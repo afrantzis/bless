@@ -1,0 +1,49 @@
+<layout>
+    <area type="offset">
+	<display>
+	    <evenrow>
+		<evencolumn>
+		    <foreground>dark red</foreground>
+		    <background>white</background>
+		</evencolumn>
+	    </evenrow>
+	    <oddrow>
+		<evencolumn>
+		    <foreground>dark red</foreground>
+		    <background>white</background>
+		</evencolumn>
+	    </oddrow>    
+	</display>
+    </area>
+    
+    <area type="separator">
+    	<display>
+	    <evenrow>
+		<evencolumn>
+		    <foreground>dark green</foreground>
+		    <background>white</background>
+		</evencolumn>
+	    </evenrow>    
+	</display>
+
+    </area>
+    
+    <area type="hexadecimal">
+	<case>upper</case>
+    </area>
+
+    <area type="separator">
+	<display>
+	    <evenrow>
+		<evencolumn>
+		    <foreground>dark green</foreground>
+		    <background>white</background>
+		</evencolumn>
+	    </evenrow>    
+	</display>
+
+    </area>
+    
+    <area type="ascii">
+    </area>
+</layout>

@@ -1,0 +1,158 @@
+<layout>
+    <area type="offset">
+        <display>
+            <evenrow>
+                <evencolumn>
+                    <foreground>dark red</foreground>
+                </evencolumn>
+            </evenrow>
+            <oddrow>
+                <evencolumn>
+                    <background>#eeeeee</background>
+		    <foreground>dark red</foreground>
+                </evencolumn>
+            </oddrow>    
+        </display>                        
+    </area>
+    
+    <area type="separator">
+        <display>
+            <evenrow>
+                <evencolumn>
+                    <foreground>dark green</foreground>
+                    <background>white</background>
+                </evencolumn>
+            </evenrow>
+        </display>                        
+    </area>
+    
+    <area type="hexadecimal">
+        <case>upper</case>
+        <display>
+            <evenrow>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#8faec8</background>
+                </selectedcolumn>
+            </evenrow>    
+            <oddrow>
+                <evencolumn>
+                    <background>#eeeeee</background>
+                </evencolumn>
+                <oddcolumn>
+                    <background>#eeeeee</background>
+                </oddcolumn>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#7b96ac</background>
+                </selectedcolumn>
+            </oddrow>    
+        </display>    
+    </area>
+
+    <area type="separator">
+        <display>
+            <evenrow>
+                <evencolumn>
+                    <foreground>dark green</foreground>
+                    <background>white</background>
+                </evencolumn>
+            </evenrow>
+        </display>                        
+    </area>
+    
+    <area type="decimal">
+        <display>
+            <evenrow>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#8faec8</background>
+                </selectedcolumn>
+            </evenrow>    
+            <oddrow>
+                <evencolumn>
+                    <background>#eeeeee</background>
+                </evencolumn>
+                <oddcolumn>
+                    <background>#eeeeee</background>
+                </oddcolumn>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#7b96ac</background>
+                </selectedcolumn>
+            </oddrow>    
+        </display>    
+    </area>
+
+    <area type="separator">
+        <display>
+            <evenrow>
+                <evencolumn>
+                    <foreground>dark green</foreground>
+                    <background>white</background>
+                </evencolumn>
+            </evenrow>
+        </display>                        
+    </area>
+
+    <area type="octal">
+        <case>upper</case>
+        <display>
+            <evenrow>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#8faec8</background>
+                </selectedcolumn>
+            </evenrow>    
+            <oddrow>
+                <evencolumn>
+                    <background>#eeeeee</background>
+                </evencolumn>
+                <oddcolumn>
+                    <background>#eeeeee</background>
+                </oddcolumn>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#7b96ac</background>
+                </selectedcolumn>
+            </oddrow>    
+        </display>    
+    </area>
+
+    <area type="separator">
+        <display>
+            <evenrow>
+                <evencolumn>
+                    <foreground>dark green</foreground>
+                    <background>white</background>
+                </evencolumn>
+            </evenrow>
+        </display>                        
+    </area>
+
+    <area type="binary">
+        <display>
+            <evenrow>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#8faec8</background>
+                </selectedcolumn>
+            </evenrow>    
+            <oddrow>
+                <evencolumn>
+                    <background>#eeeeee</background>
+                </evencolumn>
+                <oddcolumn>
+                    <background>#eeeeee</background>
+                </oddcolumn>
+                <selectedcolumn>
+                    <foreground>white</foreground>
+                    <background>#7b96ac</background>
+                </selectedcolumn>
+            </oddrow>    
+        </display>    
+    </area>
+
+
+</layout>
+

@@ -1,0 +1,113 @@
+Bless v0.4.0 20051009
+---------------------
+
+* Upgraded widgets to Gtk# 2 (Gtk+ 2.4).
+* Added a toolbar.
+* Added highlighting of patterns matching the current selection.
+* Added the ability to open files by dragging and dropping them into Bless.
+* Improved build system (for packagers).
+* Many bugfixes and usability improvements.
+
+Bless v0.3.6.1 20050827
+-----------------------
+
+* Fixed build system problems
+
+Bless v0.3.6 20050725
+---------------------
+
+* Added Preferences (undo limit, session loading options, default layout etc)
+* Added the ability to change the statusbar information (offset, selection) 
+  number base by clicking on it.
+* Reduced memory consumption for heavily modified files.
+* Improved Find/Replace and Goto Offset UI (bars instead of dialogs).
+* Misc usability improvements.
+
+Bless v0.3.5 20050519
+---------------------
+This is mainly a bugfix release
+
+* Fixed crash when saving a new file in 0.3.4.
+* Fixed subtle Gtk+ threading problems.
+* Made save as operation more robust.
+* Fixed problem with Notebook arrows.
+* Fixed dialog focusing problems.
+* Fixed crash with find/replace.
+* New <bytes> tag in layout files, allows you to set the number of bytes
+  each offset in the offset area will have.
+* You can now change the edit mode by clicking on the OVR/INS statusbar.
+
+
+Bless v0.3.4 20050509
+---------------------
+
+* Added recent file support.
+* Added session support (Bless saves its state when you quit and tries to 
+  reload it when you start).
+* Reduced memory consumption by sharing common resources.
+* Added notification when a file changes outside Bless.
+* Better help integration with scrollkeeper and GNOME.
+* Changed user configuration directory to adhere to XDG specification
+  (usually $HOME/.config/bless).
+
+Bless v0.3.3 20050412
+---------------------
+
+* Added full copy/paste support.
+* Increased speed and gui responsiveness by moving find/replace and save 
+  operations in separate threads.
+* Added new docbook manual.
+* Changed build system to use autotools.
+* When installing, an entry is added to the menu of freedesktop compliant
+  desktop enviroments (eg GNOME). 
+
+Bless v0.3.2 20050311
+---------------------
+
+* Increased search speed by using a boyer-moore based algorithm.
+* Greatly improved performance of replace all operation.
+* Added a Conversion Table (converts the data at the cursor to various formats).
+* Find and Replace dialogs can now parse numbers in all major bases.
+* New <bpr> tag in layout files allows setting the bytes per row of an area
+  to a fixed value.
+* The default values of some colors (eg selection) are now set from the theme. 
+* Fixed compilation errors/warnings with Mono 1.1.4 and removed the dependency
+  of the main program on the NUnit framework.
+
+Bless v0.3.1 20050214
+---------------------
+
+* Added replace functionality.
+* Find and Replace dialogs get their search pattern from the current selection.
+* You can now revert a file to its previous saved state.
+* Added Backspace key support for deletion.
+* Improved statusbar handling (View->Statusbar).
+
+Bless v0.3.0 20050205
+---------------------
+
+* Bless now features multiple tabs!
+* Added support for finding bytes in hexadecimal and text.
+* You can go to a specified offset within the file.
+* Reduced memory usage.
+* Improved UI, especially when confirming file saves.
+
+Bless v0.2.3 20041213
+---------------------
+
+* Support for inserting bytes.
+* Saving files is much quicker now.
+* Undo/redo behaviour has been improved.
+* A progress dialog is shown if a save lasts for more than 1 second.
+* The window title is marked with an asterisk if the file has been modified.
+
+Bless v0.2.2 20041127
+---------------------
+This release contains many bug fixes and enhancements. The most
+important ones are:
+
+* mouse wheel scrolling 
+* improved memory handling (smaller footprint)
+* ability to create new files/append to existing ones
+* proper mouse and keyboard selection behaviour
+* more robust handling of files

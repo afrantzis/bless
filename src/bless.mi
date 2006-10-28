@@ -1,0 +1,79 @@
+<moduleinfo>
+
+<option name="outputdir">../bin</option>
+
+<module name="Bless.Buffers">
+	<depends>Bless.Util</depends>
+	<depends>Bless.Tools</depends>
+	<dir>ByteBuffer</dir>
+</module>
+
+<module name="Bless.Util">
+	<dir>util</dir>
+</module>
+
+<module name="Bless.Tools">
+	<dir>tools</dir>
+</module>
+
+<module name="Bless.Tools.Find">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<dir>tools/find</dir>
+</module>
+
+<module name="Bless.Gui">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Gui.Drawers</depends>
+	<depends>Bless.Gui.Areas</depends>
+	<depends>Bless.Tools</depends>
+	<depends>Bless.Tools.Find</depends>
+	<depends>Bless.Plugins</depends>
+	<dir>gui</dir>
+</module>
+
+<module name="Bless.Gui.Areas">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Gui.Drawers</depends>
+	<depends>Bless.Tools.Find</depends>
+	<dir>gui/areas</dir>
+</module>
+
+<module name="Bless.Gui.Drawers">
+	<dir>gui/drawers</dir>
+</module>
+
+<module name="Bless.Plugins">
+	<depends>Bless.Util</depends>
+	<dir>plugins</dir>
+</module>
+
+<module name="Bless.Gui.Plugins">
+	<depends>Bless.Tools.Find</depends>
+	<depends>Bless.Tools</depends>
+	<depends>Bless.Gui.Areas</depends>
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Gui</depends>
+	<depends>Bless.Plugins</depends>
+	<dir>gui/plugins</dir>
+</module>
+
+<module name="Bless">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Gui.Drawers</depends>
+	<depends>Bless.Gui.Areas</depends>
+	<depends>Bless.Tools</depends>
+	<depends>Bless.Tools.Find</depends>
+	<depends>Bless.Gui</depends>
+	<depends>Bless.Plugins</depends>
+	<depends>Bless.Gui.Plugins</depends>
+	<dir>gui</dir>
+</module>
+
+
+
+</moduleinfo>

@@ -1,0 +1,25 @@
+Main development team
+=====================
+
+* Alexandros Frantzis <alf82 [at] freemail [dot] gr>
+
+Contributors
+============
+Many thanks to:
+
+* Jeremy Messenger <mezz7 [at] cox [dot] net>
+  Bug fixes, FreeBSD port    
+  
+* Ioannis Ramfos <isr81 [at] freemail [dot] gr>
+  Bug hunting (QA), Bug fixes
+  
+* Michael Iatrou <m_iatrou [at] freemail [dot] gr>
+  Bless logo in About Dialog.  
+
+* Mike Hearn <mike [at] navi [dot] cx>
+  Code patches
+  
+* Mirco "MacSlow" Müller <macslow [at] bangang [dot] de>
+  RPM packaging and .spec file
+  
+... if I have forgotten someone please remind me!

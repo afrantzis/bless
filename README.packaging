@@ -1,0 +1,34 @@
+Bless - Gtk# Hex Editor Packaging Notes
+=======================================
+
+This document is aimed at people trying to package Bless
+for a specific distribution.
+
+Bless can easily be packaged using the following method:
+
+configure --prefix=/usr
+make
+make prefix=/tmp-pkg-path install
+
+The contents of the /tmp-pkg-path can then be compressed and
+distributed as a package. 
+
+The only problem to this procedure is that Bless by default tries 
+to register its documentation with Scrollkeeper (if it is found) 
+during make install and unregister it during make uninstall. However
+this is not wanted on the packager`s system but on the user's system. 
+
+To overcome this, Bless should be configured without scrollkeeper support
+by the packager:
+
+configure --without-scrollkeeper
+
+and the post-install and post-uninstall scripts of the packaging system should
+take care of registering and unregistering the documentation.
+
+*Note* that the path of the help file in the .omf file is set at make time using
+the configured prefix. This is done using the 'scrollkeeper-preinstall' command
+which should therefore be present in the packager's system. In case it is
+not present, the post-install script should also set that path.
+
+A sample rpm bless.spec file is supplied with the bless source package.

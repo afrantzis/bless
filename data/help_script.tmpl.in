@@ -1,0 +1,35 @@
+#!@SHELL@
+
+# Script that loads help for Bless
+xml_help="@blessdocdir@/user/bless-manual.xml"
+html_help="@blessdocdir@/user/index.html"
+
+# try to get default browsers from GConf
+GCONFTOOL=`which gconftool-2 2> /dev/null`
+
+if [ -n $GCONFTOOL ];
+then
+    help_browser=`$GCONFTOOL --get "/desktop/gnome/url-handlers/ghelp/command"`
+    if [ -n "$help_browser" ];
+    then
+	help_browser=`echo "$help_browser" | sed  s/\"%s\"// `
+    fi
+    
+    http_browser=`$GCONFTOOL --get "/desktop/gnome/url-handlers/http/command"`
+    
+    if [ -n "$http_browser" ];
+    then
+	http_browser=`echo "$http_browser" | sed  s/\"%s\"// `
+    fi
+fi
+
+# some other browsers
+yelp_browser=`which yelp 2> /dev/null`
+firefox_browser=`which firefox 2> /dev/null`
+mozilla_browser=`which mozilla 2> /dev/null`
+
+([ -n $help_browser ] && $help_browser $xml_help) ||
+([ -n $yelp_browser ] && $yelp_browser $xml_help) ||
+([ -n $http_browser ] && $http_browser $html_help) ||
+([ -n $firefox_browser ] && $firefox_browser $html_help) ||
+([ -n $mozilla_browser ] && $mozilla_browser $html_help)

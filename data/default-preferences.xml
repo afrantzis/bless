@@ -1,0 +1,21 @@
+<preferences>
+	<pref name="Session.RememberCursorPosition">True</pref>
+	<pref name="Tools.ConversionTable.LEDecoding">False</pref>
+	<pref name="Default.EditMode">Insert</pref>
+	<pref name="Tools.ConversionTable.Show">True</pref>
+	<pref name="Tools.Statistics.Show">False</pref>
+	<pref name="Session.RememberWindowGeometry">True</pref>
+        <pref name="Highlight.PatternMatch">True</pref>	
+	<pref name="View.Toolbar.Show">True</pref>
+	<pref name="Default.NumberBase">Hexadecimal</pref>
+	<pref name="View.Statusbar.Offset">True</pref>
+	<pref name="Default.Layout.File"></pref>
+	<pref name="View.Statusbar.Show">True</pref>
+	<pref name="Undo.Limited">False</pref>
+	<pref name="Default.Layout.UseCurrent">False</pref>
+	<pref name="Session.LoadPrevious">True</pref>
+	<pref name="View.Statusbar.Overwrite">True</pref>
+	<pref name="Session.AskBeforeLoading">False</pref>
+	<pref name="Undo.Actions">100</pref>
+	<pref name="View.Statusbar.Selection">True</pref>
+</preferences>

@@ -1,0 +1,3 @@
+#!@SHELL@
+
+mono @blesslibdir@/@PACKAGE_NAME@-@PACKAGE_VERSION@/bin/bless.exe "$@"

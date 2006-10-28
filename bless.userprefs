@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
+  <Files />
+  <Views>
+    <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
+      <TreeView>
+        <Node expanded="True">
+          <Node name="bless" expanded="True">
+            <Node name="src" expanded="True">
+              <Node name="gui" expanded="True">
+                <Node name="plugins" expanded="True" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </Node>
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ClassPad">
+      <TreeView>
+        <Node expanded="True" />
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoDevelop.NUnit.TestPad">
+      <TreeView>
+        <Node expanded="False" />
+      </TreeView>
+    </ViewMemento>
+    <ViewMemento Id="MonoQuery.DatabasePad">
+      <TreeView>
+        <Node expanded="False" />
+      </TreeView>
+    </ViewMemento>
+  </Views>
+  <Properties>
+    <Properties>
+      <Property key="ActiveConfiguration" value="Debug" />
+      <Property key="ActiveWindow" value="" />
+    </Properties>
+  </Properties>
+</UserCombinePreferences>

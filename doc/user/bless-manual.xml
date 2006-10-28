@@ -1,0 +1,1713 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+	<!ENTITY legal SYSTEM "legal.xml">
+	<!ENTITY appversion "0.4.9">
+	<!ENTITY manrevision "1.0">
+	<!ENTITY date "Nov 2006">
+	<!ENTITY app "<application>Bless</application>">
+	<!-- Information about the entities
+		The legal.xml file contains legal information, there is no need to edit the file. 
+		Use the appversion entity to specify the version of the application.
+		Use the manrevision entity to specify the revision number of this manual.
+		Use the date entity to specify the release date of this manual.
+		Use the app entity to specify the name of the application. -->
+]>
+
+<!-- 
+	(Do not remove this comment block.)
+	Maintained by the GNOME Documentation Project
+	http://developer.gnome.org/projects/gdp
+	Template version: 2.0 beta
+	Template last modified Feb 06, 2003
+-->
+
+<!-- =============Document Header ============================= -->
+<book id="index" lang="en">
+	<bookinfo> 
+		<title>&app; &appversion; Manual</title>			 
+
+		<copyright> 
+			<year>2004</year> 
+			<year>2005</year> 
+			<holder>Alexandros Frantzis</holder> 
+		</copyright> 
+<!-- translators: uncomment this:
+
+	<copyright>
+	<year>2002</year>
+	<holder>ME-THE-TRANSLATOR (Latin translation)</holder>
+	</copyright>
+
+	 -->
+	 &legal;
+	 <!-- This file	contains link to license for the documentation (GNU FDL), and 
+				other legal stuff such as "NO WARRANTY" statement. Please do not change 
+	any of this. -->
+
+		<authorgroup> 
+			<author> 
+				<firstname>Alexandros</firstname> 
+				<surname>Frantzis</surname> 
+			</author> 
+			
+<!-- This is appropriate place for other contributors: translators,
+		 maintainers,	etc. Commented out by default.
+		 
+			<othercredit role="translator">
+		<firstname>Latin</firstname> 
+		<surname>Translator 1</surname> 
+		<affiliation> 
+				<orgname>Latin Translation Team</orgname> 
+				<address> <email>translator@gnome.org</email> </address> 
+		</affiliation>
+		<contrib>Latin translation</contrib>
+			</othercredit>
+-->
+		</authorgroup>
+
+
+<!-- According to GNU FDL, revision history is mandatory if you are -->
+<!-- modifying/reusing someone else's document.	If not, you can omit it. -->
+<!-- Remember to remove the &manrevision; entity from the revision entries other
+-->
+<!-- than the current revision. -->
+<!-- The revision numbering system for GNOME manuals is as follows: -->
+<!-- * the revision number consists of two components -->
+<!-- * the first component of the revision number reflects the release version of the GNOME desktop. -->
+<!-- * the second component of the revision number is a decimal unit that is incremented with each revision of the manual. -->
+<!-- For example, if the GNOME desktop release is V2.x, the first version of the manual that -->
+<!-- is written in that desktop timeframe is V2.0, the second version of the manual is V2.1, etc. -->
+<!-- When the desktop release version changes to V3.x, the revision number of the manual changes -->
+<!-- to V3.0, and so on. -->	
+<!--		<revhistory>
+			<revision> 
+		<revnumber>MY-GNOME-APPLICATION Manual V&manrevision;</revnumber> 
+		<date>&date;</date> 
+		<revdescription> 
+				<para role="author">Documentation Writer 2
+				<email>docwriter2@gnome.org</email> 
+				</para>
+				<para role="publisher">GNOME Documentation Project</para>
+		</revdescription> 
+			</revision> 
+			<revision> 
+		<revnumber>Full title of previous manual.</revnumber> 
+		<date>Release date of previous manual.</date> 
+		<revdescription> 
+				<para role="author">Documentation Writer 1 
+				<email>docwriter1@gnome.org</email> 
+				</para>
+				<para role="publisher">GNOME Documentation Project</para>
+		</revdescription> 
+			</revision> 
+		</revhistory> 
+-->
+		<releaseinfo>This manual describes version &appversion; of &app;.
+		</releaseinfo> 
+		
+		<legalnotice> 
+			<title>Feedback</title> 
+			<para>To report a bug or make a suggestion regarding the &app; application or
+			this manual, please use the
+			<ulink url="http://gna.org/bugs/?group=bless" type="http">Bless bug page</ulink>.
+			</para>
+<!-- Translators may also add here feedback address for translations -->
+		</legalnotice> 
+	</bookinfo> 
+
+	<indexterm zone="index"> 
+		<primary>Bless</primary> 
+	</indexterm> 
+	
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+		 the application is and what it does. -->
+<chapter id="bless-introduction"> 
+	<title>Introduction</title> 
+	<para>
+	&app; is a binary (hex) editor, a program that enables you to edit files as
+	sequences of bytes. It is written in C# and uses the Gtk# bindings for the
+	GTK+ toolkit.
+	</para>
+	<para>
+	&app; provides the following features:
+	</para> 
+	<itemizedlist> 
+		<listitem>
+			<para>Efficient editing of large data files.</para>
+		</listitem>
+		<listitem>
+			<para>Multilevel undo - redo operations.</para>
+		</listitem>
+		<listitem>
+			<para>Customizable data views.</para>
+		</listitem>
+ 		<listitem>
+			<para>Fast data rendering on screen.</para>
+		</listitem>
+		<listitem>
+			<para>Multiple tabs.</para>
+		</listitem>
+		<listitem>
+			<para>Fast find and replace operations.</para>
+		</listitem>
+		<listitem>
+			<para>A data conversion table.</para>
+		</listitem> 
+		<listitem> 
+			<para>Advanced copy/paste capabilities.</para> 
+		</listitem>
+		<listitem> 
+			<para>Highlighting of selection pattern matches in the file.</para> 
+		</listitem> 
+	</itemizedlist> 
+</chapter>
+
+<chapter id="bless-install">
+	<title>Building and Installing Bless</title> 
+		<section id="bless-install-requirements">
+			<title>&app; &appversion; requirements</title>
+			<para>
+				The main target platform for &app; is GNU/Linux. However, all the libraries it
+				uses are cross-platform, so &app; should be able to run without problems 
+				on all the major platforms (GNU/Linux, *BSD, Solaris, Win32).
+			</para>
+			<para>
+			To build and run &app; &appversion; you need:
+			<itemizedlist>
+				<listitem>
+					<para>GTK+ &gt;=2.4.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
+				</listitem>
+				<listitem>
+					<para>mono/.NET runtime and C# compiler &gt;= 1.1.4 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
+				</listitem>
+				<listitem>
+					<para>Gtk#  &gt;=1.9.5 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
+				</listitem>
+				<listitem>
+					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
+				</listitem>
+			</itemizedlist>
+		    </para>
+		    
+		    <note>
+		    	<para>
+					Development is done using the latest stable versions of the above libraries. 
+					Although using an older version may be OK, there is no guarantee that there 
+					will not be problems.
+				</para>
+			</note>
+		</section>
+
+	<section id="bless-install-guide"> 
+		<title>Installation guide</title>
+		<para>
+			If you downloaded bless as a distribution specific package (eg .rpm, .deb, .tgz) follow your
+			distribution's instructions on how to install packages.
+		</para>
+		<para>
+			If you downloaded Bless as a source .tar.gz or .tar.bz2 package you will need to build
+			it and install it manually. The building and installation procedure is described below:
+		</para>
+		<para>
+		Overview: untar, ./configure, make, (make install)
+	    </para>
+		<variablelist>
+			<varlistentry>
+				<term>Step 1: Untar the source package</term>
+				<listitem>
+					<para>For a tar.gz package use:
+	    				<command>tar -xzvf bless-a.b.c.tar.gz</command>
+					</para>
+					<para>For a tar.bz2 package use:
+	    				<command>tar -xjvf bless-a.b.c.tar.bz2</command>
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Step 2: Configure the build</term>
+				<listitem>
+					<para>
+						Enter the directory created in the previous step (bless-a.b.c) and type
+						<command>'./configure'</command>. The script will check if your system has all the required
+						libraries. Use the <parameter>--prefix=<replaceable>PREFIX</replaceable></parameter> option to set the installation directory prefix.
+						By default the prefix is '/usr/local'.
+					</para>
+					<para>
+						You can also use the <parameter>--enable-debug</parameter> option to build bless with debug
+						information.
+					</para>
+				</listitem>
+			</varlistentry>
+			
+			<varlistentry>
+				<term>Step 3: Build the program</term>
+				<listitem>
+					<para>
+						Type <command>'make'</command>. This will create <filename>bless.exe</filename> and the necessary 
+						libraries in the bin/ directory and the <filename>bless</filename> 
+						launcher script in the bless-a.b.c directory. You can also type <command>'make check'</command> to
+						run some tests on various bless components. 
+					</para>
+				</listitem>
+			</varlistentry>
+			
+			<varlistentry>
+				<term>Step 4: Install the program (optional)</term>
+				<listitem>
+					<para>
+						Become root and type <command>'make install'</command>. 
+					</para>
+				</listitem>
+			</varlistentry>
+			
+		</variablelist>
+	</section>		
+</chapter> 
+<!-- =========== Getting Started ============================== -->
+<!-- Use the Getting Started section to describe the steps required
+		 to start the application and to describe the user interface components
+		 of the application. If there is other information that it is important
+		 for readers to know before they start using the application, you should
+		 also include this information here. 
+		 If the information about how to get started is very short, you can 
+		 include it in the Introduction and omit this section. -->
+
+<chapter id="bless-getting-started"> 
+	<title>Getting Started</title> 
+
+	<section id="bless-start">
+		<title>To Start &app;</title>
+		<para>You can start <application>&app;</application> in the following ways:
+		</para> 
+		<variablelist>
+			<varlistentry>
+				<term><guimenu>Applications</guimenu> menu</term>
+				<listitem>
+					<para>Choose 
+					<menuchoice>
+						<guisubmenu>Programming/Development</guisubmenu>
+						<guimenuitem>Bless Hex Editor</guimenuitem>
+					</menuchoice>.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Command line</term>
+				<listitem>
+					<para>To start &app; from a command line, type the following command, 
+						then press <keycap>Return</keycap>:
+					</para>
+					<para> 
+						<command>bless</command> 
+						<replaceable>filenames</replaceable>
+					</para> 
+					<para>where 
+						<replaceable>filenames</replaceable> are the names of the files you
+						want to open. If you don't specify any files, &app; will
+						try to load the previous session. If that fails &app; will open an empty file for you.
+					</para>  
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="bless-when-start">
+		<title>When You Start &app;</title>
+		<para>When you start <application>&app;</application>, the following window is displayed.</para>
+
+		<!-- ==== Figure ==== -->
+		<figure id="bless-mainwindow"> 
+			<title>&app; Start Up Window</title> 
+			<screenshot> 
+				<mediaobject> 
+					<imageobject>
+						<imagedata fileref="figures/bless_start_window.png" format="PNG"/> 
+					</imageobject>
+					<textobject> 
+						<phrase>Shows &app; main window. Contains titlebar, menubar, toolbar, display area, and
+						scrollbars. Menubar contains File, View, Settings, and Help menus. </phrase> 
+					</textobject> 
+				</mediaobject> 
+			</screenshot> 
+		</figure>
+		<!-- ==== End of Figure ==== -->
+
+		<!-- Include any descriptions of the GUI immediately after the screenshot of the main UI, -->
+		<!-- for example, the items on the menubar and on the toolbar. This section is optional. -->
+
+		<para>The &app; window contains the following elements:
+		</para>
+		<variablelist>
+			<varlistentry>
+				<term>Menubar</term>
+				<listitem>
+					<para>The menus on the menubar contain all of the commands you need to work with files in 
+					&app;.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Toolbar</term>
+				<listitem>
+					<para>Provides shortcuts to the commands that are most frequently used when working with files
+					in &app;.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Data View</term>
+				<listitem>
+					<para>The data view contains multiple tabs that display the data of the files you are editing.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Conversion Table</term>
+				<listitem>
+					<para>The conversion table displays the bytes at the current file position converted to various formats.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Statusbar</term>
+				<listitem>
+					<para>The statusbar displays information about current &app; 
+					activity and information about the current file. </para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+</chapter>
+<!-- ================ Usage ================================ -->
+<!-- Use this section to describe how to use the application to perform the tasks for 
+	which the application is designed. -->
+
+
+<chapter id="bless-usage">
+	<title>Using &app;</title>
+	<section id="bless-usage-files">
+		<title>Working with files</title>
+		<para>
+			&app; supports multiple tabs in the Data View. Each tab contains data that belong to either an existing or a new file.
+			In case the data is related to an existing file, the file's name is displayed on the tab label. Otherwise the tab is marked	
+			with a name of the form "Untitled <replaceable>N</replaceable>", where <replaceable>N</replaceable> is a number.
+		</para>
+		<para>
+			When a file has been modified since its last save, an asterisk "*" is displayed next to its name.
+		</para>
+		<note>
+			<para>
+				&app; can currently handle only regular files, not block or character device files (eg /dev/hda).
+			</para>
+		</note>
+		
+		<section id="bless-usage-files-create">
+			<title>Creating a new file</title>
+			<para>
+				To create a new file for editing use 
+				<menuchoice>
+					<shortcut>
+						<keycombo>
+							<keycap>Ctrl</keycap>
+							<keycap>N</keycap>
+						</keycombo>
+					</shortcut>
+					<guisubmenu>File</guisubmenu>
+					<guimenuitem>New</guimenuitem>
+				</menuchoice>.
+			</para>
+			<para>
+				This action creates a new tab with an empty file.
+			</para>
+		</section>
+		
+		<section id="bless-usage-files-open">
+			<title>Opening an existing file</title>
+			<para>
+				To open an existing file for editing use 
+				<menuchoice>
+					<shortcut>
+						<keycombo>
+							<keycap>Ctrl</keycap>
+							<keycap>O</keycap>
+						</keycombo>
+					</shortcut>
+					<guisubmenu>File</guisubmenu>
+					<guimenuitem>Open</guimenuitem>
+				</menuchoice>.
+			</para>
+			<para>
+				You may also open one or more existing files by dragging and dropping them into the &app; window.
+			</para>
+			<para>	
+				This action normally creates a new tab containing the opened file. An exception to this happens when the tab that 
+				was active before opening the new file contained an empty file. In that case the old tab is <emphasis>replaced</emphasis> 
+				with the new one.
+			</para>
+		</section>
+		
+		<section id="bless-usage-files-save">
+			<title>Saving a file</title>
+			<itemizedlist>
+			<listitem>
+			<para>
+				To save a file make sure the tab that contains it is active and use 
+				<menuchoice>
+					<shortcut>
+						<keycombo>
+							<keycap>Ctrl</keycap>
+							<keycap>S</keycap>
+						</keycombo>
+					</shortcut>
+					<guisubmenu>File</guisubmenu>
+					<guimenuitem>Save</guimenuitem>
+				</menuchoice>.
+			</para>
+			</listitem>
+			<listitem>
+			<para>
+				To save a file <emphasis>under a different name or at another location</emphasis>, make sure the tab that contains it is active and use 
+				<menuchoice>
+					<shortcut>
+						<keycombo>
+							<keycap>Shift</keycap>
+							<keycap>Ctrl</keycap>
+							<keycap>S</keycap>
+						</keycombo>
+					</shortcut>
+					<guisubmenu>File</guisubmenu>
+					<guimenuitem>Save As</guimenuitem>
+				</menuchoice>.
+			</para>
+			</listitem>
+			</itemizedlist>
+			<note>
+			<para>	
+				If the data in a tab isn't related to an existing file (for example if it is a new file), the Save action actually performs a Save As action.   
+			</para>
+			</note>
+		</section>
+		
+		<section id="bless-usage-files-close">
+			<title>Closing a file</title>
+			<para>
+				To close a file, make sure the tab that contains it is active and use 
+				<menuchoice>
+					<shortcut>
+						<keycombo>
+							<keycap>Ctrl</keycap>
+							<keycap>W</keycap>
+						</keycombo>
+					</shortcut>	
+					<guisubmenu>File</guisubmenu>
+					<guimenuitem>Close</guimenuitem>
+				</menuchoice>.
+			</para>
+			<para>
+				You can also close a file by clicking on the close icon on its tab label:
+			</para>
+				<!-- ==== Figure ==== -->
+				<figure id="bless_tab_close"> 
+					<title>Closing a tab</title> 
+					<screenshot> 
+						<mediaobject> 
+							<imageobject>
+								<imagedata fileref="figures/bless_tab_close.png" format="PNG"/> 
+							</imageobject>
+							<textobject> 
+								<phrase>Shows how to close a tab using the close icon on its tab label</phrase> 
+							</textobject> 
+						</mediaobject> 
+					</screenshot> 
+				</figure>
+				<!-- ==== End of Figure ==== -->
+			<note><para>	
+				If the file has changed since the previous save you will be prompted to save it.
+			</para></note>
+		</section>
+		
+		<section id="bless-usage-files-switch-tabs">
+			<title>Changing the active file</title>
+			<para>
+				You can switch between tabs, therefore making the file the tab contains the active one, using a number of ways:
+				<itemizedlist>
+					<listitem>
+						<para>By clicking on the tab label of the tab you want to switch to.</para>
+					</listitem>
+					<listitem>
+						<para>By pressing <keycombo><keycap>Alt</keycap><replaceable>N</replaceable></keycombo>, where <replaceable>N</replaceable> is the number of the tab you want to switch to. This method works for the first nine tabs. For example to switch to the second
+						tab you should press Alt+2.</para>
+					</listitem>
+					<listitem>
+						<para>
+							By pressing <keycombo><keycap>Alt</keycap><keycap>Left arrow</keycap></keycombo> or <keycombo><keycap>Alt</keycap><keycap>Right arrow</keycap></keycombo>, you can switch to the tab immediately to the left or right of the currently active tab.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</section>
+	
+	</section>
+	
+	<section id="bless-usage-dataview">
+		<title>Data View basics</title>
+		<para>
+			The Data View is the part of &app; that displays the data of the files you are editing and enables you to manipulate them. It consists of (possibly) many tabs,
+			each corresponding to a file you are editing. Each tab contains areas that display the file's data in various formats. An area can be one of the following types:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>Offset Area: Displays the offset of the first byte at the specified row.</para>
+			</listitem>
+			<listitem>
+				<para>Separator Area: Displays a vertical separator line.</para>
+			</listitem>
+			<listitem>
+				<para>Hexadecimal Area: Displays the data in hexadecimal number base.</para>
+			</listitem>
+			<listitem>
+				<para>Decimal Area: Displays the data in decimal number base.</para>
+			</listitem>
+			<listitem>
+				<para>Octal Area: Displays the data in octal number base.</para>
+			</listitem>
+			<listitem>
+				<para>Binary Area: Displays the data in binary number base.</para>
+			</listitem>
+			<listitem>
+				<para>Ascii Area: Displays the data as Ascii text.</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			The types and placement of the areas that each tab contains can be customized with layout files.
+			See <xref linkend="bless-customizing-layout"/> for more information on how to write and use layout files. 
+		</para>
+		
+		<section  id="bless-usage-dataview-focus">
+			<title>Selecting the active area</title>
+			<para>
+				At any time only one of the areas accepts and handles editing events. This area is said to have the focus.
+				All areas except Offset and Separator may have the focus.
+			</para>
+			<!-- ==== Figure ==== -->
+			<figure id="bless-area-focus"> 
+				<title>Cursor in focused and not focused areas</title> 
+				<screenshot> 
+					<mediaobject> 
+						<imageobject>
+							<imagedata fileref="figures/bless_area_focus.png" format="PNG"/> 
+						</imageobject>
+						<textobject> 
+							<phrase>Shows the difference in the cursor when an areas has the focus or not.</phrase> 
+						</textobject> 
+					</mediaobject> 
+				</screenshot> 
+			</figure>
+			<!-- ==== End of Figure ==== -->
+			<para>
+				The cursor in the focused area consists of a horizontal line under the current byte and a vertical line just before the active digit of the current byte. 
+				In contrast, the cursor in a non-focused area consists of only the horizontal line beneath the current byte. 
+			</para>
+			<para>	
+				Changing the area that has the focus can be done in two ways:
+				<itemizedlist>
+					<listitem>
+						<para>
+							Using the <keycap>TAB</keycap> key cycles the focus among the available areas.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Pressing or releasing the left mouse button in an area, or moving with the left mouse button pressed into an area, gives the focus to that area. If the area
+							can't accept the focus (eg it is a Separator area), the focus remains unchanged. 
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</section>
+		<section  id="bless-usage-dataview-scroll">
+			<title>Scrolling</title>
+			<para>
+				If the file you are editing is big enough, only a small range of its data will be visible in the Data View. The size of the visible data is called a <emphasis>page</emphasis>
+				and changes as the &app; window is resized.
+			</para>
+			<para>
+				To change the visible range of a file's data you should <emphasis>scroll</emphasis> the Data View. You can scroll the Data View in two ways:
+				<itemizedlist>
+					<listitem>
+						<para>
+							Using the scrollbar that is located at the right side of the Data View. The scrollbar is visible only if the file is too large to fit in one page.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Using the wheel on your mouse, if it has one. 
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<note>
+				<para>
+					Scrolling the Data View does <emphasis>not</emphasis> change the cursor position.
+				</para>
+			</note>
+		</section>
+	</section>
+	
+	
+	
+	<section id="bless-usage-edit">
+		<title>Editing a file</title>
+		<section id="bless-usage-edit-basic">
+			<title>Basic editing operations</title>
+			
+			<section id="bless-usage-edit-basic-cursor">
+				<title>Changing the current cursor position</title>
+				<para>
+					You can move the cursor in two ways:
+				</para>
+				<variablelist>
+					<varlistentry>
+						<term>Using the keyboard</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Pressing the <keycap>Up Arrow</keycap> key moves the cursor to the byte just above the current one.</listitem>
+								<listitem>Pressing the <keycap>Down Arrow</keycap> key moves the cursor to the byte just below the current one.</listitem>
+								<listitem>Pressing the <keycap>Left Arrow</keycap> key moves the cursor to the previous digit of the current byte. If the cursor was at the first digit
+								of a byte, it is moved to the last digit of the previous byte.</listitem>
+								<listitem>Pressing the <keycap>Right Arrow</keycap> key moves the cursor to the next digit of the current byte. If the cursor was at the last digit
+								of a byte, it is moved to the first digit of next byte.</listitem>
+								<listitem>Pressing the <keycap>Page Up</keycap> key moves the cursor to the byte which is one page before the current position.</listitem>
+								<listitem>Pressing the <keycap>Page Down</keycap> key moves the cursor to the byte which is one page after the current position.</listitem>
+								<listitem>Pressing the <keycap>Home</keycap> key moves the cursor to the first byte in the file.</listitem>
+								<listitem>Pressing the <keycap>End</keycap> key moves the cursor one byte after the last byte in the file.</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Using the mouse</term>
+						<listitem>Clicking on a digit of a byte moves the cursor to that byte and digit.</listitem>
+					</varlistentry>
+				</variablelist>
+				<note>
+					<para>
+						If the new cursor position is outside the currently visible page of data, the view scrolls automatically so that the new cursor position is made visible.	
+					</para>
+				</note>
+			</section>
+			
+			<section id="bless-usage-edit-basic-goto">
+				<title>Moving the cursor to a specific position</title>
+				<para>
+					To access the Go to Offset Bar use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>G</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Search</guisubmenu>
+						<guimenuitem>Go to Offset</guimenuitem>
+					</menuchoice>. 
+				</para>
+				<figure>
+					<title>Go to Offset Bar</title>
+					<screenshot>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="figures/bless_goto.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<phrase>Go to Offset Bar</phrase>
+							</textobject>
+						</mediaobject>
+					</screenshot>
+				</figure>
+				<para>
+					To move the cursor to a specific position in the file:
+					<orderedlist>
+						<listitem>
+							<para>
+								Type the offset in the <guilabel>Offset</guilabel> text entry (in the desired number format).
+								if the typed offset starts with '0x' it is considered hexadecimal, if it starts with '0' it is 
+								considered octal, otherwise it is considered decimal.
+							</para>
+						</listitem>
+						<listitem>
+							<para>Press the <guibutton>Go to Offset</guibutton> button</para>
+						</listitem>
+					</orderedlist>
+				</para>
+			</section>
+			
+			<section id="bless-usage-edit-basic-select">
+				<title>Selecting a range of data</title>
+				<para>
+					There are two ways to select a range of data from the file you are editing:
+				<variablelist>
+					<varlistentry>
+						<term>Using the keyboard</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Position the cursor at one end of the range you want to select.</listitem>
+								<listitem>
+									Hold down the <keycap>Shift</keycap> key and move the cursor
+									to the other end of the range using the keyboard. As you move the cursor, the currently selected data range will be highlighted.
+								</listitem> 
+								<listitem>Release the <keycap>Shift</keycap> key.</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Using the mouse</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Position the cursor at one end of the range you want to select.</listitem>
+								<listitem>
+									Hold down the Left mouse button and move the cursor to the other end of the range using the mouse. 
+									As you move the cursor, the currently selected data range will be highlighted.
+								</listitem> 
+								<listitem>Release the Left mouse button.</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+				</variablelist>
+				</para>
+				<para>
+					Selecting a range of data has another useful effect: all the patterns matching the selected
+					data in the file are highlighted, thus providing a quick way to find or emphasize patterns.
+					The color of the highlighting can be changed using Layout files (see <xref linkend="bless-customizing-layout"/>).
+					This feature can be turned off in the Preferences Dialog (see <xref linkend="bless-customizing-preferences-general"/>).
+				</para>
+			</section>
+			
+			<section id="bless-usage-edit-basic-overwrite-mode">
+				<title>Toggling Overwrite/Insert edit mode</title>
+				<para>
+					By pressing the <keycap>Insert</keycap> key on the keyboard or by clicking on the edit mode statusbar, you can change the edit mode &app; is currently in. The edit mode
+					determines what happens when you add new data to the file. There are two available modes:
+					<variablelist>
+						<varlistentry>
+							<term>Insert Mode</term>
+							<listitem>The new data is inserted at the current cursor position. &app; automatically makes space for the new data.</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term>Overwrite Mode</term>
+							<listitem>The new data overwrites the old data, starting from the current cursor position.</listitem>
+						</varlistentry> 
+					</variablelist>
+				</para>
+				<!-- ==== Figure ==== -->
+				<figure id="bless-edit-mode"> 
+					<title>Edit mode statusbar display</title> 
+					<screenshot> 
+						<mediaobject> 
+							<imageobject>
+								<imagedata fileref="figures/bless_edit_mode.png" format="PNG"/> 
+							</imageobject>
+							<textobject> 
+								<phrase>Shows the edit mode display in the statusbar</phrase> 
+							</textobject> 
+						</mediaobject> 
+					</screenshot> 
+				</figure>
+			<!-- ==== End of Figure ==== -->
+				<para>
+					The current edit mode is displayed at the far right in the statusbar.
+				</para>
+			</section>
+			
+			<section id="bless-usage-edit-basic-number-base">
+				<title>Changing the statusbar number base</title>
+				<para>
+					You can change the number base of the information displayed in the statusbar (current offset, current selection).
+					Clicking on the Offset or Selection information in the statusbar cycles among Hexadecimal, Decimal and Octal number bases.
+					You can distinguish the current number base by checking the prefix of displayed numbers. A "0x" prefix denotes Hexadecimal,
+					a "0" prefix denotes Octal and no prefix denotes Decimal.  
+				</para>
+				<!-- ==== Figure ==== -->
+				<figure id="bless-number-base"> 
+					<title>Statusbar number base</title> 
+					<screenshot> 
+						<mediaobject> 
+							<imageobject>
+								<imagedata fileref="figures/bless_number_base.png" format="PNG"/> 
+							</imageobject>
+							<textobject> 
+								<phrase>Shows statusbar information in several number bases</phrase> 
+							</textobject> 
+						</mediaobject> 
+					</screenshot> 
+				</figure>
+			<!-- ==== End of Figure ==== -->
+			</section>
+			
+			<section id="bless-usage-edit-basic-modify">
+				<title>Modifying the data</title>
+				<para>
+					You can directly modify the data in a file by using the keyboard:
+				</para>
+				<variablelist>
+					<varlistentry>
+						<term>Inserting a new byte at a specific position</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Make sure you are in Insert Mode.</listitem>
+								<listitem>Move the cursor to the <emphasis>first digit</emphasis> of desired position.</listitem> 
+								<listitem>
+									Press the keys which correspond to the digits of the desired byte.
+									Each keypress automatically moves the cursor one position to the right.
+								</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Modifying an existing byte</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Make sure you are in Overwrite Mode (only required if you want to modify the first digit of a byte).</listitem>
+								<listitem>Move the cursor to desired byte/digit position.</listitem> 
+								<listitem>
+									Press the keys which correspond to the digits of the desired byte.
+									Each keypress automatically moves the cursor one position to the right.
+								</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Appending data to the end of the file</term>
+						<listitem>
+							<itemizedlist>
+								<listitem>Move the cursor to the position just after the last byte in the file.</listitem> 
+								<listitem>
+									Press the keys which correspond to the digits of the desired byte.
+									Each keypress automatically moves the cursor one position to the right.
+								</listitem>
+							</itemizedlist>
+						</listitem>
+					</varlistentry>
+				</variablelist>
+				
+				<note>
+					<para>
+						Each area accepts only certain digits (eg the hexadecimal area accepts only 0-9 and A-F). If a key (representing a digit) is pressed in an area that doesn't
+						accept it, the keypress is ignored.
+					</para>
+				</note>
+			</section>
+			
+			
+		</section>
+		
+		<section id="bless-usage-edit-clipboard">
+			<title>Clipboard operations</title>
+			<para>Bless features an advanced system to handle clipboard operations.</para>
+			
+			<section id="bless-usage-edit-clipboard-cut">
+				<title>Copy and Cut operations</title>
+				<para>To copy the selected data to the clipboard use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>C</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Copy</guimenuitem>
+					</menuchoice>.
+				</para>
+				
+				<para>To cut the selected data from the file and copy it to the clipboard use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>X</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Cut</guimenuitem>
+					</menuchoice>.
+				</para>
+				<para>
+					When copying or cutting data, that data becomes available to &app; and other applications as well.
+					&app; can offer its data to other applications in two main formats:
+					<variablelist>
+						<varlistentry>
+							<term>Raw bytes</term>
+							<listitem>
+								<para>
+								&app; can offer the selected data as raw bytes to applications that can handle it, for example other hex editors.
+								This is the format &app; uses when interacting with itself (for example when you copy from a tab and paste into another). 
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term>UTF-8 string</term>
+							<listitem>
+								<para>
+									&app; can offer a string representation of the selected data in various number bases or UTF-8 text.
+									The number base is determined by the type of the area that has the focus at the end of the selection action for the cut/copied data.
+									For example if that area is hexadecimal, the offered string will contain the hexadecimal string representation 
+									of the selected data. If the ending area is the text area, the offered string will contain the UTF-8 text represented by
+									the selected data (if possible). 
+								</para>
+							</listitem>
+						</varlistentry>
+					</variablelist>
+				</para>
+				<para>
+					 
+				</para>
+				
+			</section>
+			
+			<section id="bless-usage-edit-clipboard-paste">
+				<title>Paste operation</title>
+				<para>To paste data from the clipboard to the current cursor position use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>V</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Paste</guimenuitem>
+					</menuchoice>.
+				</para>
+			
+				<para>
+					The value of the Overwrite/Insert mode, affects the way paste operations function. If the mode is Insert, the pasted data is inserted at
+					the current cursor position. If the mode is Overwrite, the pasted data overwrites the data from the cursor position and on, as needed.    
+				</para>
+				
+				<para>
+					Pasted data can originate from &app; itself or some other application. 
+					&app; can accept data in two formats:
+					<variablelist>
+						<varlistentry>
+							<term>Raw bytes</term>
+							<listitem>
+								<para>
+									This is the format &app; uses when interacting with itself (for example when you copy from a tab and paste into another).
+									External applications that offer raw bytes are usually other hex editors. 
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term>UTF-8 string</term>
+							<listitem>
+								<para>
+									&app; can accept data as a UTF-8 string (for example, from a text editor). It tries to parse the data and convert it to raw bytes 
+									according to the type of the area that currently has the focus. For example if the focus is in an octal area, &app; will try to parse 
+									the string as a sequence of bytes represented in octal format. If the parse fails, the data will be inserted as UTF-8 text (as if they 
+									had been pasted into a text area).
+								</para>
+							</listitem>
+						</varlistentry>
+					</variablelist>
+				</para>
+			</section>
+		</section>
+		
+		<section id="bless-usage-edit-undo">
+			<title>Undo/Redo operations</title>
+			<para>To undo previous actions use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>Z</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Undo</guimenuitem>
+					</menuchoice>.
+				</para>
+				
+				<para>To redo previously undone actions use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Shift</keycap>
+								<keycap>Ctrl</keycap>
+								<keycap>Z</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Redo</guimenuitem>
+					</menuchoice>.
+				</para>
+		</section>
+		
+	</section>
+	
+	<section id="bless-usage-search">
+		<title>Searching and Replacing in files</title>
+		<section id="bless-usage-search-find">
+			<title>Searching in files</title>
+			<para>To access the Search Bar use
+			<menuchoice>
+				<shortcut>
+					<keycombo>
+						<keycap>Ctrl</keycap>
+						<keycap>F</keycap>
+					</keycombo>
+				</shortcut>	
+				<guisubmenu>Search</guisubmenu>
+				<guimenuitem>Find</guimenuitem>
+			</menuchoice>.
+			</para>
+			<figure>
+				<title>Search Bar</title>
+				<screenshot>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="figures/bless_search_find.png" format="PNG"/>
+						</imageobject>
+						<textobject>
+							<phrase>Search Bar</phrase>
+						</textobject>
+					</mediaobject>
+				</screenshot>
+			</figure>
+			<para>
+				To search for a sequence of bytes:
+				<orderedlist>
+					<listitem>
+						<para>Type the sequence in the <guilabel>Search for</guilabel> text entry (in the desired format).</para>
+					</listitem>
+					<listitem>
+						<para>Select the format of the typed sequence from the <guilabel>Interpret as</guilabel> option menu.</para>
+					</listitem>
+					<listitem>
+						<para>
+							Press the <guibutton>Find Next</guibutton> or <guibutton>Find Previous</guibutton> button. If a match is found 
+							it will be highlighted in the Data View, otherwise an alert informing you that no match was found will be shown.
+						</para>
+					</listitem>
+				</orderedlist>
+			</para>
+			<para>
+				To hide the Search Bar press the <keycap>Escape</keycap> key while the bar has the focus or click on the close button located
+				at the right side of the bar.
+			</para>
+			<tip>
+				<para>
+					You can use the 
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>F3</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Search</guisubmenu>
+						<guimenuitem>Find Next</guimenuitem>
+					</menuchoice> and
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Shift</keycap>
+								<keycap>F3</keycap>
+							</keycombo>
+						</shortcut>	
+						<guisubmenu>Search</guisubmenu>
+						<guimenuitem>Find Previous</guimenuitem>
+					</menuchoice> 
+					commands to search without re-opening the Search Bar.
+				</para>
+			</tip>
+		</section>
+		<section id="bless-usage-search-replace">
+			<title>Replacing in files</title>
+			<para>To access the Replace Bar use
+			<menuchoice>
+				<shortcut>
+					<keycombo>
+						<keycap>Ctrl</keycap>
+						<keycap>R</keycap>
+					</keycombo>
+				</shortcut>	
+				<guisubmenu>Search</guisubmenu>
+				<guimenuitem>Replace</guimenuitem>
+			</menuchoice>.
+			</para>
+			<figure>
+				<title>Replace Bar</title>
+				<screenshot>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="figures/bless_search_replace.png" format="PNG"/>
+						</imageobject>
+						<textobject>
+							<phrase>Replace Bar</phrase>
+						</textobject>
+					</mediaobject>
+				</screenshot>
+			</figure>
+			<para>
+				To replace a sequence of bytes with another sequence of bytes:
+				<orderedlist>
+					<listitem>
+						<para>Type the search sequence in the <guilabel>Search for</guilabel> text entry (in the desired format).</para>
+					</listitem>
+					<listitem>
+						<para>Select the format of the search sequence from the <emphasis>first</emphasis> <guilabel>Interpret as</guilabel> option menu.</para>
+					</listitem>
+					<listitem>
+						<para>Type the replace sequence in the <guilabel>Replace with</guilabel> text entry (in the desired format).</para>
+					</listitem>
+					<listitem>
+						<para>Select the format of the replace sequence from the <emphasis>second</emphasis> <guilabel>Interpret as</guilabel> option menu.</para>
+					</listitem>
+					<listitem>
+						<para>
+							Press the <guibutton>Replace</guibutton> button to replace the current match, the <guibutton>Replace All</guibutton> to replace all matches
+							in the file or the <guibutton>Find</guibutton> button to skip the current match and go to the next match. If a match is found 
+							it will be highlighted in the Data View, otherwise an alert informing you that no match was found will be shown.
+						</para>
+					</listitem>
+				</orderedlist>
+			</para>
+			<para>
+				To hide the Replace Bar press the <keycap>Escape</keycap> key while the bar has the focus or click on the close button located
+				at the right side of the bar.
+			</para>
+			<tip>
+				<para>
+					To delete the matched search sequences, leave the <guilabel>Replace with</guilabel> text entry <emphasis>completely blank</emphasis>.
+				</para>
+			</tip>
+		</section>
+	</section>
+</chapter>
+
+<chapter id="bless-customizing">
+	<title>Customizing &app;</title>
+	
+	<section id="bless-customizing-config">
+	<title>Configuration Files</title>
+	<para>
+		&app; keeps its configuration files under <filename class='directory'>$XDG_CONFIG_HOME/bless</filename> (usually $HOME/.config/bless)
+		in accordance to the XDG specification. This directory contains the following files and directories
+	</para>
+	
+	<variablelist>
+	<title></title>
+		<varlistentry>
+			<term>history.xml</term>
+			<listitem>
+				<para>
+					Keeps a list of recently opened files.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>last.session</term>
+			<listitem>
+				<para>
+					Keeps the state of &app; the last time it was closed. This includes the open files,
+					the file offset and cursor offset in each file, the active file, the window dimensions etc.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>preferences.xml</term>
+			<listitem>
+				<para>
+					Keeps the user preferences.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>layouts/</term>
+			<listitem>
+				<para>
+					This directory holds the layout description files for each user. 
+					See <xref linkend="bless-customizing-layout"/>.
+				</para>
+			</listitem>
+		</varlistentry>
+	</variablelist>
+	
+	</section>
+	
+	<section id="bless-customizing-preferences">
+	<title>Preferences</title>
+	<para>
+		You can edit the user preferences in the Preferences dialog. It can be
+		accessed by using 
+		<menuchoice>
+			<guisubmenu>Edit</guisubmenu>
+			<guimenuitem>Preferences...</guimenuitem>
+		</menuchoice>.
+	</para>
+		<section id="bless-customizing-preferences-general">
+		<title>General Preferences</title>
+		<figure>
+			<title>General Preferences</title>
+			<screenshot><mediaobject>
+				<imageobject>
+					<imagedata fileref="figures/bless_preferences_general.png" format="PNG"/>
+				</imageobject>
+				<textobject>
+					<phrase>General Preferences</phrase>
+				</textobject>
+			</mediaobject></screenshot>
+		</figure>
+		<variablelist>
+		<title>Default Layout</title>
+			<varlistentry>
+				<term>Layout File</term>
+				<listitem>
+					<para>
+						The layout file to use when opening a new tab. If it is left empty a default
+						will be used.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Use layout of currently active tab if any</term>
+				<listitem>
+					<para>
+						If it is checked, &app; will try to use the layout of the currently active tab for new tabs.
+						If there are no open tabs, &app; will use the file from the "Layout File" preference.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		<variablelist>
+		<title>Undo</title>
+			<varlistentry>
+				<term>Limit to X actions</term>
+				<listitem>
+					<para>
+						Limit the number of actions that can be undone to X actions.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Unlimited Undo</term>
+				<listitem>
+					<para>
+						Don't limit the number of actions that can be undone.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		<variablelist>
+		<title>Misc</title>
+			<varlistentry>
+				<term>Highlight matches of selection pattern</term>
+				<listitem>
+					<para>
+						Whether patterns matching the selected range of data will be highlighted in the Data View.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Default edit mode</term>
+				<listitem>
+					<para>
+						The edit mode new tabs will be placed in (Insert or Overwrite).
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		
+		</section>
+		
+		
+		<section id="bless-customizing-preferences-session">
+		<title>Session Preferences</title>
+		<figure>
+			<title>Session Preferences</title>
+			<screenshot><mediaobject>
+				<imageobject>
+					<imagedata fileref="figures/bless_preferences_session.png" format="PNG"/>
+				</imageobject>
+				<textobject>
+					<phrase>Session Preferences</phrase>
+				</textobject>
+			</mediaobject></screenshot>
+		</figure>
+		<variablelist>
+		<title></title>
+			<varlistentry>
+				<term>Load previous session on startup</term>
+				<listitem>
+					<para>
+						Whether the previous session (the state of Bless at the time of the last quit)
+						should be loaded on startup. The state includes all open files, the focused tab,
+						the focused area in each file, the cursor position in each file and the window geometry. 
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Ask before loading session</term>
+				<listitem>
+					<para>
+						Ask before loading session on startup.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Remember cursor position</term>
+				<listitem>
+					<para>
+						Whether &app; should remember and restore the position of the cursor in
+						each of the loaded files when loading the previous session.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Remember window geometry</term>
+				<listitem>
+					<para>
+						Whether &app; should remember and restore the window size when loading the previous session.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</section>
+	</section>
+	
+	<section id="bless-customizing-layout">
+	<title>Layout Files</title>
+	
+	<para>
+		The way &app; presents the data is highly customizable. The configuration is done 
+		through layout description files. Currently there is no way to graphically edit the
+		layouts but one is planned for a later version.
+	</para>
+	
+	<section id="bless-customizing-layout-selecting">
+		<title>Selecting a layout</title>
+		<para>
+			&app; searches for layout description files in the <filename class='directory'>$XDG_CONFIG_HOME/bless/layouts</filename> directory
+			(usually $HOME/.config/bless/layouts). You can preview and select the available layouts with the layout 
+			selection dialog, which can be accessed by using
+			<menuchoice>
+			<guisubmenu>View</guisubmenu>
+			<guimenuitem>Layouts</guimenuitem>
+			</menuchoice>.
+		</para>
+	</section>
+	
+	<section id="bless-customizing-layout-creating">
+		<title>Creating Layout Files</title>
+		<para>
+			Layout description files are XML files ending with the .layout suffix. They consist of 
+			the &lt;layout&gt; tag which contains a series of &lt;area&gt; tags that describe each 
+			area in the layout. The &lt;area&gt; tag takes one attribute, <emphasis>type</emphasis>, which defines 
+			the type of the area. The valid values for <emphasis>type</emphasis> are:
+		</para>
+		<informaltable>
+			<tgroup cols="2">
+			<thead>
+				<row>
+					<entry>Type</entry>
+					<entry>Description</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>hexadecimal</entry>
+					<entry>Displays the data in hexadecimal format.</entry>
+				</row>
+				<row>
+					<entry>decimal</entry>
+					<entry>Displays the data in decimal format.</entry>
+				</row>
+				<row>
+					<entry>octal</entry>
+					<entry>Displays the data in octal format.</entry>
+				</row>
+				<row>
+					<entry>binary</entry>
+					<entry>Displays the data in binary format.</entry>
+				</row>
+				<row>
+					<entry>ascii</entry>
+					<entry>Displays the data in ascii format.</entry>
+				</row>
+				<row>
+					<entry>offset</entry>
+					<entry>Displays the data offset.</entry>
+				</row>
+				<row>
+					<entry>separator</entry>
+					<entry>A vertical line that visually separates areas.</entry>
+				</row>
+			</tbody>
+			</tgroup>
+		</informaltable>
+		<para>For example, the following simple layout file:</para>
+		<programlisting>&lt;layout&gt;
+	&lt;area type="offset"&gt;&lt;/area&gt;
+	&lt;area type="hexadecimal"&gt;&lt;/area&gt;
+	&lt;area type="offset"&gt;&lt;/area&gt;
+	&lt;area type="separator"&gt;&lt;/area&gt;
+	&lt;area type="ascii"&gt;&lt;/area&gt;
+&lt;/layout&gt;</programlisting>
+	<para>produces the standard offset-hex-ascii view with default colors:</para>
+	<figure>
+		<title>Standard offset-hex-ascii view</title>
+		<screenshot><mediaobject>
+			<imageobject>
+				<imagedata fileref="figures/bless_layout_oha.png" format="PNG"/>
+			</imageobject>
+			<textobject>
+				<phrase>Standard offset-hex-ascii view</phrase>
+			</textobject>
+		</mediaobject></screenshot>
+	</figure>
+	<para>
+		Each area may include additional options about how to display the data. Some options 
+		are available to all areas whereas others are area-specific. The options that aren't
+		explicitly defined assume their default values. Also if an option is specified for an 
+		area that doesn't support it, the option is just ignored.
+	</para>
+		<informaltable>
+		<tgroup cols="4">
+			<thead>
+				<row>
+					<entry>Option</entry>
+					<entry>Values</entry>
+					<entry>Description</entry>
+					<entry>Areas</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>display</entry>
+					<entry>see below</entry>
+					<entry>The fonts and colors that should be used for the display.</entry>
+					<entry>all</entry>
+				</row>
+				<row>
+					<entry>case</entry>
+					<entry>upper|lower</entry>
+					<entry>Whether to display hexadecimal values using lowercase or uppercase.</entry>
+					<entry>offset, hexadecimal</entry>
+				</row>
+				<row>
+					<entry>grouping</entry>
+					<entry>#int</entry>
+					<entry>The number of bytes that should be grouped together in each column.</entry>
+					<entry>hexadecimal, decimal, octal, binary</entry>
+				</row>
+				<row>
+					<entry>bpr</entry>
+					<entry>#int</entry>
+					<entry>The number of bytes on each row in the area (see below for more information)</entry>
+					<entry>hexadecimal, decimal, octal, binary, ascii</entry>
+				</row>
+				<row>
+					<entry>bytes</entry>
+					<entry>#int</entry>
+					<entry>The number of bytes which will be used to display offsets (default 4)</entry>
+					<entry>offset</entry>
+				</row>
+			</tbody>
+			</tgroup>
+		</informaltable>			
+		<section id="bless-customizing-layout-creating-bpr">
+			<title>The bpr option</title>
+			<para>
+				The &lt;bpr&gt; (bytes per row) option sets the (maximum) number of bytes that each row in an area can have. If it is not
+				specified, the number of bytes on each row changes dynamically in order to fill the whole available width. If it is specified 
+				in at least one area in the layout all the areas in the layout conform to the specified restriction. In case of a conflict, for example 
+				when two areas specify different bprs, the smallest value is used. Finally, if there is a conflict between bpr and grouping values, 
+				the highest value that conforms to the grouping and is below the bpr is used (eg if bpr=5 and grouping=2 the bytes per row will
+				be 4).
+			</para>
+		</section>
+		
+		<section id="bless-customizing-layout-creating-display">
+			<title>The display option</title>
+			<para>
+				The &lt;display&gt; option is the most complicated of the lot and deserves additional explanation.
+			</para>
+			<para>
+				Bless distinguishes between even and odd rows, and even and odd columns. You can choose
+				how to color each of the above items thus creating a visual result tailored to your needs. This
+ 				is achieved by using the &lt;display&gt; tag. Note that the first row and column are numbered as 0
+				and are therefore considered even.
+			</para>
+			<para>
+				A &lt;display&gt; tag may contain a &lt;evenrow&gt; and a &lt;oddrow&gt; tag which describe how 
+				the even and odd rows will look like. Each of the &lt;evenrow&gt; and &lt;oddrow&gt; tags may     
+				contain a &lt;evencolumn&gt;, an &lt;oddcolumn&gt;, a &lt;selectedcolumn&gt; and a 
+				&lt;patternmatchcolumn&gt; tag. The first two describe the appearance of the respective columns
+				under normal conditions (no highlighting). The &lt;selectedcolumn&gt; tag 
+				describes the appearance of selected bytes and the &lt;patternmatchcolumn&gt; tag the appearance
+				of the highlighted bytes that match the selected bytes (see <xref linkend="bless-usage-edit-basic-select"/>).
+				The description for all the above is accomplished by using the &lt;foreground&gt; and 
+				&lt;background&gt; tags which specify the foreground and background colors to use.
+			</para>
+			<para>
+				The colors can be specified either by name (eg dark blue) or by an RGB triad (eg #ff004e).
+			</para>
+			<figure>
+				<title>Display tag hierarchy</title>
+				<screenshot><mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/bless_display_tag.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<phrase>Display tag hierarchy</phrase>
+					</textobject>
+				</mediaobject></screenshot>
+			</figure>
+			<para>
+				An example:
+			</para>
+<programlisting>
+&lt;layout&gt;
+    &lt;area type="offset"&gt;
+        &lt;display&gt;
+            &lt;evenrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;foreground&gt;dark red&lt;/foreground&gt;
+                &lt;/evencolumn&gt;
+            &lt;/evenrow&gt;
+            &lt;oddrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;foreground&gt;dark red&lt;/foreground&gt;
+                &lt;/evencolumn&gt;
+            &lt;/oddrow&gt;
+        &lt;/display&gt;                        
+    &lt;/area&gt;
+    
+    &lt;area type="separator"&gt;
+        &lt;display&gt;
+            &lt;evenrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;foreground&gt;dark green&lt;/foreground&gt;
+                    &lt;background&gt;white&lt;/background&gt;
+                &lt;/evencolumn&gt;
+            &lt;/evenrow&gt;
+        &lt;/display&gt;                        
+    &lt;/area&gt;
+    
+    &lt;area type="hexadecimal"&gt;
+        &lt;grouping&gt;2&lt;/grouping&gt;
+        &lt;case&gt;upper&lt;/case&gt;
+        &lt;display&gt;
+            &lt;evenrow&gt;
+                &lt;selectedcolumn&gt;
+                    &lt;foreground&gt;white&lt;/foreground&gt;
+                    &lt;background&gt;#8faec8&lt;/background&gt;
+                &lt;/selectedcolumn&gt;
+            &lt;/evenrow&gt;    
+            &lt;oddrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;background&gt;#eeeeee&lt;/background&gt;
+                &lt;/evencolumn&gt;
+                &lt;oddcolumn&gt;
+                    &lt;background&gt;#eeeeee&lt;/background&gt;
+                &lt;/oddcolumn&gt;
+                &lt;selectedcolumn&gt;
+                    &lt;foreground&gt;white&lt;/foreground&gt;
+                    &lt;background&gt;#7b96ac&lt;/background&gt;
+                &lt;/selectedcolumn&gt;
+            &lt;/oddrow&gt;    
+        &lt;/display&gt;    
+    &lt;/area&gt;
+
+    &lt;area type="separator"&gt;
+        &lt;display&gt;
+            &lt;evenrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;foreground&gt;dark green&lt;/foreground&gt;
+                    &lt;background&gt;white&lt;/background&gt;
+                &lt;/evencolumn&gt;
+            &lt;/evenrow&gt;
+        &lt;/display&gt;                        
+    &lt;/area&gt;
+    
+    &lt;area type="decimal"&gt;
+    &lt;/area&gt;
+
+    &lt;area type="separator"&gt;
+        &lt;display&gt;
+            &lt;evenrow&gt;
+                &lt;evencolumn&gt;
+                    &lt;foreground&gt;dark green&lt;/foreground&gt;
+                    &lt;background&gt;white&lt;/background&gt;
+                &lt;/evencolumn&gt;
+            &lt;/evenrow&gt;
+        &lt;/display&gt;                        
+    &lt;/area&gt;
+
+    &lt;area type="binary"&gt;
+    &lt;/area&gt;
+&lt;/layout&gt;
+</programlisting>
+			<para>The result is:</para>
+			<figure>
+					<title>Example layout</title>
+					<screenshot><mediaobject>
+						<imageobject>
+							<imagedata fileref="figures/bless_layout_example1.png" format="PNG"/>
+						</imageobject>
+						<textobject>
+							<phrase>Example layout screenshot</phrase>
+						</textobject>
+					</mediaobject></screenshot>
+			</figure>
+		</section>
+		
+		<note><para>
+			Not all font options are used in all areas. The hexadecimal, decimal, octal and binary areas use
+			all options. The ascii, offset and separator areas do not use the &lt;oddcolumn&gt; tag.
+		</para></note>
+		<note><para>
+			The */evencolumn/background colors are considered the primary background colors for 
+			their respective row. They are used to paint all parts of the row that are not otherwise painted 
+			(eg space between columns). The evenrow/evencolumn/background color is also considered the main
+			background color of the area and is used to paint the unused parts of the area.	
+		</para></note>
+
+
+	</section>
+	
+	</section>
+</chapter>
+<!-- ============= Bugs ================================== -->
+<!-- This section is optional and is commented out by default. 
+		 You can use it to describe known bugs and limitations of the 
+		program if there are any - please be frank and list all
+		 problems you know of. 
+	
+	<chapter id="mayapp-bugs">
+	<title>Known Bugs and Limitations</title>
+	<para> </para>
+ </chapter>
+-->
+<!-- ============= About ================================== -->
+<!-- This section contains info about the program (not docs), such as
+			author's name(s), web page, license, feedback address. This
+			section is optional: primary place for this info is "About.." box of
+			the program. However, if you do wish to include this info in the
+			manual, this is the place to put it. Alternatively, you can put this information in the title page.-->
+	<chapter id="bless-about"> 
+		<title>About &app;</title> 
+		<para> &app; was written by Alexandros Frantzis
+			(<email>alf82@freemail.gr</email>). To find more information about
+			&app;, please visit the 
+			<ulink url="http://home.gna.org/bless" type="http">Bless Web page</ulink>.
+		</para>
+
+		<para> This program is distributed under the terms of the GNU
+			General Public license as published by the Free Software
+			Foundation; either version 2 of the License, or (at your option)
+			any later version. A copy of this license can be found at this
+			<ulink url="ghelp:gpl" type="help">link</ulink>, or in the file
+			COPYING included with the source code of this program. </para>
+
+	</chapter> 
+</book>
