@@ -24,13 +24,13 @@ namespace Bless.Buffers {
 ///<summary>Represents a portion of a buffer</summary>
 public class Segment {
 
-	Buffer m_buffer;
+	IBuffer m_buffer;
 
 	long m_start;
 	long m_end;
 
 	/// <summary>Create a segment of a buffer</summary>
-	public Segment(Buffer buffer, long start, long end)
+	public Segment(IBuffer buffer, long start, long end)
 	{
 		m_buffer=buffer;
 		m_start=start;
@@ -67,7 +67,7 @@ public class Segment {
 		get {return m_end-m_start+1;}	
 	}
 
-	public Buffer Buffer {
+	public IBuffer Buffer {
 		get { return m_buffer;}
 	}
 	

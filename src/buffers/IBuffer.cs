@@ -22,19 +22,19 @@
 namespace Bless.Buffers {
 
 
-public abstract class Buffer {
+public interface IBuffer {
 
-	public abstract void Put(long pos, byte[] data) ;
-	public abstract  int Get(byte[] data, long pos, int len);
-	public abstract void Append(byte[] data);
-	public abstract void Append(byte data);
+	void Insert(long pos, byte[] data) ;
+	int Read(byte[] data, long pos, int len);
+	void Append(byte[] data);
+	void Append(byte data);
 	
-	public abstract byte this[long index] {
+	byte this[long index] {
 		set;
 		get;
 	}
 	
-	public abstract long Size {
+	long Size {
 		get;
 	}
 }

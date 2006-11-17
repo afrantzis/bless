@@ -18,28 +18,28 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 namespace Bless.Buffers
 {
 
-public class ChangeBuffer : Buffer  {
+public class ChangeBuffer : IBuffer  {
 
-	ArrayList data;
+	List<byte> data;
 	
 	public ChangeBuffer() 
 	{
-		data = new ArrayList();
+		data = new List<byte>();
 	}
 	
-	public override void Put(long pos, byte[] d) 
+	public void Insert(long pos, byte[] d) 
 	{
 		//if (pos < data.Count && pos+d.Length < data.Count)
-			data.SetRange((int)pos, d);
+			data.InsertRange((int)pos, d);
 	}
 	
-	public override int Get(byte[] ba, long pos, int len) 
+	public int Read(byte[] ba, long pos, int len) 
 	{
 		if (pos >= data.Count || pos+len > data.Count)
 			return 0;
@@ -47,17 +47,17 @@ public class ChangeBuffer : Buffer  {
 		return len;
 	}
 	
-	public override void Append(byte[] d) 
+	public void Append(byte[] d) 
 	{ 
 			data.AddRange(d);
 	}
 	
-	public override void Append(byte b) 
+	public void Append(byte b) 
 	{
 			data.Add(b);		
 	}
 	
-	public override byte this[long index] {
+	public byte this[long index] {
 		set {
 			if (index >= data.Count)
 				return;
@@ -70,7 +70,7 @@ public class ChangeBuffer : Buffer  {
 		}
 	}
 
-	public override long Size {
+	public long Size {
 		get { return data.Count; }
 	}
 }

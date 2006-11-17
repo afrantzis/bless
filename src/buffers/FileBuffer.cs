@@ -23,7 +23,7 @@ using System;
 
 namespace Bless.Buffers {
 
-public class FileBuffer: Buffer {
+public class FileBuffer: IBuffer {
 
 	long winOffset;
 	int winOccupied;
@@ -45,9 +45,9 @@ public class FileBuffer: Buffer {
 		return (pos >= winOffset && pos < winOffset + winOccupied);
 	}
 	
-	public override void Put(long pos, byte[] data) { /*read only buffer*/}
+	public void Insert(long pos, byte[] data) { /*read only buffer*/}
 	
-	public override int Get(byte[] ba, long pos, int len) 
+	public int Read(byte[] ba, long pos, int len) 
 	{
 		// bounds checking
 		if (pos >= FileLength || pos<0)
@@ -65,11 +65,11 @@ public class FileBuffer: Buffer {
 	
 	public int GetIndex(long pos, int len) { return 0;}
 	
-	public override void Append(byte[] data) { /*read only buffer*/}
+	public void Append(byte[] data) { /*read only buffer*/}
 	
-	public override void Append(byte data){ /*read only buffer*/}
+	public void Append(byte data){ /*read only buffer*/}
 	
-	public override byte this[long index] {
+	public byte this[long index] {
 		set {/*read only buffer*/ }
 		get {
 			
@@ -90,7 +90,7 @@ public class FileBuffer: Buffer {
 	}
 	
 
-	public override long Size {
+	public long Size {
 		get { return FileLength; }
 	}
 	

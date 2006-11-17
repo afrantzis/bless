@@ -132,7 +132,7 @@ public class SaveAsOperation : ThreadedAsyncOperation
 		
 			// for every full block
 			for (i=0;i<nBlocks;i++) {
-				s.Buffer.Get(baTemp, s.Start+i*blockSize, blockSize);
+				s.Buffer.Read(baTemp, s.Start+i*blockSize, blockSize);
 				fs.Write(baTemp, 0, blockSize);
 				bytesSaved=(i+1)*blockSize;
 				
@@ -142,7 +142,7 @@ public class SaveAsOperation : ThreadedAsyncOperation
 		
 			// if last non-full block is not empty
 			if (last!=0 && !cancelled) {
-				s.Buffer.Get(baTemp, s.Start+i*blockSize, last);
+				s.Buffer.Read(baTemp, s.Start+i*blockSize, last);
 				fs.Write(baTemp, 0, last);
 			}
 					

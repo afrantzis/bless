@@ -26,7 +26,7 @@ namespace Bless.Buffers
 ///<summary>
 /// A simple and lightweight buffer implementing the Buffer interface 
 ///</summary>
-public class SimpleBuffer : Buffer
+public class SimpleBuffer : IBuffer
 {
 	byte[] data;
 	
@@ -35,18 +35,18 @@ public class SimpleBuffer : Buffer
 		data=new byte[0];
 	}
 	
-	public override void Put(long pos, byte[] d) 
+	public void Insert(long pos, byte[] d) 
 	{
 		throw new NotImplementedException();
 	}
 	
-	public override int Get(byte[] ba, long pos, int len) 
+	public int Read(byte[] ba, long pos, int len) 
 	{
 		Array.Copy(data, pos, ba, 0, len);
 		return len;
 	}
 	
-	public override void Append(byte[] d) 
+	public void Append(byte[] d) 
 	{
 		if (data.Length>0) {
 			byte[] tmp=new byte[data.LongLength+d.LongLength];
@@ -59,12 +59,12 @@ public class SimpleBuffer : Buffer
 			data=d;
 	}
 	
-	public override void Append(byte b) 
+	public void Append(byte b) 
 	{
 			throw new NotImplementedException();	
 	}
 	
-	public override byte this[long index] {
+	public byte this[long index] {
 		set {
 			if (index >= data.LongLength)
 				return;
@@ -78,7 +78,7 @@ public class SimpleBuffer : Buffer
 		}
 	}
 
-	public override long Size {
+	public long Size {
 		get { return data.LongLength; }
 	}
 	

@@ -33,7 +33,7 @@ namespace Bless.Buffers {
 /// It supports undo-redo and can easily handle large files.
 /// Editing is also very cheap.
 ///</summary>
-public class ByteBuffer {
+public class ByteBuffer : IBuffer {
 
 	internal FileBuffer	fileBuf;
 	internal SegmentCollection segCol;
@@ -613,6 +613,16 @@ public class ByteBuffer {
 	private void OnFileChanged(object source, FileSystemEventArgs e)
 	{
 		EmitFileChanged();
+	}
+	
+	public int Read(byte[] data, long pos, int len)
+	{
+		throw new NotImplementedException();
+	}
+	
+	public void Append(byte b)
+	{
+		throw new NotImplementedException();
 	}
 	
 	public byte this[long index] {
