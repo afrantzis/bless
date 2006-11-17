@@ -71,7 +71,7 @@ public class ModuleBuilder
 		//System.Console.WriteLine("mcs {0}", sb.ToString());
 		System.Console.WriteLine(">> Building module {0}...", module.Name);
 		
-		Process buildProcess=Process.Start("mcs", sb.ToString());
+		Process buildProcess=Process.Start("gmcs", sb.ToString());
 		buildProcess.WaitForExit();
 		
 		if (buildProcess.ExitCode==0) {
