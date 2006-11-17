@@ -5,7 +5,7 @@
 <module name="Bless.Buffers">
 	<depends>Bless.Util</depends>
 	<depends>Bless.Tools</depends>
-	<dir>ByteBuffer</dir>
+	<dir>buffers</dir>
 </module>
 
 <module name="Bless.Util">

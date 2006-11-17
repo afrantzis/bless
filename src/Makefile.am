@@ -1,6 +1,6 @@
-#SUBDIRS= ByteBuffer gui tools util
+#SUBDIRS= buffers gui tools util
 
-DIST_SUBDIRS = ByteBuffer gui tools util plugins
+DIST_SUBDIRS = buffers gui tools util plugins
 
 EXTRA_DIST= bless.mi
 

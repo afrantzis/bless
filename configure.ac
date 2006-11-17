@@ -1,12 +1,12 @@
 #                                               -*- Autoconf -*-
 AC_PREREQ(2.59)
 AC_INIT([bless], [0.4.9], [alf82@freemail.gr])
-AC_CONFIG_SRCDIR([src/ByteBuffer/ByteBuffer.cs])
+AC_CONFIG_SRCDIR([src/buffers/ByteBuffer.cs])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PATH_PROG(PKG_CONFIG,pkg-config)
-AC_PATH_PROG(MCS,mcs)
+AC_PATH_PROG(MCS,gmcs)
 AC_PATH_PROG(MONO_PROGRAM, mono)
 
 
@@ -70,7 +70,7 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  doc/developer/Makefile
                  doc/user/Makefile
-                 src/ByteBuffer/Makefile
+                 src/buffers/Makefile
                  src/Makefile
                  src/gui/Makefile
                  src/gui/areas/Makefile
@@ -82,7 +82,7 @@ AC_CONFIG_FILES([Makefile
                  src/util/Makefile
 		 src/plugins/Makefile
                  tests/Makefile
-                 tests/ByteBuffer/Makefile
+                 tests/buffers/Makefile
                  tests/util/Makefile
                  src/bless-script
                  bless-script])
