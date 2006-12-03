@@ -8,6 +8,9 @@ class MainClass
 	{
 		ModuleTree mt=new ModuleTree("bless.mi");
 		ModuleBuilder mb=new ModuleBuilder(mt);
-		mb.Build("Bless");
+		foreach (string moduleName in args) {
+			if (mb.Build(moduleName) == BuildStatus.Failed)
+				System.Console.WriteLine("Build of module '{0}' failed!", moduleName);
+		}
 	}
 }

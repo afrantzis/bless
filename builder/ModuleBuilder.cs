@@ -5,10 +5,10 @@ using System.IO;
 
 namespace BlessBuilder {
 
+public enum BuildStatus { UpToDate, Rebuilt, Failed };
+
 public class ModuleBuilder
-{
-	public enum BuildStatus { UpToDate, Rebuilt, Failed };
-	
+{	
 	private ModuleTree moduleTree;
 	
 	public ModuleBuilder(ModuleTree moduleTree)
@@ -49,7 +49,7 @@ public class ModuleBuilder
 		}
 		
 		if (module.UpToDate && status==BuildStatus.UpToDate) {
-			//System.Console.WriteLine("Already Built");
+			//System.Console.WriteLine("{0} Already Built", module.Name);
 			return BuildStatus.UpToDate;
 		}
 		
