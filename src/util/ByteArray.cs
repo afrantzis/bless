@@ -34,7 +34,7 @@ public class ByteArray
 	{
 		int i=0;
 		int len=s.Length;
-		byte[] ba=new byte[(len/BaseConverter.MinDigits[baseNum])+1];
+		byte[] ba=new byte[(len/BaseConverter.DefaultMinDigits[baseNum])+1];
 		int j=0;
 		
 		// ignore leading whitespace
@@ -42,7 +42,7 @@ public class ByteArray
 		
 		while (i < len) {
 			int k=1;
-			while (i+k < len &&  s[i+k]!=' ' && k < BaseConverter.MinDigits[baseNum]) k++;
+			while (i+k < len &&  s[i+k]!=' ' && k < BaseConverter.DefaultMinDigits[baseNum]) k++;
 			
 			ba[j++]=(byte)BaseConverter.ConvertToNum(s, i, i+k-1, baseNum);
 			
@@ -63,7 +63,7 @@ public class ByteArray
 		if (ba.Length==0)
 			return string.Empty;
 		
-		StringBuilder sb=new StringBuilder(ba.Length*(BaseConverter.MinDigits[baseNum]+1));
+		StringBuilder sb=new StringBuilder(ba.Length*(BaseConverter.DefaultMinDigits[baseNum]+1));
 		
 		foreach(byte b in ba) {
 			sb.Append(BaseConverter.ConvertToString(b, baseNum));

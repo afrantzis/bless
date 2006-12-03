@@ -26,7 +26,7 @@ namespace Bless.Util {
 ///<summary>Convert strings to numbers and vice-versa using a specified base</summary>
 public class BaseConverter
 {
-	static public int[] MinDigits=new int[]{0, 0, 8, 6, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2};
+	static public int[] DefaultMinDigits=new int[]{0, 0, 8, 6, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2};
 	
 	// Don't allow instantiation
 	private BaseConverter() { }
@@ -34,11 +34,11 @@ public class BaseConverter
 	///<summary>Convinience method</summary>
 	static public string ConvertToString(long num, int b)
 	{
-		return ConvertToString(num, b, false, true);
+		return ConvertToString(num, b, false, 0);
 	}
-	
+		
 	///<summary>Convert a number to string using the specified base</summary>
-	static public string ConvertToString(long num, int b, bool prependPrefix, bool useMinDigits)
+	static public string ConvertToString(long num, int b, bool prependPrefix, int minDigits)
 	{
 		// make sure base is valid
 		if (b<2 || b>16)
@@ -55,16 +55,13 @@ public class BaseConverter
 			num=num/b;
 		}
 		
-		// at least one digit should be visible
-		// even if we don't useMinDigits
-		int minDigit=1;
-		
-		// pad number with zeroes, until it reaches a minimum length
+		// if minDigits == 0 use a minimum number of digits
 		// which depends on the base used
-		if (useMinDigits)
-			minDigit=MinDigits[b];
+		if (minDigits == 0)
+			minDigits = DefaultMinDigits[b];
 		
-		while (sb.Length < minDigit)
+		// pad number with zeroes, until it reaches the minimum length
+		while (sb.Length < minDigits)
 			sb.Insert(0, '0');
 			
 		// prepend a prefix to mark the number base

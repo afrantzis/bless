@@ -398,8 +398,8 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		long coffset=dv.CursorOffset;
 		OffsetStatusbar.Pop(0);
 		
-		string coffsetString=BaseConverter.ConvertToString(coffset, numberBase, true, false); 
-		string sizeString=BaseConverter.ConvertToString(dv.Buffer.Size-1, numberBase, true, false);
+		string coffsetString=BaseConverter.ConvertToString(coffset, numberBase, true, 1); 
+		string sizeString=BaseConverter.ConvertToString(dv.Buffer.Size-1, numberBase, true, 1);
 		
 		string str=string.Format("Offset: {0} / {1}", coffsetString, sizeString);
 		OffsetStatusbar.Push(0, str);
@@ -426,9 +426,9 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		if (sel.IsEmpty()==true)
 			str="Selection: None";
 		else {
-			string startString=BaseConverter.ConvertToString(sel.Start, numberBase, true, false);
-			string endString=BaseConverter.ConvertToString(sel.End, numberBase, true, false);
-			string sizeString=BaseConverter.ConvertToString(sel.Size, numberBase, true, false);
+			string startString=BaseConverter.ConvertToString(sel.Start, numberBase, true, 1);
+			string endString=BaseConverter.ConvertToString(sel.End, numberBase, true, 1);
+			string sizeString=BaseConverter.ConvertToString(sel.Size, numberBase, true, 1);
 			
 			str=string.Format("Selection: {0} to {1} ({2} bytes)", startString, endString, sizeString);
 		}
