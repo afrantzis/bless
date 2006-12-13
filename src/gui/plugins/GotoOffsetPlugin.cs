@@ -53,6 +53,7 @@ public class GotoOffsetPlugin : GuiPlugin
 		name="GotoOffset";
 		author="Alexandros Frantzis";
 		description="Adds a firefox like go to offset bar";
+		loadAfter.Add("FindReplace");
 	}
 	
 	public override bool Load()

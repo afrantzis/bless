@@ -18,6 +18,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using System;
+using System.Collections.Generic;
 
 namespace Bless.Plugins
 {
@@ -28,9 +29,13 @@ public class Plugin
 	protected string author;
 	protected string description;
 	protected bool loaded;
+	protected List<string> dependencies;
+	protected List<string> loadAfter;
 	
 	public Plugin()
 	{
+		dependencies = new List<string>();
+		loadAfter = new List<string>();
 	}
 	
 	public virtual bool Load()
@@ -60,6 +65,14 @@ public class Plugin
 	
 	public bool Loaded {
 		get { return loaded; }
+	}
+	
+	public IList<string> Dependencies {
+		get { return dependencies; }
+	}
+	
+	public IList<string> LoadAfter {
+		get { return loadAfter; }
 	}
 }
 	

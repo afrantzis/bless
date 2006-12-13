@@ -187,7 +187,7 @@ public class BlessMain
 		
 		PluginManager guiPlugins=new PluginManager(typeof(GuiPlugin), new object[]{MainWindow, uiManager});
 		foreach (Plugin p in guiPlugins.Plugins) {
-			p.Load();
+			guiPlugins.LoadPlugin(p);
 			//Console.WriteLine("Loaded Plugin: {0}", p.Name);
 		}
 		

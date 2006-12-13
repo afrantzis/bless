@@ -18,7 +18,8 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using System.IO;
 using Bless.Util;
@@ -26,16 +27,24 @@ using Bless.Util;
 namespace Bless.Plugins
 {
 
+public class PluginDependencyException : Exception 
+{ 
+	public PluginDependencyException(string msg)
+	: base(msg)
+	{ }
+}
+
 public class PluginManager
 {
-	ArrayList plugins;
+	Dictionary<string, Plugin> plugins;
+	
 	Type[] ctorArgTypes;
 	object[] ctorArgs;
 	Type pluginType;
 	
 	public PluginManager(Type pluginType, object[] args)
 	{
-		plugins=new ArrayList();
+		plugins = new Dictionary<string, Plugin>();
 		this.pluginType=pluginType;
 		
 		ctorArgTypes=new Type[args.Length];
@@ -49,8 +58,10 @@ public class PluginManager
 		string[] systemPluginFiles=Directory.GetFiles(systemPluginDir);
 		
 		foreach (string file in systemPluginFiles) {
-			//Console.WriteLine("Searching File {0}", file);
-			AddPluginFile(file);
+			if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
+				Console.WriteLine("Searching File {0}", file);
+				AddPluginFile(file);
+			}
 		}
 		
 		try {
@@ -59,11 +70,14 @@ public class PluginManager
 			string[] userPluginFiles=Directory.GetFiles(userPluginDir);
 			
 			foreach (string file in userPluginFiles) {
-				//Console.WriteLine("Searching File {0}", file);
-				AddPluginFile(file);
+				if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
+					Console.WriteLine("Searching File {0}", file);
+					AddPluginFile(file);
+				}
 			}
 		}
 		catch(DirectoryNotFoundException e) { }
+		
 	}
 	
 	private void AddPluginFile(string file)
@@ -74,9 +88,9 @@ public class PluginManager
 			
 			foreach(Type t in types) {
 				if (t.BaseType==pluginType) {
-					//Console.WriteLine("    Found Type {0}", t.FullName);
+					Console.WriteLine("    Found Type {0}", t.FullName);
 					ConstructorInfo ctor=t.GetConstructor(ctorArgTypes);
-					plugins.Add(ctor.Invoke(ctorArgs));
+					AddToPluginCollection((Plugin)ctor.Invoke(ctorArgs));
 				}
 			}
 		}
@@ -84,11 +98,50 @@ public class PluginManager
 	
 	}
 	
+	private void AddToPluginCollection(Plugin plugin)
+	{
+		plugins.Add(plugin.Name, plugin);
+		System.Console.WriteLine("Added plugin {0}", plugin.Name);	
+	}
+	
+	public bool LoadPlugin(Plugin plugin)
+	{
+		StringCollection visited = new StringCollection();
+		return LoadPluginInternal(plugin, visited);
+	}
+	
+	private bool LoadPluginInternal(Plugin plugin, StringCollection visited)
+	{
+		visited.Add(plugin.Name);
+		if (plugin.Loaded)
+			return true;
+		
+		foreach(string dep in plugin.Dependencies) {
+			if (visited.Contains(dep))
+				throw new PluginDependencyException("Cyclic dependency detected!");
+			if (!plugins.ContainsKey(dep))
+				throw new PluginDependencyException(string.Format("Cannot find plugin '{0}' needed by '{1}'", dep, plugin.Name));
+				
+			if (LoadPluginInternal(plugins[dep], visited) == false)
+				return false;
+		}
+		
+		foreach(string la in plugin.LoadAfter) {
+			if (visited.Contains(la))
+				throw new PluginDependencyException("Cyclic LoadAfter association detected!");
+			if (plugins.ContainsKey(la))
+				LoadPluginInternal(plugins[la], visited);
+		}
+		
+		
+		return plugin.Load();
+	}
+	
 	public Plugin[] Plugins {
 		get {
 			Plugin[] pa=new Plugin[plugins.Count];
 			int i=0;
-			foreach (Plugin p in plugins)
+			foreach (Plugin p in plugins.Values)
 				pa[i++]=p;
 		
 			return pa;
