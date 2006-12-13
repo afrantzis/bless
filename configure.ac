@@ -84,6 +84,8 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  tests/buffers/Makefile
                  tests/util/Makefile
+		 tests/tools/Makefile
+                 tests/tools/export/Makefile
                  src/bless-script
                  bless-script])
                  

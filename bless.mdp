@@ -15,12 +15,6 @@
   </Configurations>
   <DeployTargets />
   <Contents>
-    <File name="./src/ByteBuffer/Buffer.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/ByteBuffer.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/ChangeBuffer.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/FileBuffer.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/SegmentCollection.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/Segment.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/DataView.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/Layout.cs" subtype="Code" buildaction="Compile" />
@@ -65,17 +59,11 @@
     <File name="./src/gui/dialogs/InformationAlert.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/RevertConfirmationAlert.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/ReplaceDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/ByteBufferAction.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/BMFindStrategy.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/BaseConverter.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests" subtype="Directory" buildaction="Compile" />
     <File name="./src/util/FileResourcePath.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/ProgressDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="./tests/ByteBuffer/ByteBufferTests.cs" subtype="Code" buildaction="Compile" />
-    <File name="./tests/ByteBuffer/ChangeBufferTests.cs" subtype="Code" buildaction="Compile" />
-    <File name="./tests/ByteBuffer/FileBufferTests.cs" subtype="Code" buildaction="Compile" />
-    <File name="./tests/ByteBuffer/SegmentCollectionTests.cs" subtype="Code" buildaction="Compile" />
-    <File name="./tests/ByteBuffer/SegmentTests.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests/util/BaseConverterTests.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests/util/ByteArrayTests.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests/util/ListTests.cs" subtype="Code" buildaction="Compile" />
@@ -84,8 +72,6 @@
     <File name="./src/tools/find/FindAsyncResult.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/ThreadedAsyncOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/FindOperations.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/SaveOperation.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/SaveAsOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/LayoutManager.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/Session.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/History.cs" subtype="Code" buildaction="Compile" />
@@ -94,7 +80,6 @@
     <File name="./src/gui/dialogs/WarningAlert.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/Preferences.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/PreferencesDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/ByteBuffer/SimpleBuffer.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/Deque.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests/util/DequeTests.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/RangeCollection.cs" subtype="Code" buildaction="Compile" />
@@ -115,6 +100,43 @@
     <File name="./src/gui/plugins/EditOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/ConversionTablePlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/InfobarPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/HelpOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/SelectLayoutPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/StatisticsPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/XWindowsResourcesPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export" subtype="Directory" buildaction="Compile" />
+    <File name="./src/tools/export/IExporter.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/ByteBuffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/ByteBufferAction.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/ChangeBuffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/FileBuffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/IBuffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/SaveAsOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/SaveOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/Segment.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/SegmentCollection.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/SimpleBuffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/IExportBuilder.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/InterpretedPatternExporter.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/IPatternExporter.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/buffers/ByteBufferTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/buffers/ChangeBufferTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/buffers/FileBufferTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/buffers/SegmentCollectionTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/buffers/SegmentTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./tests/tools/export/ExporterTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="./builder/Main.cs" subtype="Code" buildaction="Compile" />
+    <File name="./builder/Module.cs" subtype="Code" buildaction="Compile" />
+    <File name="./builder/ModuleBuilder.cs" subtype="Code" buildaction="Compile" />
+    <File name="./builder/ModuleTree.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/plugins/ExportPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/plugins/TextExportBuilder.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/plugins/TextExportPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/dialogs/ExportDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/FileExportPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/ExporterOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/plugins/HTMLExportBuilder.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/tools/export/plugins/HTMLExportPlugin.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References />
   <DeploymentInformation strategy="File">

@@ -19,7 +19,7 @@ endif
 noinst_SCRIPTS = bless.exe
 
 bless.exe: bless
-	$(MONO_PROGRAM) ../builder/bless-builder.exe $(MCS_FLAGS)
+	$(MONO_PROGRAM) ../builder/bless-builder.exe Bless $(MCS_FLAGS)
 
 bless: bless-script
 	sed -e 's,@blesslibdir\@,$(libdir),g' bless-script > bless

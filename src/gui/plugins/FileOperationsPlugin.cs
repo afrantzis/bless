@@ -47,6 +47,8 @@ public class FileOperationsPlugin : GuiPlugin
 	"		<menuitem name=\"SaveAs\" action=\"SaveAsAction\" />"+
 	"		<menuitem name=\"Revert\" action=\"RevertAction\" />"+
 	"		<separator/>"+
+	"		<placeholder name=\"Extra\"/>"+
+	"		<separator/>"+
 	"		<placeholder name=\"HistoryItems\"/>"+
 	"		<separator/>"+
 	"		<menuitem name=\"Close\" action=\"CloseAction\" />"+
@@ -70,7 +72,7 @@ public class FileOperationsPlugin : GuiPlugin
 		mainWindow=mw;
 		uiManager=uim;
 				
-		name="FileOperation";
+		name="FileOperations";
 		author="Alexandros Frantzis";
 		description="Provides access to basic file operations";
 	}

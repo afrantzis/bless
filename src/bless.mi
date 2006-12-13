@@ -22,6 +22,13 @@
 	<dir>tools/find</dir>
 </module>
 
+<module name="Bless.Tools.Export">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<dir>tools/export</dir>
+</module>
+
+
 <module name="Bless.Gui">
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
@@ -30,6 +37,7 @@
 	<depends>Bless.Tools</depends>
 	<depends>Bless.Tools.Find</depends>
 	<depends>Bless.Plugins</depends>
+	<depends>Bless.Tools.Export</depends>
 	<dir>gui</dir>
 </module>
 
@@ -47,6 +55,7 @@
 
 <module name="Bless.Plugins">
 	<depends>Bless.Util</depends>
+	<depends>Bless.Tools.Export</depends>
 	<dir>plugins</dir>
 </module>
 
@@ -61,6 +70,14 @@
 	<dir>gui/plugins</dir>
 </module>
 
+<module name="Bless.Tools.Export.Plugins">
+	<depends>Bless.Tools.Export</depends>
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Plugins</depends>
+	<dir>tools/export/plugins</dir>
+</module>
+
 <module name="Bless">
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
@@ -68,9 +85,11 @@
 	<depends>Bless.Gui.Areas</depends>
 	<depends>Bless.Tools</depends>
 	<depends>Bless.Tools.Find</depends>
+	<depends>Bless.Tools.Export</depends>
 	<depends>Bless.Gui</depends>
 	<depends>Bless.Plugins</depends>
 	<depends>Bless.Gui.Plugins</depends>
+	<depends>Bless.Tools.Export.Plugins</depends>
 	<dir>gui</dir>
 </module>
 

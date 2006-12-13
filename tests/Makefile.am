@@ -1,1 +1,1 @@
-SUBDIRS= buffers util
+SUBDIRS= buffers tools util
