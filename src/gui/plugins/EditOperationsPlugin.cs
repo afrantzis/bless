@@ -49,6 +49,8 @@ public class EditOperationsPlugin : GuiPlugin
 	"		<menuitem name=\"Paste\" action=\"PasteAction\" />"+
 	"		<menuitem name=\"Delete\" action=\"DeleteAction\" />"+
 	"		<separator/>"+
+	"		<placeholder name=\"Extra\" />"+
+	"		<separator/>"+
 	"		<menuitem name=\"Preferences\" action=\"PreferencesAction\" />"+
 	"	</menu>"+
 	"</menubar>"+
