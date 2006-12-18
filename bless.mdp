@@ -48,17 +48,14 @@
     <File name="./src/gui/DataBook.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/SaveConfirmationMultiAlert.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools" subtype="Directory" buildaction="Compile" />
-    <File name="./src/gui/dialogs/FindDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/DataViewDisplay.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/ByteArray.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/IFindStrategy.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/SimpleFindStrategy.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/IFinder.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/dialogs/GotoOffsetDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/AboutDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/InformationAlert.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/dialogs/RevertConfirmationAlert.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/dialogs/ReplaceDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/BMFindStrategy.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/BaseConverter.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests" subtype="Directory" buildaction="Compile" />
