@@ -39,7 +39,7 @@ public class ExportDialog : Dialog
 	
 	[Glade.Widget] Gtk.VBox ExportDialogVBox;
 	[Glade.Widget] Gtk.ComboBox ExportAsCombo;
-	[Glade.Widget] Gtk.Entry ExportPatternEntry;
+	[Glade.Widget] Gtk.ComboBoxEntry ExportPatternComboEntry;
 	[Glade.Widget] Gtk.ProgressBar ExportProgressBar;
 	[Glade.Widget] Gtk.Entry ExportFileEntry;
 	[Glade.Widget] Gtk.RadioButton WholeFileRadio;
@@ -68,6 +68,10 @@ public class ExportDialog : Dialog
 		exportFinishedEvent = new AutoResetEvent(false);
 		
 		SetupExportPlugins();
+		
+		ExportPatternComboEntry.Model = new ListStore (typeof (string));
+		ExportPatternComboEntry.TextColumn = 0;
+		LoadFromPatternFile((ListStore)ExportPatternComboEntry.Model);
 		
 		ProgressHBox.Visible = false;
 		cancelClicked = false;
@@ -130,6 +134,109 @@ public class ExportDialog : Dialog
 	{
 		cancelClicked = true;
 	}
+	
+	
+	private void OnDeletePatternButtonClicked(object o, EventArgs args)
+	{
+		string pattern = ExportPatternComboEntry.Entry.Text;
+		
+		if (pattern != "") {
+			ListStore ls = (ListStore)ExportPatternComboEntry.Model;
+			TreeIter iter;
+			int index = FindPattern(ls, pattern, out iter);
+			if (index >= 0) {
+				ls.Remove(ref iter);
+				UpdatePatternFile(ls);
+			}
+		}
+	}
+	
+	private void OnSavePatternButtonClicked(object o, EventArgs args)
+	{
+		string pattern = ExportPatternComboEntry.Entry.Text;
+		
+		if (pattern != "") {
+			ListStore ls = (ListStore)ExportPatternComboEntry.Model;
+			TreeIter iter;
+			if (FindPattern(ls, pattern, out iter) < 0) {
+				ls.AppendValues(pattern);
+				UpdatePatternFile(ls);
+			}
+		}
+		
+	}
+	
+	private int FindPattern(ListStore ls, string pattern, out TreeIter ti)
+	{
+		ti = new TreeIter();
+		TreeIter iter;
+		if (ls.GetIterFirst(out iter) == false)
+			return -1;
+		
+		string val;
+		int i = 0;
+		
+		while((val = (ls.GetValue(iter, 0) as string)) != null) {
+			if (pattern == val) {
+				ti = iter;
+				return i;
+			}
+			ls.IterNext(ref iter);
+			i++;
+		}
+		
+		return -1;
+	}
+	
+	private FileStream GetPatternFile(FileMode mode, FileAccess access)
+	{
+		string patternDir = FileResourcePath.GetUserPath();
+		
+		FileStream fs = new FileStream(System.IO.Path.Combine(patternDir, "export_patterns"), mode, access);	
+		
+		return fs;
+	}
+	
+	private void LoadFromPatternFile(ListStore ls)
+	{
+		StreamReader reader;
+		
+		try {
+			FileStream fs = GetPatternFile(FileMode.Open, FileAccess.Read);
+			reader = new StreamReader(fs);
+		}
+		catch(Exception e) {
+			return;
+		}
+		
+		string pattern;
+		while ((pattern = reader.ReadLine()) != null) {
+			ls.AppendValues(pattern);
+		}
+		
+		
+		reader.BaseStream.Close();
+	}
+	
+	private void UpdatePatternFile(ListStore ls)
+	{
+		StreamWriter writer;
+		
+		try {
+			FileStream fs = GetPatternFile(FileMode.Create, FileAccess.Write);
+			writer = new StreamWriter(fs);
+		}
+		catch(Exception e) {
+			return;
+		}
+		
+		foreach (object[] row in ls)
+			writer.WriteLine(row[0] as string);
+		
+		writer.Flush();
+		writer.BaseStream.Close();
+	}
+	
 	
 	private IAsyncResult BeginExport(IExporter exporter, IBuffer buf, long start, long end)
 	{
@@ -239,7 +346,7 @@ public class ExportDialog : Dialog
 				builder = plugin.CreateBuilder(stream);
 						
 				InterpretedPatternExporter exporter = new InterpretedPatternExporter(builder);
-				exporter.Pattern = ExportPatternEntry.Text;
+				exporter.Pattern = ExportPatternComboEntry.Entry.Text;
 				
 				cancelClicked = false;
 				BeginExport(exporter, dv.Buffer, range.Start, range.End);

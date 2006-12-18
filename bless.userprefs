@@ -1,31 +1,19 @@
 <?xml version="1.0"?>
 <UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
   <Files>
-    <File filename="./src/tools/export/IExportBuilder.cs" />
     <File filename="./src/gui/dialogs/ExportDialog.cs" />
     <File filename="./src/gui/plugins/SelectRangePlugin.cs" />
-    <File filename="./src/gui/plugins/EditOperationsPlugin.cs" />
-    <File filename="./src/gui/plugins/FindReplacePlugin.cs" />
   </Files>
   <Views>
     <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
       <TreeView>
         <Node expanded="True">
           <Node name="bless" expanded="True">
-            <Node name="builder" expanded="True" />
             <Node name="src" expanded="True">
               <Node name="gui" expanded="True">
-                <Node name="plugins" expanded="True">
-                  <Node name="SelectRangePlugin.cs" expanded="False" selected="True" />
+                <Node name="dialogs" expanded="True">
+                  <Node name="ExportDialog.cs" expanded="False" selected="True" />
                 </Node>
-              </Node>
-              <Node name="tools" expanded="True">
-                <Node name="export" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="tests" expanded="True">
-              <Node name="tools" expanded="True">
-                <Node name="export" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -53,7 +41,7 @@
   <Properties>
     <Properties>
       <Property key="ActiveConfiguration" value="Debug" />
-      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/plugins/SelectRangePlugin.cs" />
+      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/dialogs/ExportDialog.cs" />
     </Properties>
   </Properties>
 </UserCombinePreferences>
