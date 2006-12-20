@@ -26,6 +26,7 @@ using Bless.Util;
 using Bless.Gui.Dialogs;
 using Bless.Gui;
 using Bless.Plugins;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -76,7 +77,7 @@ public class SelectRangePlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("SelectRangeAction", Stock.JumpTo, "_Select Range", "<shift><control>R", null,
+			new ActionEntry ("SelectRangeAction", Stock.JumpTo, Catalog.GetString("_Select Range"), "<shift><control>R", null,
 			                    new EventHandler(OnSelectRangeActivated)),
 		};
 		
@@ -120,7 +121,7 @@ public class SelectRangeWidget : Gtk.HBox
 	{
 		dataBook = db;
 		
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "SelectRangeHBox", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "SelectRangeHBox", "bless");
 		gxml.Autoconnect (this);
 		
 		// set up entry completions
@@ -209,7 +210,7 @@ public class SelectRangeWidget : Gtk.HBox
 			fromOffset = BaseConverter.Parse(FromEntry.Text);
 		}
 		catch(FormatException e) {
-			ErrorAlert ea=new ErrorAlert("Error in From Offset Format", e.Message, null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Error in From Offset Format"), e.Message, null);
 			ea.Run();
 			ea.Destroy();
 			return;
@@ -228,7 +229,7 @@ public class SelectRangeWidget : Gtk.HBox
 			toOffset = BaseConverter.Parse(toString);
 		}
 		catch(FormatException e) {
-			ErrorAlert ea=new ErrorAlert("Error in To Offset Format", e.Message, null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Error in To Offset Format"), e.Message, null);
 			ea.Run();
 			ea.Destroy();
 			return;
@@ -248,7 +249,7 @@ public class SelectRangeWidget : Gtk.HBox
 				ls.AppendValues(FromEntry.Text);
 		}
 		else {
-			ErrorAlert ea=new ErrorAlert("Invalid Offset", "The range you specified is outside the file's limits.", null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Invalid Offset"), Catalog.GetString("The range you specified is outside the file's limits."), null);
 			ea.Run();
 			ea.Destroy();
 		}

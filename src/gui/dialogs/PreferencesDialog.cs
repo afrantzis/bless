@@ -24,6 +24,7 @@ using Gtk;
 using Glade;
 using Bless.Tools;
 using Bless.Util;
+using Mono.Unix;
 
 namespace Bless.Gui.Dialogs {
 
@@ -53,9 +54,9 @@ public class PreferencesDialog : Dialog
 	enum NumberBaseEnum { Hexadecimal, Decimal, Octal }
 	
 	public PreferencesDialog(Preferences p, Window parent)
-	: base ("Bless Preferences", parent, DialogFlags.DestroyWithParent)
+	: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "PreferencesNotebook", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "PreferencesNotebook", "bless");
 		gxml.Autoconnect (this);
 		
 		prefs=p;

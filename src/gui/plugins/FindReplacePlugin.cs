@@ -29,6 +29,7 @@ using Bless.Buffers;
 using Bless.Gui.Dialogs;
 using System.Text;
 using Bless.Plugins;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -145,13 +146,13 @@ public class FindReplacePlugin : GuiPlugin
 	private void AddActions(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("FindAction", Stock.Find, "_Find", "<control>F", "Find",
+			new ActionEntry ("FindAction", Stock.Find, null, "<control>F", "Find",
 			                    new EventHandler(OnFindActivated)),
-			new ActionEntry ("FindNextAction", null, "Find _Next", "F3", null,
+			new ActionEntry ("FindNextAction", null, Catalog.GetString("Find _Next"), "F3", null,
 			                    new EventHandler(OnFindNextActivated)),
-			new ActionEntry ("FindPreviousAction", null, "Find _Previous", "<shift>F3", null,
+			new ActionEntry ("FindPreviousAction", null, Catalog.GetString("Find _Previous"), "<shift>F3", null,
 			                    new EventHandler(OnFindPreviousActivated)),
-			new ActionEntry ("ReplaceAction", Stock.FindAndReplace, "_Replace", "<control>R", "Replace",
+			new ActionEntry ("ReplaceAction", Stock.FindAndReplace, null, "<control>R", "Replace",
 			                    new EventHandler(OnReplaceActivated))
 		};
 		
@@ -210,7 +211,7 @@ public class FindReplacePlugin : GuiPlugin
 		
 		FindNextOperation state=(FindNextOperation)tar.AsyncState;
 		if (state.Result==FindNextOperation.OperationResult.Finished && state.Match==null) {
-			InformationAlert ia=new InformationAlert("The pattern you requested was not found.", "End of file reached.", mainWindow);
+			InformationAlert ia=new InformationAlert(Catalog.GetString("The pattern you requested was not found."), Catalog.GetString("End of file reached."), mainWindow);
 			ia.Run();
 			ia.Destroy();
 		}
@@ -228,7 +229,7 @@ public class FindReplacePlugin : GuiPlugin
 		
 		FindPreviousOperation state=(FindPreviousOperation)tar.AsyncState;
 		if (state.Result==FindPreviousOperation.OperationResult.Finished && state.Match==null) {
-			InformationAlert ia=new InformationAlert("The pattern you requested was not found.", "Beginning of file reached.", mainWindow);
+			InformationAlert ia=new InformationAlert(Catalog.GetString("The pattern you requested was not found."), Catalog.GetString("Beginning of file reached."), mainWindow);
 			ia.Run();
 			ia.Destroy();
 		}
@@ -332,7 +333,7 @@ public class FindReplaceWidget : Gtk.HBox
 		finder=iFinder;
 		dataBook=db;
 		
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "FindReplaceTable", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "FindReplaceTable", "bless");
 		gxml.Autoconnect (this);
 		
 		this.Shown+=OnWidgetShown;
@@ -469,7 +470,7 @@ public class FindReplaceWidget : Gtk.HBox
 			// if there is something in the text entry but nothing is parsed
 			// it means it is full of spaces
 			if (ba.Length==0 && SearchPatternEntry.Text.Length!=0)
-				throw new FormatException("Strings representing numbers cannot consist of whitespace characters only.");
+				throw new FormatException(Catalog.GetString("Strings representing numbers cannot consist of whitespace characters only."));
 			else
 				finder.Strategy.Pattern=ba;
 			
@@ -478,7 +479,7 @@ public class FindReplaceWidget : Gtk.HBox
 			ls.AppendValues(SearchPatternEntry.Text);
 		}	
 		catch (FormatException e) {
-			ErrorAlert ea=new ErrorAlert("Invalid Search Pattern", e.Message, null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Invalid Search Pattern"), e.Message, null);
 			ea.Run();
 			ea.Destroy();
 			throw;
@@ -559,7 +560,7 @@ public class FindReplaceWidget : Gtk.HBox
 		
 		FindPreviousOperation state=(FindPreviousOperation)tar.AsyncState;
 		if (state.Result==FindPreviousOperation.OperationResult.Finished && state.Match==null) {
-			InformationAlert ia=new InformationAlert("The pattern you requested was not found.", "Beginning of file reached.", null);
+			InformationAlert ia=new InformationAlert(Catalog.GetString("The pattern you requested was not found."), Catalog.GetString("Beginning of file reached."), null);
 			ia.Run();
 			ia.Destroy();
 		}

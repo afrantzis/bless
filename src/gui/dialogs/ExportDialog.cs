@@ -27,6 +27,7 @@ using Bless.Tools.Export;
 using Bless.Gui;
 using Bless.Util;
 using Bless.Buffers;
+using Mono.Unix;
 
 namespace Bless.Gui.Dialogs
 {
@@ -57,9 +58,9 @@ public class ExportDialog : Dialog
 	bool cancelClicked;
 	
 	public ExportDialog(DataBook db, Gtk.Window mw)
-	: base("Export Bytes", null, 0) 
+	: base(Catalog.GetString("Export Bytes"), null, 0) 
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ExportDialogVBox", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ExportDialogVBox", "bless");
 		gxml.Autoconnect (this);
 		
 		dataBook = db;
@@ -80,7 +81,7 @@ public class ExportDialog : Dialog
 		this.BorderWidth = 6;
 		this.HasSeparator = false;
 		CloseButton = (Gtk.Button)this.AddButton(Gtk.Stock.Close, ResponseType.Close);
-		ExportButton = (Gtk.Button)this.AddButton("Export", ResponseType.Ok);
+		ExportButton = (Gtk.Button)this.AddButton(Catalog.GetString("Export"), ResponseType.Ok);
 		this.Response += new ResponseHandler(OnDialogResponse);
 		this.VBox.Add(ExportDialogVBox);
 	}
@@ -117,8 +118,8 @@ public class ExportDialog : Dialog
 	
 	private void OnSelectFileButtonClicked(object o, EventArgs args)
 	{
-		FileChooserDialog fcd = new FileChooserDialog("Select file", mainWindow, FileChooserAction.Save,  "Cancel", ResponseType.Cancel,
-                                      "Select", ResponseType.Accept);
+		FileChooserDialog fcd = new FileChooserDialog(Catalog.GetString("Select file"), mainWindow, FileChooserAction.Save,  Catalog.GetString("Cancel"), ResponseType.Cancel,
+                                      Catalog.GetString("Select"), ResponseType.Accept);
 		if ((ResponseType)fcd.Run() == ResponseType.Accept)
 			ExportFileEntry.Text = fcd.Filename;
 		fcd.Destroy();
@@ -261,15 +262,15 @@ public class ExportDialog : Dialog
 		ExportOperation eo=(ExportOperation)ar.AsyncState;
 		
 		if (eo.Result == ExportOperation.OperationResult.Finished) {
-			Services.Info.DisplayMessage(string.Format("Exported data to '{0}'",  (eo.Exporter.Builder.OutputStream as FileStream).Name));
+			Services.Info.DisplayMessage(string.Format(Catalog.GetString("Exported data to '{0}'"),  (eo.Exporter.Builder.OutputStream as FileStream).Name));
 			this.Hide();
 		}
 		else if (eo.Result == ExportOperation.OperationResult.CaughtException) {
 			ErrorAlert ea;
 			if (eo.ThreadException.GetType() == typeof(FormatException))
-				ea = new ErrorAlert("Export Pattern Error", eo.ThreadException.Message, mainWindow);
+				ea = new ErrorAlert(Catalog.GetString("Export Pattern Error"), eo.ThreadException.Message, mainWindow);
 			else
-				ea = new ErrorAlert("Exporting Error", eo.ThreadException.Message, mainWindow);
+				ea = new ErrorAlert(Catalog.GetString("Exporting Error"), eo.ThreadException.Message, mainWindow);
 				
 			ea.Run();
 			ea.Destroy();
@@ -321,7 +322,7 @@ public class ExportDialog : Dialog
 				range = GetCurrentRange(dv);
 			}
 			catch(FormatException ex) {
-				ErrorAlert ea = new ErrorAlert("Error in custom range", ex.Message, mainWindow);
+				ErrorAlert ea = new ErrorAlert(Catalog.GetString("Error in custom range"), ex.Message, mainWindow);
 				ea.Run();
 				ea.Destroy();
 				return;
@@ -334,7 +335,7 @@ public class ExportDialog : Dialog
 				bufferRange = new Util.Range(0, dv.Buffer.Size - 1);
 			
 			if (!bufferRange.Contains(range.Start) || !bufferRange.Contains(range.End)) {
-				ErrorAlert ea = new ErrorAlert("Error in range", "Range is out of file's limits", mainWindow);
+				ErrorAlert ea = new ErrorAlert(Catalog.GetString("Error in range"), Catalog.GetString("Range is out of file's limits"), mainWindow);
 				ea.Run();
 				ea.Destroy();
 				return;
@@ -356,7 +357,7 @@ public class ExportDialog : Dialog
 				if (stream != null)
 					stream.Close();
 					
-				ErrorAlert ea = new ErrorAlert("Error saving to file", ex.Message, mainWindow);
+				ErrorAlert ea = new ErrorAlert(Catalog.GetString("Error saving to file"), ex.Message, mainWindow);
 				ea.Run();
 				ea.Destroy();
 				return;

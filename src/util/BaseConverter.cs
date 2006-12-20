@@ -20,6 +20,7 @@
  */
 using System;
 using System.Text;
+using Mono.Unix;
 
 namespace Bless.Util {
 
@@ -90,7 +91,7 @@ public class BaseConverter
 		
 		// if character is not valid or beyond base throw exception 
 		if (ret >= b || ret==-1)
-			throw new FormatException(String.Format("Character '{0}' is not valid in a number of base {1}.", c, b));
+			throw new FormatException(String.Format(Catalog.GetString("Character '{0}' is not valid in a number of base {1}."), c, b));
 		
 		return ret;						
 	}
@@ -124,7 +125,7 @@ public class BaseConverter
 		int len=trimStr.Length;
 		
 		if (len==0)
-			throw new FormatException("The string to parse is empty.");
+			throw new FormatException(Catalog.GetString("The string to parse is empty."));
 			
 		//decide if it is hex, octal or decimal
 		

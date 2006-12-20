@@ -18,14 +18,14 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+using System;
+using System.IO;
+using Gtk;
 using Bless.Buffers;
 using Bless.Gui;
 using Bless.Plugins;
 using Bless.Gui.Dialogs;
 using Bless.Tools;
-using System;
-using System.IO;
-using Gtk;
 
 namespace Bless.Gui.Plugins {
 	
@@ -172,21 +172,21 @@ public class EditOperationsPlugin : GuiPlugin
 	private void AddActions(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("CutAction", Stock.Cut, "Cu_t", "<control>X", "Cut",
+			new ActionEntry ("CutAction", Stock.Cut, null, "<control>X", null,
 			                    new EventHandler(OnCutActivated)),
-			new ActionEntry ("CopyAction", Stock.Copy, "_Copy", "<control>C", "Copy",
+			new ActionEntry ("CopyAction", Stock.Copy, null, "<control>C", "Copy",
 			                    new EventHandler(OnCopyActivated)),
-			new ActionEntry ("PasteAction", Stock.Paste, "_Paste", "<control>V", "Paste",
+			new ActionEntry ("PasteAction", Stock.Paste, null, "<control>V", "Paste",
 			                    new EventHandler(OnPasteActivated)),
-			new ActionEntry ("DeleteAction", Stock.Delete, "_Delete", "Delete", "Delete",
+			new ActionEntry ("DeleteAction", Stock.Delete, null, "Delete", "Delete",
 			                    new EventHandler(OnDeleteActivated))
 		};		
 		ActionEntry[] miscActionEntries = new ActionEntry[] {
-			new ActionEntry ("UndoAction", Stock.Undo, "_Undo", "<control>Z", "Undo",
+			new ActionEntry ("UndoAction", Stock.Undo, null, "<control>Z", "Undo",
 			                    new EventHandler(OnUndoActivated)),
-			new ActionEntry ("RedoAction", Stock.Redo, "_Redo", "<shift><control>Z", "Redo",
+			new ActionEntry ("RedoAction", Stock.Redo, null, "<shift><control>Z", "Redo",
 			                    new EventHandler(OnRedoActivated)),
-			new ActionEntry ("PreferencesAction", Stock.Preferences, "_Preferences...", null, "Preferences",
+			new ActionEntry ("PreferencesAction", Stock.Preferences, null, null, "Preferences",
 			                    new EventHandler(OnPreferencesActivated))
 		};
 		

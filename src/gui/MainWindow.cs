@@ -32,6 +32,7 @@ using Bless.Tools.Find;
 using Bless.Tools;
 using Bless.Util;
 using Bless.Plugins;
+using Mono.Unix;
 
 public class BlessMain
 {
@@ -69,12 +70,12 @@ public class BlessMain
 	"</toolbar>";
 	
 	ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("File", null, "_File", null, null, null),
-			new ActionEntry ("Edit", null, "_Edit", null, null, null),
-			new ActionEntry ("View", null, "_View", null, null, null),
-			new ActionEntry ("Search", null, "_Search", null, null, null),
-			new ActionEntry ("Tools", null, "_Tools", null, null, null),
-			new ActionEntry ("Help", null, "_Help", null, null, null)
+			new ActionEntry ("File", null, Catalog.GetString("_File"), null, null, null),
+			new ActionEntry ("Edit", null, Catalog.GetString("_Edit"), null, null, null),
+			new ActionEntry ("View", null, Catalog.GetString("_View"), null, null, null),
+			new ActionEntry ("Search", null, Catalog.GetString("_Search"), null, null, null),
+			new ActionEntry ("Tools", null, Catalog.GetString("_Tools"), null, null, null),
+			new ActionEntry ("Help", null, Catalog.GetString("_Help"), null, null, null)
 	};
 	
 	UIManager uiManager;
@@ -99,8 +100,11 @@ public class BlessMain
 	{
 		Application.Init();
 		
+		// 
+		Catalog.Init("bless", FileResourcePath.GetSystemPath("locale"));
+		
 		// load main window from glade XML
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "MainWindow", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "MainWindow", "bless");
 		gxml.Autoconnect (this);
 		
 		// set the application icon
@@ -115,7 +119,7 @@ public class BlessMain
 			}
 		}
 		catch (Exception ex){
-			ErrorAlert ea=new ErrorAlert("Cannot create user configuration directory", ex.Message+"\n\nSome features of Bless may not work properly.", MainWindow);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Cannot create user configuration directory"), ex.Message+Catalog.GetString("\n\nSome features of Bless may not work properly."), MainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
@@ -210,7 +214,7 @@ public class BlessMain
 				MessageDialog md = new MessageDialog (MainWindow, 
 					DialogFlags.DestroyWithParent,
 					MessageType.Question, 
-					ButtonsType.YesNo, "Do you want to load your previous session?");
+					ButtonsType.YesNo, Catalog.GetString("Do you want to load your previous session?"));
      
 					ResponseType result = (ResponseType)md.Run ();
 					md.Destroy();

@@ -20,6 +20,7 @@
  */
 using System;
 using Gtk;
+using Mono.Unix;
  
 namespace Bless.Gui.Dialogs {
 
@@ -38,13 +39,14 @@ namespace Bless.Gui.Dialogs {
 		SaveFileItem[] fileList;
 		
 		public SaveConfirmationMultiAlert(SaveFileItem[] list, Gtk.Window parent) 
-		: base("There are "+ list.Length +" files with unsaved changes. Save changes before closing?", "If you don't save, all changes made since the last save will be lost.", parent)
+		: base(string.Format(Catalog.GetString("There are {0} files with unsaved changes. Save changes before closing?"), list.Length),
+			Catalog.GetString("If you don't save, all changes made since the last save will be lost."), parent)
 		{
 			fileList=list;
 			
 			image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
 			
-			Label label=new Label("\nSelect the files you want to save:\n");
+			Label label=new Label(Catalog.GetString("\nSelect the files you want to save:\n"));
 			label.Xalign=0.0f;
 			
 			VBox vb=new VBox();
@@ -55,7 +57,7 @@ namespace Bless.Gui.Dialogs {
 			labelBox.PackStart(vb);
 			labelBox.ReorderChild(vb, 1);
 			
-			this.AddButton("Close without Saving", ResponseType.No);
+			this.AddButton(Catalog.GetString("Close without Saving"), ResponseType.No);
 			this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Gtk.Stock.Save, ResponseType.Ok);
 			

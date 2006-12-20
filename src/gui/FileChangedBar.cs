@@ -22,6 +22,7 @@
 using System;
 using Gtk;
 using Bless.Gui.Dialogs;
+using Mono.Unix;
 
 namespace Bless.Gui
 {
@@ -42,14 +43,14 @@ public class FileChangedBar : Gtk.HBox
 		
 		Gtk.Image img=new Gtk.Image(Gtk.Stock.DialogWarning, Gtk.IconSize.SmallToolbar);
 		
-		Gtk.Label label=new Gtk.Label("This file has been changed on disk. You may choose to ignore the changes but reloading is the only safe option.");	
+		Gtk.Label label=new Gtk.Label(Catalog.GetString("This file has been changed on disk. You may choose to ignore the changes but reloading is the only safe option."));	
 		label.LineWrap=true;
 		label.Wrap=true;
 		
-		Gtk.Button buttonIgnore=new Gtk.Button("Ignore");
+		Gtk.Button buttonIgnore=new Gtk.Button(Catalog.GetString("Ignore"));
 		buttonIgnore.Clicked+=OnFileChangedIgnore;
 			
-		Gtk.Button buttonReload=new Gtk.Button("Reload");
+		Gtk.Button buttonReload=new Gtk.Button(Catalog.GetString("Reload"));
 		buttonReload.Clicked+=OnFileChangedReload;
 			
 		this.PackStart(img, false, false, 4);
@@ -60,7 +61,7 @@ public class FileChangedBar : Gtk.HBox
 	
 	void OnFileChangedIgnore(object o, EventArgs args)
 	{
-		WarningAlert wa=new WarningAlert("Are you sure you want to ignore the changes?", "Due to the way Bless handles files, ignoring these changes may corrupt your data.", null);
+		WarningAlert wa=new WarningAlert(Catalog.GetString("Are you sure you want to ignore the changes?"), Catalog.GetString("Due to the way Bless handles files, ignoring these changes may corrupt your data."), null);
 		ResponseType res=(ResponseType)wa.Run();
 		wa.Destroy();
 		

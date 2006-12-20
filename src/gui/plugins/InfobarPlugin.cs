@@ -26,6 +26,7 @@ using Bless.Gui;
 using Bless.Plugins;
 using Bless.Buffers;
 using Bless.Tools;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -93,13 +94,13 @@ public class InfobarPlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ToggleActionEntry[] toggleActionEntries = new ToggleActionEntry[] {
-			new ToggleActionEntry ("StatusbarShowAction", null, "Show", null, null,
+			new ToggleActionEntry ("StatusbarShowAction", null, Catalog.GetString("Show"), null, null,
 			                          new EventHandler(OnStatusbarShow), false),
-			new ToggleActionEntry ("StatusbarOffsetAction", null, "Offset", null, null,
+			new ToggleActionEntry ("StatusbarOffsetAction", null, Catalog.GetString("Offset"), null, null,
 			                    new EventHandler(OnStatusbarOffset), false),
-			new ToggleActionEntry ("StatusbarSelectionAction", null, "Selection", null, null,
+			new ToggleActionEntry ("StatusbarSelectionAction", null, Catalog.GetString("Selection"), null, null,
 			                    new EventHandler(OnStatusbarSelection), false),                    
-			new ToggleActionEntry ("StatusbarOverwriteAction", null, "Overwrite", null, null,
+			new ToggleActionEntry ("StatusbarOverwriteAction", null, Catalog.GetString("Overwrite"), null, null,
 			                    new EventHandler(OnStatusbarOverwrite), false)                    
 		};
 		
@@ -401,7 +402,7 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		string coffsetString=BaseConverter.ConvertToString(coffset, numberBase, true, 1); 
 		string sizeString=BaseConverter.ConvertToString(dv.Buffer.Size-1, numberBase, true, 1);
 		
-		string str=string.Format("Offset: {0} / {1}", coffsetString, sizeString);
+		string str=string.Format(Catalog.GetString("Offset: {0} / {1}"), coffsetString, sizeString);
 		OffsetStatusbar.Push(0, str);
 	}
 	
@@ -424,13 +425,13 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		string str;
 	
 		if (sel.IsEmpty()==true)
-			str="Selection: None";
+			str=Catalog.GetString("Selection: None");
 		else {
 			string startString=BaseConverter.ConvertToString(sel.Start, numberBase, true, 1);
 			string endString=BaseConverter.ConvertToString(sel.End, numberBase, true, 1);
 			string sizeString=BaseConverter.ConvertToString(sel.Size, numberBase, true, 1);
 			
-			str=string.Format("Selection: {0} to {1} ({2} bytes)", startString, endString, sizeString);
+			str=string.Format(Catalog.GetString("Selection: {0} to {1} ({2} bytes)"), startString, endString, sizeString);
 		}
 		
 		SelectionStatusbar.Push(0, str);
@@ -462,10 +463,10 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 	public void ClearMessage()
 	{
 		OffsetStatusbar.Pop(0);
-		OffsetStatusbar.Push(0, "Offset: -");
+		OffsetStatusbar.Push(0, Catalog.GetString("Offset: -"));
 			
 		SelectionStatusbar.Pop(0);
-		SelectionStatusbar.Push(0, "Selection: None");
+		SelectionStatusbar.Push(0, Catalog.GetString("Selection: None"));
 	}
 	
 	///<summary>Handle button press on Ins/Ovr statusbar</summary>

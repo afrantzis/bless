@@ -26,6 +26,7 @@ using Bless.Util;
 using System;
 using System.IO;
 using System.Collections;
+using Mono.Unix;
  
 namespace Bless.Gui
 {
@@ -66,7 +67,8 @@ public class FileService
 				dv.Display.Layout=new Bless.Gui.Layout(layoutFile);
 		}
 		catch(Exception ex) {
-			ErrorAlert ea=new ErrorAlert("Error loading layout '"+ layoutFile +"'. Loading default layout instead.", ex.Message , mainWindow);
+			string msg = string.Format(Catalog.GetString("Error loading layout '{0}'. Loading default layout instead."), layoutFile); 
+			ErrorAlert ea=new ErrorAlert(msg, ex.Message , mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
@@ -192,7 +194,8 @@ public class FileService
 				uri=new Uri(Path.Combine("file://", Path.GetFullPath(filename)));
 			}
 			catch(Exception ex) {
-				ErrorAlert ea=new ErrorAlert("Error opening file "+filename, ex.Message, mainWindow);
+				string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), filename);
+				ErrorAlert ea=new ErrorAlert(msg, ex.Message, mainWindow);
 				ea.Run();
 				ea.Destroy();
 				return null;
@@ -205,27 +208,32 @@ public class FileService
 		try {	
 			ByteBuffer bb=ByteBuffer.FromFile(fullPath);
 			bb.UseGLibIdle=true;
-			Services.Info.DisplayMessage("Loaded file '"+ fullPath +"'");
+			string msg = string.Format(Catalog.GetString("Loaded file '{0}'"), fullPath);
+			Services.Info.DisplayMessage(msg);
 			//history.Add(fullPath);
 			return bb;
 		}
 		catch(UnauthorizedAccessException ex) {
-			ErrorAlert ea=new ErrorAlert("Error opening file '"+ fullPath+"'", "You do not have read permissions for the file you requested.", mainWindow);
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
+			ErrorAlert ea=new ErrorAlert(msg, Catalog.GetString("You do not have read permissions for the file you requested."), mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
 		catch(System.IO.FileNotFoundException ex) {
-			ErrorAlert ea=new ErrorAlert("Error opening file '"+ fullPath+"'", "The file you requested does not exist.", mainWindow);
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
+			ErrorAlert ea=new ErrorAlert(msg, Catalog.GetString("The file you requested does not exist."), mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
 		catch(System.IO.IOException ex) {
-			ErrorAlert ea=new ErrorAlert("Error opening file '"+ fullPath+"'", ex.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
+			ErrorAlert ea=new ErrorAlert(msg, ex.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
 		catch(System.ArgumentException ex) {
-			ErrorAlert ea=new ErrorAlert("Error opening file '"+ fullPath+"'", ex.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
+			ErrorAlert ea=new ErrorAlert(msg, ex.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
@@ -254,7 +262,7 @@ public class FileService
 			return SaveFileInternal(dv, bb.Filename, synchronous);	  
 	  
 		// otherwise prompt user for a name	  
-		Gtk.FileChooserDialog fs=new Gtk.FileChooserDialog("Save File As", mainWindow, FileChooserAction.Save,
+		Gtk.FileChooserDialog fs=new Gtk.FileChooserDialog(Catalog.GetString("Save File As"), mainWindow, FileChooserAction.Save,
 			Gtk.Stock.Cancel, ResponseType.Cancel,
 			Gtk.Stock.Save, ResponseType.Accept);
 		
@@ -310,7 +318,8 @@ public class FileService
 			fullPath=Path.GetFullPath(filename);	
 		}
 		catch(Exception ex) {
-			ErrorAlert ea=new ErrorAlert("Error saving file "+filename, ex.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error saving file '{0}'"), filename);
+			ErrorAlert ea=new ErrorAlert(msg, ex.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
@@ -322,11 +331,11 @@ public class FileService
 		try {
 			string msg;
 			if (fullPath!=bb.Filename)
-				msg="Saving file '"+ bb.Filename +"' as '"+fullPath+"'";
+				msg	= string.Format(Catalog.GetString("Saving file '{0}' as '{1}'"), bb.Filename, fullPath);
 			else
-				msg="Saving file '"+ bb.Filename+"'";
+				msg = string.Format(Catalog.GetString("Saving file '{0}'"), bb.Filename);
 						
-			Services.Info.DisplayMessage(msg+"...");
+			Services.Info.DisplayMessage(msg + "...");
 
 			
 			// create a ProgressDialog
@@ -365,12 +374,13 @@ public class FileService
 				file=fullPath;
 			else
 				file=bb.Filename;
-				
-			ErrorAlert ea=new ErrorAlert("Error saving file '"+ file +"'", ex.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error saving file '{0}'"), file);	
+			ErrorAlert ea=new ErrorAlert(msg, ex.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 			
-			Services.Info.DisplayMessage("The file '" + file + "' has NOT been saved");
+			msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), file);
+			Services.Info.DisplayMessage(msg);
 		}
 		
 		return false;
@@ -394,11 +404,13 @@ public class FileService
 		}
 		
 		if (bbs.Result==SaveAsOperation.OperationResult.Finished) { // save went ok
+			string msg;
 			if (bbs.SavePath!=bbs.Buffer.Filename)
-				Services.Info.DisplayMessage("The file has been saved as '" + bbs.SavePath +"'");	
+				msg = string.Format(Catalog.GetString("The file has been saved as '{0}'"), bbs.SavePath);
 			else
-				Services.Info.DisplayMessage("The file '" + bbs.SavePath+ "' has been saved");
+				msg = string.Format(Catalog.GetString("The file '{0}' has been saved"), bbs.SavePath);
 			
+			Services.Info.DisplayMessage(msg);
 			// add to history
 			//history.Add(bbs.SavePath);
 			
@@ -411,12 +423,16 @@ public class FileService
 			// * UnauthorizedAccessException
 			// * System.ArgumentException
 			// * System.IO.IOException
-			ErrorAlert ea=new ErrorAlert("Error saving file '"+ bbs.SavePath+"'", bbs.ThreadException.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error saving file '{0}'"), bbs.SavePath);	
+			ErrorAlert ea=new ErrorAlert(msg, bbs.ThreadException.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
 		
-		Services.Info.DisplayMessage("The file '" + bbs.SavePath + "' has NOT been saved");
+		{
+		string msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), bbs.SavePath);
+		Services.Info.DisplayMessage(msg);
+		}
 	}
 	
 	public void CloseFile(DataView dv)

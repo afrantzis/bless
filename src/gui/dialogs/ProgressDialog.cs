@@ -41,7 +41,7 @@ public class ProgressDialog : Gtk.Window {
 	
 	public ProgressDialog(string primary, Gtk.Window main) : base(primary)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ProgressVBox", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ProgressVBox", "bless");
 		gxml.Autoconnect (this);
 		
 		// setup window

@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Bless.Util;
+using Mono.Unix;
 
 namespace Bless.Buffers {
 
@@ -69,8 +70,10 @@ public class SaveAsOperation : ThreadedAsyncOperation
 		long freeSpace=(long)(stat.f_bavail*stat.f_bsize);
 			
 		// make sure there is enough disk space in the device
-		if (freeSpace < bb.Size)
-			throw new IOException("There is not enough free space on the device to save file '" + fn +"'.");	
+		if (freeSpace < bb.Size) {
+			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), fn);
+			throw new IOException(msg);
+		}
 #endif		
 		byteBuffer=bb;
 		savePath=fn;

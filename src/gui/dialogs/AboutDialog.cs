@@ -22,6 +22,7 @@
 using System;
 using Gtk;
 using Bless.Util;
+using Mono.Unix;
  
 namespace Bless.Gui.Dialogs {
  
@@ -41,9 +42,9 @@ public class AboutDialog: Gtk.Window
 
 		static AboutDialog instance;
 
-		private AboutDialog() : base ("About Bless")
+		private AboutDialog() : base (Catalog.GetString("About Bless"))
 		{
-				Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "AboutVBox", null);
+				Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "AboutVBox", "bless");
 				gxml.Autoconnect (this);
 
 				CloseButton.Clicked+=OnCloseClicked;

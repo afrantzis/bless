@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Bless.Util;
+using Mono.Unix;
 
 namespace Bless.Buffers {
 
@@ -62,7 +63,8 @@ public class SaveOperation : SaveAsOperation
 		if (freeSpace < bb.Size) {
 			if (System.IO.File.Exists(savePath))
 				System.IO.File.Delete(savePath);
-			throw new IOException("There is not enough free space on the device to save file '" + bb.Filename +"'.");
+			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), bb.Filename);
+			throw new IOException();
 		}
 #endif
 	}

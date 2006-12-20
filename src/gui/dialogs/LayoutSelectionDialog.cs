@@ -25,6 +25,7 @@ using Glade;
 using Bless.Gui.Areas;
 using Bless.Buffers;
 using Bless.Util;
+using Mono.Unix;
  
 namespace Bless.Gui.Dialogs { 
 
@@ -49,9 +50,9 @@ public class LayoutSelectionDialog : Dialog {
 	enum LayoutColumn { Filename, Path } 
 	
 	public LayoutSelectionDialog(DataBook db)
-	: base("Select Layout", null, 0) 
+	: base(Catalog.GetString("Select Layout"), null, 0) 
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "LayoutSelectionPaned", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "LayoutSelectionPaned", "bless");
 		gxml.Autoconnect (this);
 		
 		dataBook=db;
@@ -89,7 +90,7 @@ public class LayoutSelectionDialog : Dialog {
 		// specify the column types
 		TreeStore ts=new TreeStore(typeof(string), typeof(string));
 		
-		TreeIter ti=ts.AppendValues("System-wide Layouts", string.Empty);
+		TreeIter ti=ts.AppendValues(Catalog.GetString("System-wide Layouts"), string.Empty);
 		
 		// fill list from bless data dir
 		string dataDir=FileResourcePath.GetSystemPath("..", "data");
@@ -100,7 +101,7 @@ public class LayoutSelectionDialog : Dialog {
 			}
 		}
 		
-		ti=ts.AppendValues("User Layouts", string.Empty);
+		ti=ts.AppendValues(Catalog.GetString("User Layouts"), string.Empty);
 		
 		// fill list from user layout dir
 		if (Directory.Exists(layoutDir)) {
@@ -143,7 +144,8 @@ public class LayoutSelectionDialog : Dialog {
 				selectedLayout=val;
 			}
 			catch(System.Xml.XmlException ex) {
-				ErrorAlert ea=new ErrorAlert("Error parsing layout file " + val, ex.Message, this);
+				string msg = string.Format(Catalog.GetString("Error parsing layout file '{0}'"), val);
+				ErrorAlert ea=new ErrorAlert(msg, ex.Message, this);
 				ea.Run();
 				ea.Destroy();
 				if (selectedLayout != null)

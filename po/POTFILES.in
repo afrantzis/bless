@@ -1,0 +1,25 @@
+# List of source files which contain translatable strings.
+data/bless.glade
+src/buffers/SaveAsOperation.cs
+src/buffers/SaveOperation.cs
+src/gui/FileChangedBar.cs
+src/gui/FileService.cs
+src/gui/MainWindow.cs
+src/gui/dialogs/AboutDialog.cs
+src/gui/dialogs/ExportDialog.cs
+src/gui/dialogs/FileOverwriteAlert.cs
+src/gui/dialogs/LayoutSelectionDialog.cs
+src/gui/dialogs/PreferencesDialog.cs
+src/gui/dialogs/RevertConfirmationAlert.cs
+src/gui/dialogs/SaveConfirmationAlert.cs
+src/gui/dialogs/SaveConfirmationMultiAlert.cs
+src/gui/plugins/ConversionTablePlugin.cs
+src/gui/plugins/FileExportPlugin.cs
+src/gui/plugins/FileOperationsPlugin.cs
+src/gui/plugins/FindReplacePlugin.cs
+src/gui/plugins/GotoOffsetPlugin.cs
+src/gui/plugins/HelpOperationsPlugin.cs
+src/gui/plugins/InfobarPlugin.cs
+src/gui/plugins/SelectLayoutPlugin.cs
+src/gui/plugins/SelectRangePlugin.cs
+src/util/BaseConverter.cs

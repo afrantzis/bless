@@ -20,6 +20,7 @@
  */
 using System;
 using Gtk;
+using Mono.Unix;
  
 namespace Bless.Gui.Dialogs {
 
@@ -28,7 +29,8 @@ public class RevertConfirmationAlert : Alert
 {
 	
 	public RevertConfirmationAlert(string primary, Gtk.Window parent) 
-	: base("Revert file '"+primary+"' to its last saved state?", "If you revert, all changes made since the last save will be lost.", parent)
+	: base(string.Format(Catalog.GetString("Revert file '{0}' to its last saved state?"), primary),
+		Catalog.GetString("If you revert, all changes made since the last save will be lost."), parent)
 	{
 		image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
 		

@@ -26,6 +26,7 @@ using Bless.Tools;
 using Bless.Gui;
 using Bless.Buffers;
 using Bless.Plugins;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -78,7 +79,7 @@ public class ConversionTablePlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ToggleActionEntry[] toggleActionEntries = new ToggleActionEntry[] {
-			new ToggleActionEntry ("ConversionTableAction", null, "Conversion Table", null, null,
+			new ToggleActionEntry ("ConversionTableAction", null, Catalog.GetString("Conversion Table"), null, null,
 			                    new EventHandler(OnViewConversionTableToggled), false),
 		};
 		
@@ -139,7 +140,7 @@ public class ConversionTable: Gtk.HBox
 	
 	public ConversionTable(DataBook db)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ConversionTableWidget", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ConversionTableWidget", "bless");
 		gxml.Autoconnect (this);
 	
 		littleEndian=true;

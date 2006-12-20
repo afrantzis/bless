@@ -23,6 +23,7 @@ using Bless.Plugins;
 using Bless.Gui.Dialogs;
 using System;
 using Gtk;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -67,9 +68,9 @@ public class HelpOperationsPlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("ContentsAction", Stock.Help, "_Contents", "F1", null,
+			new ActionEntry ("ContentsAction", Stock.Help, Catalog.GetString("_Contents"), "F1", null,
 			                    new EventHandler(OnContentsActivated)),
-			new ActionEntry ("AboutAction", null, "_About", "", null,
+			new ActionEntry ("AboutAction", null, Catalog.GetString("_About"), null, null,
 			                    new EventHandler(OnAboutActivated)),
 		};
 		

@@ -26,6 +26,7 @@ using Bless.Tools;
 using System;
 using System.IO;
 using Gtk;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -68,7 +69,7 @@ public class SelectLayoutPlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("LayoutsAction", null, "_Layouts...", "<shift><ctrl>L", null,
+			new ActionEntry ("LayoutsAction", null, Catalog.GetString("_Layouts..."), "<shift><ctrl>L", null,
 			                    new EventHandler(OnLayoutsActivated)),
 		};
 		

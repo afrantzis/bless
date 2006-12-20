@@ -80,7 +80,6 @@
     <File name="./src/util/Deque.cs" subtype="Code" buildaction="Compile" />
     <File name="./tests/util/DequeTests.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/RangeCollection.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/FileFinder.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/WidgetGroup.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/plugins" subtype="Directory" buildaction="Compile" />
     <File name="./src/plugins/Plugin.cs" subtype="Code" buildaction="Compile" />

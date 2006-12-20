@@ -1,8 +1,8 @@
 EXTRA_DIST = AUTHORS COPYING NEWS README README.packaging bless.mdp bless.mds bless.spec
 
-SUBDIRS = builder src bin data doc tests
+SUBDIRS = po builder src po bin data doc tests
 
-DIST_SUBDIRS= builder src bin doc data tests
+DIST_SUBDIRS= po builder src po bin doc data tests
 
 CLEANFILES = bless
 
@@ -21,4 +21,3 @@ install-data-local:
 
 uninstall-local:
 	rm -rf $(libdir)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
-

@@ -26,6 +26,7 @@ using Bless.Gui.Dialogs;
 using System;
 using System.IO;
 using Gtk;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -136,19 +137,19 @@ public class FileOperationsPlugin : GuiPlugin
 	private void AddActions(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("NewAction", Stock.New, "_New", "<control>N", "New File",
+			new ActionEntry ("NewAction", Stock.New, null, "<control>N", "New File",
 			                    new EventHandler(OnNewActivated)),
-			new ActionEntry ("OpenAction", Stock.Open, "_Open", "<control>O", "Open File",
+			new ActionEntry ("OpenAction", Stock.Open, null, "<control>O", "Open File",
 			                    new EventHandler(OnOpenActivated)),
-			new ActionEntry ("SaveAction", Stock.Save, "_Save", "<control>S", "Save File",
+			new ActionEntry ("SaveAction", Stock.Save, null, "<control>S", "Save File",
 			                    new EventHandler(OnSaveActivated)),
-			new ActionEntry ("SaveAsAction", Stock.SaveAs, "Save _As", "<shift><control>S", "Save File As",
+			new ActionEntry ("SaveAsAction", Stock.SaveAs, null, "<shift><control>S", "Save File As",
 			                    new EventHandler(OnSaveAsActivated)),
-			new ActionEntry ("RevertAction", Stock.RevertToSaved, "_Revert", null, "Revert File",
+			new ActionEntry ("RevertAction", Stock.RevertToSaved, null, null, "Revert File",
 			                    new EventHandler(OnRevertActivated)),
-			new ActionEntry ("CloseAction", Stock.Close, "_Close", "<control>W", "Close File",
+			new ActionEntry ("CloseAction", Stock.Close, null, "<control>W", "Close File",
 			                    new EventHandler(OnCloseActivated)),
-			new ActionEntry ("QuitAction", Stock.Quit, "_Quit", "<control>Q", "Quit Application",
+			new ActionEntry ("QuitAction", Stock.Quit, null, "<control>Q", "Quit Application",
 			                    new EventHandler(OnQuitActivated))
 		};
 		
@@ -185,7 +186,7 @@ public class FileOperationsPlugin : GuiPlugin
 	public void OnOpenActivated(object o, EventArgs args) 
 	{
 		// Get path of file(s) to open	
-		Gtk.FileChooserDialog fs=new Gtk.FileChooserDialog("Open File(s)", mainWindow, FileChooserAction.Open,
+		Gtk.FileChooserDialog fs=new Gtk.FileChooserDialog(Catalog.GetString("Open File(s)"), mainWindow, FileChooserAction.Open,
 			Gtk.Stock.Cancel, ResponseType.Cancel,
 			Gtk.Stock.Open, ResponseType.Accept);
 		
@@ -239,7 +240,8 @@ public class FileOperationsPlugin : GuiPlugin
 				dv.Revert();
 		}
 		catch (FileNotFoundException ex) {
-			ErrorAlert ea=new ErrorAlert("Error reverting file '"+ ex.Message+"'.","The file cannot be found. Perhaps it has been recently deleted." , mainWindow);
+			string msg = string.Format(Catalog.GetString("The file '{0}' cannot be found. Perhaps it has been recently deleted."), ex.Message);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Error reverting file"), msg, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}

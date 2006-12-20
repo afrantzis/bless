@@ -27,6 +27,7 @@ using Bless.Gui.Dialogs;
 using Bless.Gui;
 using Bless.Tools.Find;
 using Bless.Plugins;
+using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
 	
@@ -74,7 +75,7 @@ public class GotoOffsetPlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("GotoOffsetAction", Stock.JumpTo, "_Goto Offset", "<control>G", null,
+			new ActionEntry ("GotoOffsetAction", Stock.JumpTo, Catalog.GetString("_Goto Offset"), "<control>G", null,
 			                    new EventHandler(OnGotoOffsetActivated)),
 		};
 		
@@ -112,7 +113,7 @@ public class GotoOffsetWidget : Gtk.HBox
 	{
 		dataBook=db;
 		
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "GotoOffsetHBox", null);
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "GotoOffsetHBox", "bless");
 		gxml.Autoconnect (this);
 		
 		OffsetEntry.Completion=new EntryCompletion();
@@ -177,7 +178,7 @@ public class GotoOffsetWidget : Gtk.HBox
 				dv.MoveCursor(offset, 0);
 			}
 			else {
-				ErrorAlert ea=new ErrorAlert("Invalid Offset", "The offset you specified is outside the file's limits.", null);
+				ErrorAlert ea=new ErrorAlert(Catalog.GetString("Invalid Offset"), Catalog.GetString("The offset you specified is outside the file's limits."), null);
 				ea.Run();
 				ea.Destroy();
 			}
@@ -187,7 +188,7 @@ public class GotoOffsetWidget : Gtk.HBox
 			ls.AppendValues(OffsetEntry.Text);
 		}
 		catch(FormatException e) {
-			ErrorAlert ea=new ErrorAlert("Error in Offset Format", e.Message, null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Error in Offset Format"), e.Message, null);
 			ea.Run();
 			ea.Destroy();
 		}
