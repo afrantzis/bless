@@ -1,4 +1,4 @@
-DIST_SUBDIRS= find
+DIST_SUBDIRS= export find
 
 SRC= $(wildcard *.cs)
 

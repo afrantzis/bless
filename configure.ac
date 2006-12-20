@@ -80,6 +80,8 @@ AC_CONFIG_FILES([Makefile po/Makefile.in
 				 src/gui/plugins/Makefile
 				 src/tools/Makefile
 				 src/tools/find/Makefile
+ 				 src/tools/export/Makefile
+				 src/tools/export/plugins/Makefile
 				 src/util/Makefile
 				 src/plugins/Makefile
 				 tests/Makefile
