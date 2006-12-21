@@ -1,24 +1,13 @@
 <?xml version="1.0"?>
 <UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
   <Files>
-    <File filename="./src/gui/MainWindow.cs" />
-    <File filename="./src/gui/dialogs/SaveConfirmationAlert.cs" />
-    <File filename="./src/gui/dialogs/Alert.cs" />
-    <File filename="./src/gui/dialogs/SaveConfirmationMultiAlert.cs" />
+    <File filename="./src/gui/FileService.cs" />
   </Files>
   <Views>
     <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
       <TreeView>
         <Node expanded="True">
-          <Node name="bless" expanded="True">
-            <Node name="src" expanded="True">
-              <Node name="gui" expanded="True">
-                <Node name="dialogs" expanded="True">
-                  <Node name="SaveConfirmationMultiAlert.cs" expanded="False" selected="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
+          <Node name="bless" expanded="True" />
         </Node>
       </TreeView>
     </ViewMemento>
@@ -43,7 +32,7 @@
   <Properties>
     <Properties>
       <Property key="ActiveConfiguration" value="Debug" />
-      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/dialogs/SaveConfirmationMultiAlert.cs" />
+      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/FileService.cs" />
     </Properties>
   </Properties>
 </UserCombinePreferences>

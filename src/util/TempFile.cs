@@ -42,7 +42,7 @@ public class TempFile
 		} while (File.Exists(dir + Path.DirectorySeparatorChar + str + ".bless")==true);
 			
 		//System.Console.WriteLine("Created random: {0}",str);
-		return str+".bless";	
+		return Path.Combine(dir, str + ".bless");	
 	 }
 }
  

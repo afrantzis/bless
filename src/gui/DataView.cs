@@ -154,6 +154,9 @@ public class DataView {
 		else
 			byteBuffer.MaxUndoActions=-1;
 		
+		// temp dir
+		byteBuffer.TempDir = prefs["ByteBuffer.TempDir"];
+		
 		// pattern match highlighting
 		if (dvDisplay.Layout.Areas.Count>0) {
 			bool highlightPref=false;
@@ -300,6 +303,7 @@ public class DataView {
 		Preferences.Proxy.Subscribe("Undo.Limited", prefID, handler);
 		Preferences.Proxy.Subscribe("Undo.Actions", prefID, handler);
 		Preferences.Proxy.Subscribe("Highlight.PatternMatch", prefID, handler);
+		Preferences.Proxy.Subscribe("ByteBuffer.TempDir", prefID, handler);
 	}
 	
 	public void Copy()

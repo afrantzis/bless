@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Bless.Util;
+
 using Mono.Unix;
 
 namespace Bless.Buffers {
@@ -46,9 +47,9 @@ public class SaveOperation : SaveAsOperation
 		get { return stageReached; }
 	}
 	
-	public SaveOperation(ByteBuffer bb, ProgressCallback pc,
+	public SaveOperation(ByteBuffer bb, string tempFilename, ProgressCallback pc,
 							AsyncCallback ac, bool glibIdle)
-							: base(bb, Path.GetTempFileName(), pc, ac, glibIdle)
+							: base(bb, tempFilename, pc, ac, glibIdle)
 	{
 #if ENABLE_UNIX_SPECIFIC
 		// get info about the device the file will be saved on

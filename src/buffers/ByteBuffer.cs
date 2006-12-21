@@ -43,6 +43,7 @@ public class ByteBuffer : IBuffer {
 	FileSystemWatcher fsw;
 	int maxUndoActions;
 	bool changedBeyondUndo;
+	string tempDir;
 	
 	// automatic file naming
 	string autoFilename;
@@ -135,6 +136,7 @@ public class ByteBuffer : IBuffer {
 		useGLibIdle=false;
 		emitEvents=true;
 		maxUndoActions=-1; // unlimited undo
+		tempDir = Path.GetTempPath();
 	}
 	
 	///<summary>Create a ByteBuffer loaded with a file</summary>
@@ -432,7 +434,7 @@ public class ByteBuffer : IBuffer {
 			saveFinishedEvent.Reset();
 			userSaveAsyncCallback=ac;
 			
-			SaveOperation so=new SaveOperation(this, progressCallback, SaveAsyncCallback, useGLibIdle);
+			SaveOperation so=new SaveOperation(this, TempFile.CreateName(tempDir), progressCallback, SaveAsyncCallback, useGLibIdle);
 			
 			// don't allow messing up with the buffer
 			// while we are saving
@@ -773,6 +775,11 @@ public class ByteBuffer : IBuffer {
 				
 			}
 		}
+	}
+	
+	public string TempDir {
+		get { return tempDir; }
+		set { tempDir = value;}
 	}
 	
 	internal void Display(string s) 

@@ -232,8 +232,7 @@ public class BlessMain
 		
 		// if nothing has been loaded, create a new file
 		if (dataBook.NPages == 0) {
-			ByteBuffer bb=new ByteBuffer();
-			bb.UseGLibIdle=true;
+			ByteBuffer bb = Services.File.NewFile();
 			
 			// create and setup a  DataView
 			DataView dv=Services.File.CreateDataView(bb);

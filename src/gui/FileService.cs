@@ -176,6 +176,20 @@ public class FileService
 	
 	
 	///<summary>
+	/// Create new file  
+	///</summary>
+	public ByteBuffer NewFile()
+	{
+		ByteBuffer bb = new ByteBuffer();
+		bb.UseGLibIdle = true;
+		
+		if (Preferences.Instance["ByteBuffer.TempDir"] != "") 
+			bb.TempDir = Preferences.Instance["ByteBuffer.TempDir"];
+			
+		return bb;
+	}
+	
+	///<summary>
 	/// Try to open the file as a ByteBuffer 
 	///</summary>
 	public ByteBuffer OpenFile(string filename)
@@ -208,6 +222,8 @@ public class FileService
 		try {	
 			ByteBuffer bb=ByteBuffer.FromFile(fullPath);
 			bb.UseGLibIdle=true;
+			if (Preferences.Instance["ByteBuffer.TempDir"] != "") 
+				bb.TempDir = Preferences.Instance["ByteBuffer.TempDir"];
 			string msg = string.Format(Catalog.GetString("Loaded file '{0}'"), fullPath);
 			Services.Info.DisplayMessage(msg);
 			//history.Add(fullPath);

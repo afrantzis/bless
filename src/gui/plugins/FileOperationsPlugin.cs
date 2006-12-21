@@ -23,6 +23,7 @@ using Bless.Buffers;
 using Bless.Gui;
 using Bless.Plugins;
 using Bless.Gui.Dialogs;
+using Bless.Tools;
 using System;
 using System.IO;
 using Gtk;
@@ -171,10 +172,7 @@ public class FileOperationsPlugin : GuiPlugin
 	///<summary>Handle file->new command from menu</summary>
 	public void OnNewActivated(object o, EventArgs args) 
 	{
-		ByteBuffer bb=new ByteBuffer();
-		bb.UseGLibIdle=true;
-		
-		//bufferHasChanged[bb]=true;
+		ByteBuffer bb = Services.File.NewFile();
 	
 		// create and setup a  DataView
 		DataView dv=Services.File.CreateDataView(bb);

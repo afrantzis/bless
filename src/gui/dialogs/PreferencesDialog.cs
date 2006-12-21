@@ -34,6 +34,7 @@ namespace Bless.Gui.Dialogs {
 public class PreferencesDialog : Dialog
 {
 	Preferences prefs;
+	Window mainWindow;
 	
 	[Glade.Widget] Notebook PreferencesNotebook;
 	[Glade.Widget] Entry LayoutFileEntry;
@@ -43,6 +44,8 @@ public class PreferencesDialog : Dialog
 	[Glade.Widget] SpinButton UndoActionsSpinButton;
 	[Glade.Widget] ComboBox DefaultEditModeComboBox;
 	[Glade.Widget] ComboBox DefaultNumberBaseComboBox;
+	[Glade.Widget] Entry TempDirEntry;
+	[Glade.Widget] Button SelectTempDirButton;
 	[Glade.Widget] CheckButton HighlightPatternMatchCheckButton;
 	
 	[Glade.Widget] CheckButton LoadPreviousSessionCheckButton;
@@ -60,6 +63,7 @@ public class PreferencesDialog : Dialog
 		gxml.Autoconnect (this);
 		
 		prefs=p;
+		mainWindow = parent;
 		LoadPreferences();
 		
 		// connect handlers
@@ -160,6 +164,11 @@ public class PreferencesDialog : Dialog
 			DefaultNumberBaseComboBox.Active=(int)index;
 		}
 		
+		if (prefs["ByteBuffer.TempDir"] != System.IO.Path.GetTempPath())
+			TempDirEntry.Text = prefs["ByteBuffer.TempDir"];
+		else
+			TempDirEntry.Text = "";
+		
 		LoadCheckButtonPreference(
 			"Highlight.PatternMatch",
 			HighlightPatternMatchCheckButton,
@@ -228,6 +237,11 @@ public class PreferencesDialog : Dialog
 		if (DefaultNumberBaseComboBox.GetActiveIter (out iter))
 			prefs["Default.NumberBase"]=(string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
 		
+		if (TempDirEntry.Text != "")
+			prefs["ByteBuffer.TempDir"] = TempDirEntry.Text;
+		else
+			prefs["ByteBuffer.TempDir"] = System.IO.Path.GetTempPath();
+			
 		prefs["Session.LoadPrevious"]=LoadPreviousSessionCheckButton.Active.ToString();
 		prefs["Session.AskBeforeLoading"]=AskBeforeLoadingSessionCheckButton.Active.ToString();
 		prefs["Session.RememberCursorPosition"]=RememberCursorPositionCheckButton.Active.ToString();
@@ -272,6 +286,15 @@ public class PreferencesDialog : Dialog
 			RememberCursorPositionCheckButton.Sensitive=false;
 			RememberWindowGeometryCheckButton.Sensitive=false;
 		}
+	}
+	
+	private void OnSelectTempDirButtonClicked(object o, EventArgs args)
+	{
+		FileChooserDialog fcd = new FileChooserDialog(Catalog.GetString("Select Directory"), mainWindow, FileChooserAction.CreateFolder,  Catalog.GetString("Cancel"), ResponseType.Cancel,
+                                      Catalog.GetString("Select"), ResponseType.Accept);
+		if ((ResponseType)fcd.Run() == ResponseType.Accept)
+			TempDirEntry.Text = fcd.Filename;
+		fcd.Destroy();
 	}
 	
 	void OnPreferencesChanged(object o, EventArgs args)

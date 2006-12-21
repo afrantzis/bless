@@ -5,7 +5,7 @@
 	<pref name="Tools.ConversionTable.Show">True</pref>
 	<pref name="Tools.Statistics.Show">False</pref>
 	<pref name="Session.RememberWindowGeometry">True</pref>
-        <pref name="Highlight.PatternMatch">True</pref>	
+	<pref name="Highlight.PatternMatch">True</pref>	
 	<pref name="View.Toolbar.Show">True</pref>
 	<pref name="Default.NumberBase">Hexadecimal</pref>
 	<pref name="View.Statusbar.Offset">True</pref>
@@ -18,4 +18,5 @@
 	<pref name="Session.AskBeforeLoading">False</pref>
 	<pref name="Undo.Actions">100</pref>
 	<pref name="View.Statusbar.Selection">True</pref>
+	<pref name="ByteBuffer.TempDir"></pref>
 </preferences>
