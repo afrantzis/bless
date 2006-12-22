@@ -35,14 +35,12 @@ public class FileService
 {
 	DataBook dataBook;
 	Window mainWindow;
-	History history;
 	
 	
-	public FileService(DataBook db, Window mw, History h)
+	public FileService(DataBook db, Window mw)
 	{
 		dataBook=db;
 		mainWindow=mw;
-		history=h;
 	}
 	
 	///<summary>
@@ -220,13 +218,13 @@ public class FileService
 		string fullPath=uri.LocalPath;
 		
 		try {	
-			ByteBuffer bb=ByteBuffer.FromFile(fullPath);
-			bb.UseGLibIdle=true;
+			ByteBuffer bb = ByteBuffer.FromFile(fullPath);
+			bb.UseGLibIdle = true;
 			if (Preferences.Instance["ByteBuffer.TempDir"] != "") 
 				bb.TempDir = Preferences.Instance["ByteBuffer.TempDir"];
 			string msg = string.Format(Catalog.GetString("Loaded file '{0}'"), fullPath);
 			Services.Info.DisplayMessage(msg);
-			//history.Add(fullPath);
+			History.Instance.Add(fullPath);
 			return bb;
 		}
 		catch(UnauthorizedAccessException ex) {
@@ -380,7 +378,7 @@ public class FileService
 				if (bbs.Result!=SaveOperation.OperationResult.Finished)
 					return false;
 				// add to history
-				//history.Add(bbs.SavePath);
+				History.Instance.Add(bbs.SavePath);
 				return true;
 			}
 		}
@@ -428,7 +426,7 @@ public class FileService
 			
 			Services.Info.DisplayMessage(msg);
 			// add to history
-			//history.Add(bbs.SavePath);
+			History.Instance.Add(bbs.SavePath);
 			
 			return;
 		}
@@ -489,7 +487,7 @@ public class FileService
 	 		string blessConfDir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bless");
 			try {
 				Services.Session.Save(Path.Combine(blessConfDir,"last.session"));
-				SaveHistory(Path.Combine(blessConfDir,"history.xml"));
+				History.Instance.Save(Path.Combine(blessConfDir,"history.xml"));
 			}
 			catch (Exception ex) { }
 			Application.Quit ();
@@ -524,32 +522,6 @@ public class FileService
 				
 			}
 		}  
-	}
-	
-	///<summary>
-	/// Save the history to the specified file
-	///</summary>
-	public void SaveHistory(string path)
-	{
-		try {
-			history.Save(path);
-		}
-		catch (Exception ex) {
-		
-		}
-	}
-	
-	///<summary>
-	/// Load the history from the specified file
-	///</summary>
-	public void LoadHistory(string path)
-	{
-		try {
-			history.Load(path);
-		}
-		catch (Exception ex) {
-		
-		}
 	}
 }
 	

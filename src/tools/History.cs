@@ -20,23 +20,35 @@
  */
  
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 
 namespace Bless.Tools {
 
 ///<summary>
-/// A class that handles recently used files history.
+/// A class that handles recently used files history (singleton)
 ///</summary>
 public class History
 {
 
-	Queue files;
+	List<string> files;
 	int maxSize;
+	static History instance;
+	
+	///<summary>
+	/// The current history
+	///</summary>
+	static public History Instance {
+		get { 
+			if (instance==null)
+				instance=new History(5);
+			return instance;
+		}
+	}
 	
 	///<summary>The file in the history</summary>
-	public Queue Files {
+	public List<string> Files {
 		get { return files; }
 	}
 	
@@ -46,28 +58,22 @@ public class History
 	}
 	
 	///<summary>Create history with maximum size 'n'</summary>
-	public History(int n)
+	private History(int n)
 	{
-		files=new Queue(n);
+		files=new List<string>(n);
 		maxSize=n;
 	}
 	
 	///<summary>Add a file to the history</summary>
 	public void Add(string path)
 	{
-		if (files.Contains(path)) {
-			Queue tmp=new Queue(maxSize);
-			foreach(string s in files) {
-				if (s!=path)
-					tmp.Enqueue(s);
-			}
-			tmp.Enqueue(path);
-			files=tmp;
+		if (files.Remove(path) == true) {
+			files.Insert(0, path);
 		}
 		else {
-			if (files.Count==maxSize)
-				files.Dequeue();
-			files.Enqueue(path);
+			if (files.Count == maxSize)
+				files.RemoveAt(files.Count - 1);
+			files.Insert(0, path);
 		}
 		
 		if (Changed!=null)
@@ -99,9 +105,11 @@ public class History
 		
 		xml.WriteStartElement(null, "history", null);
 		
-		foreach(string file in files) {
+		// save them in reverse order
+		// so that they are loaded normally
+		for(int i = files.Count - 1; i>=0 ; i--) {
 			xml.WriteStartElement(null, "file", null);
-				xml.WriteString(file);
+				xml.WriteString(files[i]);
 			xml.WriteEndElement();
 		}
 		

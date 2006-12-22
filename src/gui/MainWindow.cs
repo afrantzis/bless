@@ -84,8 +84,6 @@ public class BlessMain
 	DataBook dataBook;
 	ProgressDialog findProgressDialog;
 	
-	History history;
-		
 	// the kinds of MIME type targets we are accepting
 	static TargetEntry[] dropTargets= new TargetEntry[]{
 		new TargetEntry("text/uri-list", 0, 0)
@@ -185,7 +183,7 @@ public class BlessMain
 		//MainVBox.ReorderChild(widgetGroup1, 4);
 		
 		
-		Services.File=new FileService(dataBook, MainWindow, history);
+		Services.File=new FileService(dataBook, MainWindow);
 		Services.Session=new SessionService(dataBook, MainWindow);
 		//Services.Info=new InfoService(infobar);
 		
@@ -196,9 +194,10 @@ public class BlessMain
 		}
 		
 		// load recent file history
-		history=new History(5);
-		history.Changed += OnHistoryChanged;
-		Services.File.LoadHistory(Path.Combine(blessConfDir,"history.xml"));
+		try {
+			History.Instance.Load(Path.Combine(blessConfDir,"history.xml"));
+		}
+		catch(Exception e) { }
 		
 		// if user specified files on the command line
 		// try to load them
@@ -304,58 +303,6 @@ public class BlessMain
 		}
 	}
 	
-	///<summary>Handle additions to history</summary>
-	void OnHistoryChanged(History h)
-	{
-	/*	Menu fileMenu=(Menu)FileMenuItem.Submenu;
-		
-		// clear file list
-		while (fileMenu.Children.Length > 9)
-			fileMenu.Remove(fileMenu.Children[7]);
-		
-		// add separator if it is needed
-		if (h.Files.Count>=1) {
-			SeparatorMenuItem smi=new SeparatorMenuItem();
-			fileMenu.Insert(smi, 7);
-		}
-		
-		// add recent files
-		int i=h.Files.Count;
-		foreach (string file in h.Files) {
-			HistoryMenuItem mi=new HistoryMenuItem(file, i);
-			mi.Visible=true;
-			mi.Activated+=OnHistoryMenuItemActivated;
-			fileMenu.Insert(mi, 7);
-			i--;
-		}
-		
-		fileMenu.ShowAll();*/
-	}
-	
-	///<summary>Handle Activated event on a HistoryMenuItem</summary>
-	void OnHistoryMenuItemActivated(object o, EventArgs args)
-	{
-/*		HistoryMenuItem hmi=(HistoryMenuItem)o;
-		
-		// try to open the file
-		ByteBuffer bb=OpenFile(hmi.FilePath);
-		
-		// if open was successful
-		if (bb!=null) {
-			if (dataBook.CanReplacePage(dataBook.CurrentPage)) { // replace current page
-				DataView dv=((DataViewDisplay)dataBook.CurrentPageWidget).View;
-				dv.Buffer.CloseFile();
-				dv.Buffer=bb;
-			}
-			else { // create new page
-				// create and setup a  DataView
-				DataView dv=CreateDataView(bb);	
-				dataBook.AppendView(dv, new CloseViewDelegate(CloseFile), Path.GetFileName(bb.Filename));	
-			}
-							
-		}*/
-	}
-
 	///<summary>
 	/// Load the preferences from the specified file
 	///</summary>
