@@ -236,7 +236,7 @@ public class SelectRangeWidget : Gtk.HBox
 		}
 		
 		if (relative != 0)
-			toOffset = fromOffset + relative * toOffset - 1;
+			toOffset = fromOffset + relative * (toOffset - 1);
 		
 		if (toOffset >= 0 && toOffset < dv.Buffer.Size &&
 			fromOffset >= 0 && fromOffset < dv.Buffer.Size) { 
@@ -249,7 +249,7 @@ public class SelectRangeWidget : Gtk.HBox
 				ls.AppendValues(FromEntry.Text);
 		}
 		else {
-			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Invalid Offset"), Catalog.GetString("The range you specified is outside the file's limits."), null);
+			ErrorAlert ea=new ErrorAlert(Catalog.GetString("Invalid Range"), Catalog.GetString("The range you specified is outside the file's limits."), null);
 			ea.Run();
 			ea.Destroy();
 		}

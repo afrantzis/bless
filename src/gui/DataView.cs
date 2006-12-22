@@ -565,15 +565,15 @@ public class DataView {
 		if (sel.Start==start && sel.End==end)
 			return;
 		
+		Bless.Util.Range newSel=new Bless.Util.Range(start, end);
+		newSel.Sort();
+		
 		// clear the previous selection pattern highlights
 		// and check the selection
 		foreach (Area a in dvDisplay.Layout.Areas) {
 			a.ClearHighlights(Drawer.HighlightType.PatternMatch);
-			a.SetSelection(start, end);		
+			a.SetSelection(newSel.Start, newSel.End);		
 		}
-		
-		Bless.Util.Range newSel=new Bless.Util.Range(start, end);
-		newSel.Sort();
 		
 		byte[] ba=byteBuffer.RangeToByteArray(newSel);
 		// if the selection contains data and highlights are enabled
