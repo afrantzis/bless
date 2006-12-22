@@ -1,8 +1,8 @@
 Name:      bless
 Summary:   gtk#-based hex-editor written in C# (with mono)
-Requires:  mono-core >= 1.1.4 gtk-sharp2 >= 1.9.5
-BuildRequires:  mono-core >= 1.1.4 gtk-sharp2 >= 1.9.5
-Version:   0.4.0
+Requires:  mono-core >= 1.1.4 gtk-sharp2 >= 2.4
+BuildRequires:  mono-core >= 1.1.4 gtk-sharp2 >= 2.4
+Version:   0.5.0
 Release:   1
 License:   GPL
 Vendor:    Alexandros Frantzis <alf82 at freemail dot gr>

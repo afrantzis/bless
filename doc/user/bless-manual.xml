@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 	<!ENTITY legal SYSTEM "legal.xml">
-	<!ENTITY appversion "0.4.9">
+	<!ENTITY appversion "0.5.0">
 	<!ENTITY manrevision "1.0">
-	<!ENTITY date "Nov 2006">
+	<!ENTITY date "Dec 2006">
 	<!ENTITY app "<application>Bless</application>">
 	<!-- Information about the entities
 		The legal.xml file contains legal information, there is no need to edit the file. 
@@ -29,7 +29,7 @@
 
 		<copyright> 
 			<year>2004</year> 
-			<year>2005</year> 
+			<year>2006</year> 
 			<holder>Alexandros Frantzis</holder> 
 		</copyright> 
 <!-- translators: uncomment this:
@@ -161,7 +161,13 @@
 		</listitem>
 		<listitem> 
 			<para>Highlighting of selection pattern matches in the file.</para> 
-		</listitem> 
+		</listitem>
+		<listitem> 
+			<para>Exporting to text and html.</para> 
+		</listitem>
+		<listitem> 
+			<para>Extensibility with plugins.</para> 
+		</listitem>
 	</itemizedlist> 
 </chapter>
 
@@ -184,7 +190,7 @@
 					<para>mono/.NET runtime and C# compiler &gt;= 1.1.4 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
 				</listitem>
 				<listitem>
-					<para>Gtk#  &gt;=1.9.5 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
+					<para>Gtk#  &gt;=2.4 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
@@ -743,7 +749,7 @@
 			<section id="bless-usage-edit-basic-select">
 				<title>Selecting a range of data</title>
 				<para>
-					There are two ways to select a range of data from the file you are editing:
+					There are three ways to select a range of data from the file you are editing:
 				<variablelist>
 					<varlistentry>
 						<term>Using the keyboard</term>
@@ -769,6 +775,61 @@
 								</listitem> 
 								<listitem>Release the Left mouse button.</listitem>
 							</itemizedlist>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Using the Select Range Bar</term>
+						<listitem>
+							<para>
+								To access the Select Range Bar use:
+								<menuchoice>
+									<shortcut>
+										<keycombo>
+											<keycap>Ctrl</keycap>
+											<keycap>Shift</keycap>
+											<keycap>R</keycap>
+										</keycombo>
+									</shortcut>	
+									<guisubmenu>Edit</guisubmenu>
+									<guimenuitem>Select Range</guimenuitem>
+								</menuchoice>. 
+							</para>
+							<figure>
+								<title>Select Range Bar</title>
+								<screenshot>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="figures/bless_select_range.png" format="PNG"/>
+										</imageobject>
+										<textobject>
+											<phrase>Select Range Bar</phrase>
+										</textobject>
+									</mediaobject>
+								</screenshot>
+							</figure>
+							<para>
+								To select a range:
+								<orderedlist>
+									<listitem>
+										<para>
+											Type the starting offset in the <guilabel>from</guilabel> text entry (in the desired number format).
+											if the typed offset starts with '0x' it is considered hexadecimal, if it starts with '0' it is 
+											considered octal, otherwise it is considered decimal.
+										</para>
+									</listitem>
+									<listitem>
+										<para>Type the ending offset in the <guilabel>to</guilabel> text entry (in the desired number format).
+											if the typed offset starts with '0x' it is considered hexadecimal, if it starts with '0' it is 
+											considered octal, otherwise it is considered decimal.</para>
+										<para>
+											Instead of specifying an absolute ending offset you can specify the length of the selection. To do
+											this type the length in the <guilabel>to</guilabel> text entry, prepending it with either '+' or '-'.
+											The '+' or '-' specify the direction of the selection: '+' means select towards the end of the file and
+											'-' means select towards the beginning. The selected range always contains the starting offset. 
+										</para>		
+									</listitem>
+								</orderedlist>
+							</para>
 						</listitem>
 					</varlistentry>
 				</variablelist>
@@ -1180,6 +1241,120 @@
 					To delete the matched search sequences, leave the <guilabel>Replace with</guilabel> text entry <emphasis>completely blank</emphasis>.
 				</para>
 			</tip>
+		</section>
+	</section>
+	
+	<section id="bless-usage-export">
+		<title>Exporting Data</title>
+		<para>
+			&app; features an advanced and customizable export system. It can currently export data to text or 
+			html files.
+		</para>
+		<section id="bless-usage-export-pattern">
+		<title>Export Patterns</title>
+			<para>
+				The exporting is based on an export pattern. The pattern consists of string literals and special command strings. 
+				The literals are printed in the output file as they are whereas the command strings tell the exporter to 
+				do something. Commands strings are enclosed in '%'s and specify the command and its parameters. The command 
+				is specified by an uppercase letter and the parameter by lowercase letters. Each letter (whether it corresponds
+				to a command or a paramter) may be followed by an argument enclosed in double quotes '"'.
+			</para>
+			<informaltable>
+				<tgroup cols="3">
+				<thead>
+					<row>
+						<entry>Command</entry>
+						<entry></entry>
+						<entry>Parameters</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>Export (E)</entry>
+						<entry>Writes actual data.</entry>
+						<entry>
+							<simplelist>
+								<member>
+									<para>E: the number of bytes to export</para>
+								</member>
+								<member>
+									<para>p: the prefix to write before each byte</para>
+								</member>
+								<member>
+									<para>s: the suffix to write after each byte</para>
+								</member>
+								<member>
+									<para>x: the separator to use between bytes</para>
+								</member>
+								<member>
+									<para>e: the string to use for not printed bytes (due to alignment)</para>
+								</member>
+							</simplelist>
+						</entry>
+					</row>
+					<row>
+						<entry>Ignore (I)</entry>
+						<entry>Ignores data.</entry>
+						<entry>
+							<simplelist>
+								<member>
+									<para>I: The number of bytes to ignore</para>
+								</member>
+							</simplelist>
+						</entry>
+					</row>				
+					<row>
+						<entry>Offset (O)</entry>
+						<entry>Writes the current offset.</entry>
+						<entry>
+							<simplelist>
+								<member>
+									<para>O: </para>
+								</member>
+							</simplelist>
+						</entry>
+					</row>
+				</tbody>
+				</tgroup>
+			</informaltable>
+			<para>
+				Command strings can be grouped together with square brackets '[',']'. After such a group
+				of commands is executed the pointer which keeps track of the next byte to export is reset
+				to the position it had just before the group was executed.
+			</para>
+			<para>
+				Some sample patterns and their output will make things much clearer:
+				<variablelist>
+					<varlistentry>
+						<term>%O"4"%: %E"4"p"0x"x" "% - %E"4"p"0x"x" "%\n</term>
+						<listitem>
+							<para>
+								<screen>0000: 0x00 0x01 0x02 0x03 - 0x04 0x05 0x06 0x07
+0008: 0x08 0x09 0x0a 0x0b - 0x0c 0x0d 0x0e 0x0f
+0010: 0x10 0x11 0x12 0x13 - 0x14 0x15 0x16 0x17
+0018: 0x18 0x19 0x10 0x1a - 0x1b 0x1c 0x1d 0x1e
+0020: 0x1f                -                    </screen> 
+							</para>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>[%E"2"% %I"2"% %E"2"% %I"2"%] %I"2"% %E"2"% %I"2"% %E"2"%\n</term>
+						<listitem>
+							<para>
+							<screen>0001  0405   0203  0607
+0809  0c0d   0a0b  0e0f
+1011  1415   1213  1617
+1819  1b1c   101a  1d1e
+1f
+</screen> 
+							</para>
+						</listitem>
+					</varlistentry>
+					</variablelist>
+			</para>
+		</section>
+		<section id="bless-usage-export-dialog">
+		<title>Export Dialog</title>
 		</section>
 	</section>
 </chapter>
@@ -1674,8 +1849,20 @@
 
 
 	</section>
-	
 	</section>
+	<section id="bless-customizing-plugins">
+	<title>Extending with plugins</title>
+		<para>As of version 0.5.0 &app; can be extended by using plugins. Internally &app; uses plugins
+		for almost all of its GUI. Currently the parts that can be extended by plugins are:
+		</para>
+		<simplelist>
+			<member>The GUI</member>
+			<member>Export builders</member>
+		</simplelist>
+		<para>
+			See the developer documentation for more information on how to write plugins (TODO).
+		</para>
+	</section>	
 </chapter>
 <!-- ============= Bugs ================================== -->
 <!-- This section is optional and is commented out by default. 

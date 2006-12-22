@@ -38,7 +38,7 @@ public class AboutDialog: Gtk.Window
 		[Glade.Widget]
 		Gtk.Label ReleaseLabel;
 
-		const string release="Bless 0.4.9";
+		const string release="Bless 0.5.0 beta1";
 
 		static AboutDialog instance;
 

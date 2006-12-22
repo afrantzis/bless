@@ -1,6 +1,6 @@
-Bless - Gtk# Hex Editor v0.4.0
+Bless - Gtk# Hex Editor v0.5.0
 ==============================
-Copyright (c) 2004-2005, Alexandros Frantzis
+Copyright (c) 2004-2006, Alexandros Frantzis
 
 Thank you for using ( or at least trying out :) ) Bless!
 
@@ -37,13 +37,12 @@ Main Features
   * Conversion Table.
   * Advanced Copy/Paste capabilities.
   * Multi-threaded search and save operations.
-  * Preferences
+  * Export to text and html (others with plugins).
+  * Plugins.
   
 Planned Features
 ----------------
-  * Export functionality
   * Scripting language for binary file manipulation.
-  * Plugins
 
 ------------------------------------
 2. Project Web Site and contact info
@@ -65,7 +64,7 @@ on all the major platforms (GNU/Linux, *BSD, Solaris, Win32).
 To build and run the current version of bless you need:
     * GTK+ >= 2.4.x (Included in all modern GNU/Linux distributions, http://www.gtk.org)
     * mono/.NET runtime and C# compiler >= 1.1.4 (http://www.mono-project.com)
-    * Gtk# bindings >= 1.9.5 for GTK+ (http://gtk-sharp.sourceforge.net)
+    * Gtk# bindings >= 2.4 for GTK+ (http://gtk-sharp.sourceforge.net)
     * pkg-config (Included in all modern GNU/Linux distributions)
     
 Development is done using the latest stable versions of the above libraries. 
@@ -123,7 +122,7 @@ Enjoy!
 The doc/ directory contains documentation directed both at the user and at the 
 developer who wants to explore Bless. The doc/user/ subdirectory contains 
 information about using bless whereas doc/developer/ contains developer 
-information (UML diagrams, class documentation etc). 
+information (plugin development etc). 
 Note: The developer documentation is almost non-existant.
 
 ---------------
