@@ -98,7 +98,6 @@
     <File name="./src/gui/plugins/HelpOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/SelectLayoutPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/StatisticsPlugin.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/plugins/XWindowsResourcesPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/export" subtype="Directory" buildaction="Compile" />
     <File name="./src/tools/export/IExporter.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/ByteBuffer.cs" subtype="Code" buildaction="Compile" />

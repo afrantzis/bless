@@ -53,11 +53,13 @@ public class StatisticsPlugin : GuiPlugin
 		
 		name="File Statistics";
 		author="Alexandros Frantzis";
-		description="Convert";
+		description="File statistics";
 	}
 	
 	public override bool Load()
 	{
+		return false;
+		/*
 		dataBook=(DataBook)GetDataBook(mainWindow);
 		WidgetGroup wg=(WidgetGroup)GetWidgetGroup(mainWindow, 1);
 		sw=new StatisticsWidget(dataBook);
@@ -69,7 +71,7 @@ public class StatisticsPlugin : GuiPlugin
 		Preferences.Proxy.Subscribe("Tools.Statistics.Show", "stats1", new PreferencesChangedHandler(OnPreferencesChanged));
 		
 		loaded=true;
-		return true;
+		return true;*/
 	}
 	
 	
@@ -268,9 +270,50 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 {
 	int[] freqs;
 	int[] dummyFreqs;
-	double freqWidth;
-	int previousB;
 	
+	PointD[] barStart;
+	PointD[] barEnd;
+	
+	double freqWidth;
+	int previousHighlight;
+	int currentHighlight;
+	
+	void DrawBar(Cairo.Context gr, int b)
+    {
+		gr.MoveTo(barStart[b]);
+	    gr.LineTo (barEnd[b]);
+	    gr.Stroke();
+    }
+    
+    void UpdateHighlight()
+    {
+    	Gdk.Window win = this.GdkWindow;                
+
+        Cairo.Context g = Gdk.CairoHelper.Create(win);
+
+        int x, y, w, h, d;
+        win.GetGeometry(out x, out y, out w, out h, out d);
+    	
+    	g.Scale (w, h);
+    	g.LineWidth = (1.0/freqs.Length) * 0.6;
+    	
+    	if (previousHighlight!=-1) {
+    		/*int start=previousHighlight-1;
+    		int end=previousHighlight+1;
+    		if (start<0) start=0;
+    		if (end>=barStart.Length) end=barStart.Length-1;*/
+    		g.Color=new Color(0.0, 0.0, 0.0);
+    		//for(int i=start; i<=end; i++)
+    			DrawBar(g, previousHighlight);
+    	}
+    	
+    	if (currentHighlight!=-1) {
+    		g.Color=new Color(1.0, 0.0, 0.0);
+    		DrawBar(g, currentHighlight);
+    	}
+    	
+    }
+    
     void Draw (Cairo.Context gr, int width, int height)
     {	
 		gr.Scale (width, height);
@@ -279,24 +322,13 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		gr.Stroke();
 		gr.Color=new Color(0.0, 0.0, 0.0);
 		
-	 freqWidth= (1.0/freqs.Length);
-		gr.LineWidth = (1.0/freqs.Length) * 0.75;
-		int max=0;
-		
-		
+	 	gr.LineWidth = (1.0/freqs.Length) * 0.6;
 		
 		for (int i=0; i<freqs.Length; i++) {
-			if (freqs[i]>max) max=freqs[i];
-		}
-		
-		
-		for (int i=0; i<freqs.Length; i++) {
-			if (previousB==i)
+			if (previousHighlight==i)
 				gr.Color=new Color(1.0, 0.0, 0.0);
-			gr.MoveTo(i*freqWidth,1);
-	    	gr.LineTo (i*freqWidth,1.0-((double)freqs[i])/max);
-	    	gr.Stroke ();
-	    	if (previousB==i)
+			DrawBar(gr, i);
+	    	if (previousHighlight==i)
 				gr.Color=new Color(0.0, 0.0, 0.0);		
 		}
 
@@ -305,13 +337,16 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 	public StatisticsDrawWidget()
 	{
 		dummyFreqs=new int[0];
+		barStart=new PointD[0];
+		barEnd=new PointD[0];
 		freqs=dummyFreqs;
 		
 		this.AddEvents((int)Gdk.EventMask.PointerMotionMask);
 		this.AddEvents((int)Gdk.EventMask.PointerMotionHintMask);
 		
 		this.MotionNotifyEvent+=OnMotionNotify;
-		previousB=-1;
+		previousHighlight=-1;
+		currentHighlight=-1;
 	}
 	
     protected override bool OnExposeEvent (Gdk.EventExpose args)
@@ -323,7 +358,9 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
         int x, y, w, h, d;
         win.GetGeometry(out x, out y, out w, out h, out d);
 		this.HeightRequest= w/5;
-        Draw (g, w, h);
+		
+		Draw (g, w, h);
+        
         return true;
     }
 	
@@ -332,9 +369,38 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 	{
 		if (freqs==null)
 			this.freqs=dummyFreqs;
-		else
+		else {
 			this.freqs=freqs;
+			if (freqs.Length!=barStart.Length) {
+				barStart = new PointD[freqs.Length];
+				barEnd = new PointD[freqs.Length];
+			}
+		}
+		
+		DoDrawingCalculations();
+		previousHighlight=-1;
+		currentHighlight=-1;
 		this.QueueDraw();
+	}
+	
+	void DoDrawingCalculations()
+	{
+		freqWidth= (1.0/freqs.Length);
+		
+		int max=0;
+
+		for (int i=0; i<freqs.Length; i++) {
+			if (freqs[i]>max) max=freqs[i];
+		}
+		
+		for (int i=0; i<barStart.Length; i++) {
+			barStart[i].X=i*freqWidth;
+			barStart[i].Y=1.0;
+			barEnd[i].X=barStart[i].X;
+			barEnd[i].Y=1.0-((double)freqs[i])/max;
+			
+		}
+		
 	}
 	
 	void OnMotionNotify(object o, MotionNotifyEventArgs args)
@@ -352,12 +418,12 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		}
 		Gdk.Rectangle alloc=this.Allocation;
 		//Console.WriteLine("x {0} freq {1} width{2}", x, freqWidth, alloc.Width);
-		int b=(int)((x/(freqWidth*alloc.Width)))+1;
-		Console.WriteLine(b);
+		currentHighlight=(int)((x/(freqWidth*alloc.Width)))+1;
+		Console.WriteLine(currentHighlight);
 		
-		if (previousB!=b) {
-			previousB=b;
-			this.QueueDraw();
+		if (previousHighlight!=currentHighlight) {
+			UpdateHighlight();
+			previousHighlight=currentHighlight;
 		}
 	}
 }   
