@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bless 0.4.9\n"
 "Report-Msgid-Bugs-To: alf82@freemail.gr\n"
-"POT-Creation-Date: 2006-12-20 12:33+0200\n"
+"POT-Creation-Date: 2006-12-22 03:33+0200\n"
 "PO-Revision-Date: 2006-12-18 20:51+0200\n"
 "Last-Translator:  <alf82@freemail.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -36,64 +36,64 @@ msgstr ""
 msgid "<small>Copyright © 2004-2005 Alexandros Frantzis</small>"
 msgstr ""
 
-#: data/bless.glade:372
-msgid "ASCII Text:"
+#: data/bless.glade:255
+msgid "Signed 8 bit:"
 msgstr ""
 
-#: data/bless.glade:391
-msgid "Show unsigned as hexadecimal"
-msgstr ""
-
-#: data/bless.glade:414
-msgid "Show little endian decoding"
-msgstr ""
-
-#: data/bless.glade:597
-msgid "Binary:"
-msgstr ""
-
-#: data/bless.glade:613
-msgid "Octal:"
-msgstr ""
-
-#: data/bless.glade:629
-msgid "Decimal:"
-msgstr ""
-
-#: data/bless.glade:645
-msgid "Hexadecimal:"
-msgstr ""
-
-#: data/bless.glade:659
-msgid "Float 64 bit:"
-msgstr ""
-
-#: data/bless.glade:676
-msgid "Float 32 bit:"
-msgstr ""
-
-#: data/bless.glade:693
-msgid "Unsigned 32 bit:"
-msgstr ""
-
-#: data/bless.glade:710
-msgid "Signed 32 bit:"
-msgstr ""
-
-#: data/bless.glade:725
-msgid "Unsigned 16 bit:"
-msgstr ""
-
-#: data/bless.glade:740
-msgid "Signed 16 bit:"
-msgstr ""
-
-#: data/bless.glade:755
+#: data/bless.glade:268
 msgid "Unsigned 8 bit:"
 msgstr ""
 
-#: data/bless.glade:770
-msgid "Signed 8 bit:"
+#: data/bless.glade:283
+msgid "Signed 16 bit:"
+msgstr ""
+
+#: data/bless.glade:298
+msgid "Unsigned 16 bit:"
+msgstr ""
+
+#: data/bless.glade:313
+msgid "Signed 32 bit:"
+msgstr ""
+
+#: data/bless.glade:328
+msgid "Unsigned 32 bit:"
+msgstr ""
+
+#: data/bless.glade:345
+msgid "Float 32 bit:"
+msgstr ""
+
+#: data/bless.glade:362
+msgid "Float 64 bit:"
+msgstr ""
+
+#: data/bless.glade:379
+msgid "Hexadecimal:"
+msgstr ""
+
+#: data/bless.glade:393
+msgid "Decimal:"
+msgstr ""
+
+#: data/bless.glade:409
+msgid "Octal:"
+msgstr ""
+
+#: data/bless.glade:425
+msgid "Binary:"
+msgstr ""
+
+#: data/bless.glade:608
+msgid "Show little endian decoding"
+msgstr ""
+
+#: data/bless.glade:630
+msgid "Show unsigned as hexadecimal"
+msgstr ""
+
+#: data/bless.glade:650
+msgid "ASCII Text:"
 msgstr ""
 
 #: data/bless.glade:795
@@ -101,6 +101,7 @@ msgid "label4"
 msgstr ""
 
 #: data/bless.glade:832 src/gui/dialogs/ExportDialog.cs:121
+#: src/gui/dialogs/PreferencesDialog.cs:293
 msgid "Cancel"
 msgstr ""
 
@@ -109,7 +110,7 @@ msgid "<b>Default Layout</b>"
 msgstr ""
 
 #: data/bless.glade:889 data/bless.glade:1034 data/bless.glade:1151
-#: data/bless.glade:1302 data/bless.glade:2708
+#: data/bless.glade:1345 data/bless.glade:2751
 msgid "    "
 msgstr ""
 
@@ -145,56 +146,88 @@ msgstr ""
 msgid "<b>Misc</b>"
 msgstr ""
 
-#: data/bless.glade:1169
-msgid "Highlight matches of selection pattern"
+#: data/bless.glade:1201
+msgid "Temporary Directory:"
 msgstr ""
 
-#: data/bless.glade:1183
+#: data/bless.glade:1212
+msgid "Default _edit mode:"
+msgstr ""
+
+#: data/bless.glade:1226
+msgid "Default _number base:"
+msgstr ""
+
+#: data/bless.glade:1239
+msgid ""
+"Insert\n"
+"Overwrite"
+msgstr ""
+
+#: data/bless.glade:1254
 msgid ""
 "Hexadecimal\n"
 "Octal\n"
 "Decimal"
 msgstr ""
 
-#: data/bless.glade:1199
-msgid ""
-"Insert\n"
-"Overwrite"
+#: data/bless.glade:1271
+msgid "Highlight matches of selection pattern"
 msgstr ""
 
-#: data/bless.glade:1215
-msgid "Default _number base:"
-msgstr ""
-
-#: data/bless.glade:1229
-msgid "Default _edit mode:"
-msgstr ""
-
-#: data/bless.glade:1268
+#: data/bless.glade:1311
 msgid "General"
 msgstr ""
 
-#: data/bless.glade:1285
+#: data/bless.glade:1328
 msgid "_Load previous session on startup"
 msgstr ""
 
-#: data/bless.glade:1318
+#: data/bless.glade:1361
 msgid "_Ask before loading session "
 msgstr ""
 
-#: data/bless.glade:1332
+#: data/bless.glade:1375
 msgid "Remember cursor _position"
 msgstr ""
 
-#: data/bless.glade:1347
+#: data/bless.glade:1390
 msgid "Remember _window geometry"
 msgstr ""
 
-#: data/bless.glade:1379
+#: data/bless.glade:1422
 msgid "Session"
 msgstr ""
 
-#: data/bless.glade:1434 data/bless.glade:1454
+#: data/bless.glade:1497
+msgid "Search for:"
+msgstr ""
+
+#: data/bless.glade:1509
+msgid "Replace with:"
+msgstr ""
+
+#: data/bless.glade:1577
+msgid "Find Previous"
+msgstr ""
+
+#: data/bless.glade:1604
+msgid "Replace All"
+msgstr ""
+
+#: data/bless.glade:1622 data/bless.glade:1635
+msgid "as"
+msgstr ""
+
+#: data/bless.glade:1677 src/gui/dialogs/FileOverwriteAlert.cs:39
+msgid "Replace"
+msgstr ""
+
+#: data/bless.glade:1731
+msgid "Find Next"
+msgstr ""
+
+#: data/bless.glade:1757 data/bless.glade:1775
 msgid ""
 "Hexadecimal\n"
 "Decimal\n"
@@ -203,99 +236,72 @@ msgid ""
 "Text"
 msgstr ""
 
-#: data/bless.glade:1498
-msgid "Find Next"
-msgstr ""
-
-#: data/bless.glade:1550 src/gui/dialogs/FileOverwriteAlert.cs:39
-msgid "Replace"
-msgstr ""
-
-#: data/bless.glade:1577 data/bless.glade:1592
-msgid "as"
-msgstr ""
-
-#: data/bless.glade:1607
-msgid "Replace All"
-msgstr ""
-
-#: data/bless.glade:1652
-msgid "Find Previous"
-msgstr ""
-
-#: data/bless.glade:1706
-msgid "Replace with:"
-msgstr ""
-
-#: data/bless.glade:1720
-msgid "Search for:"
-msgstr ""
-
-#: data/bless.glade:1763
+#: data/bless.glade:1806
 msgid "Offset:"
 msgstr ""
 
-#: data/bless.glade:1813
+#: data/bless.glade:1856
 msgid "Go to Offset"
 msgstr ""
 
-#: data/bless.glade:1868
+#: data/bless.glade:1911
 msgid "Select range from:"
 msgstr ""
 
-#: data/bless.glade:1889
+#: data/bless.glade:1932
 msgid "to/±length"
 msgstr ""
 
-#: data/bless.glade:1938 src/gui/dialogs/ExportDialog.cs:122
+#: data/bless.glade:1981 src/gui/dialogs/ExportDialog.cs:122
+#: src/gui/dialogs/PreferencesDialog.cs:294
 msgid "Select"
 msgstr ""
 
-#: data/bless.glade:2624
-msgid "Export Pattern:"
-msgstr ""
-
-#: data/bless.glade:2667
-msgid "Export Type:"
-msgstr ""
-
-#: data/bless.glade:2679
+#: data/bless.glade:2591
 msgid "Export to file:"
 msgstr ""
 
-#: data/bless.glade:2695
+#: data/bless.glade:2601
+msgid "Export Type:"
+msgstr ""
+
+#: data/bless.glade:2644
+msgid "Export Pattern:"
+msgstr ""
+
+#: data/bless.glade:2738
 msgid "<b>Range</b>"
 msgstr ""
 
-#: data/bless.glade:2717
+#: data/bless.glade:2760
 msgid "Whole File"
 msgstr ""
 
-#: data/bless.glade:2730
+#: data/bless.glade:2773
 msgid "Current Selection"
 msgstr ""
 
-#: data/bless.glade:2746
+#: data/bless.glade:2789
 msgid "From"
 msgstr ""
 
-#: data/bless.glade:2766
+#: data/bless.glade:2809
 msgid "to"
 msgstr ""
 
-#: data/bless.glade:2810
+#: data/bless.glade:2853
 msgid "gtk-cancel"
 msgstr ""
 
-#: data/bless.glade:2839
+#: data/bless.glade:2882
 msgid "gtk-close"
 msgstr ""
 
-#: data/bless.glade:2859 src/gui/dialogs/ExportDialog.cs:84
+#: data/bless.glade:2902 src/gui/dialogs/ExportDialog.cs:84
 msgid "Export"
 msgstr ""
 
-#: src/buffers/SaveAsOperation.cs:74 src/buffers/SaveOperation.cs:66
+#: src/buffers/SaveAsOperation.cs:74 src/buffers/SaveOperation.cs:67
 #, csharp-format
 msgid "There is not enough free space on the device to save file '{0}'."
 msgstr ""
@@ -329,57 +335,57 @@ msgstr ""
 msgid "Error loading layout '{0}'. Loading default layout instead."
 msgstr ""
 
-#: src/gui/FileService.cs:197 src/gui/FileService.cs:217
-#: src/gui/FileService.cs:223 src/gui/FileService.cs:229
-#: src/gui/FileService.cs:235
+#: src/gui/FileService.cs:211 src/gui/FileService.cs:233
+#: src/gui/FileService.cs:239 src/gui/FileService.cs:245
+#: src/gui/FileService.cs:251
 #, csharp-format
 msgid "Error opening file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:211
+#: src/gui/FileService.cs:227
 #, csharp-format
 msgid "Loaded file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:218
+#: src/gui/FileService.cs:234
 msgid "You do not have read permissions for the file you requested."
 msgstr ""
 
-#: src/gui/FileService.cs:224
+#: src/gui/FileService.cs:240
 msgid "The file you requested does not exist."
 msgstr ""
 
-#: src/gui/FileService.cs:265
+#: src/gui/FileService.cs:281
 msgid "Save File As"
 msgstr ""
 
-#: src/gui/FileService.cs:321 src/gui/FileService.cs:377
-#: src/gui/FileService.cs:426
+#: src/gui/FileService.cs:337 src/gui/FileService.cs:393
+#: src/gui/FileService.cs:442
 #, csharp-format
 msgid "Error saving file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:334
+#: src/gui/FileService.cs:350
 #, csharp-format
 msgid "Saving file '{0}' as '{1}'"
 msgstr ""
 
-#: src/gui/FileService.cs:336
+#: src/gui/FileService.cs:352
 #, csharp-format
 msgid "Saving file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:382 src/gui/FileService.cs:433
+#: src/gui/FileService.cs:398 src/gui/FileService.cs:449
 #, csharp-format
 msgid "The file '{0}' has NOT been saved"
 msgstr ""
 
-#: src/gui/FileService.cs:409
+#: src/gui/FileService.cs:425
 #, csharp-format
 msgid "The file has been saved as '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:411
+#: src/gui/FileService.cs:427
 #, csharp-format
 msgid "The file '{0}' has been saved"
 msgstr ""
@@ -490,8 +496,12 @@ msgstr ""
 msgid "Error parsing layout file '{0}'"
 msgstr ""
 
-#: src/gui/dialogs/PreferencesDialog.cs:57
+#: src/gui/dialogs/PreferencesDialog.cs:60
 msgid "Bless Preferences"
+msgstr ""
+
+#: src/gui/dialogs/PreferencesDialog.cs:293
+msgid "Select Directory"
 msgstr ""
 
 #: src/gui/dialogs/RevertConfirmationAlert.cs:32
@@ -538,16 +548,16 @@ msgstr ""
 msgid "_Export..."
 msgstr ""
 
-#: src/gui/plugins/FileOperationsPlugin.cs:189
+#: src/gui/plugins/FileOperationsPlugin.cs:187
 msgid "Open File(s)"
 msgstr ""
 
-#: src/gui/plugins/FileOperationsPlugin.cs:243
+#: src/gui/plugins/FileOperationsPlugin.cs:241
 #, csharp-format
 msgid "The file '{0}' cannot be found. Perhaps it has been recently deleted."
 msgstr ""
 
-#: src/gui/plugins/FileOperationsPlugin.cs:244
+#: src/gui/plugins/FileOperationsPlugin.cs:242
 msgid "Error reverting file"
 msgstr ""
 

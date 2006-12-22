@@ -3,7 +3,9 @@ AC_PREREQ(2.59)
 AC_INIT([bless], [0.4.9], [alf82@freemail.gr])
 AC_CONFIG_SRCDIR([src/buffers/ByteBuffer.cs])
 AM_INIT_AUTOMAKE
+
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.15)
 
 # Checks for programs.
 AC_PATH_PROG(PKG_CONFIG,pkg-config)
