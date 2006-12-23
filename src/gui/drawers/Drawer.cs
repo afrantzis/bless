@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Collections.Specialized;
 using Gtk;
 using Gdk;
 using Pango;
@@ -158,6 +159,7 @@ public abstract class Drawer {
 	
 	protected Gdk.Pixmap[,] pixmapsNormal;
 	protected Gdk.Pixmap[,] pixmapsHighlight;
+	protected StringCollection pixmapIds;
 	
 	// pango layout used for rendering text
 	protected Pango.Layout pangoLayout;
@@ -171,7 +173,7 @@ public abstract class Drawer {
 	{
 		widget=wid;
 		info=inf;
-		
+		pixmapIds = new StringCollection();
 		// make sure highlight colors are set
 		info.SetupHighlight(wid);
 		
@@ -206,37 +208,37 @@ public abstract class Drawer {
 		//even rows
 		colorFg=info.fgNormal[(int)RowType.Even, (int)ColumnType.Even];
 		colorBg=info.bgNormal[(int)RowType.Even, (int)ColumnType.Even];
-		pixmapsNormal[(int)RowType.Even, (int)ColumnType.Even]=Create(colorFg, colorBg);
+		pixmapsNormal[(int)RowType.Even, (int)ColumnType.Even]=CreateWrapper(colorFg, colorBg);
 		
 		colorFg=info.fgNormal[(int)RowType.Even, (int)ColumnType.Odd];
 		colorBg=info.bgNormal[(int)RowType.Even, (int)ColumnType.Odd];
-		pixmapsNormal[(int)RowType.Even, (int)ColumnType.Odd]=Create(colorFg, colorBg);
+		pixmapsNormal[(int)RowType.Even, (int)ColumnType.Odd]=CreateWrapper(colorFg, colorBg);
 		
 		colorFg=info.fgHighlight[(int)RowType.Even, (int)HighlightType.Selection];
 		colorBg=info.bgHighlight[(int)RowType.Even, (int)HighlightType.Selection];
-		pixmapsHighlight[(int)RowType.Even, (int)HighlightType.Selection]=Create(colorFg, colorBg);
+		pixmapsHighlight[(int)RowType.Even, (int)HighlightType.Selection]=CreateWrapper(colorFg, colorBg);
 		
 		colorFg=info.fgHighlight[(int)RowType.Even, (int)HighlightType.PatternMatch];
 		colorBg=info.bgHighlight[(int)RowType.Even, (int)HighlightType.PatternMatch];
-		pixmapsHighlight[(int)RowType.Even, (int)HighlightType.PatternMatch]=Create(colorFg, colorBg);
+		pixmapsHighlight[(int)RowType.Even, (int)HighlightType.PatternMatch]=CreateWrapper(colorFg, colorBg);
 		
 		
 		//odd rows
 		colorFg=info.fgNormal[(int)RowType.Odd, (int)ColumnType.Even];
 		colorBg=info.bgNormal[(int)RowType.Odd, (int)ColumnType.Even];
-		pixmapsNormal[(int)RowType.Odd, (int)ColumnType.Even]=Create(colorFg, colorBg);
+		pixmapsNormal[(int)RowType.Odd, (int)ColumnType.Even]=CreateWrapper(colorFg, colorBg);
 				
 		colorFg=info.fgNormal[(int)RowType.Odd, (int)ColumnType.Odd];
 		colorBg=info.bgNormal[(int)RowType.Odd, (int)ColumnType.Odd];
-		pixmapsNormal[(int)RowType.Odd, (int)ColumnType.Odd]=Create(colorFg, colorBg);
+		pixmapsNormal[(int)RowType.Odd, (int)ColumnType.Odd]=CreateWrapper(colorFg, colorBg);
 		
 		colorFg=info.fgHighlight[(int)RowType.Odd, (int)HighlightType.Selection];
 		colorBg=info.bgHighlight[(int)RowType.Odd, (int)HighlightType.Selection];
-		pixmapsHighlight[(int)RowType.Odd, (int)HighlightType.Selection]=Create(colorFg, colorBg);
+		pixmapsHighlight[(int)RowType.Odd, (int)HighlightType.Selection]=CreateWrapper(colorFg, colorBg);
 		
 		colorFg=info.fgHighlight[(int)RowType.Odd, (int)HighlightType.PatternMatch];
 		colorBg=info.bgHighlight[(int)RowType.Odd, (int)HighlightType.PatternMatch];
-		pixmapsHighlight[(int)RowType.Odd, (int)HighlightType.PatternMatch]=Create(colorFg, colorBg);
+		pixmapsHighlight[(int)RowType.Odd, (int)HighlightType.PatternMatch]=CreateWrapper(colorFg, colorBg);
 	}
 	
 	void InitializeBackgroundGCs()
@@ -272,6 +274,30 @@ public abstract class Drawer {
 		backGC[(int)RowType.Odd, (int)HighlightType.PatternMatch].RgbFgColor=col;
 	}
 	
+	///<summary>
+	/// Wrapper around create to avoid creating pixmaps we already have 
+	///</summary>
+	private Gdk.Pixmap CreateWrapper(Gdk.Color fg, Gdk.Color bg)
+	{
+		string id = PixmapManager.Instance.GetPixmapId(this.GetType(), info, fg, bg);
+		
+		Gdk.Pixmap pix = PixmapManager.Instance.GetPixmap(id);
+		if (pix == null) {
+			pix = Create(fg, bg); // can be null for DummyDrawer
+			if (pix != null) {
+				PixmapManager.Instance.AddPixmap(id, pix);
+				PixmapManager.Instance.ReferencePixmap(id);
+				pixmapIds.Add(id);
+			}
+		}
+		else {
+			PixmapManager.Instance.ReferencePixmap(id);
+			pixmapIds.Add(id);
+		}
+		
+		return pix;
+	}
+	
 	///<summary>Creates a pixmap with the drawn data</summary>
 	abstract protected Gdk.Pixmap Create(Gdk.Color fg, Gdk.Color bg);
 	
@@ -296,13 +322,10 @@ public abstract class Drawer {
  	
 	public void DisposePixmaps()
 	{
-		foreach(Pixmap pix in pixmapsNormal)
-			if (pix!=null)
-				pix.Dispose();
+		foreach(string id in pixmapIds)
+			PixmapManager.Instance.DereferencePixmap(id);
 		
-		foreach(Pixmap pix in pixmapsHighlight)
-			if (pix!=null)
-				pix.Dispose();
+		pixmapIds.Clear();
 	}
 	
 	public int Width{
@@ -319,7 +342,7 @@ public abstract class Drawer {
 
 }
 
-//<summary>dummy</summary>
+///<summary>dummy</summary>
 public class DummyDrawer : Drawer {
 	
 	public DummyDrawer(Gtk.Widget wid, Information inf)

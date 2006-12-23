@@ -69,7 +69,6 @@
     <File name="./src/tools/find/FindAsyncResult.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/ThreadedAsyncOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/find/FindOperations.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/LayoutManager.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/Session.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/tools/History.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/FileChangedBar.cs" subtype="Code" buildaction="Compile" />
@@ -133,6 +132,7 @@
     <File name="./src/tools/export/plugins/HTMLExportPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/SelectRangePlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/HistoryPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/drawers/PixmapManager.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References />
   <DeploymentInformation strategy="File">

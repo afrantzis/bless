@@ -77,7 +77,7 @@ public class DataViewDisplay : Gtk.VBox {
 			}
 			
 			if (widgetRealized) {
-				LayoutManager.RealizeLayout(layout, drawingArea);
+				layout.Realize(drawingArea);
 				Gdk.Rectangle alloc=drawingArea.Allocation;
 				Resize(alloc.Width, alloc.Height);
 
@@ -360,7 +360,7 @@ public class DataViewDisplay : Gtk.VBox {
 	void OnRealized (object o, EventArgs args)
 	{		
 		// Create some default areas
-		LayoutManager.RealizeLayout(layout, drawingArea);
+		layout.Realize(drawingArea);
 		widgetRealized=true;
 	
 		// now we can configure properly
@@ -474,7 +474,7 @@ public class DataViewDisplay : Gtk.VBox {
 	
 	public void DisposePixmaps()
 	{
-		LayoutManager.DisposeLayout(layout);
+		layout.DisposePixmaps();
 	}
 	
 	public void GrabKeyboardFocus()

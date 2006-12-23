@@ -145,16 +145,8 @@ public class Layout {
 	/// Realizes the areas. If sharedLayout is not null, use its 
 	/// resources instead of creating new ones.
 	///</summary>
-	public void Realize(Gtk.DrawingArea da, Layout sharedLayout)
+	public void Realize(Gtk.DrawingArea da)
 	{	
-		if (sharedLayout!=null && sharedLayout.Areas.Count==areas.Count) {
-			for(int i=0; i < areas.Count; i++) {
-				((Area)areas[i]).Realize(da, ((Area)sharedLayout.Areas[i]).Drawer);
-				((Area)areas[i]).DrawerInformation=((Area)sharedLayout.Areas[i]).DrawerInformation;
-			}
-			return;
-		}
-		
 		foreach(Area area in areas) {
 			Drawer d=null;
 			
