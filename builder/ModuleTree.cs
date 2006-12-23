@@ -1,6 +1,7 @@
 // created on 2/20/2006 at 5:43 PM
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 
@@ -76,10 +77,8 @@ public class ModuleTree
 			
 		// get input files
 		XmlNodeList inputList=xmlDoc.GetElementsByTagName("input");
-		
-		DateTime maxWriteTime=ParseInputFiles(inputList, module);
-		
-		
+		XmlNodeList ignoreList=xmlDoc.GetElementsByTagName("ignore");
+		DateTime maxWriteTime=ParseInputFiles(inputList, ignoreList, module);
 			
 		// get pkgs
 		XmlNodeList pkgList=xmlDoc.GetElementsByTagName("package");
@@ -127,26 +126,47 @@ public class ModuleTree
 		
 	}
 	
-	private DateTime ParseInputFiles(XmlNodeList inputList, Module module)
+	private DateTime ParseInputFiles(XmlNodeList inputList, XmlNodeList ignoreList, Module module)
 	{
 		DateTime maxWriteTime=new DateTime(0);
-		
+		List<FileInfo> fiArray = new List<FileInfo>();
+		List<FileInfo> ignoreArray = new List<FileInfo>();
 		
 		foreach(XmlNode inputNode in inputList) {
-			FileInfo[] fiArray;
 			string fileDir=Path.GetDirectoryName(inputNode.InnerText);
 			string filePattern=Path.GetFileName(inputNode.InnerText);
 			DirectoryInfo di=new DirectoryInfo(GetNewPath(module.Dir, fileDir));
 			
-			fiArray=di.GetFiles(filePattern);
+			fiArray.AddRange(di.GetFiles(filePattern));
+		}
+		
+		foreach(XmlNode ignoreNode in ignoreList) {
+			string fileDir=Path.GetDirectoryName(ignoreNode.InnerText);
+			string filePattern=Path.GetFileName(ignoreNode.InnerText);
+			DirectoryInfo di=new DirectoryInfo(GetNewPath(module.Dir, fileDir));
 			
-			foreach (FileInfo fi in fiArray) {
+			ignoreArray.AddRange(di.GetFiles(filePattern));
+		}
+		
+		foreach (FileInfo fi in fiArray) {
+			bool cont = true;
+			
+			foreach (FileInfo fi1 in ignoreArray) {
+				if (fi.FullName == fi1.FullName) {
+					//System.Console.WriteLine("    Ignoring File: {0}", fi.FullName);
+					cont = false;
+					break;
+				}
+			}
+			
+			if (cont == true) {
 				module.InputFiles.Add(fi.FullName);
 				if (fi.LastWriteTime > maxWriteTime)
 					maxWriteTime=fi.LastWriteTime;
 				//System.Console.WriteLine("    Input File: {0}", fi.FullName);
 			}
 		}
+		
 		
 		return maxWriteTime;
 	}
