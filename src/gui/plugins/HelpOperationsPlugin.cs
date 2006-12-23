@@ -29,9 +29,6 @@ namespace Bless.Gui.Plugins {
 	
 public class HelpOperationsPlugin : GuiPlugin
 {
-	Gtk.MenuItem ContentsMenuItem;
-	Gtk.MenuItem AboutMenuItem;
-		
 	const string uiXml=
 	"<menubar>"+
 	"	<menu action=\"Help\">"+
@@ -47,7 +44,7 @@ public class HelpOperationsPlugin : GuiPlugin
 	
 	public HelpOperationsPlugin(Window mw, UIManager uim)
 	{
-		mainWindow=mw;
+		//mainWindow=mw;
 		uiManager=uim;
 		
 		name="HelpOperations";
@@ -57,8 +54,6 @@ public class HelpOperationsPlugin : GuiPlugin
 	
 	public override bool Load()
 	{
-		dataBook=(DataBook)GetDataBook(mainWindow);
-		
 		AddMenuItems(uiManager);
 		
 		loaded=true;
@@ -79,9 +74,6 @@ public class HelpOperationsPlugin : GuiPlugin
 		
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
-
-		ContentsMenuItem=(MenuItem)uim.GetWidget("/menubar/Help/Contents");
-		AboutMenuItem=(MenuItem)uim.GetWidget("/menubar/Help/About");
 		
 		uim.EnsureUpdate();
 		

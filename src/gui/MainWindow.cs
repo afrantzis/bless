@@ -197,7 +197,9 @@ public class BlessMain
 		try {
 			History.Instance.Load(Path.Combine(blessConfDir,"history.xml"));
 		}
-		catch(Exception e) { }
+		catch (Exception e) {
+			System.Console.WriteLine(e.Message);
+		}
 		
 		// if user specified files on the command line
 		// try to load them
@@ -312,7 +314,8 @@ public class BlessMain
 			Preferences.Instance.Load(Preferences.Default);
 			Preferences.Instance.Load(path);
 		}
-		catch (Exception ex) {
+		catch (Exception e) {
+			System.Console.WriteLine(e.Message);
 		}
 	}
 	

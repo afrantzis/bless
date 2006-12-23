@@ -57,9 +57,7 @@ public class StatisticsPlugin : GuiPlugin
 	}
 	
 	public override bool Load()
-	{
-		return false;
-		/*
+	{		
 		dataBook=(DataBook)GetDataBook(mainWindow);
 		WidgetGroup wg=(WidgetGroup)GetWidgetGroup(mainWindow, 1);
 		sw=new StatisticsWidget(dataBook);
@@ -71,7 +69,7 @@ public class StatisticsPlugin : GuiPlugin
 		Preferences.Proxy.Subscribe("Tools.Statistics.Show", "stats1", new PreferencesChangedHandler(OnPreferencesChanged));
 		
 		loaded=true;
-		return true;*/
+		return true;
 	}
 	
 	

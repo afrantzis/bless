@@ -199,7 +199,7 @@ public class FileService
 			// first try filename as a uri
 			uri=new Uri(filename);
 		}
-		catch(Exception e) {
+		catch {
 			try {
 				// filename is not a uri...
 				// try to expand it as a local path
@@ -227,13 +227,13 @@ public class FileService
 			History.Instance.Add(fullPath);
 			return bb;
 		}
-		catch(UnauthorizedAccessException ex) {
+		catch(UnauthorizedAccessException) {
 			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
 			ErrorAlert ea=new ErrorAlert(msg, Catalog.GetString("You do not have read permissions for the file you requested."), mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
-		catch(System.IO.FileNotFoundException ex) {
+		catch(System.IO.FileNotFoundException) {
 			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
 			ErrorAlert ea=new ErrorAlert(msg, Catalog.GetString("The file you requested does not exist."), mainWindow);
 			ea.Run();
@@ -407,16 +407,6 @@ public class FileService
 	{
 		SaveAsOperation bbs=(SaveAsOperation)ar.AsyncState;
 		
-		DataViewDisplay dvDisplay=null;
-		
-		// find out to which dataview the saved buffer belongs
-		foreach (DataViewDisplay dd in dataBook.Children) {
-			if (dd.View.Buffer==bbs.Buffer) {
-				dvDisplay=dd;
-				break;
-			}
-		}
-		
 		if (bbs.Result==SaveAsOperation.OperationResult.Finished) { // save went ok
 			string msg;
 			if (bbs.SavePath!=bbs.Buffer.Filename)
@@ -489,7 +479,7 @@ public class FileService
 				Services.Session.Save(Path.Combine(blessConfDir,"last.session"));
 				History.Instance.Save(Path.Combine(blessConfDir,"history.xml"));
 			}
-			catch (Exception ex) { }
+			catch (Exception ex) { System.Console.WriteLine(ex.Message); }
 			Application.Quit ();
 		}
 	}

@@ -207,6 +207,7 @@ public class ExportDialog : Dialog
 			reader = new StreamReader(fs);
 		}
 		catch(Exception e) {
+			System.Console.WriteLine(e.Message);
 			return;
 		}
 		
@@ -228,6 +229,7 @@ public class ExportDialog : Dialog
 			writer = new StreamWriter(fs);
 		}
 		catch(Exception e) {
+			System.Console.WriteLine(e.Message);
 			return;
 		}
 		

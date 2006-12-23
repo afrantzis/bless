@@ -96,7 +96,9 @@ public class Preferences
 				if (autoSavePath!=null)
 					Save(autoSavePath);
 			}
-			catch(Exception ex) { }
+			catch (Exception e) {
+				System.Console.WriteLine(e.Message);
+			}
 			
 			if (notifyWhenSetting)
 				Preferences.Proxy.Change(key, value, "__Preferences__");
@@ -250,9 +252,10 @@ public class PreferencesProxy
 		currentlyHandling.Add(pref, null);
 		
 		foreach(DictionaryEntry subscriber in (prefSubscribers[pref] as Hashtable))
-			if (subscriber.Key!=id) {
+			if ((subscriber.Key as string)!=id) {
 				Console.WriteLine("Sending pref {0}:{1} to {2} ({3})", pref, val, subscriber.Key, id);
-				(subscriber.Value as PreferencesChangedHandler)(prefs);}
+				(subscriber.Value as PreferencesChangedHandler)(prefs);
+			}
 		
 		currentlyHandling.Remove(pref);	
 	}

@@ -76,7 +76,9 @@ public class PluginManager
 				}
 			}
 		}
-		catch(DirectoryNotFoundException e) { }
+		catch(DirectoryNotFoundException e) { 
+			System.Console.WriteLine(e.Message);
+		}
 		
 	}
 	
@@ -94,7 +96,9 @@ public class PluginManager
 				}
 			}
 		}
-		catch(Exception e) { }
+		catch (Exception e) {
+			System.Console.WriteLine(e.Message);
+		}
 	
 	}
 	

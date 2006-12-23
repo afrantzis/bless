@@ -145,8 +145,6 @@ public class SelectRangeWidget : Gtk.HBox
 	///<summary>Load the widget with data from the DataView's selection</summary>
 	public void LoadWithSelection(DataView dv)
 	{
-		ByteBuffer bb = dv.Buffer;
-		
 		// load selection only if it isn't very large 
 		if (dv.Selection.Size > 0) {
 			// make sure selection is sorted

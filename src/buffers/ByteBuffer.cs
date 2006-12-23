@@ -403,7 +403,9 @@ public class ByteBuffer : IBuffer {
 					try {
 						System.IO.File.Delete(so.SavePath);
 					}
-					catch(Exception ex) { }
+					catch (Exception e) {
+						System.Console.WriteLine(e.Message);
+					}
 				}
 			}
 			
@@ -641,7 +643,7 @@ public class ByteBuffer : IBuffer {
 					try {
 						return seg.Buffer[seg.Start+index-map];	
 					}
-					catch(IndexOutOfRangeException e) {
+					catch(IndexOutOfRangeException) {
 						Console.WriteLine("Problem at index {0} at {1}:{2}", index, map, seg);
 						throw;
 					}

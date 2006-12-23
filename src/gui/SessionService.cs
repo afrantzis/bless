@@ -77,6 +77,7 @@ public class SessionService
 			session.Load(path);
 		}
 		catch(Exception ex) {
+			System.Console.WriteLine(ex.Message);
 			return;
 		}
 		

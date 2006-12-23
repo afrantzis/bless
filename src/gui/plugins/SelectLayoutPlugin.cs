@@ -31,9 +31,7 @@ using Mono.Unix;
 namespace Bless.Gui.Plugins {
 	
 public class SelectLayoutPlugin : GuiPlugin
-{
-	Gtk.MenuItem LayoutsMenuItem;
-		
+{		
 	const string uiXml=
 	"<menubar>"+
 	"	<menu action=\"View\">"+
@@ -78,8 +76,6 @@ public class SelectLayoutPlugin : GuiPlugin
 		
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
-		
-		LayoutsMenuItem=(MenuItem)uim.GetWidget("/menubar/View/Layouts");
 		
 		uim.EnsureUpdate();
 		

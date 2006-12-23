@@ -268,7 +268,7 @@ public class DataView {
 							break;
 					}
 				}
-				catch (FormatException e) { 
+				catch (FormatException) { 
 					// if string cannot be parsed, consider it as plain text
 					data=sd.Data;
 				}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bless 0.4.9\n"
 "Report-Msgid-Bugs-To: alf82@freemail.gr\n"
-"POT-Creation-Date: 2006-12-22 03:33+0200\n"
+"POT-Creation-Date: 2006-12-22 18:01+0200\n"
 "PO-Revision-Date: 2006-12-18 20:51+0200\n"
 "Last-Translator:  <alf82@freemail.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -330,62 +330,62 @@ msgid ""
 "data."
 msgstr ""
 
-#: src/gui/FileService.cs:70
+#: src/gui/FileService.cs:68
 #, csharp-format
 msgid "Error loading layout '{0}'. Loading default layout instead."
 msgstr ""
 
-#: src/gui/FileService.cs:211 src/gui/FileService.cs:233
-#: src/gui/FileService.cs:239 src/gui/FileService.cs:245
-#: src/gui/FileService.cs:251
+#: src/gui/FileService.cs:209 src/gui/FileService.cs:231
+#: src/gui/FileService.cs:237 src/gui/FileService.cs:243
+#: src/gui/FileService.cs:249
 #, csharp-format
 msgid "Error opening file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:227
+#: src/gui/FileService.cs:225
 #, csharp-format
 msgid "Loaded file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:234
+#: src/gui/FileService.cs:232
 msgid "You do not have read permissions for the file you requested."
 msgstr ""
 
-#: src/gui/FileService.cs:240
+#: src/gui/FileService.cs:238
 msgid "The file you requested does not exist."
 msgstr ""
 
-#: src/gui/FileService.cs:281
+#: src/gui/FileService.cs:279
 msgid "Save File As"
 msgstr ""
 
-#: src/gui/FileService.cs:337 src/gui/FileService.cs:393
-#: src/gui/FileService.cs:442
+#: src/gui/FileService.cs:335 src/gui/FileService.cs:391
+#: src/gui/FileService.cs:440
 #, csharp-format
 msgid "Error saving file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:350
+#: src/gui/FileService.cs:348
 #, csharp-format
 msgid "Saving file '{0}' as '{1}'"
 msgstr ""
 
-#: src/gui/FileService.cs:352
+#: src/gui/FileService.cs:350
 #, csharp-format
 msgid "Saving file '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:398 src/gui/FileService.cs:449
+#: src/gui/FileService.cs:396 src/gui/FileService.cs:447
 #, csharp-format
 msgid "The file '{0}' has NOT been saved"
 msgstr ""
 
-#: src/gui/FileService.cs:425
+#: src/gui/FileService.cs:423
 #, csharp-format
 msgid "The file has been saved as '{0}'"
 msgstr ""
 
-#: src/gui/FileService.cs:427
+#: src/gui/FileService.cs:425
 #, csharp-format
 msgid "The file '{0}' has been saved"
 msgstr ""
@@ -414,18 +414,18 @@ msgstr ""
 msgid "_Help"
 msgstr ""
 
-#: src/gui/MainWindow.cs:122
+#: src/gui/MainWindow.cs:120
 msgid "Cannot create user configuration directory"
 msgstr ""
 
-#: src/gui/MainWindow.cs:122
+#: src/gui/MainWindow.cs:120
 msgid ""
 "\n"
 "\n"
 "Some features of Bless may not work properly."
 msgstr ""
 
-#: src/gui/MainWindow.cs:217
+#: src/gui/MainWindow.cs:216
 msgid "Do you want to load your previous session?"
 msgstr ""
 
@@ -598,7 +598,6 @@ msgid "_Goto Offset"
 msgstr ""
 
 #: src/gui/plugins/GotoOffsetPlugin.cs:181
-#: src/gui/plugins/SelectRangePlugin.cs:252
 msgid "Invalid Offset"
 msgstr ""
 
@@ -666,6 +665,10 @@ msgstr ""
 
 #: src/gui/plugins/SelectRangePlugin.cs:232
 msgid "Error in To Offset Format"
+msgstr ""
+
+#: src/gui/plugins/SelectRangePlugin.cs:252
+msgid "Invalid Range"
 msgstr ""
 
 #: src/gui/plugins/SelectRangePlugin.cs:252

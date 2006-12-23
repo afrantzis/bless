@@ -116,6 +116,7 @@ public class PreferencesDialog : Dialog
 			UndoUnlimitedRadioButton.Active=!limited;	
 		}
 		catch(FormatException e) {
+			System.Console.WriteLine(e.Message);
 			UndoLimitedRadioButton.Active=true;	
 		}
 		
@@ -127,6 +128,7 @@ public class PreferencesDialog : Dialog
 			UndoActionsSpinButton.Value=actions;	
 		}
 		catch(FormatException e) {
+			System.Console.WriteLine(e.Message);
 			UndoActionsSpinButton.Value=100;	
 		}
 		
@@ -207,6 +209,7 @@ public class PreferencesDialog : Dialog
 			cb.Active=b;
 		}
 		catch(FormatException e) {
+			System.Console.WriteLine(e.Message);
 			cb.Active=defaultValue;
 		}
 	
