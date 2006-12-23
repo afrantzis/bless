@@ -180,8 +180,8 @@ public class DataBook : Gtk.Notebook
 	}
 	
 	
-	public event DataView.DataViewEventHandler PageAdded;
-	public event DataView.DataViewEventHandler PageRemoved;
+	public new event DataView.DataViewEventHandler PageAdded;
+	public new event DataView.DataViewEventHandler PageRemoved;
 }
 
 ///<summary>A widget to display on each tab label</summary>

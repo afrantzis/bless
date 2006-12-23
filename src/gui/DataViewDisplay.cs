@@ -416,9 +416,9 @@ public class DataViewDisplay : Gtk.VBox {
 		
 		if (type == ShowType.Closest) {
 			// if already visible do nothing
-			if (offsetRow >= curOffsetRow && offsetRow <= curOffsetEndRow)
-				;
-			else if (curOffsetRow > offsetRow)
+			//if (offsetRow >= curOffsetRow && offsetRow <= curOffsetEndRow)
+			//	;
+			if (curOffsetRow > offsetRow)
 				type = ShowType.Start;
 			else if (curOffsetEndRow < offsetRow)
 				type = ShowType.End;
