@@ -88,11 +88,9 @@ public class ExportDialog : Dialog
 	
 	private void SetupExportPlugins()
 	{
-		System.Console.WriteLine("Setup export dialog");
 		ListStore model = new ListStore(typeof(string), typeof(ExportPlugin));
 		 
 		foreach(ExportPlugin plugin in pluginManager.Plugins) {
-			System.Console.WriteLine("Found plugin {0}", plugin.Description);
 			model.AppendValues(plugin.Description, plugin);
 		}
 		

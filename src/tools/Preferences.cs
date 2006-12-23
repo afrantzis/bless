@@ -88,7 +88,6 @@ public class Preferences
 		}
 		
 		set {
-			Console.WriteLine("Setting pref {0} <= {1}", key, value);
 			prefs[key]=value;
 			// save the preferences if autoSavePath is set
 			// ignore exceptions
@@ -228,16 +227,6 @@ public class PreferencesProxy
 		if (enable==false)
 			return;
 			
-		Console.WriteLine("Change 1: ");
-		foreach (DictionaryEntry hand in (currentlyHandling as Hashtable)) {
-			Console.Write("{0} ", hand.Key);
-		}
-		Console.WriteLine("");
-		
-		
-		Console.WriteLine("Change 2");
-		
-		
 		if (currentlyHandling.Contains(pref))
 			return;
 		
@@ -253,7 +242,6 @@ public class PreferencesProxy
 		
 		foreach(DictionaryEntry subscriber in (prefSubscribers[pref] as Hashtable))
 			if ((subscriber.Key as string)!=id) {
-				Console.WriteLine("Sending pref {0}:{1} to {2} ({3})", pref, val, subscriber.Key, id);
 				(subscriber.Value as PreferencesChangedHandler)(prefs);
 			}
 		

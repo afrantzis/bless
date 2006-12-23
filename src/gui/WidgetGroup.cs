@@ -32,19 +32,17 @@ public class WidgetGroup : HBox
 	
 	protected override void OnAdded(Widget w)
 	{
-		Console.WriteLine("Onadded {0}", w);
 		w.Hide();
 		w.Shown += OnWidgetShown;
-		w.Hidden += OnWidgetHidden;
+		
 		
 		base.OnAdded(w);
 	}
 	
 	protected override void OnRemoved(Widget w)
 	{
-		Console.WriteLine("Onremoved {0}", w);
 		w.Shown -= OnWidgetShown;
-		w.Hidden -= OnWidgetHidden;
+		
 		base.OnRemoved(w);
 	}
 	
@@ -52,7 +50,6 @@ public class WidgetGroup : HBox
 	void OnWidgetShown(object sender, EventArgs e)
 	{
 		Widget w=(Widget)sender;
-		Console.WriteLine("Onwidgetshown {0}", w);
 		// Make sure only one widget is visible
 		foreach(Widget child in Children) {
 			if (child!=w)
@@ -61,16 +58,6 @@ public class WidgetGroup : HBox
 		
 		// don't use ShowAll(): causes loop
 		this.Show();
-	}
-	
-	void OnWidgetHidden(object sender, EventArgs e)
-	{
-		/*Console.WriteLine("Onwidgethidden {0}", (Widget)sender);
-		foreach(Widget child in Children) {
-			if (child.Visible==true)
-				return;
-		}
-		this.Hide();*/
 	}
 }
 

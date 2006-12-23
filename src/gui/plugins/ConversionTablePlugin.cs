@@ -233,7 +233,6 @@ public class ConversionTable: Gtk.HBox
 				dvd.GrabKeyboardFocus();
 		}
 		
-		Console.WriteLine("CT Hide");
 		Preferences.Proxy.Change("Tools.ConversionTable.Show", "False", "ct2");
 		base.OnHidden();
 	}
@@ -283,7 +282,6 @@ public class ConversionTable: Gtk.HBox
 	
 	void OnPreferencesChanged(Preferences prefs)
 	{
-		Console.WriteLine("Prefch CT2");
 		if (prefs["Tools.ConversionTable.LEDecoding"]=="True")
 			LittleEndianCheckButton.Active=true;
 		else	

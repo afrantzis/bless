@@ -59,7 +59,7 @@ public class PluginManager
 		
 		foreach (string file in systemPluginFiles) {
 			if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
-				Console.WriteLine("Searching File {0}", file);
+				//Console.WriteLine("Searching File {0}", file);
 				AddPluginFile(file);
 			}
 		}
@@ -71,7 +71,7 @@ public class PluginManager
 			
 			foreach (string file in userPluginFiles) {
 				if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
-					Console.WriteLine("Searching File {0}", file);
+					//Console.WriteLine("Searching File {0}", file);
 					AddPluginFile(file);
 				}
 			}
@@ -90,7 +90,7 @@ public class PluginManager
 			
 			foreach(Type t in types) {
 				if (t.BaseType==pluginType) {
-					Console.WriteLine("    Found Type {0}", t.FullName);
+					//Console.WriteLine("    Found Type {0}", t.FullName);
 					ConstructorInfo ctor=t.GetConstructor(ctorArgTypes);
 					AddToPluginCollection((Plugin)ctor.Invoke(ctorArgs));
 				}
@@ -105,7 +105,7 @@ public class PluginManager
 	private void AddToPluginCollection(Plugin plugin)
 	{
 		plugins.Add(plugin.Name, plugin);
-		System.Console.WriteLine("Added plugin {0}", plugin.Name);	
+		//System.Console.WriteLine("Added plugin {0}", plugin.Name);	
 	}
 	
 	public bool LoadPlugin(Plugin plugin)

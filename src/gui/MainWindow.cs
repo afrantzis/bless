@@ -322,7 +322,7 @@ public class BlessMain
 	void OnPreferencesChanged(Preferences prefs)
 	{	
 		ToggleAction viewToolbarAction=(ToggleAction)uiManager.GetAction("/menubar/View/Toolbar");
-		Console.WriteLine("MW: View toolbar show {0}",prefs["View.Toolbar.Show"]);
+		
 		if (prefs["View.Toolbar.Show"]=="True")
 			viewToolbarAction.Active=true;
 		else
@@ -380,7 +380,7 @@ public class BlessMain
 	public void OnViewToolbarToggled(object o, EventArgs args)
 	{
 		ToggleAction viewToolbarAction=(ToggleAction)uiManager.GetAction("/menubar/View/Toolbar");
-		Console.WriteLine("MW: toolbar toggle {0}",viewToolbarAction.Active);
+		
 		Preferences.Proxy.Change("View.Toolbar.Show", viewToolbarAction.Active.ToString(), "mainwin");
 		
 		Widget mainToolbar = uiManager.GetWidget("/toolbar");
