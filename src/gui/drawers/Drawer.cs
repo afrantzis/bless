@@ -159,6 +159,9 @@ public abstract class Drawer {
 	protected Gdk.Pixmap[,] pixmapsNormal;
 	protected Gdk.Pixmap[,] pixmapsHighlight;
 	
+	// pango layout used for rendering text
+	protected Pango.Layout pangoLayout;
+	
 	protected Gdk.GC[,] backGC;
 	protected int width;
 	protected int height;
@@ -176,12 +179,16 @@ public abstract class Drawer {
 		Pango.Language lang=Pango.Language.FromString(info.FontLanguage);
 		
 		Pango.Context pangoCtx=widget.PangoContext;
-		Pango.FontMetrics fm=pangoCtx.GetMetrics(fontDescription, lang);
+		pangoCtx.FontDescription=fontDescription;                               
+		pangoCtx.Language=lang;                                                 
+                                                                                
+		// set the font height and width                                        
+		pangoLayout=new Pango.Layout(pangoCtx);                                 
+		// we use a monospaced font, the actual character doesn't matter        
+		pangoLayout.SetText("X");                                               
+		pangoLayout.GetPixelSize(out width, out height);                        
+		pangoLayout.SetText("");  
 		
-		// set the font height and width
-		height =(int)( (fm.Ascent+fm.Descent)/Pango.Scale.PangoScale);
-    	width =(int) ((fm.ApproximateCharWidth)/Pango.Scale.PangoScale);
-
 		// create the font pixmaps
 		InitializePixmaps();
 		

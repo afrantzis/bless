@@ -38,7 +38,6 @@ public class OctalDrawer : Drawer {
 	protected override Gdk.Pixmap Create(Gdk.Color fg, Gdk.Color bg)
 	{
 		Gdk.Window win=widget.GdkWindow;
-		Pango.Context pangoCtx=widget.PangoContext;
 		
 		Gdk.GC gc=new Gdk.GC(win);
 		Gdk.Pixmap pix=new Gdk.Pixmap(win, 256*3*width, height, -1);
@@ -52,13 +51,11 @@ public class OctalDrawer : Drawer {
 				
 		//System.Console.WriteLine(s);
 		
-		Pango.Layout layout=new Pango.Layout(pangoCtx);
-		layout.FontDescription=fontDescription;
-		layout.SetText(s);
+		pangoLayout.SetText(s);
 		
 		
 		gc.RgbFgColor=fg;
-		pix.DrawLayout(gc, 0, 0, layout);
+		pix.DrawLayout(gc, 0, 0, pangoLayout);
 		
 		return pix;
 	}
