@@ -17,7 +17,7 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+using System;
 using System.IO;
 using Bless.Buffers;
 using Bless.Util;
@@ -60,7 +60,7 @@ public class TextExportBuilder : IExportBuilder
 			if (i != 0)
 				BuildSeparator(info.Separator);
 			
-			nwritten += BuildByte(buffer, offset + i, info.Prefix, info.Suffix, info.Empty, false);
+			nwritten += BuildByte(buffer, offset + i, info, false);
 			
 		}
 		
@@ -85,11 +85,14 @@ public class TextExportBuilder : IExportBuilder
 		alignment = align;
 	}
 	
-	public virtual void BuildOffset(long offset, int length) 
+	public virtual void BuildOffset(long offset, int length, char type) 
 	{
 		long lowAlign = (offset / alignment) * alignment;
+		bool lowercase;
+		int numBase = GetBaseFromArgument(type, out lowercase);
+		string str = BaseConverter.ConvertToString(lowAlign, numBase, false, lowercase, length);
 		
-		BuildByteData(BaseConverter.ConvertToString(lowAlign, 16, false, length));
+		BuildByteData(str);
 	}
 	
 	public Stream OutputStream {
@@ -111,8 +114,7 @@ public class TextExportBuilder : IExportBuilder
 			if (i != lowAlign)
 				BuildSeparator(info.Separator);
 			
-			BuildByte(null, 0,
-				info.Prefix, info.Suffix, info.Empty, true);
+			BuildByte(null, 0, info, true);
 			
 			count++;
 		}
@@ -125,37 +127,45 @@ public class TextExportBuilder : IExportBuilder
 		return count;
 	}
 	
-	protected virtual int BuildByte(IBuffer buffer, long offset, string prefix, string suffix, string empty, bool dummy)
+	protected virtual int BuildByte(IBuffer buffer, long offset, BuildBytesInfo info, bool dummy)
 	{
 		string str;
 		int nwritten = 0;
+		byte b = 0;
 		
 		if (dummy == true || offset >= buffer.Size) {
 			dummy = true;
-			str = BaseConverter.ConvertToString(0, 16);
 		}
 		else {
 			nwritten++;
-			str = BaseConverter.ConvertToString(buffer[offset], 16);
+			b = buffer[offset];
+		}
+		
+		if (info.Type == 'A')
+			str = info.Type.ToString(); 
+		else {
+			bool lowercase;
+			int numBase = GetBaseFromArgument(info.Type, out lowercase);
+			str = BaseConverter.ConvertToString(b, numBase, false, lowercase, 0);
 		}
 			
-		if (!dummy && prefix != null)
-			BuildPrefix(prefix);
+		if (!dummy && info.Prefix != null)
+			BuildPrefix(info.Prefix);
 		else
-			BuildEmpty(prefix, " ");
+			BuildEmpty(info.Prefix, " ");
 			
 		if (!dummy && str != null) {
 			BuildByteData(str);
 		}
-		else if (empty != null)
-			BuildEmpty(str, empty);
+		else if (info.Empty != null)
+			BuildEmpty(str, info.Empty);
 		else 
 			BuildEmpty(str, " ");
 		
-		if (!dummy && suffix != null)
-			BuildSuffix(suffix);
+		if (!dummy && info.Suffix != null)
+			BuildSuffix(info.Suffix);
 		else
-			BuildEmpty(suffix, " ");
+			BuildEmpty(info.Suffix, " ");
 
 		return nwritten;
 	}
@@ -197,7 +207,34 @@ public class TextExportBuilder : IExportBuilder
 		writer.Write(str);
 	}
 	
+	private int GetBaseFromArgument(char type, out bool lowercase)
+	{
+		int numBase = 0;
+		lowercase = false;
+		
+		switch(type) {
+			case 'H':
+				numBase = 16;
+				break;
+			case 'h':
+				numBase = 16;
+				lowercase = true;
+				break;
+			case 'D':
+				numBase = 10;
+				break;
+			case 'O':
+				numBase = 8;
+				break;
+			case 'B':
+				numBase = 2;
+				break;
+			default:
+				break;
+		}
 	
+		return numBase;
+	}
 	
 }
 

@@ -46,7 +46,7 @@ public interface IExportBuilder
 	void BuildString(string str);
 	void BuildCharacter(char c);
 	void BuildAlignment(int align);
-	void BuildOffset(long offset, int length);
+	void BuildOffset(long offset, int length, char type);
 	
 	Stream OutputStream {
 		get;

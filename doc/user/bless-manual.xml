@@ -1264,8 +1264,8 @@
 				<thead>
 					<row>
 						<entry>Command</entry>
-						<entry></entry>
-						<entry>Parameters</entry>
+						<entry>Description</entry>
+						<entry>Parameters [default]</entry>
 					</row>
 				</thead>
 				<tbody>
@@ -1275,19 +1275,22 @@
 						<entry>
 							<simplelist>
 								<member>
-									<para>E: the number of bytes to export</para>
+									<para>E: the number of bytes to export ["1"]</para>
 								</member>
 								<member>
-									<para>p: the prefix to write before each byte</para>
+									<para>p: the prefix to write before each byte [""]</para>
 								</member>
 								<member>
-									<para>s: the suffix to write after each byte</para>
+									<para>s: the suffix to write after each byte [""]</para>
 								</member>
 								<member>
-									<para>x: the separator to use between bytes</para>
+									<para>x: the separator to use between bytes [""]</para>
 								</member>
 								<member>
-									<para>e: the string to use for not printed bytes (due to alignment)</para>
+									<para>e: the string to use for not printed bytes (due to alignment) [" "]</para>
+								</member>
+								<member>
+									<para>t: the type to export the byte(s) to (see below) ["H"]</para>
 								</member>
 							</simplelist>
 						</entry>
@@ -1298,7 +1301,7 @@
 						<entry>
 							<simplelist>
 								<member>
-									<para>I: The number of bytes to ignore</para>
+									<para>I: the number of bytes to ignore ["1"]</para>
 								</member>
 							</simplelist>
 						</entry>
@@ -1309,10 +1312,49 @@
 						<entry>
 							<simplelist>
 								<member>
-									<para>O: </para>
+									<para>O: the number of digits to use for writing the offset ["8"]</para>
+								</member>
+								<member>
+									<para>t: the type to write the offset in (see below) ["H"]</para>
 								</member>
 							</simplelist>
 						</entry>
+					</row>
+				</tbody>
+				</tgroup>
+			</informaltable>
+			<informaltable>
+				<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Export Type</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>H</entry>
+						<entry>Hexadecimal with uppercase characters</entry>
+					</row>
+					<row>
+						<entry>h</entry>
+						<entry>Hexadecimal with lowercase characters</entry>
+					</row>
+					<row>
+						<entry>D</entry>
+						<entry>Decimal</entry>
+					</row>
+					<row>
+						<entry>O</entry>
+						<entry>Octal</entry>
+					</row>
+					<row>
+						<entry>B</entry>
+						<entry>Binary</entry>
+					</row>
+					<row>
+						<entry>A</entry>
+						<entry>Ascii</entry>
 					</row>
 				</tbody>
 				</tgroup>

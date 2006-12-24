@@ -50,12 +50,12 @@ public class HTMLExportBuilder : TextExportBuilder
 		BuildString("</pre></body></html>");
 	}
 	
-	protected override int BuildByte(IBuffer buf, long offset, string prefix, string suffix, string empty, bool dummy)
+	protected override int BuildByte(IBuffer buf, long offset, BuildBytesInfo info, bool dummy)
 	{
 		if (offset % 2 == 0)
 			BuildString("<span style=\"color:blue\">");
 			
-		int n = base.BuildByte(buf, offset, prefix, suffix, empty, dummy); 
+		int n = base.BuildByte(buf, offset, info, dummy); 
 	
 		if (offset % 2 == 0)
 			BuildString("</span>");

@@ -145,7 +145,11 @@ public class InterpretedPatternExporter : IPatternExporter
 		// Export command
 		if (cmds.Contains('E')) {
 			BuildBytesInfo bbi = new BuildBytesInfo();
-			bbi.Count = Convert.ToInt32(cmds['E'] as string);
+			
+			bbi.Count = 1;
+			if ((cmds['E'] as string) != "")
+				bbi.Count = Convert.ToInt32(cmds['E'] as string);
+			
 			if (cmds.Contains('p'))
 				bbi.Prefix = cmds['p'] as string;
 			if (cmds.Contains('s'))
@@ -156,18 +160,35 @@ public class InterpretedPatternExporter : IPatternExporter
 				bbi.Separator = cmds['x'] as string;
 			if (cmds.Contains('e'))
 				bbi.Empty = cmds['e'] as string;
+			
+			if (cmds.Contains('t'))
+				bbi.Type = Convert.ToChar(cmds['e'] as string);
+			else
+				bbi.Type = 'H';
+				
 			bbi.Commands = cmds;
 			return builder.BuildBytes(buffer, bufPos, bbi);
 		}
 		
 		// Ignore command
 		if (cmds.Contains('I')) {
-			return Convert.ToInt32(cmds['I'] as string);
+			if ((cmds['I'] as string) == "")
+				return 1;
+			else
+				return Convert.ToInt32(cmds['I'] as string);
 		}
 		
 		// Offset command
 		if (cmds.Contains('O')) {
-			builder.BuildOffset(bufPos, Convert.ToInt32(cmds['O'] as string));
+			char type = 'H';
+			if (cmds.Contains('t'))
+				type = Convert.ToChar(cmds['t'] as string);
+			
+			int length = 8;
+			if ((cmds['O'] as string) != "")
+				length = Convert.ToInt32(cmds['O'] as string);
+				
+			builder.BuildOffset(bufPos, length, type);
 			return 0;
 		}
 		
