@@ -35,11 +35,11 @@ public class BaseConverter
 	///<summary>Convinience method</summary>
 	static public string ConvertToString(long num, int b)
 	{
-		return ConvertToString(num, b, false, 0);
+		return ConvertToString(num, b, false, false, 0);
 	}
 		
 	///<summary>Convert a number to string using the specified base</summary>
-	static public string ConvertToString(long num, int b, bool prependPrefix, int minDigits)
+	static public string ConvertToString(long num, int b, bool prependPrefix, bool lowercase, int minDigits)
 	{
 		// make sure base is valid
 		if (b<2 || b>16)
@@ -47,12 +47,14 @@ public class BaseConverter
 			
 		StringBuilder sb=new StringBuilder(64);
 		
+		char alpha = lowercase ? 'a' : 'A';
+		
 		while (num > 0) {
 			int rem=(int)(num%b);
 			if (rem<10) 
 				sb.Insert(0, (char)(rem+'0'));
 			else
-				sb.Insert(0, (char)(rem-10+'a'));
+				sb.Insert(0, (char)(rem-10+alpha));
 			num=num/b;
 		}
 		
