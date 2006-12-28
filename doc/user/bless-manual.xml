@@ -772,8 +772,12 @@
 								<listitem>
 									Hold down the Left mouse button and move the cursor to the other end of the range using the mouse. 
 									As you move the cursor, the currently selected data range will be highlighted.
-								</listitem> 
+								</listitem>
 								<listitem>Release the Left mouse button.</listitem>
+								<listitem>
+									...alternatively, while pressing the <keycap>Shift</keycap> key, position the mouse pointer over 
+									the other end of the selection and click using the Left mouse button.
+								</listitem>
 							</itemizedlist>
 						</listitem>
 					</varlistentry>
@@ -1397,6 +1401,53 @@
 		</section>
 		<section id="bless-usage-export-dialog">
 		<title>Export Dialog</title>
+			<figure>
+				<title>Export Dialog</title>
+				<screenshot><mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/bless_export_dialog.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<phrase>Export Dialog</phrase>
+					</textobject>
+				</mediaobject></screenshot>
+			</figure>
+			<variablelist>
+			<title>Export Dialog</title>
+				<varlistentry>
+					<term>Export to file</term>
+					<listitem>
+						<para>
+							The name of the file to export the data to.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Export type</term>
+					<listitem>
+						<para>
+							The type of file to export to. New types can be added with plugins.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Export pattern</term>
+					<listitem>
+						<para>
+							The pattern to use when exporting the file (see <xref linkend="bless-usage-export-pattern"/>). Use the save and delete buttons
+							next to the pattern entry to manage the saved patterns.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Range</term>
+					<listitem>
+						<para>
+							The range of data to export.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
 		</section>
 	</section>
 </chapter>
@@ -1414,10 +1465,18 @@
 	<variablelist>
 	<title></title>
 		<varlistentry>
+			<term>export_patterns</term>
+			<listitem>
+				<para>
+					Keeps the list of saved export patterns.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
 			<term>history.xml</term>
 			<listitem>
 				<para>
-					Keeps a list of recently opened files.
+					Keeps the list of recently opened files.
 				</para>
 			</listitem>
 		</varlistentry>
@@ -1529,6 +1588,16 @@
 				<listitem>
 					<para>
 						The edit mode new tabs will be placed in (Insert or Overwrite).
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Temporary Directory</term>
+				<listitem>
+					<para>
+						The directory to save temporary files into (leave blank for default eg /tmp).
+						When a file is saved, it is saved into this directory and then moved
+						to its final position.
 					</para>
 				</listitem>
 			</varlistentry>

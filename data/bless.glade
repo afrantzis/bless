@@ -2,7 +2,7 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!-- Generated with glade3
 	Version: 3.0.1
-	Date: Thu Dec 21 19:38:29 2006
+	Date: Thu Dec 28 23:43:12 2006
 	User: alf
 	Host: ALF
 -->
@@ -196,7 +196,7 @@
           <widget class="GtkLabel" id="CopyrightLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">&lt;small&gt;Copyright © 2004-2005 Alexandros Frantzis&lt;/small&gt;</property>
+            <property name="label" translatable="yes">&lt;small&gt;Copyright © 2004-2007 Alexandros Frantzis&lt;/small&gt;</property>
             <property name="use_markup">True</property>
             <property name="selectable">True</property>
           </widget>
@@ -2588,7 +2588,8 @@ Text</property>
                   <widget class="GtkLabel" id="label4">
                     <property name="visible">True</property>
                     <property name="xalign">0.000000</property>
-                    <property name="label" translatable="yes">Export to file:</property>
+                    <property name="label" translatable="yes">Export to _file:</property>
+                    <property name="use_underline">True</property>
                   </widget>
                   <packing>
                     <property name="x_options">GTK_FILL</property>
@@ -2598,7 +2599,8 @@ Text</property>
                   <widget class="GtkLabel" id="label5">
                     <property name="visible">True</property>
                     <property name="xalign">0.000000</property>
-                    <property name="label" translatable="yes">Export Type:</property>
+                    <property name="label" translatable="yes">Export _type:</property>
+                    <property name="use_underline">True</property>
                   </widget>
                   <packing>
                     <property name="top_attach">1</property>
@@ -2641,7 +2643,8 @@ Text</property>
                   <widget class="GtkLabel" id="label6">
                     <property name="visible">True</property>
                     <property name="xalign">0.000000</property>
-                    <property name="label" translatable="yes">Export Pattern:</property>
+                    <property name="label" translatable="yes">Export _pattern:</property>
+                    <property name="use_underline">True</property>
                   </widget>
                   <packing>
                     <property name="top_attach">2</property>
@@ -2757,7 +2760,8 @@ Text</property>
                     <child>
                       <widget class="GtkRadioButton" id="WholeFileRadio">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Whole File</property>
+                        <property name="label" translatable="yes">_Whole file</property>
+                        <property name="use_underline">True</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">CurrentSelectionRadio</property>
@@ -2770,7 +2774,8 @@ Text</property>
                     <child>
                       <widget class="GtkRadioButton" id="CurrentSelectionRadio">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Current Selection</property>
+                        <property name="label" translatable="yes">Current _selection</property>
+                        <property name="use_underline">True</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">WholeFileRadio</property>
@@ -2786,7 +2791,8 @@ Text</property>
                         <child>
                           <widget class="GtkRadioButton" id="RangeRadio">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">From</property>
+                            <property name="label" translatable="yes">F_rom</property>
+                            <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                             <property name="group">CurrentSelectionRadio</property>
                             <signal name="toggled" handler="OnRangeRadioToggled"/>
@@ -2899,7 +2905,8 @@ Text</property>
                     <child>
                       <widget class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Export</property>
+                        <property name="label" translatable="yes">_Export</property>
+                        <property name="use_underline">True</property>
                         <property name="mnemonic_widget">ExportButton</property>
                       </widget>
                       <packing>

@@ -1,6 +1,6 @@
 Bless - Gtk# Hex Editor v0.5.0
 ==============================
-Copyright (c) 2004-2006, Alexandros Frantzis
+Copyright (c) 2004-2007, Alexandros Frantzis
 
 Thank you for using ( or at least trying out :) ) Bless!
 
@@ -38,7 +38,7 @@ Main Features
   * Advanced Copy/Paste capabilities.
   * Multi-threaded search and save operations.
   * Export to text and html (others with plugins).
-  * Plugins.
+  * Extensibility with Plugins.
   
 Planned Features
 ----------------

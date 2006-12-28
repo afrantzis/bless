@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
   <Files>
-    <File filename="./src/tools/export/InterpretedPatternExporter.cs" />
-    <File filename="./src/tools/export/plugins/TextExportBuilder.cs" />
-    <File filename="./src/util/BaseConverter.cs" />
-    <File filename="./src/tools/export/IExportBuilder.cs" />
-    <File filename="./src/gui/plugins/InfobarPlugin.cs" />
+    <File filename="./src/gui/DataViewControl.cs" />
+    <File filename="./src/gui/DataView.cs" />
+    <File filename="./src/util/Range.cs" />
   </Files>
   <Views>
     <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
@@ -14,14 +12,11 @@
           <Node name="bless" expanded="True">
             <Node name="src" expanded="True">
               <Node name="gui" expanded="True">
-                <Node name="plugins" expanded="True" />
+                <Node name="areas" expanded="True" />
+                <Node name="DataViewControl.cs" expanded="False" selected="True" />
               </Node>
               <Node name="tools" expanded="True">
-                <Node name="export" expanded="True">
-                  <Node name="plugins" expanded="True">
-                    <Node name="TextExportBuilder.cs" expanded="False" selected="True" />
-                  </Node>
-                </Node>
+                <Node name="export" expanded="True" />
               </Node>
               <Node name="util" expanded="True" />
             </Node>
@@ -50,7 +45,7 @@
   <Properties>
     <Properties>
       <Property key="ActiveConfiguration" value="Debug" />
-      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/tools/export/plugins/TextExportBuilder.cs" />
+      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/DataViewControl.cs" />
     </Properties>
   </Properties>
 </UserCombinePreferences>

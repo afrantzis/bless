@@ -32,7 +32,7 @@ namespace Bless.Gui.Dialogs {
 			Catalog.GetString("If you don't save, all changes made since the last save will be lost."), parent)
 		{
 			image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
-			System.Console.WriteLine(Catalog.GetString("Save changes to file '{0}' before closing?"));
+			
 			this.AddButton(Catalog.GetString("Close without Saving"), ResponseType.No);
 			this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Gtk.Stock.Save, ResponseType.Ok);
