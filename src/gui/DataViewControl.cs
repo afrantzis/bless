@@ -22,22 +22,26 @@
 using Gtk;
 using Bless.Buffers;
 using Bless.Gui.Areas;
+using Bless.Util;
 
 namespace Bless.Gui {
 
 ///<summary>Handles all dataview ui aspects except display</summary>
 public class DataViewControl
 {
- 
+	private struct Position
+	{
+		public long First;
+		public long Second;
+		public int Digit;
+	}
+	
 	DataView dataView;
 	DataViewDisplay dvDisplay;
 	
 	// mouse selection related
-	long selStart;
-	bool selStartInAbyss;
-	
-	// keyboard selection related
-	bool shiftPressed;
+	Position selStartPos;
+	Position selEndPos;
 	
 	// Filter keypresses
 	Gtk.IMContext imContext;
@@ -54,6 +58,9 @@ public class DataViewControl
 	public DataViewControl(DataView dv)
 	{
 		dataView=dv;
+		
+		selStartPos = new Position();
+		selEndPos = new Position();
 		
 		imContext=new IMContextSimple();
 	}
@@ -72,48 +79,126 @@ public class DataViewControl
 		
 		return clickArea;
 	}
- 
-	///<summary>Sets up the selection while dragging the mouse</summary>
-	private void EvaluateSelectionDrag(long okp_selEnd, bool abyss)
-	{
-		long newSelStart=selStart;
-		long newokp_selEnd=okp_selEnd;
-		
 	
-		if (okp_selEnd!=selStart ) {
-			if (selStart==dataView.Buffer.Size && !selStartInAbyss)
-				newSelStart--;
-			// find if the selection end is at a greater or
-			// lesser position than the start and adjust
-			// the selection accordingly
-			 if (okp_selEnd > selStart && abyss)
-				newokp_selEnd--;
-			 else if (okp_selEnd < selStart && selStartInAbyss)
-				newSelStart--;
-				
-			if (newokp_selEnd==dataView.Buffer.Size)
-				newokp_selEnd--;
-			
-			// make sure selection range is sorted
-			if (newSelStart > newokp_selEnd)
-				dataView.SetSelection(newokp_selEnd, newSelStart);
-			else
-				dataView.SetSelection(newSelStart, newokp_selEnd);
-			
-			if (okp_selEnd >= selStart && !abyss && okp_selEnd<dataView.Buffer.Size) {
-				dataView.MoveCursor(okp_selEnd+1, 0);
-			}
+	private void UpdateSelection(bool abyss)
+	{
+		//System.Console.WriteLine("* (1) Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
+		Bless.Util.Range r;
+		if (selStartPos.Second <= selEndPos.First)
+			r = new Bless.Util.Range(selStartPos.Second, selEndPos.First);
+		else
+			r = new Bless.Util.Range(selEndPos.Second, selStartPos.First);
+		
+		//System.Console.WriteLine("Selection is ({0}, {1}) Expected ({2}, {3})", dataView.Selection.Start, dataView.Selection.End, r.Start, r.End);
+		// if nothing is selected and cursor position has changed externally
+		if (dataView.Selection.IsEmpty() && dataView.CursorOffset != selStartPos.Second) {
+			long offset = dataView.CursorOffset;
+			selStartPos.First = offset - (abyss?1:0);
+			selStartPos.Second = offset;
+			selStartPos.Digit = dataView.CursorDigit;
+			selEndPos = selStartPos;
+			//System.Console.WriteLine("* (2) Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
 		}
-		else if (((abyss && !selStartInAbyss) || (!abyss && selStartInAbyss)) && selStart!=dataView.Buffer.Size) {
-			dataView.SetSelection(selStart, okp_selEnd); // no need to sort, selStart==okp_selEnd
-			
-			if (okp_selEnd >= selStart && !abyss && okp_selEnd<dataView.Buffer.Size) {
-				dataView.MoveCursor(okp_selEnd+1, 0);
-			}
+		else if (!dataView.Selection.IsEmpty() && !r.Equals(dataView.Selection)) {
+			selStartPos.Second = dataView.Selection.Start;
+			selStartPos.First = selStartPos.Second - 1;
+			selEndPos.First = dataView.Selection.End;
+			selEndPos.Second = selEndPos.First + 1; 
 		}
+		//System.Console.WriteLine("* Selection is ({0}, {1}) Expected ({2}, {3}) Fixed ({4}, {5})", dataView.Selection.Start, dataView.Selection.End, r.Start, r.End, selStartPos.Second, selEndPos.First);
+		
+	}
+	
+	private void UpdateFocus(Area area)
+	{
+		if (area.CanFocus && !area.HasCursorFocus) {
+
+			foreach(Area a in dvDisplay.Layout.Areas) 
+				a.HasCursorFocus=false;
+			
+			dataView.MoveCursor(dataView.CursorOffset, dataView.CursorDigit);
+			
+			area.HasCursorFocus=true;
+			area.MoveCursor(area.CursorOffset, area.CursorDigit);
+		}
+	}
+	
+ 	private void CalculatePosition(Area area, int x, int y, ref Position pos)
+ 	{
+ 		Area.GetOffsetFlags flags;
+		int digit;
+ 		
+ 		long off2;
+		long off1 = area.GetOffsetByDisplayInfo(x, y, out digit, out flags);
+		
+		if ((flags & Area.GetOffsetFlags.Eof) == Area.GetOffsetFlags.Eof) {
+			off1 = dataView.Buffer.Size;
+			off2 = off1;
+		}
+		else if ((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss) {
+			off2 = off1 + 1;
+ 		}
+ 		else
+ 			off2 = off1;
+ 		
+ 		pos.First = off1;
+ 		pos.Second = off2;
+ 		pos.Digit = digit;
+ 	}
+ 	
+	private long ValidateOffset(long offset)
+	{
+		if (offset < 0)
+			return 0;
+		
+		if (offset >= dataView.Buffer.Size)
+			return dataView.Buffer.Size - 1;
+		
+		return offset;
+	}
+	
+	///<summary>
+	/// Sets the selection and the cursor position according to the values of selStartPos, selEndPos 
+	///</summary>
+	private void EvaluateSelection(DataViewDisplay.ShowType showType)
+	{	
+		long cursorOffset;
+		
+		// no selection
+		if (selStartPos.First == selEndPos.First && selStartPos.Second == selEndPos.Second) {
+			cursorOffset = selStartPos.Second;
+			// make sure cursor (or end of selection) is visible
+			dvDisplay.MakeOffsetVisible(cursorOffset, showType);
+			
+			dataView.SetSelection(-1, -1);
+			dataView.MoveCursor(selStartPos.Second, selEndPos.Digit);
+		}
+		// selection with start pos <= end pos
+		else if (selStartPos.Second <= selEndPos.First) {
+			// set end position between bytes
+			selEndPos.Second = selEndPos.First + 1;
+			
+			// if selEndPos.Second is at or beyond the EOF
+			long off = ValidateOffset(selEndPos.Second);
+			if (selEndPos.First >= off)
+				off++;
+			cursorOffset = off;
+			dvDisplay.MakeOffsetVisible(cursorOffset, showType);
+			
+			dataView.SetSelection(ValidateOffset(selStartPos.Second), ValidateOffset(selEndPos.First));
+			dataView.MoveCursor(off, 0);
+		}
+		// selection with start pos > end pos
 		else {
-			dataView.SetSelection(-1,-1);
-		}		
+			long off = ValidateOffset(selEndPos.Second);
+			cursorOffset = off;
+			dvDisplay.MakeOffsetVisible(cursorOffset, showType);
+			
+			dataView.SetSelection(ValidateOffset(selEndPos.Second), ValidateOffset(selStartPos.First));
+			dataView.MoveCursor(off, 0);
+		}
+		
+		
 	}
 	
 	///<summary>Handle mouse button presses</summary>
@@ -121,48 +206,33 @@ public class DataViewControl
 	{
 		dvDisplay.GrabKeyboardFocus();
 	
-		Gdk.EventButton e=args.Event;
-		Area clickArea=GetAreaByXY((int)e.X, (int)e.Y);
+		Gdk.EventButton e = args.Event;
+		Area clickArea = GetAreaByXY((int)e.X, (int)e.Y);
 		
-		if (clickArea!=null) {
-			Area.GetOffsetFlags flags;
-			int digit;
-			long off=clickArea.GetOffsetByDisplayInfo((int)(e.X-clickArea.X), (int)(e.Y-clickArea.Y), out digit, out flags);
-			//Console.WriteLine("Press in {0} area @ {1:x}.{2}", clickArea.Type,off, digit);
-			
-			if ((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss)
-				off++;
-			
-			if ((flags & Area.GetOffsetFlags.Eof) == Area.GetOffsetFlags.Eof)
-				off=dataView.Buffer.Size;
-			
-				
-			// update cursor in areas if keypress outside selection
-			if (!clickArea.Selection.Contains(off)) {
-				if (clickArea.CanFocus) {	
-					foreach(Area a in dvDisplay.Layout.Areas) 
-						a.HasCursorFocus=false;
-				}
-				
-				dataView.MoveCursor(off, digit);
-				dataView.SetSelection(-1,-1);
-				
-				// set the focused area
-				if (clickArea.CanFocus) {
-					clickArea.HasCursorFocus=true;
-					clickArea.MoveCursor(off, digit);
-				}
-			}
-			
-			if ((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss)
-				selStartInAbyss=true;
-			else
-				selStartInAbyss=false;
-				
-			selStart=off;
-			
-		}											
+		if (clickArea == null)
+			return;
 		
+		// get the position in the file
+		Position pos = new Position();
+		
+		CalculatePosition(clickArea, (int)(e.X-clickArea.X), (int)(e.Y-clickArea.Y), ref pos);
+		
+		// update selection and cursor if they have changed externally
+		UpdateSelection(pos.First != pos.Second);
+		
+		// if shift is pressed the position is the end position of the selection
+		if ((e.State & Gdk.ModifierType.ShiftMask) != 0) {
+			selEndPos = pos;
+		}
+		else { // ... start a new selection
+			selStartPos = pos;
+			selEndPos = pos;
+		}
+		
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
+		
+		// give the focus to the appropriate area
+		UpdateFocus(clickArea);
 	}
 	
 	///<summary>Handle mouse motion</summary>
@@ -181,48 +251,31 @@ public class DataViewControl
 			state = e.State;
 		}
 		
-		// if left mouse button is down
-		if ((state & Gdk.ModifierType.Button1Mask) != 0) {
-			// find in which area the pointer is
-			Area clickArea=GetAreaByXY(x, y);
-						
-			if (clickArea!=null) {
-				Area.GetOffsetFlags flags;
-				int digit;
-				long off=clickArea.GetOffsetByDisplayInfo((int)(x-clickArea.X), (int)(y-clickArea.Y), out digit, out flags);
-				//Console.WriteLine("Motion in {0} area @ {1:x}", clickArea.Type,off);
-				if ((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss)
-					off++;
-				if ((flags & Area.GetOffsetFlags.Eof) == Area.GetOffsetFlags.Eof)
-					off=dataView.Buffer.Size;
-				if (off<0)
-					off=0;
-					
-				// Evaluate selection before moving the cursor
-				// for better visual result
-				bool abyss=((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss);
-				
-				EvaluateSelectionDrag(off, abyss);
-				
-				// update cursor in areas	
-				if (clickArea.CanFocus) {	
-					foreach(Area a in dvDisplay.Layout.Areas) 
-						a.HasCursorFocus=false;
-				}
-				
-				dataView.MoveCursor(off, digit);
-				
-				// set the focused area
-				if (clickArea.CanFocus) {
-					clickArea.HasCursorFocus=true;
-					clickArea.MoveCursor(off, digit);
-				}
-				
-				dvDisplay.MakeOffsetVisible(off, DataViewDisplay.ShowType.Closest);
-			}											
-				
-		}// end: if mouse button down
+		// if left mouse button is not down
+		if ((state & Gdk.ModifierType.Button1Mask) == 0)
+			return;
 		
+		// find in which area the pointer is
+		Area clickArea=GetAreaByXY(x, y);
+					
+		if (clickArea == null)
+			return;
+		
+		// get the position in the file
+		Position pos = new Position();
+		CalculatePosition(clickArea, (int)(x-clickArea.X), (int)(y-clickArea.Y), ref pos);
+		
+		// update selection and cursor if they have changed externally
+		UpdateSelection(pos.First != pos.Second);		
+		
+		// Evaluate selection before moving the cursor
+		// for better visual result
+		selEndPos = pos;
+		
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
+		
+		// give the focus to the appropriate area
+		UpdateFocus(clickArea);
 	}
 	
 	///<summary>Handle mouse button release</summary>
@@ -231,50 +284,36 @@ public class DataViewControl
 		Gdk.EventButton e=args.Event;
 		Area clickArea=GetAreaByXY((int)e.X, (int)e.Y);
 		
+		if (clickArea == null)
+			return;
 		
-		if (clickArea!=null) {
-			int x=(int)e.X;
-			int y;
-			// if the pointer has moved out of the area height borders
-			// make sure there is consistency in the selection
-			// when depressing the mouse button
-			if (e.Y > clickArea.Height + clickArea.Y) 
-				y=clickArea.Height + clickArea.Y - clickArea.Drawer.Height;
-			else if (e.Y < clickArea.Y)
-				y=clickArea.Y;
-			else
-				y=(int)e.Y;
-				
-			Area.GetOffsetFlags flags;
-			int digit;
-			long off=clickArea.GetOffsetByDisplayInfo((int)(x-clickArea.X), (int)(y-clickArea.Y), out digit, out flags);
-			//Console.WriteLine("Release in {0} area @ {1:x}", clickArea.Type,off);
-			if ((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss)
-				off++;
-			if ((flags & Area.GetOffsetFlags.Eof) == Area.GetOffsetFlags.Eof)
-				off=dataView.Buffer.Size;
-			
-			// Evaluate selection before moving the cursor
-			// for better visual result
-			bool abyss=((flags & Area.GetOffsetFlags.Abyss) == Area.GetOffsetFlags.Abyss);
-				
-			EvaluateSelectionDrag(off, abyss);
-			
-			// update cursor in areas	
-			if (clickArea.CanFocus) {	
-				foreach(Area a in dvDisplay.Layout.Areas) 
-					a.HasCursorFocus=false;
-			}
-				
-			dataView.MoveCursor(off, digit);
-				
-			// set the focused area
-			if (clickArea.CanFocus) {
-				clickArea.HasCursorFocus=true;
-				clickArea.MoveCursor(off, digit);
-			}
-			
-		}											
+		int x=(int)e.X;
+		int y;
+		// if the pointer has moved out of the area height borders
+		// make sure there is consistency in the selection
+		// when depressing the mouse button
+		if (e.Y > clickArea.Height + clickArea.Y) 
+			y=clickArea.Height + clickArea.Y - clickArea.Drawer.Height;
+		else if (e.Y < clickArea.Y)
+			y=clickArea.Y;
+		else
+			y=(int)e.Y;
+		
+		// get the position in the file
+		Position pos = new Position();
+		CalculatePosition(clickArea, (int)(x-clickArea.X), (int)(y-clickArea.Y), ref pos);
+		
+		// update selection and cursor if they have changed externally
+		UpdateSelection(pos.First != pos.Second);		
+		
+		// Evaluate selection before moving the cursor
+		// for better visual result
+		selEndPos = pos;
+		//System.Console.WriteLine("Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
+		
+		// give the focus to the appropriate area
+		UpdateFocus(clickArea);										
 	}
 	
 	///<summary>Find the area that has the focus and its index</summary>
@@ -321,19 +360,15 @@ public class DataViewControl
 	Area okp_focusArea;
 	int okp_bpr;
 	int okp_dpb;
-	long okp_cOffset;
-	int okp_cDigit;
-	int okp_pageIncrement;
-	long okp_bbSize;
-	long okp_selEnd;
-	bool okp_specialKey;
 	DataViewDisplay.ShowType okp_showType;
 		
 	///<summary>Handle key presses</summary>
 	internal void OnKeyPress (object o, KeyPressEventArgs args)
 	{
-		Gdk.EventKey e=args.Event;
-		okp_focusArea=null;
+		Gdk.EventKey e = args.Event;
+		
+		okp_focusArea = null;
+		bool shiftPressed = false;
 		
 		// find focused area
 		FindFocusedArea(out okp_focusArea);
@@ -347,105 +382,96 @@ public class DataViewControl
 		if (okp_focusArea == null)
 			return;
 		
-		okp_bpr=okp_focusArea.BytesPerRow;
-		okp_dpb=okp_focusArea.DigitsPerByte;
-		okp_cOffset=okp_focusArea.CursorOffset;
-		okp_cDigit=okp_focusArea.CursorDigit;
-		okp_pageIncrement=(int)dvDisplay.VScroll.Adjustment.PageIncrement;
-		okp_bbSize=dataView.Buffer.Size;
-		okp_selEnd=-1;
-		okp_showType=DataViewDisplay.ShowType.Closest;
+		okp_bpr = okp_focusArea.BytesPerRow;
+		okp_dpb = okp_focusArea.DigitsPerByte;
+		okp_showType = DataViewDisplay.ShowType.Closest;
 		
-		// 
-		if ((e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask) {
-			if (shiftPressed==false) {
-				selStart=okp_cOffset;
-				shiftPressed=true;
-			}
+		if ((e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask)
+			shiftPressed = true;
+		
+		UpdateSelection(true);
+		
+		Position cur = new Position();
+		if (shiftPressed || !okp_focusArea.Selection.IsEmpty()) {
+			cur = selEndPos;
+			cur.Digit = 0;
+		}
+		else {
+			cur = selStartPos;
 		}
 		
-		// handle keys 
-		okp_specialKey=false;
+		Position next = new Position();
+		// set next to cur in case it is not set by a keypress handler
+		next = cur;
+		
+		// handle keys
+		bool specialKey = false;
 		
 		switch(e.Key) {
 			case Gdk.Key.Up:
-				OnKeyUp(); 
+				OnKeyUp(ref cur, ref next); 
 				break;
 			case Gdk.Key.Down:
-				OnKeyDown();
+				OnKeyDown(ref cur, ref next);
 				break;
 			case Gdk.Key.Left:
-				OnKeyLeft();
+				OnKeyLeft(ref cur, ref next);
 				break;
 			case Gdk.Key.Right:
-				OnKeyRight();
+				if (shiftPressed)
+					cur.Digit = okp_dpb - 1;
+				OnKeyRight(ref cur, ref next);
 				break;
 			case Gdk.Key.Page_Up:
-				OnKeyPageUp();
+				OnKeyPageUp(ref cur, ref next);
 				break;
 			case Gdk.Key.Page_Down:
-				OnKeyPageDown();
+				OnKeyPageDown(ref cur, ref next);
 				break;
 			case Gdk.Key.Home:
-				OnKeyHome();
+				OnKeyHome(ref cur, ref next);
 				break;
 			case Gdk.Key.End:
-				OnKeyEnd();
+				OnKeyEnd(ref cur, ref next);
 				break;
 			case Gdk.Key.Insert:
 				OnKeyInsert();
 				break;
 			case Gdk.Key.Tab:
 				OnKeyTab();
+				specialKey = true;
 				break;
 			case Gdk.Key.BackSpace:
 				OnKeyBackspace();
 				return; // OnKeyBackspace() handles drawing
 			default:
-				OnKeyDefault(e); 
+				OnKeyDefault(e, ref cur, ref next, out specialKey); 
 				break;
 		} // end switch()
-			
+		//System.Console.WriteLine("Current: {0},{1},{2} Next: {3},{4},{5}", cur.First, cur.Second, cur.Digit, next.First, next.Second, next.Digit);
 		
-			
-		// if we have a new selection end
-		if (okp_selEnd != -1) {
-			long newSelEnd=okp_selEnd;
-			long newSelStart=selStart;
-				
-			if (okp_selEnd!=selStart) {
-				// find if the selection end is at a greater or
-				// lesser position than the start and adjust
-				// the selection accordingly
-				if (okp_selEnd > selStart)
-					newSelEnd--;
-				else if (okp_selEnd < selStart)
-					newSelStart--;
-				
-				// make sure selection range is sorted
-				if (newSelStart > newSelEnd)
-					dataView.SetSelection(newSelEnd, newSelStart);
-				else
-					dataView.SetSelection(newSelStart, newSelEnd);	
-			}
-			else {
-				dataView.SetSelection(-1, -1);
-			}		
+		// if just a special key was pressed (eg shift, ctrl, tab or a digit the area doesn't understand don't do anything) 
+		if (specialKey)
+			return;
+		
+		if (shiftPressed) {
+			next.Digit = 0;
+			if (selStartPos.First == selStartPos.Second)
+				selStartPos.First--;
+			selEndPos = next;
 		}
-		else if (!okp_specialKey && !shiftPressed)
-			dataView.SetSelection(-1, -1);
-
-		// update cursor
-		dvDisplay.MakeOffsetVisible(okp_cOffset, okp_showType);	
-		dataView.MoveCursor(okp_cOffset, okp_cDigit);	
+		else {
+			selEndPos = next;
+			selStartPos = next;
+		}
+		//System.Console.WriteLine("Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
+		EvaluateSelection(okp_showType);		
 	}
 	
 	///<summary>Handle key releases</summary>
 	internal void OnKeyRelease (object o, KeyReleaseEventArgs args)
 	{
-		Gdk.EventKey e=args.Event;
-		if ( (e.Key == Gdk.Key.Shift_L || e.Key == Gdk.Key.Shift_R) )
-			shiftPressed=false;
+		// do nothing
 	}
 	
 	internal void OnMouseWheel(object o, ScrollEventArgs args)
@@ -494,142 +520,146 @@ public class DataViewControl
 	// Key Handlers, called by OnKeyPress
 	//
 	
-	void OnKeyUp()
+	void OnKeyUp(ref Position cur, ref Position next)
 	{
-		okp_cOffset -= okp_bpr;
+		long offset = cur.Second;
 		
-		if (okp_cOffset < 0) {
-			okp_cOffset=okp_focusArea.CursorOffset;
-			okp_cDigit=okp_focusArea.CursorDigit;
-			if (shiftPressed)
-				okp_selEnd=-1;
-		}
-		else if (shiftPressed) {
-			okp_selEnd=okp_cOffset;
-			okp_cDigit=0;
-		}
-	}
-	
-	void OnKeyDown()
-	{
-		okp_cOffset += okp_bpr;
+		offset -= okp_bpr;
 		
-		if (okp_cOffset > okp_bbSize) {
-			okp_cOffset = okp_bbSize;
-			okp_cDigit=okp_focusArea.CursorDigit;
-			if (shiftPressed)
-				okp_selEnd=okp_bbSize;
-		}
-		else if (shiftPressed) {	
-			okp_selEnd=okp_cOffset;
-			okp_cDigit=0;
-		}
-	}
-	
-	void OnKeyLeft()
-	{
-		if (!shiftPressed) {
-			okp_cDigit--;
-			if (okp_cDigit<0) {
-				okp_cOffset--;
-				okp_cDigit = okp_dpb - 1;
-			}
-			if (okp_cOffset < 0) {
-				okp_cOffset = 0;
-				okp_cDigit=0;
-			}
+		if (offset < 0) {
+			next.First = cur.Second;
+			next.Second = cur.Second;
 		}
 		else {
-			okp_cOffset--;
-			if (okp_cOffset < 0)
-				okp_cOffset = 0;
-			else {
-				okp_selEnd=okp_cOffset;	
-				okp_cDigit=0;
-			}
-		}	
-	}
-	
-	void OnKeyRight()
-	{
-		if (!shiftPressed) {
-			okp_cDigit++;
-			if (okp_cDigit>=okp_dpb) {
-				okp_cOffset++;
-				okp_cDigit = 0;
-			}
-			if (okp_cOffset > okp_bbSize) {
-				okp_cOffset = okp_bbSize;
-				okp_cDigit = okp_dpb-1;
-			}
-		}
-		else {	// if (shiftPressed)	
-			okp_cOffset++;
-			if (okp_cOffset > okp_bbSize)
-				okp_cOffset = okp_bbSize;
-			else {
-				okp_selEnd=okp_cOffset;	
-				okp_cDigit=0;
-			}
-		}
-	}
-	
-	
-	void OnKeyPageUp()
-	{
-		okp_cOffset -= okp_bpr*okp_pageIncrement;
-		
-		if (okp_cOffset < 0) {
-			okp_cOffset=0;
-			okp_cDigit=okp_focusArea.CursorDigit;
-			if (shiftPressed) 
-				okp_selEnd=0;
-		}
-		else if (shiftPressed) {
-			okp_selEnd=okp_cOffset;
-			okp_cDigit=0;
+			next.First = offset - 1;
+			next.Second = offset;
 		}
 		
-		okp_showType=DataViewDisplay.ShowType.Cursor;
+		next.Digit = cur.Digit;
 	}
 	
-	void OnKeyPageDown()
+	void OnKeyDown(ref Position cur, ref Position next)
 	{
-		okp_cOffset += okp_bpr*okp_pageIncrement;
+		 long offset = cur.Second;
+		 offset += okp_bpr;
 		
-		if (okp_cOffset > okp_bbSize) {
-			okp_cOffset=okp_bbSize;
-			okp_cDigit=okp_focusArea.CursorDigit;
-			if (shiftPressed) 
-				okp_selEnd=okp_bbSize;
+		if (offset > dataView.Buffer.Size) {
+			next.First = dataView.Buffer.Size;
+			next.Second = dataView.Buffer.Size;
 		}
-		else if (shiftPressed) {
-			okp_selEnd=okp_cOffset;
-			okp_cDigit=0;
+		else {
+			next.First = offset - 1;
+			next.Second = offset;
 		}
 		
-		okp_showType=DataViewDisplay.ShowType.Cursor;
+		next.Digit = cur.Digit;
 	}
 	
-	void OnKeyHome()
+	void OnKeyLeft(ref Position cur, ref Position next)
 	{
-		okp_cOffset = 0;
-		okp_cDigit = 0;
-		if (shiftPressed) 
-			okp_selEnd = okp_cOffset;
+		long offset = cur.Second;
+		int digit = cur.Digit;
+		
+		digit--;
+		
+		if (digit < 0) {
+			offset--;
+			digit = okp_dpb - 1;
+		}
+		
+		if (offset < 0) {
+			offset = 0;
+			digit = 0;
+		}
+		
+		next.First = offset - 1;
+		next.Second = offset;
+		next.Digit = digit;
+		
+	}
+	
+	void OnKeyRight(ref Position cur, ref Position next)
+	{
+		long offset = cur.Second;
+		int digit = cur.Digit;
+		
+		digit++;
+		
+		if (digit >= okp_dpb) {
+			offset++;
+			digit = 0;
+		}
+		
+		if (offset > dataView.Buffer.Size) {
+			offset = dataView.Buffer.Size;
+			digit = okp_dpb - 1;
+		}
+		
+		next.First = offset - 1;
+		next.Second = offset;
+		next.Digit = digit;
+		
+	}
+	
+	
+	void OnKeyPageUp(ref Position cur, ref Position next)
+	{
+		long offset = cur.Second;
+		int digit = cur.Digit;
+		
+		offset -= okp_bpr * (int)dvDisplay.VScroll.Adjustment.PageIncrement;
+		
+		if (offset < 0) {
+			offset = 0;
+			//digit = 0;
+		}
+		
+		okp_showType = DataViewDisplay.ShowType.Cursor;
+				
+		next.First = offset;
+		next.Second = offset;
+		next.Digit = digit;
+		
+	}
+		
+	void OnKeyPageDown(ref Position cur, ref Position next)
+	{
+		long offset = cur.Second;
+		int digit = cur.Digit;
+		
+		offset += okp_bpr * (int)dvDisplay.VScroll.Adjustment.PageIncrement;
+		
+		if (offset > dataView.Buffer.Size) {
+			offset = dataView.Buffer.Size;
+			//digit = 0;
+		}
+		
+		okp_showType = DataViewDisplay.ShowType.Cursor;
+				
+		next.First = offset;
+		next.Second = offset;
+		next.Digit = digit;
+		
+	}
+		
+	void OnKeyHome(ref Position cur, ref Position next)
+	{
+		next.First = 0;
+		next.Second = 0;
+		next.Digit = 0;
 			
-		okp_showType=DataViewDisplay.ShowType.Start;
+		okp_showType = DataViewDisplay.ShowType.Start;
 	}
 	
-	void OnKeyEnd()
+	void OnKeyEnd(ref Position cur, ref Position next)
 	{
-		okp_cOffset = okp_bbSize;
-		okp_cDigit = 0;
-		if (shiftPressed) 
-			okp_selEnd = okp_cOffset;
-		
-		okp_showType=DataViewDisplay.ShowType.End;
+		next.First = dataView.Buffer.Size;
+		next.Second = dataView.Buffer.Size;
+		next.Digit = 0;
+			
+		okp_showType = DataViewDisplay.ShowType.End;
 	}
+	
 	
 	void OnKeyInsert()
 	{
@@ -639,7 +669,6 @@ public class DataViewControl
 	void OnKeyTab()
 	{
 		CycleFocus();
-		okp_specialKey=true;
 	}
 	
 	void OnKeyBackspace()
@@ -648,33 +677,39 @@ public class DataViewControl
 		dataView.DeleteBackspace();
 	}
 	
-	void OnKeyDefault(Gdk.EventKey e)
+	void OnKeyDefault(Gdk.EventKey e, ref Position cur, ref Position next, out bool specialKey)
 	{
 		if (!dataView.Buffer.ModifyAllowed) {
-			okp_specialKey=true;
+			specialKey = true;
 			return;
 		}
 		
+		if (dataView.Selection.IsEmpty()) {
+			if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, dataView.Overwrite) == true) {
+				OnKeyRight(ref cur, ref next);
+				dataView.CursorUndoDeque.AddFront(new CursorState(cur.Second, cur.Digit, next.Second, next.Digit));
+							
+				dataView.CursorRedoDeque.Clear();	
+				
+				selStartPos = selEndPos = next;
+				specialKey = false;
+			}
+			else
+				specialKey = true;
+		}
+		else {
+			if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, dataView.Overwrite) == true) {
+				dataView.Delete();
+				specialKey = false;
+			}
+			else {
+				specialKey = true;
+			}
+			
+		}
 		// any other key pass it to focused area
 		// if area handled it move one position right
-		if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, dataView.Overwrite) == true) {
-			okp_cDigit++;
-			// bytebuffer size may have changed (eg append)
-			okp_bbSize=dataView.Buffer.Size;
-			if (okp_cDigit>=okp_dpb) {
-				okp_cOffset++;
-				okp_cDigit = 0;
-				dataView.CursorUndoDeque.AddFront(new CursorState(okp_cOffset-1, okp_dpb-1, okp_cOffset, okp_cDigit));
-			}
-			else 
-				dataView.CursorUndoDeque.AddFront(new CursorState(okp_cOffset, okp_cDigit-1, okp_cOffset, okp_cDigit));
-				
-			dataView.CursorRedoDeque.Clear();	
-			
-			dataView.SetSelection(-1, -1);
-		}
-		else
-			okp_specialKey=true;
+		
 	}
 	
  } // end DataViewControl

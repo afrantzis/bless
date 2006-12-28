@@ -228,7 +228,7 @@ public abstract class Area {
 	}
 	
 	public bool HasCursorFocus {
-		set { cursorFocus=value; CursorDigit=-1;} 
+		set { cursorFocus=value; } 
 		get { return cursorFocus;}
 	}
 	
