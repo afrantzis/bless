@@ -35,8 +35,13 @@ public class OctalArea : GroupedArea {
 	{
 		//System.Console.WriteLine("Octal: {0}", key);
 		
-		if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_7) {
-			byte b = (byte)(key - Gdk.Key.Key_0);
+		if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_7 || (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_7)) {
+			byte b;
+			if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_7)
+				b = (byte)(key - Gdk.Key.Key_0);
+			else
+				b = (byte)(key - Gdk.Key.KP_0);
+			
 			byte orig;
 			
 			// if we are after the end of the buffer, assume

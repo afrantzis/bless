@@ -35,7 +35,7 @@ public class BinaryArea : GroupedArea {
 	{
 		//System.Console.WriteLine("Binary: {0}", key);
 		
-		if (key == Gdk.Key.Key_0 || key == Gdk.Key.Key_1) {
+		if (key == Gdk.Key.Key_0 || key == Gdk.Key.Key_1 || key == Gdk.Key.KP_0 || key == Gdk.Key.KP_1) {
 			byte orig;
 			
 			// if we are after the end of the buffer, assume
@@ -47,7 +47,7 @@ public class BinaryArea : GroupedArea {
 				
 			byte repl;
 			
-			if (key == Gdk.Key.Key_1)
+			if (key == Gdk.Key.Key_1 || key == Gdk.Key.KP_1 )
 				repl = (byte)((1 << (dpb-cursorDigit-1)) | orig);
 			else
 				repl = (byte)((~(1 << (dpb-cursorDigit-1))) & orig);

@@ -158,10 +158,14 @@ public class AsciiArea : Area {
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
 		//System.Console.WriteLine("Ascii: {0}", key);
+		byte[] ba = null;
 		
-		if (key >= Gdk.Key.space && key <= Gdk.Key.asciitilde) {
-			byte[] ba=new byte[]{(byte)key};
+		if (key >= Gdk.Key.space && key <= Gdk.Key.asciitilde)
+			ba = new byte[]{(byte)key};
+		else if (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_9)
+			ba = new byte[]{(byte)(key - Gdk.Key.KP_0 + Gdk.Key.Key_0)};
 			
+		if (ba != null) {
 			if (cursorOffset==byteBuffer.Size)
 				byteBuffer.Append(ba);	
 			else if (overwrite==true)

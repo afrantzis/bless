@@ -40,15 +40,16 @@ public class HexArea : GroupedArea {
 			return key - Gdk.Key.A + 10;
 		else if (key >= Gdk.Key.a && key <= Gdk.Key.f)
 			return key - Gdk.Key.a + 10;
-		else 
+		else if (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_9)
+			return key - Gdk.Key.KP_0;
+		else
 			return -1;	
 	}
 
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
-		//System.Console.WriteLine("Hexadecimal: {0}", key);
 		int hex=KeyToHex(key);
-
+		
 		if (hex != -1) {
 			byte b = (byte)hex;
 			byte orig;

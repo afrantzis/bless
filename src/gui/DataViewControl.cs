@@ -109,7 +109,7 @@ public class DataViewControl
 		
 	}
 	
-	private void UpdateFocus(Area area)
+	private bool UpdateFocus(Area area)
 	{
 		if (area.CanFocus && !area.HasCursorFocus) {
 
@@ -120,7 +120,10 @@ public class DataViewControl
 			
 			area.HasCursorFocus=true;
 			area.MoveCursor(area.CursorOffset, area.CursorDigit);
+			return true;
 		}
+		
+		return false;
 	}
 	
  	private void CalculatePosition(Area area, int x, int y, ref Position pos)
@@ -349,6 +352,7 @@ public class DataViewControl
 				a.HasCursorFocus=true;
 				if (focusArea!=null)
 					focusArea.HasCursorFocus=false;
+				dataView.MoveCursor(dataView.CursorOffset, dataView.CursorDigit);
 				return a;
 			}
 		}
