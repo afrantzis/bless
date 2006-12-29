@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace BlessBuilder {
 
@@ -10,10 +11,17 @@ public enum BuildStatus { UpToDate, Rebuilt, Failed };
 public class ModuleBuilder
 {	
 	private ModuleTree moduleTree;
+	private List<string> extraOptions;
 	
 	public ModuleBuilder(ModuleTree moduleTree)
 	{
 		this.moduleTree=moduleTree;
+		this.extraOptions = new List<string>();
+	}
+	
+	public void AddOption(string option)
+	{
+		extraOptions.Add(option);
 	}
 	
 	public BuildStatus Build(string name)
@@ -59,6 +67,10 @@ public class ModuleBuilder
 		
 		foreach(string s in module.Packages) {
 			sb.Append("-pkg:"+s+" ");
+		}
+		
+		foreach(string s in extraOptions) {
+			sb.Append(s + " ");
 		}
 		
 		foreach(string s in module.InputFiles) {
