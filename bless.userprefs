@@ -1,25 +1,12 @@
 <?xml version="1.0"?>
 <UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
-  <Files>
-    <File filename="./src/gui/DataViewControl.cs" />
-    <File filename="./src/gui/DataView.cs" />
-    <File filename="./src/util/Range.cs" />
-  </Files>
+  <Files />
   <Views>
     <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
       <TreeView>
         <Node expanded="True">
           <Node name="bless" expanded="True">
-            <Node name="src" expanded="True">
-              <Node name="gui" expanded="True">
-                <Node name="areas" expanded="True" />
-                <Node name="DataViewControl.cs" expanded="False" selected="True" />
-              </Node>
-              <Node name="tools" expanded="True">
-                <Node name="export" expanded="True" />
-              </Node>
-              <Node name="util" expanded="True" />
-            </Node>
+            <Node name="src" expanded="False" selected="True" />
           </Node>
         </Node>
       </TreeView>
@@ -45,7 +32,7 @@
   <Properties>
     <Properties>
       <Property key="ActiveConfiguration" value="Debug" />
-      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/DataViewControl.cs" />
+      <Property key="ActiveWindow" value="" />
     </Properties>
   </Properties>
 </UserCombinePreferences>

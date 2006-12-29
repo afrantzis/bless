@@ -21,6 +21,7 @@
 using Bless.Gui;
 using Bless.Plugins;
 using Bless.Gui.Dialogs;
+using Bless.Util;
 using System;
 using Gtk;
 using Mono.Unix;
@@ -82,7 +83,7 @@ public class HelpOperationsPlugin : GuiPlugin
 	public void OnContentsActivated(object o, EventArgs args) 
 	{
 #if ENABLE_UNIX_SPECIFIC
-		string helpScript=FileResourcePath.GetPath("..", "data", "help_script.sh");
+		string helpScript=FileResourcePath.GetSystemPath("..", "data", "help_script.sh");
 		System.Diagnostics.Process.Start(helpScript);
 #endif
 	}

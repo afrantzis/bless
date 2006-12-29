@@ -13,7 +13,7 @@ if ENABLE_DEBUG
 endif
 
 if ENABLE_UNIX_SPECIFIC
-    MCS_FLAGS+=-d:ENABLE_UNIX_SPECIFIC -r:Mono.Posix
+    MCS_FLAGS+=-d:ENABLE_UNIX_SPECIFIC
 endif
 
 noinst_SCRIPTS = bless.exe

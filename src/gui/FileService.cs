@@ -374,8 +374,8 @@ public class FileService
       				}
 				}
 				// find out if save succeeded
-				SaveOperation bbs=(SaveOperation)ar.AsyncState;
-				if (bbs.Result!=SaveOperation.OperationResult.Finished)
+				SaveAsOperation bbs=(SaveAsOperation)ar.AsyncState;
+				if (bbs.Result!=SaveAsOperation.OperationResult.Finished)
 					return false;
 				// add to history
 				History.Instance.Add(bbs.SavePath);

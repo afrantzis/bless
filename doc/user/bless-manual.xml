@@ -585,7 +585,7 @@
 		</itemizedlist>
 		<para>
 			The types and placement of the areas that each tab contains can be customized with layout files.
-			See <xref linkend="bless-customizing-layout"/> for more information on how to write and use layout files. 
+			See <xref linkend="bless-customizing-layouts"/> for more information on how to write and use layout files. 
 		</para>
 		
 		<section  id="bless-usage-dataview-focus">
@@ -841,7 +841,7 @@
 				<para>
 					Selecting a range of data has another useful effect: all the patterns matching the selected
 					data in the file are highlighted, thus providing a quick way to find or emphasize patterns.
-					The color of the highlighting can be changed using Layout files (see <xref linkend="bless-customizing-layout"/>).
+					The color of the highlighting can be changed using Layout files (see <xref linkend="bless-customizing-layouts"/>).
 					This feature can be turned off in the Preferences Dialog (see <xref linkend="bless-customizing-preferences-general"/>).
 				</para>
 			</section>
@@ -1458,7 +1458,8 @@
 	<section id="bless-customizing-config">
 	<title>Configuration Files</title>
 	<para>
-		&app; keeps its configuration files under <filename class='directory'>$XDG_CONFIG_HOME/bless</filename> (usually $HOME/.config/bless)
+		&app; keeps its configuration files under <filename class='directory'>$XDG_CONFIG_HOME/bless</filename> (usually <filename class='directory'>$HOME/.config/bless</filename> on UNIX based systems and
+		<filename class='directory'>C:\Documents and Settings\User Name\Application Data\bless</filename> on MS Windows systems)
 		in accordance to the XDG specification. This directory contains the following files and directories
 	</para>
 	
@@ -1502,7 +1503,7 @@
 			<listitem>
 				<para>
 					This directory holds the layout description files for each user. 
-					See <xref linkend="bless-customizing-layout"/>.
+					See <xref linkend="bless-customizing-layouts"/>.
 				</para>
 			</listitem>
 		</varlistentry>
@@ -1660,7 +1661,7 @@
 		</section>
 	</section>
 	
-	<section id="bless-customizing-layout">
+	<section id="bless-customizing-layouts">
 	<title>Layout Files</title>
 	
 	<para>
@@ -1669,7 +1670,7 @@
 		layouts but one is planned for a later version.
 	</para>
 	
-	<section id="bless-customizing-layout-selecting">
+	<section id="bless-customizing-layouts-selecting">
 		<title>Selecting a layout</title>
 		<para>
 			&app; searches for layout description files in the <filename class='directory'>$XDG_CONFIG_HOME/bless/layouts</filename> directory
@@ -1682,7 +1683,7 @@
 		</para>
 	</section>
 	
-	<section id="bless-customizing-layout-creating">
+	<section id="bless-customizing-layouts-creating">
 		<title>Creating Layout Files</title>
 		<para>
 			Layout description files are XML files ending with the .layout suffix. They consist of 
@@ -1800,7 +1801,7 @@
 			</tbody>
 			</tgroup>
 		</informaltable>			
-		<section id="bless-customizing-layout-creating-bpr">
+		<section id="bless-customizing-layouts-creating-bpr">
 			<title>The bpr option</title>
 			<para>
 				The &lt;bpr&gt; (bytes per row) option sets the (maximum) number of bytes that each row in an area can have. If it is not
@@ -1812,7 +1813,7 @@
 			</para>
 		</section>
 		
-		<section id="bless-customizing-layout-creating-display">
+		<section id="bless-customizing-layouts-creating-display">
 			<title>The display option</title>
 			<para>
 				The &lt;display&gt; option is the most complicated of the lot and deserves additional explanation.
@@ -1986,6 +1987,88 @@
 	<para> </para>
  </chapter>
 -->
+<chapter id="bless-faq">
+	<title>Frequently Asked Questions</title>
+
+	<qandaset defaultlabel='number'>
+	
+	  <qandadiv><title>Philosophical Questions</title>
+	
+	    <qandaentry><question><simpara>Why did you start Bless? Aren't there enough hex editors?</simpara></question>
+	        <answer><simpara>There aren't enough free (as in speech) graphical hex editors. The two main
+	ones are khexedit and ghex. Khexedit hasn't been updated in years and ghex is moving 
+	very slowly.</simpara></answer>
+	        </qandaentry>
+		
+		<qandaentry><question><simpara>So, why didn't you contribute to one of the existing projects?</simpara></question>
+	        <answer><simpara>I wanted to try out the mono/Gtk# combination for graphical applications and none such 
+	project existed.</simpara></answer>
+	        </qandaentry>
+		
+		<qandaentry><question><simpara>What kind of name is Bless?</simpara></question>
+	        <answer><simpara>It is a wordplay on the word hex. Hex also means curse and a bless(ing) is the opposite of a curse.</simpara></answer>
+	        </qandaentry>
+
+	</qandadiv>
+	
+	<qandadiv><title>Technical Questions</title>
+	
+	    <qandaentry><question><simpara>How can I get the latest source of Bless?</simpara></question>
+	        <answer><para>Bless now uses <ulink url="http://bazaar-vcs.org" type="http">Bazaar-NG</ulink> as its version control system. 
+	After you install Bazaar-NG on your system use the following command to get the latest version
+	of Bless into the bless.dev directory (this might take some time):
+	</para>
+	<para>
+	<command>bzr branch http://download.gna.org/bless/bless.dev</command>
+	</para>
+	<para>
+	If you already downloaded a previous version (using the above command, not source tarballs) and want to update to the latest version 
+	use:
+	</para>
+	<para>
+	<command>bzr pull</command>
+	</para>
+	<para>
+	from within the directory that contains the previous version. 
+	</para></answer>
+	        </qandaentry>
+		
+		<qandaentry><question><simpara>I don't like the way Bless displays data. Can I change it?</simpara></question>
+	        <answer><simpara>Yes! Bless is highly customizable. See <xref linkend="bless-customizing-layouts"/>
+	        </simpara></answer>
+	        </qandaentry>
+		
+		<qandaentry><question><simpara>I am trying to save a large file (under the same name) but while saving Bless complains that there is
+	no space left! I was sure I had enough space! What's going on?</simpara></question>
+	        <answer><simpara>To be able to save a file under the same name (File-&gt;Save command) you need
+	to have (temporarily) enough disk space to hold both the original and the
+	new file. This happens because the new file is created in a temporary file
+	directory (eg /tmp see <xref linkend="bless-customizing-preferences-general"/>) and then moved to its proper position. For example if you have a
+	20MB file and edit it so that it becomes 21MB and the new file is supposed to
+	be saved in the same storage device as /tmp, you need to have 20+21=41MB free
+	space in that storage device to be able to save it. After a successful save,
+	the original file is deleted, in this case freeing 20MB.Although this can be a problem (when there is not enough disk space), it
+	can also be seen as a safety measure in case something goes wrong when saving.</simpara></answer>
+	        </qandaentry>
+
+	<qandaentry><question><simpara>The data in the data areas isn't displayed correctly! What is wrong?</simpara></question>
+	        <answer><para>On some systems the data in the data areas are garbled. This is an
+	 issue with the font subsystem. What happens is that the font subsystem reports to Bless a different font width than the one that is actually used on screen.
+	 This bug should be fixed in current versions of Pango.</para>
+	<para>
+	 Anyway, the bug is now irrevelevant: from version 0.5.0 &app; uses a different way to measure the font width.
+	 Also, the temporary workaround with the FontWidthFix preference introduced in 0.4.1 is now disabled.
+	 If you are still experiencing such problems with versions >= 0.5.0 please file a bug report.
+	</para>			 
+	 </answer>
+	        </qandaentry>
+	        <qandaentry><question><simpara>Where does Bless keep its configuration files?</simpara></question>
+	        <answer><simpara>See <xref linkend="bless-customizing-config"/></simpara></answer>
+	        </qandaentry>
+	</qandadiv>
+	</qandaset>
+ </chapter>
+
 <!-- ============= About ================================== -->
 <!-- This section contains info about the program (not docs), such as
 			author's name(s), web page, license, feedback address. This
