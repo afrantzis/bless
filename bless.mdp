@@ -133,6 +133,7 @@
     <File name="./src/gui/plugins/SelectRangePlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/HistoryPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/drawers/PixmapManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/util/ConfigureDefines.cs.in" subtype="Code" buildaction="Compile" />
   </Contents>
   <References />
   <DeploymentInformation strategy="File">

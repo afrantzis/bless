@@ -7,6 +7,10 @@ AM_INIT_AUTOMAKE
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.15)
 
+GETTEXT_PACKAGE=bless
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext Package])
+
 # Checks for programs.
 AC_PATH_PROG(PKG_CONFIG,pkg-config)
 AC_PATH_PROG(MCS,gmcs)
@@ -69,6 +73,7 @@ AC_CONFIG_FILES([Makefile po/Makefile.in
 				 builder/Makefile
 				 bin/Makefile
 				 data/Makefile
+				 data/bless.desktop
 				 data/help_script.tmpl
 				 doc/Makefile
 				 doc/developer/Makefile
@@ -85,6 +90,7 @@ AC_CONFIG_FILES([Makefile po/Makefile.in
  				 src/tools/export/Makefile
 				 src/tools/export/plugins/Makefile
 				 src/util/Makefile
+				 src/util/ConfigureDefines.cs
 				 src/plugins/Makefile
 				 tests/Makefile
 				 tests/buffers/Makefile

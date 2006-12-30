@@ -1,4 +1,4 @@
-dist_noinst_DATA=bless-about.png bless-48x48.png bless.desktop \
+dist_noinst_DATA=bless-about.png bless-48x48.png bless.desktop.in \
 		bless-default.layout bless-16-bytes-per-row.layout \
 		bless-all-number-bases.layout help_script.tmpl.in \
 		default-preferences.xml bless.glade

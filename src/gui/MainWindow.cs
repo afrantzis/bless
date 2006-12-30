@@ -99,7 +99,7 @@ public class BlessMain
 		Application.Init();
 		
 		// 
-		Catalog.Init("bless", FileResourcePath.GetSystemPath("locale"));
+		Catalog.Init(ConfigureDefines.GETTEXT_PACKAGE, ConfigureDefines.LOCALE_DIR);
 		
 		// load main window from glade XML
 		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "MainWindow", "bless");
@@ -108,7 +108,7 @@ public class BlessMain
 		// set the application icon
 		MainWindow.Icon=new Gdk.Pixbuf(FileResourcePath.GetSystemPath("..","data","bless-48x48.png"));
 		
-		string blessConfDir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bless");
+		string blessConfDir=FileResourcePath.GetUserPath();
 		
 		// make sure local configuration directory exists
 		try {

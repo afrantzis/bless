@@ -1,3 +1,19 @@
+Bless v0.5.0 20061230
+---------------------
+
+* Brand new plugin architecture (GUI and export).
+* Export functionality (text and html, others with plugins).
+* Reduced memory usage.
+* Fixed garbled display issue (thanks to Thomas Liebetraut).
+* Localization support.
+* New ways to select data ranges.
+
+Bless v0.4.1 20060803                                                           
+---------------------                                                           
+                                                                                
+* Fixed compilation problems with newer versions of Mono.                       
+* Added a work-around for the long standing garbled display issue (See README). 
+
 Bless v0.4.0 20051009
 ---------------------
 
