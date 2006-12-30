@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bless 0.4.9\n"
 "Report-Msgid-Bugs-To: alf82@freemail.gr\n"
-"POT-Creation-Date: 2006-12-29 00:14+0200\n"
+"POT-Creation-Date: 2006-12-30 12:15+0200\n"
 "PO-Revision-Date: 2006-12-18 20:51+0200\n"
 "Last-Translator:  <alf82@freemail.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -612,11 +612,11 @@ msgstr ""
 msgid "Error in Offset Format"
 msgstr ""
 
-#: src/gui/plugins/HelpOperationsPlugin.cs:66
+#: src/gui/plugins/HelpOperationsPlugin.cs:67
 msgid "_Contents"
 msgstr ""
 
-#: src/gui/plugins/HelpOperationsPlugin.cs:68
+#: src/gui/plugins/HelpOperationsPlugin.cs:69
 msgid "_About"
 msgstr ""
 

@@ -65,7 +65,7 @@ public class SaveOperation : SaveAsOperation
 			if (System.IO.File.Exists(savePath))
 				System.IO.File.Delete(savePath);
 			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), bb.Filename);
-			throw new IOException();
+			throw new IOException(msg);
 		}
 #endif
 	}
