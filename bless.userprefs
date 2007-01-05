@@ -2,6 +2,12 @@
 <UserCombinePreferences filename="/home/alf/projects/bless/bless.mds">
   <Files>
     <File filename="./src/gui/MainWindow.cs" />
+    <File filename="./src/util/ByteArray.cs" />
+    <File filename="./src/util/ConfigureDefines.cs.in" />
+    <File filename="./src/gui/WidgetGroup.cs" />
+    <File filename="./src/gui/dialogs/AboutDialog.cs" />
+    <File filename="./src/util/FileResourcePath.cs" />
+    <File filename="./src/buffers/SaveOperation.cs" />
   </Files>
   <Views>
     <ViewMemento Id="MonoDevelop.Ide.Gui.Pads.ProjectPad">
@@ -9,9 +15,8 @@
         <Node expanded="True">
           <Node name="bless" expanded="True">
             <Node name="src" expanded="True">
-              <Node name="buffers" expanded="True" />
-              <Node name="gui" expanded="True">
-                <Node name="MainWindow.cs" expanded="False" selected="True" />
+              <Node name="buffers" expanded="True">
+                <Node name="SaveOperation.cs" expanded="False" selected="True" />
               </Node>
               <Node name="util" expanded="True" />
             </Node>
@@ -40,7 +45,7 @@
   <Properties>
     <Properties>
       <Property key="ActiveConfiguration" value="Debug" />
-      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/gui/MainWindow.cs" />
+      <Property key="ActiveWindow" value="/home/alf/projects/bless/src/buffers/SaveOperation.cs" />
     </Properties>
   </Properties>
 </UserCombinePreferences>

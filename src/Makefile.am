@@ -25,9 +25,9 @@ bless: bless-script
 	sed -e 's,@blesslibdir\@,$(libdir),g' bless-script > bless
 
 install-exec-local: bless
-	$(INSTALL) -d $(bindir)
-	$(INSTALL_SCRIPT) bless $(bindir)
+	$(INSTALL) -d $(DESTDIR)$(bindir)
+	$(INSTALL_SCRIPT) bless $(DESTDIR)$(bindir)
 
 uninstall-local:
-	rm -rf $(libdir)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/bin
-	rm -f $(bindir)/bless
+	rm -rf $(DESTDIR)$(libdir)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/bin
+	rm -f $(DESTDIR)$(bindir)/bless

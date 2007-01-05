@@ -22,21 +22,21 @@ dist-hook: doc
 	cp --parents $(DOCS) $(OMF).in $(wildcard *.html) $(FIGURES) $(distdir)
 
 install-data-local:
-	$(INSTALL) -d $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
-	$(INSTALL) -d $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user/figures
-	$(INSTALL_DATA) $(DOCS) $(wildcard *.html)  $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
-	$(INSTALL_DATA) $(FIGURES) $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user/figures
-	$(INSTALL) -d $(datadir)/omf/$(PACKAGE_NAME)
-	$(INSTALL_DATA) $(OMF) $(datadir)/omf/$(PACKAGE_NAME)
+	$(INSTALL) -d $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
+	$(INSTALL) -d $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user/figures
+	$(INSTALL_DATA) $(DOCS) $(wildcard *.html)  $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
+	$(INSTALL_DATA) $(FIGURES) $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user/figures
+	$(INSTALL) -d $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)
+	$(INSTALL_DATA) $(OMF) $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)
 if WITH_SCROLLKEEPER
-	scrollkeeper-update -o $(datadir)/omf/$(PACKAGE_NAME)
+	scrollkeeper-update -o $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)
 endif
 
 uninstall-local:
-	rm -rf $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
-	rm $(datadir)/omf/$(PACKAGE_NAME)/$(OMF)
+	rm -rf $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/user
+	rm $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)/$(OMF)
 if WITH_SCROLLKEEPER
-	scrollkeeper-update -o $(datadir)/omf/$(PACKAGE_NAME)
+	scrollkeeper-update -o $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)
 endif
-	rm -rf $(datadir)/omf/$(PACKAGE_NAME)
+	rm -rf $(DESTDIR)$(datadir)/omf/$(PACKAGE_NAME)
 

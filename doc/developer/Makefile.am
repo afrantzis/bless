@@ -5,8 +5,8 @@ dist-hook:
 	
 
 install-data-local: 
-	$(INSTALL) -d $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
-	$(INSTALL_DATA) $(DOCS) $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
+	$(INSTALL) -d $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
+	$(INSTALL_DATA) $(DOCS) $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
 
 uninstall-local:
-	rm -rf $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
+	rm -rf $(DESTDIR)$(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/developer
