@@ -4,6 +4,9 @@ AC_INIT([bless], [0.5.0beta1], [alf82@freemail.gr])
 AC_CONFIG_SRCDIR([src/buffers/ByteBuffer.cs])
 AM_INIT_AUTOMAKE
 
+#
+# I18N
+#
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.15)
 
@@ -11,13 +14,33 @@ GETTEXT_PACKAGE=bless
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext Package])
 
-# Checks for programs.
-AC_PATH_PROG(PKG_CONFIG,pkg-config)
-AC_PATH_PROG(MCS,gmcs)
-AC_PATH_PROG(MONO_PROGRAM, mono)
+#
+# Check for programs.
+#
+AC_PATH_PROG(PKG_CONFIG,pkg-config, no)
 
+if test "x$PKG_CONFIG" = "xno"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+	
+# C# compiler
+AC_PATH_PROG(MCS, gmcs, no)
 
+CS="gmcs C#"
+if test "x$MCS" = "xno"  ; then
+	AC_MSG_ERROR([No $CS compiler found])
+fi
+
+# Mono runtime
+AC_PATH_PROG(MONO_PROGRAM, mono, no)
+	
+if test "x$MONO" = "xno"; then
+	AC_MSG_ERROR([No mono runtime found])
+fi
+
+#
 # Checks for libraries.
+#
 PKG_CHECK_MODULES(MONO, mono >= 1.1.4)
 PKG_CHECK_MODULES(GTK_SHARP_2_0, gtk-sharp-2.0 >= 2.4)
 PKG_CHECK_MODULES(GLADE_SHARP_2_0, glade-sharp-2.0 >= 2.4)
