@@ -74,7 +74,9 @@ public class ModuleBuilder
 		}
 		
 		foreach(string s in module.InputFiles) {
+			sb.Append('"');
 			sb.Append(s);
+			sb.Append('"');
 			sb.Append(' ');
 		}
 		
