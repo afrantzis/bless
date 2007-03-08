@@ -58,7 +58,8 @@ public class PluginManager
 		string[] systemPluginFiles=Directory.GetFiles(systemPluginDir);
 		
 		foreach (string file in systemPluginFiles) {
-			if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
+			if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0
+				&& file.EndsWith(".dll")) {
 				//Console.WriteLine("Searching File {0}", file);
 				AddPluginFile(file);
 			}
@@ -70,7 +71,8 @@ public class PluginManager
 			string[] userPluginFiles=Directory.GetFiles(userPluginDir);
 			
 			foreach (string file in userPluginFiles) {
-				if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0) {
+				if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0
+					&& file.EndsWith(".dll")) {
 					//Console.WriteLine("Searching File {0}", file);
 					AddPluginFile(file);
 				}
