@@ -62,9 +62,9 @@ uses are cross-platform, so bless should be able to run without problems
 on all the major platforms (GNU/Linux, *BSD, Solaris, Win32).
 
 To build and run the current version of bless you need:
-    * GTK+ >= 2.4.x (Included in all modern GNU/Linux distributions, http://www.gtk.org)
-    * mono/.NET runtime and C# compiler >= 1.1.4 (http://www.mono-project.com)
-    * Gtk# bindings >= 2.4 for GTK+ (http://gtk-sharp.sourceforge.net)
+    * GTK+ >= 2.8.x (Included in all modern GNU/Linux distributions, http://www.gtk.org)
+    * mono/.NET runtime and C# compiler >= 1.1.14 (http://www.mono-project.com)
+    * Gtk# bindings >= 2.8 for GTK+ (http://gtk-sharp.sourceforge.net)
     * pkg-config (Included in all modern GNU/Linux distributions)
     
 Development is done using the latest stable versions of the above libraries. 

@@ -25,4 +25,7 @@ Many thanks to:
 * Thomas Liebetraut <thomas [at] tommie-lie [dot] de>
   Exceptional bug hunting and fixes
     
+* Saleem Abdulrasool <compnerd [at] gentoo [dot] org>
+  Support for DESTDIR in Makefiles
+  
 ... if I have forgotten someone please remind me!

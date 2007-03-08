@@ -1,6 +1,6 @@
 # -*- Autoconf -*-
 AC_PREREQ(2.59)
-AC_INIT([bless], [0.5.0beta1], [alf82@freemail.gr])
+AC_INIT([bless], [0.5.0rc1], [alf82@freemail.gr])
 AC_CONFIG_SRCDIR([src/buffers/ByteBuffer.cs])
 AM_INIT_AUTOMAKE
 
@@ -8,7 +8,7 @@ AM_INIT_AUTOMAKE
 # I18N
 #
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.15)
+AM_GNU_GETTEXT_VERSION(0.14)
 
 GETTEXT_PACKAGE=bless
 AC_SUBST(GETTEXT_PACKAGE)
@@ -41,9 +41,9 @@ fi
 #
 # Checks for libraries.
 #
-PKG_CHECK_MODULES(MONO, mono >= 1.1.4)
-PKG_CHECK_MODULES(GTK_SHARP_2_0, gtk-sharp-2.0 >= 2.4)
-PKG_CHECK_MODULES(GLADE_SHARP_2_0, glade-sharp-2.0 >= 2.4)
+PKG_CHECK_MODULES(MONO, mono >= 1.1.14)
+PKG_CHECK_MODULES(GTK_SHARP_2_0, gtk-sharp-2.0 >= 2.8)
+PKG_CHECK_MODULES(GLADE_SHARP_2_0, glade-sharp-2.0 >= 2.8)
 
 #
 # Check for GNOME

@@ -1,4 +1,4 @@
-EXTRA_DIST = AUTHORS COPYING NEWS README README.packaging bless.mdp bless.mds bless.spec
+EXTRA_DIST = AUTHORS COPYING NEWS README README.packaging bless.mdp bless.mds bless.spec autogen.sh
 
 SUBDIRS = po builder src po bin data doc tests
 

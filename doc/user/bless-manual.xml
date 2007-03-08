@@ -4,7 +4,7 @@
 	<!ENTITY legal SYSTEM "legal.xml">
 	<!ENTITY appversion "0.5.0">
 	<!ENTITY manrevision "1.0">
-	<!ENTITY date "Dec 2006">
+	<!ENTITY date "Mar 2007">
 	<!ENTITY app "<application>Bless</application>">
 	<!-- Information about the entities
 		The legal.xml file contains legal information, there is no need to edit the file. 
@@ -29,7 +29,7 @@
 
 		<copyright> 
 			<year>2004</year> 
-			<year>2006</year> 
+			<year>2007</year> 
 			<holder>Alexandros Frantzis</holder> 
 		</copyright> 
 <!-- translators: uncomment this:
@@ -184,13 +184,13 @@
 			To build and run &app; &appversion; you need:
 			<itemizedlist>
 				<listitem>
-					<para>GTK+ &gt;=2.4.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
+					<para>GTK+ &gt;=2.8.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
 				</listitem>
 				<listitem>
-					<para>mono/.NET runtime and C# compiler &gt;= 1.1.4 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
+					<para>mono/.NET runtime and C# compiler &gt;= 1.1.14 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
 				</listitem>
 				<listitem>
-					<para>Gtk#  &gt;=2.4 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
+					<para>Gtk#  &gt;=2.8 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
@@ -1825,7 +1825,13 @@
 				and are therefore considered even.
 			</para>
 			<para>
-				A &lt;display&gt; tag may contain a &lt;evenrow&gt; and a &lt;oddrow&gt; tag which describe how 
+				A &lt;display&gt; tag may contain a &lt;font&gt; tag which sets the font family and size to use for 
+				displaying data in the area (eg "Courier 10"). The font should be a monospaced font, otherwise the
+				data in the area won't be displayed correctly. It is also advised to use same sized fonts in all the 
+				areas so that the data is correctly aligned.
+			</para>
+			<para>
+				A &lt;display&gt; tag may also contain a &lt;evenrow&gt; and a &lt;oddrow&gt; tag which describe how 
 				the even and odd rows will look like. Each of the &lt;evenrow&gt; and &lt;oddrow&gt; tags may     
 				contain a &lt;evencolumn&gt;, an &lt;oddcolumn&gt;, a &lt;selectedcolumn&gt; and a 
 				&lt;patternmatchcolumn&gt; tag. The first two describe the appearance of the respective columns
@@ -1946,7 +1952,7 @@
 						</textobject>
 					</mediaobject></screenshot>
 			</figure>
-		</section>
+		
 		
 		<note><para>
 			Not all font options are used in all areas. The hexadecimal, decimal, octal and binary areas use
@@ -1959,7 +1965,7 @@
 			background color of the area and is used to paint the unused parts of the area.	
 		</para></note>
 
-
+		</section>
 	</section>
 	</section>
 	<section id="bless-customizing-plugins">
@@ -2056,7 +2062,7 @@
 	 issue with the font subsystem. What happens is that the font subsystem reports to Bless a different font width than the one that is actually used on screen.
 	 This bug should be fixed in current versions of Pango.</para>
 	<para>
-	 Anyway, the bug is now irrevelevant: from version 0.5.0 &app; uses a different way to measure the font width.
+	 Anyway, the bug is now irrevelevant: since version 0.5.0 &app; uses a different way to measure the font width.
 	 Also, the temporary workaround with the FontWidthFix preference introduced in 0.4.1 is now disabled.
 	 If you are still experiencing such problems with versions >= 0.5.0 please file a bug report.
 	</para>			 

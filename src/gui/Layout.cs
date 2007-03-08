@@ -307,7 +307,7 @@ public class Layout {
 		
 		area.DrawerInformation=info;
 	}
-	///<summary>Parse the <fonts> tag in layout files</summary>
+	///<summary>Parse the <display> tag in layout files</summary>
 	void ParseDisplay(XmlNode parentNode, Drawer.Information info) 
 	{
 		XmlNodeList childNodes=parentNode.ChildNodes;

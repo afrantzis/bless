@@ -13,7 +13,7 @@ make prefix=/tmp-pkg-path install
 The contents of the /tmp-pkg-path can then be compressed and
 distributed as a package. 
 
-The only problem to this procedure is that Bless by default tries 
+The only problem with this procedure is that Bless by default tries 
 to register its documentation with Scrollkeeper (if it is found) 
 during make install and unregister it during make uninstall. However
 this is not wanted on the packager`s system but on the user's system. 
