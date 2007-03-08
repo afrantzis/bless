@@ -53,6 +53,7 @@ public class HistoryPlugin : GuiPlugin
 		
 		History.Instance.Changed += OnHistoryChanged;
 		historyActionGroup = new ActionGroup ("HistoryActions");
+		uiManager.InsertActionGroup(historyActionGroup, 0);
 		OnHistoryChanged(History.Instance);
 		
 		loaded=true;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!-- Generated with glade3
+<!--Generated with glade3 3.0.3 on Thu Mar  8 14:18:20 2007 by alf@ALF
 	Version: 3.0.1
 	Date: Thu Dec 28 23:43:12 2006
 	User: alf
@@ -61,7 +61,7 @@
             <child>
               <widget class="GtkFrame" id="frame2">
                 <property name="visible">True</property>
-                <property name="label_xalign">0.000000</property>
+                <property name="label_xalign">0</property>
                 <child>
                   <widget class="GtkScrolledWindow" id="scrolledwindow1">
                     <property name="visible">True</property>
@@ -96,7 +96,7 @@
             <child>
               <widget class="GtkFrame" id="PreviewFrame">
                 <property name="visible">True</property>
-                <property name="label_xalign">0.000000</property>
+                <property name="label_xalign">0</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -163,6 +163,7 @@
         <child>
           <widget class="GtkImage" id="LogoImage">
             <property name="visible">True</property>
+            <property name="stock">gtk-missing-image</property>
           </widget>
         </child>
         <child>
@@ -251,7 +252,7 @@
         <child>
           <widget class="GtkLabel" id="label30">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Signed 8 bit:</property>
           </widget>
           <packing>
@@ -264,7 +265,7 @@
         <child>
           <widget class="GtkLabel" id="label31">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Unsigned 8 bit:</property>
           </widget>
           <packing>
@@ -279,7 +280,7 @@
         <child>
           <widget class="GtkLabel" id="label32">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Signed 16 bit:</property>
           </widget>
           <packing>
@@ -294,7 +295,7 @@
         <child>
           <widget class="GtkLabel" id="label33">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Unsigned 16 bit:</property>
           </widget>
           <packing>
@@ -309,7 +310,7 @@
         <child>
           <widget class="GtkLabel" id="label34">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Signed 32 bit:</property>
           </widget>
           <packing>
@@ -324,7 +325,7 @@
         <child>
           <widget class="GtkLabel" id="label35">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Unsigned 32 bit:</property>
           </widget>
           <packing>
@@ -341,7 +342,7 @@
         <child>
           <widget class="GtkLabel" id="label36">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Float 32 bit:</property>
           </widget>
           <packing>
@@ -358,7 +359,7 @@
         <child>
           <widget class="GtkLabel" id="label37">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Float 64 bit:</property>
           </widget>
           <packing>
@@ -375,7 +376,7 @@
         <child>
           <widget class="GtkLabel" id="label38">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Hexadecimal:</property>
           </widget>
           <packing>
@@ -389,7 +390,7 @@
         <child>
           <widget class="GtkLabel" id="label39">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Decimal:</property>
           </widget>
           <packing>
@@ -405,7 +406,7 @@
         <child>
           <widget class="GtkLabel" id="label40">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Octal:</property>
           </widget>
           <packing>
@@ -421,7 +422,7 @@
         <child>
           <widget class="GtkLabel" id="label41">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">Binary:</property>
           </widget>
           <packing>
@@ -437,8 +438,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment29">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Unsigned16bitEntry">
                 <property name="visible">True</property>
@@ -458,8 +459,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment30">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Signed8bitEntry">
                 <property name="visible">True</property>
@@ -477,8 +478,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment31">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Unsigned8bitEntry">
                 <property name="visible">True</property>
@@ -498,8 +499,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment32">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Signed16bitEntry">
                 <property name="visible">True</property>
@@ -519,8 +520,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment33">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Signed32bitEntry">
                 <property name="visible">True</property>
@@ -538,8 +539,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment34">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Unsigned32bitEntry">
                 <property name="visible">True</property>
@@ -559,8 +560,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment35">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Float32bitEntry">
                 <property name="visible">True</property>
@@ -580,8 +581,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment36">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="Float64bitEntry">
                 <property name="visible">True</property>
@@ -601,7 +602,7 @@
         <child>
           <widget class="GtkAlignment" id="alignment41">
             <property name="visible">True</property>
-            <property name="xscale">0.000000</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkCheckButton" id="LittleEndianCheckButton">
                 <property name="visible">True</property>
@@ -623,7 +624,7 @@
         <child>
           <widget class="GtkAlignment" id="alignment42">
             <property name="visible">True</property>
-            <property name="xscale">0.000000</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkCheckButton" id="UnsignedAsHexCheckButton">
                 <property name="visible">True</property>
@@ -646,7 +647,7 @@
         <child>
           <widget class="GtkLabel" id="label42">
             <property name="visible">True</property>
-            <property name="xalign">1.000000</property>
+            <property name="xalign">1</property>
             <property name="label" translatable="yes">ASCII Text:</property>
           </widget>
           <packing>
@@ -675,8 +676,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment43">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="HexadecimalEntry">
                 <property name="visible">True</property>
@@ -694,8 +695,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment44">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="DecimalEntry">
                 <property name="visible">True</property>
@@ -715,8 +716,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment45">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="OctalEntry">
                 <property name="visible">True</property>
@@ -736,8 +737,8 @@
         <child>
           <widget class="GtkAlignment" id="alignment46">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
-            <property name="xscale">0.000000</property>
+            <property name="xalign">0</property>
+            <property name="xscale">0</property>
             <child>
               <widget class="GtkEntry" id="AsciiEntry">
                 <property name="visible">True</property>
@@ -791,7 +792,7 @@
         <child>
           <widget class="GtkLabel" id="MessageLabel">
             <property name="visible">True</property>
-            <property name="yalign">0.000000</property>
+            <property name="yalign">0</property>
             <property name="label" translatable="yes">label4</property>
           </widget>
           <packing>
@@ -813,7 +814,7 @@
         <child>
           <widget class="GtkProgressBar" id="ProgressBar">
             <property name="visible">True</property>
-            <property name="pulse_step">0.1</property>
+            <property name="pulse_step">0.10000000149011612</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -871,7 +872,7 @@
                     <child>
                       <widget class="GtkLabel" id="label47">
                         <property name="visible">True</property>
-                        <property name="xalign">0.000000</property>
+                        <property name="xalign">0</property>
                         <property name="label" translatable="yes">&lt;b&gt;Default Layout&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
@@ -930,8 +931,8 @@
                                     <child>
                                       <widget class="GtkAlignment" id="alignment50">
                                         <property name="visible">True</property>
-                                        <property name="xscale">0.000000</property>
-                                        <property name="yscale">0.000000</property>
+                                        <property name="xscale">0</property>
+                                        <property name="yscale">0</property>
                                         <child>
                                           <widget class="GtkHBox" id="hbox27">
                                             <property name="visible">True</property>
@@ -1016,7 +1017,7 @@
                     <child>
                       <widget class="GtkLabel" id="label50">
                         <property name="visible">True</property>
-                        <property name="xalign">0.000000</property>
+                        <property name="xalign">0</property>
                         <property name="label" translatable="yes">&lt;b&gt;Undo&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
@@ -1133,7 +1134,7 @@
                     <child>
                       <widget class="GtkLabel" id="label53">
                         <property name="visible">True</property>
-                        <property name="xalign">0.000000</property>
+                        <property name="xalign">0</property>
                         <property name="label" translatable="yes">&lt;b&gt;Misc&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </widget>
@@ -1197,7 +1198,7 @@
                             <child>
                               <widget class="GtkLabel" id="label7">
                                 <property name="visible">True</property>
-                                <property name="xalign">0.000000</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Temporary Directory:</property>
                               </widget>
                               <packing>
@@ -1208,7 +1209,7 @@
                             <child>
                               <widget class="GtkLabel" id="label58">
                                 <property name="visible">True</property>
-                                <property name="xalign">0.000000</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Default _edit mode:</property>
                                 <property name="use_underline">True</property>
                               </widget>
@@ -1222,7 +1223,7 @@
                             <child>
                               <widget class="GtkLabel" id="label59">
                                 <property name="sensitive">False</property>
-                                <property name="xalign">0.000000</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Default _number base:</property>
                                 <property name="use_underline">True</property>
                               </widget>
@@ -1493,7 +1494,7 @@ Decimal</property>
         <child>
           <widget class="GtkLabel" id="SearchLabel">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Search for:</property>
             <property name="use_markup">True</property>
           </widget>
@@ -1505,7 +1506,7 @@ Decimal</property>
         <child>
           <widget class="GtkLabel" id="ReplaceLabel">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Replace with:</property>
             <property name="use_markup">True</property>
           </widget>
@@ -1555,8 +1556,8 @@ Decimal</property>
             <child>
               <widget class="GtkAlignment" id="alignment52">
                 <property name="visible">True</property>
-                <property name="xscale">0.000000</property>
-                <property name="yscale">0.000000</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
                 <child>
                   <widget class="GtkHBox" id="hbox31">
                     <property name="visible">True</property>
@@ -1655,8 +1656,8 @@ Decimal</property>
             <child>
               <widget class="GtkAlignment" id="alignment53">
                 <property name="visible">True</property>
-                <property name="xscale">0.000000</property>
-                <property name="yscale">0.000000</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
                 <child>
                   <widget class="GtkHBox" id="hbox32">
                     <property name="visible">True</property>
@@ -1709,8 +1710,8 @@ Decimal</property>
             <child>
               <widget class="GtkAlignment" id="alignment51">
                 <property name="visible">True</property>
-                <property name="xscale">0.000000</property>
-                <property name="yscale">0.000000</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
                 <child>
                   <widget class="GtkHBox" id="hbox30">
                     <property name="visible">True</property>
@@ -1802,7 +1803,7 @@ Text</property>
         <child>
           <widget class="GtkLabel" id="label80">
             <property name="visible">True</property>
-            <property name="xalign">0.000000</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Offset:</property>
             <property name="use_markup">True</property>
           </widget>
@@ -1834,8 +1835,8 @@ Text</property>
             <child>
               <widget class="GtkAlignment" id="alignment54">
                 <property name="visible">True</property>
-                <property name="xscale">0.000000</property>
-                <property name="yscale">0.000000</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
                 <child>
                   <widget class="GtkHBox" id="hbox34">
                     <property name="visible">True</property>
@@ -1959,8 +1960,8 @@ Text</property>
             <child>
               <widget class="GtkAlignment" id="alignment55">
                 <property name="visible">True</property>
-                <property name="xscale">0.000000</property>
-                <property name="yscale">0.000000</property>
+                <property name="xscale">0</property>
+                <property name="yscale">0</property>
                 <child>
                   <widget class="GtkHBox" id="hbox36">
                     <property name="visible">True</property>
@@ -2587,7 +2588,7 @@ Text</property>
                 <child>
                   <widget class="GtkLabel" id="label4">
                     <property name="visible">True</property>
-                    <property name="xalign">0.000000</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Export to _file:</property>
                     <property name="use_underline">True</property>
                   </widget>
@@ -2598,7 +2599,7 @@ Text</property>
                 <child>
                   <widget class="GtkLabel" id="label5">
                     <property name="visible">True</property>
-                    <property name="xalign">0.000000</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Export _type:</property>
                     <property name="use_underline">True</property>
                   </widget>
@@ -2642,7 +2643,7 @@ Text</property>
                 <child>
                   <widget class="GtkLabel" id="label6">
                     <property name="visible">True</property>
-                    <property name="xalign">0.000000</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Export _pattern:</property>
                     <property name="use_underline">True</property>
                   </widget>
@@ -2655,8 +2656,8 @@ Text</property>
                 <child>
                   <widget class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
-                    <property name="xalign">0.000000</property>
-                    <property name="xscale">0.000000</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
                     <child>
                       <widget class="GtkComboBox" id="ExportAsCombo">
                         <property name="visible">True</property>
@@ -2737,7 +2738,7 @@ Text</property>
             <child>
               <widget class="GtkLabel" id="label11">
                 <property name="visible">True</property>
-                <property name="xalign">0.000000</property>
+                <property name="xalign">0</property>
                 <property name="label" translatable="yes">&lt;b&gt;Range&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </widget>
@@ -2764,7 +2765,6 @@ Text</property>
                         <property name="use_underline">True</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <property name="group">CurrentSelectionRadio</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -2794,7 +2794,7 @@ Text</property>
                             <property name="label" translatable="yes">F_rom</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <property name="group">CurrentSelectionRadio</property>
+                            <property name="group">WholeFileRadio</property>
                             <signal name="toggled" handler="OnRangeRadioToggled"/>
                           </widget>
                         </child>
@@ -2892,7 +2892,6 @@ Text</property>
             <child>
               <widget class="GtkButton" id="ExportButton">
                 <property name="visible">True</property>
-                <property name="xalign">0.490000</property>
                 <child>
                   <widget class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
