@@ -40,10 +40,10 @@ public class DataBook : Gtk.Notebook
 		this.EnablePopup=false;
 	}
 	
-	///<summary>Append a DataView to the databook.</summary>
-	public void AppendView(DataView dv, CloseViewDelegate deleg, string text)
+	///<summary>Insert a DataView into the databook.</summary>
+	public void InsertView(DataView dv, CloseViewDelegate deleg, string text, int pos)
 	{
-		base.AppendPage(dv.Display, new DataBookTabLabel(dv, deleg, text));
+		base.InsertPage(dv.Display, new DataBookTabLabel(dv, deleg, text), pos);
 		this.ShowAll();
 		
 		dv.Buffer.Changed += new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
@@ -54,9 +54,15 @@ public class DataBook : Gtk.Notebook
 		
 		// this must be placed after the page added signal,
 		// so that the page change is caught by others (eg EditOperationsPlugin)
-		this.CurrentPage=this.NPages-1;
+		this.CurrentPage=pos;
 		
 		this.FocusChild=dv.Display;
+	}
+	
+	///<summary>Append a DataView to the databook.</summary>
+	public void AppendView(DataView dv, CloseViewDelegate deleg, string text)
+	{
+		this.InsertView(dv, deleg, text, this.NPages);
 	} 
 	
 	///<summary>Remove a DataView from databook.</summary>
@@ -69,8 +75,19 @@ public class DataBook : Gtk.Notebook
 		
 		if (PageRemoved!=null)
 			PageRemoved(dv);
-	} 
- 
+	}
+	
+ 	///<summary>Replace a DataView from databook with a new one.</summary>
+	public void ReplaceView(DataView oldDv, DataView newDv, CloseViewDelegate deleg, string text)
+	{
+		// find pos of old dataview
+		int pos = this.PageNum(oldDv.Display);
+		
+		RemoveView(oldDv);
+		
+		InsertView(newDv, deleg, text, pos);
+	}
+	
 	///<summary>
 	/// Whether a databook page can be replaced by a new one.
 	///</summary>

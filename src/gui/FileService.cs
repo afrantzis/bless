@@ -495,19 +495,25 @@ public class FileService
 		foreach(string file in files) {
 			// try to open the file
 			ByteBuffer bb=OpenFile(file);
-
+			
 			// if open was successful
 			if (bb!=null) {
+				DataView newDv=CreateDataView(bb);
 				if (replaceCurrentPage) { // replace current page
 					DataView dv=((DataViewDisplay)dataBook.CurrentPageWidget).View;
+					
+					dataBook.ReplaceView(dv, newDv, new CloseViewDelegate(CloseFile), Path.GetFileName(bb.Filename));
+					
+					// promptly free resources memory (eg pixmaps)
 					dv.Buffer.CloseFile();
-					dv.Buffer=bb;
+					dv.Cleanup();
+					dv=null;
+					
 					replaceCurrentPage=false;
 				}
 				else { // create new page
-					// create and setup a  DataView
-					DataView dv=CreateDataView(bb);	
-					dataBook.AppendView(dv, new CloseViewDelegate(CloseFile), Path.GetFileName(bb.Filename));	
+					// create and setup a  DataView	
+					dataBook.AppendView(newDv, new CloseViewDelegate(CloseFile), Path.GetFileName(bb.Filename));	
 				}
 				
 			}

@@ -30,15 +30,12 @@ namespace Bless.Gui.Plugins {
 
 public class HistoryPlugin : GuiPlugin
 {
-	DataBook dataBook;
-	Window mainWindow;
 	UIManager uiManager;
 	uint mergeId;
 	ActionGroup historyActionGroup;
 	
 	public HistoryPlugin(Window mw, UIManager uim)
 	{
-		mainWindow=mw;
 		uiManager=uim;
 				
 		name="HistoryPlugin";
@@ -49,8 +46,6 @@ public class HistoryPlugin : GuiPlugin
 	
 	public override bool Load()
 	{
-		dataBook=(DataBook)GetDataBook(mainWindow);
-		
 		History.Instance.Changed += OnHistoryChanged;
 		historyActionGroup = new ActionGroup ("HistoryActions");
 		uiManager.InsertActionGroup(historyActionGroup, 0);
@@ -102,24 +97,8 @@ public class HistoryPlugin : GuiPlugin
 		Gtk.Action action = (Gtk.Action)o;
 		int i = Convert.ToInt32(action.Name.Substring(0,1));
 		string filePath = History.Instance.Files[i-1];
-
-		// try to open the file
-		ByteBuffer bb = Services.File.OpenFile(filePath);
 		
-		// if open was successful
-		if (bb!=null) {
-			if (dataBook.CanReplacePage(dataBook.CurrentPage)) { // replace current page
-				DataView dv = ((DataViewDisplay)dataBook.CurrentPageWidget).View;
-				dv.Buffer.CloseFile();
-				dv.Buffer = bb;
-			}
-			else { // create new page
-				// create and setup a  DataView
-				DataView dv = Services.File.CreateDataView(bb);	
-				dataBook.AppendView(dv, new CloseViewDelegate(Services.File.CloseFile), System.IO.Path.GetFileName(bb.Filename));	
-			}
-							
-		}
+		Services.File.LoadFiles(new string[]{filePath});
 	}
 	
 }
