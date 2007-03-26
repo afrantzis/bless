@@ -76,20 +76,10 @@ public class DataView {
 	public ByteBuffer Buffer {
 		get { return byteBuffer; }
 		set { 
-			byteBuffer=value;
-			byteBuffer.Changed+=OnByteBufferChanged;
-			byteBuffer.FileChanged+=OnByteBufferFileChanged;
-			foreach(Area a in dvDisplay.Layout.Areas) {
-				a.Buffer=byteBuffer;
-				a.CursorOffset=0;
-				a.CursorDigit=0;
-				a.Selection.Clear();
-			}
-			dvDisplay.Redraw();
-			dvDisplay.VScroll.Adjustment.Value=0;
-			OnPreferencesChanged(Preferences.Instance);
-			if (BufferChanged!=null)
-				BufferChanged(this);
+			if (value != null)
+				SetupByteBuffer(value);
+			else
+				CleanupByteBuffer();
 		}
 	} 
 	
@@ -542,12 +532,58 @@ public class DataView {
 		MoveCursor(0,0);
 	}
 	
-	public void Cleanup()
+	private void SetupByteBuffer(ByteBuffer bb)
 	{
-		dvDisplay.DisposePixmaps();
+		byteBuffer = bb;
+		byteBuffer.Changed += OnByteBufferChanged;
+		byteBuffer.FileChanged += OnByteBufferFileChanged;
+		
+		foreach(Area a in dvDisplay.Layout.Areas) {
+			a.Buffer=byteBuffer;
+			a.CursorOffset=0;
+			a.CursorDigit=0;
+			a.Selection.Clear();
+		}
+		
+		dvDisplay.Redraw();
+		dvDisplay.VScroll.Adjustment.Value=0;
+		
+		OnPreferencesChanged(Preferences.Instance);
+		if (BufferChanged!=null)
+			BufferChanged(this);
+	}
+	
+	private void CleanupByteBuffer()
+	{
+		if (byteBuffer != null) {
+			byteBuffer.Changed -= OnByteBufferChanged;
+			byteBuffer.FileChanged -= OnByteBufferFileChanged;
+		}
+		
+		foreach(Area a in dvDisplay.Layout.Areas) {
+			a.Buffer=null;
+			a.CursorOffset=0;
+			a.CursorDigit=0;
+			a.Selection.Clear();
+		}
+		
+		byteBuffer = null;
+	}
+	
+	public void Cleanup()
+	{	
+		this.Buffer = null;
+		
+		// all these to help the GC...
+		dvDisplay.Cleanup();
+		dvDisplay = null;
+		dvControl.Cleanup();
+		dvControl = null;
+		
 		Preferences.Proxy.Unsubscribe("Undo.Limited", prefID);
 		Preferences.Proxy.Unsubscribe("Undo.Actions", prefID);
 		Preferences.Proxy.Unsubscribe("Highlight.PatternMatch", prefID);
+		Preferences.Proxy.Unsubscribe("ByteBuffer.TempDir", prefID);
 	}
 	
 	public void SetSelection(long start, long end)

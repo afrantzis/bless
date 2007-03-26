@@ -716,6 +716,13 @@ public class DataViewControl
 		
 	}
 	
+	public void Cleanup()
+	{
+		okp_focusArea = null;
+		dataView = null;
+		dvDisplay = null;
+	}
+	
  } // end DataViewControl
  
  } //end namespace

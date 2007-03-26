@@ -71,6 +71,8 @@ public class DataBook : Gtk.Notebook
 		dv.Buffer.Changed -= new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
 		dv.BufferChanged -= new DataView.DataViewEventHandler(OnBufferChanged);
 		
+		((DataBookTabLabel)this.GetTabLabel(dv.Display)).Cleanup();
+		
 		this.RemovePage(this.PageNum(dv.Display));
 		
 		if (PageRemoved!=null)
@@ -263,6 +265,11 @@ class DataBookTabLabel : Gtk.HBox
 		doCloseFile(dataView);
 	}
 	
+	public void Cleanup()
+	{
+		dataView.NotificationChanged -= OnNotificationChanged;
+		dataView = null;
+	}
 }  
  
 }

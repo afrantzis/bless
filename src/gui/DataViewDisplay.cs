@@ -66,7 +66,7 @@ public class DataViewDisplay : Gtk.VBox {
 			Layout prevLayout=layout;
 			
 			// dispose Area pixmaps
-			DisposePixmaps();
+			layout.DisposePixmaps();
 			
 			// set new layout
 			layout=value;
@@ -472,9 +472,12 @@ public class DataViewDisplay : Gtk.VBox {
 		fileChangedBar.ShowAll();
 	}
 	
-	public void DisposePixmaps()
+	public void Cleanup()
 	{
 		layout.DisposePixmaps();
+		layout = null;
+		dataView = null;
+		dvControl = null;
 	}
 	
 	public void GrabKeyboardFocus()

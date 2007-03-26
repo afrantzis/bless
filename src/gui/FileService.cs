@@ -448,12 +448,11 @@ public class FileService
 		if (AskForSaveIfFileChanged(dv)==false)
 			return;
 	
-		dv.Buffer.CloseFile();
 		dataBook.RemoveView(dv);
-	
+		
 		// promptly free resources memory (eg pixmaps)
+		dv.Buffer.CloseFile();
 		dv.Cleanup();
-		dv=null;
 		
 		// Make sure the new current DataView has the focus
 		DataViewDisplay dvd=(DataViewDisplay)dataBook.CurrentPageWidget;
@@ -507,7 +506,6 @@ public class FileService
 					// promptly free resources memory (eg pixmaps)
 					dv.Buffer.CloseFile();
 					dv.Cleanup();
-					dv=null;
 					
 					replaceCurrentPage=false;
 				}
