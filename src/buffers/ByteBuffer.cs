@@ -143,7 +143,8 @@ public class ByteBuffer : IBuffer {
 	static public ByteBuffer FromFile(string filename)
 	{
 		ByteBuffer bb=new ByteBuffer();
-		bb.LoadWithFileBuffer(new FileBuffer(filename, 0xfffff));
+		// 64 KB buffer
+		bb.LoadWithFileBuffer(new FileBuffer(filename, 0xffff));
 		
 		// fix automatic file naming
 		ByteBuffer.autoNum--;
@@ -214,7 +215,6 @@ public class ByteBuffer : IBuffer {
 	void RedoDequeDispose()
 	{
 		redoDeque.Clear();
-		//System.GC.Collect();
 	}
 	
 	///<summary>Append bytes at the end of the buffer</summary>
@@ -353,7 +353,8 @@ public class ByteBuffer : IBuffer {
 			
 			// don't allow messing up with the buffer
 			// while we are saving
-			this.ReadAllowed=false;
+			// ...ReadAllowed is set in SaveOperation
+			//this.ReadAllowed=false;
 			this.ModifyAllowed=false;
 			this.FileOperationsAllowed=false;
 			this.EmitEvents=false;
@@ -379,10 +380,7 @@ public class ByteBuffer : IBuffer {
 			SaveAsOperation so=(SaveAsOperation)ar.AsyncState;
 			
 			// re-allow buffer usage
-			this.ReadAllowed=true;
-			this.ModifyAllowed=true;
 			this.FileOperationsAllowed=true;
-			this.EmitEvents=true;
 			
 			
 			// make sure Save As went smoothly before doing anything
@@ -408,6 +406,12 @@ public class ByteBuffer : IBuffer {
 					}
 				}
 			}
+			
+			// re-allow buffer usage
+			this.ReadAllowed=true;
+			this.ModifyAllowed=true;
+			
+			this.EmitEvents=true;
 			
 			if (fsw!=null)
 				fsw.EnableRaisingEvents=true;
@@ -440,9 +444,11 @@ public class ByteBuffer : IBuffer {
 			
 			// don't allow messing up with the buffer
 			// while we are saving
-			this.ReadAllowed=false;
+			// ...ReadAllowed is set in SaveOperation
+			//this.ReadAllowed=false;
 			this.ModifyAllowed=false;
 			this.FileOperationsAllowed=false;
+			
 			this.EmitEvents=false;
 			fsw.EnableRaisingEvents=false;
 			
@@ -463,10 +469,6 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {
 			SaveOperation so=(SaveOperation)ar.AsyncState;
 			
-			// re-allow buffer usage
-			this.ReadAllowed=true;
-			this.ModifyAllowed=true;
-			this.FileOperationsAllowed=true;
 			
 			if (so.Result==SaveOperation.OperationResult.Finished) { // save went ok
 				LoadWithFileBuffer(new FileBuffer(so.SavePath));
@@ -514,6 +516,11 @@ public class ByteBuffer : IBuffer {
 					fileBuf.Load(so.SavePath);
 				}
 			}
+			
+			// re-allow buffer usage
+			this.ReadAllowed=true;
+			this.ModifyAllowed=true;
+			this.FileOperationsAllowed=true;
 			
 			this.EmitEvents=true;
 			fsw.EnableRaisingEvents=true;
@@ -633,6 +640,8 @@ public class ByteBuffer : IBuffer {
 		set { } 
 		get {
 			lock (LockObj) {
+				if (!readAllowed) { return 0;}
+				
 				long map; 
 				Util.List.Node node;
 				Segment seg=segCol.FindSegment(index, out map, out node);
@@ -661,6 +670,9 @@ public class ByteBuffer : IBuffer {
 				fileBuf.Close();
 				fsw.Dispose();
 				fsw=null;
+				segCol = null;
+				// buffer is in an unreadable state...
+				this.ReadAllowed = false;
 			}
 		}
 	}
@@ -718,8 +730,6 @@ public class ByteBuffer : IBuffer {
 	
 	// whether buffer can be safely read
 	// by user eg to display data in a DataView.
-	// This is only a hint and doesn't modify
-	// the behavior of the buffer.
 	public bool ReadAllowed { 
 		get { return readAllowed; }
 		set { 
