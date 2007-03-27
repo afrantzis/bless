@@ -714,10 +714,13 @@ public abstract class Area {
 				RenderNormally(rSel);
 				
 		// render secondary highlights, if they are enabled
+		// and if selection isof reasonable size (<= 1024 bytes)
 		ClearHighlightsNoRender(Drawer.HighlightType.PatternMatch);
-		byte[] ba=byteBuffer.RangeToByteArray(Selection);
-		if (ba!=null && enableHighlights[(int)Drawer.HighlightType.PatternMatch])
-			AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
+		if (Selection.Size <= 1024) {
+			byte[] ba=byteBuffer.RangeToByteArray(Selection);
+			if (ba!=null && enableHighlights[(int)Drawer.HighlightType.PatternMatch])
+				AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
+		}
 		
 		// render the cursor	
 		if ((cursorOffset >= offset && cursorOffset < offset+bleft)

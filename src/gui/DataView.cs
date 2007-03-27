@@ -611,12 +611,16 @@ public class DataView {
 			a.SetSelection(newSel.Start, newSel.End);		
 		}
 		
-		byte[] ba=byteBuffer.RangeToByteArray(newSel);
-		// if the selection contains data and highlights are enabled
-		// add the highlights
-		if (ba!=null && area0.EnableHighlights[(int)Drawer.HighlightType.PatternMatch])
-			foreach (Area a in dvDisplay.Layout.Areas)
-				a.AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
+		// add pattern highlights only if the selection 
+		// has a reasonable size (eg <= 104 bytes)
+		if (newSel.Size <= 1024) {
+			byte[] ba=byteBuffer.RangeToByteArray(newSel);
+			// if the selection contains data and highlights are enabled
+			// add the highlights
+			if (ba!=null && area0.EnableHighlights[(int)Drawer.HighlightType.PatternMatch])
+				foreach (Area a in dvDisplay.Layout.Areas)
+					a.AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
+		}
 		
 		if (SelectionChanged!=null)
 			SelectionChanged(this); 
