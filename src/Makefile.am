@@ -9,7 +9,7 @@ CLEANFILES= bless
 MCS_FLAGS= -nowarn:0169
 
 if ENABLE_DEBUG
-    MCS_FLAGS+=-g
+    MCS_FLAGS+=-debug
 endif
 
 if ENABLE_UNIX_SPECIFIC

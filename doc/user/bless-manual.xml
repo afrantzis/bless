@@ -844,6 +844,11 @@
 					The color of the highlighting can be changed using Layout files (see <xref linkend="bless-customizing-layouts"/>).
 					This feature can be turned off in the Preferences Dialog (see <xref linkend="bless-customizing-preferences-general"/>).
 				</para>
+				<note>
+					<para>
+						The patterns matching the selected data are highlighted only if the selected data size is at most 1024 bytes.
+					</para>
+				</note>
 			</section>
 			
 			<section id="bless-usage-edit-basic-overwrite-mode">

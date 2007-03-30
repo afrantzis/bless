@@ -1,6 +1,6 @@
 # -*- Autoconf -*-
 AC_PREREQ(2.59)
-AC_INIT([bless], [0.5.0rc1], [alf82@freemail.gr])
+AC_INIT([bless], [0.5.0], [alf82@freemail.gr])
 AC_CONFIG_SRCDIR([src/buffers/ByteBuffer.cs])
 AM_INIT_AUTOMAKE
 

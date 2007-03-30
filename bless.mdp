@@ -13,7 +13,6 @@
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
-  <DeployTargets />
   <Contents>
     <File name="./src/gui/DataView.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/MainWindow.cs" subtype="Code" buildaction="Compile" />
@@ -134,8 +133,8 @@
     <File name="./src/gui/plugins/HistoryPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/drawers/PixmapManager.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/ConfigureDefines.cs.in" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/DataBookFinder.cs" subtype="Code" buildaction="Compile" />
   </Contents>
-  <References />
   <DeploymentInformation strategy="File">
     <excludeFiles />
   </DeploymentInformation>
