@@ -91,7 +91,9 @@ public class HelpOperationsPlugin : GuiPlugin
 	///<summary>Handle edit->redo command from menu</summary>
 	public void OnAboutActivated(object o, EventArgs args) 
 	{
-		Bless.Gui.Dialogs.AboutDialog.Show();
+		Gtk.Dialog aboutDialog = new Bless.Gui.Dialogs.AboutDialog();
+		aboutDialog.Run();
+		aboutDialog.Destroy();
 	}
 		
 }
