@@ -220,16 +220,28 @@ public class DataViewControl
 		
 		CalculatePosition(clickArea, (int)(e.X-clickArea.X), (int)(e.Y-clickArea.Y), ref pos);
 		
-		// update selection and cursor if they have changed externally
-		UpdateSelection(pos.First != pos.Second);
-		
-		// if shift is pressed the position is the end position of the selection
-		if ((e.State & Gdk.ModifierType.ShiftMask) != 0) {
-			selEndPos = pos;
+		// right mouse button
+		if (e.Button == 3) {
+			// show the popup
+			clickArea.ShowPopup(Services.UI.Manager);
+			// if there is no selection change the cursor position 
+			if (dataView.Selection.IsEmpty()) {
+				selStartPos = pos;
+				selEndPos = pos;
+			}
 		}
-		else { // ... start a new selection
-			selStartPos = pos;
-			selEndPos = pos;
+		else {
+			// update selection and cursor if they have changed externally
+			UpdateSelection(pos.First != pos.Second);
+			
+			// if shift is pressed the position is the end position of the selection
+			if ((e.State & Gdk.ModifierType.ShiftMask) != 0) {
+				selEndPos = pos;
+			}
+			else { // ... start a new selection
+				selStartPos = pos;
+				selEndPos = pos;
+			}
 		}
 		
 		EvaluateSelection(DataViewDisplay.ShowType.Closest);

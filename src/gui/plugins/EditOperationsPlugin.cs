@@ -63,7 +63,15 @@ public class EditOperationsPlugin : GuiPlugin
 	"		<toolitem name=\"Copy\" action=\"CopyAction\" />"+
 	"		<toolitem name=\"Paste\" action=\"PasteAction\" />"+
 	"	</placeholder>"+
-	"</toolbar>";
+	"</toolbar>"+
+	"<popup name=\"DefaultAreaPopup\">"+
+	"	<menuitem name=\"Cut\" action=\"CutAction\" />"+
+	"	<menuitem name=\"Copy\" action=\"CopyAction\" />"+
+	"	<menuitem name=\"Paste\" action=\"PasteAction\" />"+
+	"	<menuitem name=\"Delete\" action=\"DeleteAction\" />"+
+	"	<separator/>"+
+	"	<placeholder name=\"ExtraAreaPopupItems\" />"+
+	"</popup>";
 	
 	DataBook dataBook;
 	Window mainWindow;

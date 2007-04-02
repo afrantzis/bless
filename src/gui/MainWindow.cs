@@ -185,6 +185,7 @@ public class BlessMain
 		
 		Services.File=new FileService(dataBook, MainWindow);
 		Services.Session=new SessionService(dataBook, MainWindow);
+		Services.UI=new UIService(uiManager);
 		//Services.Info=new InfoService(infobar);
 		
 		PluginManager guiPlugins=new PluginManager(typeof(GuiPlugin), new object[]{MainWindow, uiManager});

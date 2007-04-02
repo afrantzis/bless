@@ -18,7 +18,7 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using Bless.Gui.Drawers;
 using Bless.Util; 
 using Bless.Buffers;
@@ -921,6 +921,12 @@ public abstract class Area {
 			}
 		}
 		
+	}
+	
+	public virtual void ShowPopup(Gtk.UIManager uim)
+	{
+		Gtk.Widget popup = uim.GetWidget("/DefaultAreaPopup");
+		(popup as Gtk.Menu).Popup();
 	}
 	
 }// Area
