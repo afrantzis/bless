@@ -48,15 +48,19 @@ public class SimpleBuffer : IBuffer
 	
 	public void Append(byte[] d) 
 	{
+		if (d.Length == 0)
+			return;
+		
 		if (data.Length>0) {
 			byte[] tmp=new byte[data.LongLength+d.LongLength];
 			data.CopyTo(tmp, 0);
 			d.CopyTo(tmp, data.LongLength);
 			data=tmp;
 		}
-		else // just assign reference, this is more efficient
-			// but could lead to problems if caller is not careful...
-			data=d;
+		else {
+			data = new byte[d.Length];
+			d.CopyTo(data, 0);
+		}
 	}
 	
 	public void Append(byte b) 
