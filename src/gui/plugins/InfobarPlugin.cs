@@ -128,6 +128,7 @@ public class InfobarPlugin : GuiPlugin
 		dv.Buffer.Changed += new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
 		dv.BufferChanged += new DataView.DataViewEventHandler(OnBufferChanged);
 		dv.CursorChanged += new DataView.DataViewEventHandler(OnCursorChanged);
+		dv.SelectionChanged += new DataView.DataViewEventHandler(OnSelectionChanged);
 	}
 	
 	void OnDataViewRemoved(object o, RemovedArgs args)
@@ -136,6 +137,7 @@ public class InfobarPlugin : GuiPlugin
 		dv.Buffer.Changed -= new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
 		dv.BufferChanged -= new DataView.DataViewEventHandler(OnBufferChanged);
 		dv.CursorChanged -= new DataView.DataViewEventHandler(OnCursorChanged);
+		dv.SelectionChanged -= new DataView.DataViewEventHandler(OnSelectionChanged);
 	}
 	
 	void OnBufferChanged(DataView dv)
@@ -166,6 +168,11 @@ public class InfobarPlugin : GuiPlugin
 	}
 	
 	void OnCursorChanged(DataView dv)
+	{
+		UpdateInfobar(dv);
+	}
+	
+	void OnSelectionChanged(DataView dv)
 	{
 		UpdateInfobar(dv);
 	}
