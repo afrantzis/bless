@@ -794,6 +794,17 @@ public class ByteBuffer : IBuffer {
 		set { tempDir = value;}
 	}
 	
+	public Util.Range Range {
+		get { 
+			Util.Range range = new Util.Range();
+			if (size > 0) {
+				range.Start = 0;
+				range.End = size - 1;
+			}
+			
+			return range;
+		}
+	}
 	internal void Display(string s) 
 	{
 		Console.Write(s);

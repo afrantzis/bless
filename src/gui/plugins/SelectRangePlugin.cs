@@ -38,6 +38,7 @@ public class SelectRangePlugin : GuiPlugin
 	"<menubar>"+
 	"	<menu action=\"Edit\">"+
 	"		<placeholder name=\"Extra\">"+
+	"			<menuitem name=\"SelectAll\" action=\"SelectAllAction\" />"+
 	"			<menuitem name=\"SelectRange\" action=\"SelectRangeAction\" />"+
 	"		</placeholder>"+
 	"		<separator/>"+
@@ -62,10 +63,10 @@ public class SelectRangePlugin : GuiPlugin
 	public override bool Load()
 	{
 		dataBook = (DataBook)GetDataBook(mainWindow);
-		widget=new SelectRangeWidget(dataBook);
-		widget.Visible=false;
+		widget = new SelectRangeWidget(dataBook);
+		widget.Visible = false;
 		
-		WidgetGroup wgroup=(WidgetGroup)GetWidgetGroup(mainWindow, 0);
+		WidgetGroup wgroup = (WidgetGroup)GetWidgetGroup(mainWindow, 0);
 		wgroup.Add(widget);
 		
 		AddMenuItems(uiManager);
@@ -77,6 +78,8 @@ public class SelectRangePlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
+			new ActionEntry ("SelectAllAction", Stock.SelectAll, null, "<control>A", "Select All",
+			                    new EventHandler(OnSelectAllActivated)),
 			new ActionEntry ("SelectRangeAction", Stock.JumpTo, Catalog.GetString("_Select Range"), "<shift><control>R", null,
 			                    new EventHandler(OnSelectRangeActivated)),
 		};
@@ -91,11 +94,21 @@ public class SelectRangePlugin : GuiPlugin
 		
 	}
 	
+	///<summary>Handle the Edit->Select All command</summary>
+	public void OnSelectAllActivated(object o, EventArgs args)
+	{
+		if (dataBook.NPages == 0)
+			return;
+			
+		DataView dv = ((DataViewDisplay)dataBook.CurrentPageWidget).View;
+		dv.Selection = dv.Buffer.Range;
+	}
+	
 	///<summary>Handle the Edit->Select Range command</summary>
 	public void OnSelectRangeActivated(object o, EventArgs args)
 	{
 		if (dataBook.NPages > 0) {
-			DataView dv=((DataViewDisplay)dataBook.CurrentPageWidget).View;
+			DataView dv = ((DataViewDisplay)dataBook.CurrentPageWidget).View;
 			widget.LoadWithSelection(dv);
 		}
 		
