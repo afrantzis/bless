@@ -20,21 +20,58 @@
  */
 
 using Gtk;
+using Bless.Util;
 
 namespace Bless.Gui
 {
 
+public interface IInfoDisplay
+{
+	void DisplayMessage(string message);
+	void ClearMessage();
+}
+
+public interface IProgressDisplay
+{
+	ProgressCallback NewCallback();
+}
+
+
+///<summary>
+/// Provides services related to the UI
+///</summary>
 public class UIService
 {
 	UIManager uiManager;
+	IInfoDisplay infoDisplay;
+	IProgressDisplay progressDisplay;
 	
 	public UIService(UIManager uim)
 	{
 		uiManager = uim;
 	}
 	
+	///<summary>
+	/// Service for showing status messages
+	///</summary>
+	public IInfoDisplay Info {
+		get { return infoDisplay; }
+		set { infoDisplay = value; }
+	}
+	
+	///<summary>
+	/// Service for displaying the progress of various actions
+	///</summary>
+	public IProgressDisplay Progress {
+		get { return progressDisplay; }
+		set { progressDisplay = value; }
+	}
+	
+	///<summary>
+	/// The global UIManager
+	///</summary>
 	public UIManager Manager {
-		get { return uiManager;} 
+		get { return uiManager;}
 	}
 	
 }

@@ -83,6 +83,7 @@ public class SaveAsOperation : ThreadedAsyncOperation
 	
 	protected override bool StartProgress()
 	{
+		progressCallback(string.Format("Saving '{0}'", SavePath), ProgressAction.Message);
 		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
 	}
 	

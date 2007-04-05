@@ -70,6 +70,12 @@ public class SaveOperation : SaveAsOperation
 #endif
 	}
 	
+	protected override bool StartProgress()
+	{
+		progressCallback(string.Format("Saving '{0}'", byteBuffer.Filename), ProgressAction.Message);
+		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
+	}
+	
 	protected override void DoOperation()
 	{
 		stageReached=SaveStage.BeforeSaveAs;

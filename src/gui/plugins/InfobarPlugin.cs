@@ -71,7 +71,7 @@ public class InfobarPlugin : GuiPlugin
 		widget=new Infobar(dataBook);
 		widget.Visible=true;
 		
-		Services.Info=new InfoService(widget);
+		Services.UI.Info = widget;
 		
 		((VBox)mainWindow.Child).PackEnd(widget, false, false, 0);
 		

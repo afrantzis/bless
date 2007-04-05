@@ -82,7 +82,7 @@ public class BlessMain
 	
 	Gtk.AccelGroup editAccelGroup; // the group of accelerators for the edit menu
 	DataBook dataBook;
-	ProgressDialog findProgressDialog;
+	
 	
 	// the kinds of MIME type targets we are accepting
 	static TargetEntry[] dropTargets= new TargetEntry[]{

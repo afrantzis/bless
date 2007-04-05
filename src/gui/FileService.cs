@@ -223,7 +223,7 @@ public class FileService
 			if (Preferences.Instance["ByteBuffer.TempDir"] != "") 
 				bb.TempDir = Preferences.Instance["ByteBuffer.TempDir"];
 			string msg = string.Format(Catalog.GetString("Loaded file '{0}'"), fullPath);
-			Services.Info.DisplayMessage(msg);
+			Services.UI.Info.DisplayMessage(msg);
 			History.Instance.Add(fullPath);
 			return bb;
 		}
@@ -349,21 +349,16 @@ public class FileService
 			else
 				msg = string.Format(Catalog.GetString("Saving file '{0}'"), bb.Filename);
 						
-			Services.Info.DisplayMessage(msg + "...");
+			Services.UI.Info.DisplayMessage(msg + "...");
 
-			
-			// create a ProgressDialog
-			// if save is synchronous, make it modal
-			ProgressDialog pd=new ProgressDialog(msg, mainWindow);
-			pd.Modal=synchronous;
 			
 			IAsyncResult ar;
 			
 			// Decide whether to save or save as
 			if (fullPath!=bb.Filename)
-				ar=bb.BeginSaveAs(fullPath, new ProgressCallback(pd.Update), new AsyncCallback(SaveFileAsyncCallback));
+				ar=bb.BeginSaveAs(fullPath, Services.UI.Progress.NewCallback(), new AsyncCallback(SaveFileAsyncCallback));
 			else
-				ar=bb.BeginSave(new ProgressCallback(pd.Update), new AsyncCallback(SaveFileAsyncCallback));
+				ar=bb.BeginSave(Services.UI.Progress.NewCallback(), new AsyncCallback(SaveFileAsyncCallback));
 				
 			// if save is synchronous wait for save to finish
 			if (synchronous) {
@@ -394,7 +389,7 @@ public class FileService
 			ea.Destroy();
 			
 			msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), file);
-			Services.Info.DisplayMessage(msg);
+			Services.UI.Info.DisplayMessage(msg);
 		}
 		
 		return false;
@@ -414,7 +409,7 @@ public class FileService
 			else
 				msg = string.Format(Catalog.GetString("The file '{0}' has been saved"), bbs.SavePath);
 			
-			Services.Info.DisplayMessage(msg);
+			Services.UI.Info.DisplayMessage(msg);
 			// add to history
 			History.Instance.Add(bbs.SavePath);
 			
@@ -435,7 +430,7 @@ public class FileService
 		
 		{
 		string msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), bbs.SavePath);
-		Services.Info.DisplayMessage(msg);
+		Services.UI.Info.DisplayMessage(msg);
 		}
 	}
 	
@@ -462,7 +457,7 @@ public class FileService
 			// there is no dataview left,
 			// update title and statusbars
 			mainWindow.Title="Bless - Gtk# Hex Editor";
-			Services.Info.ClearMessage();
+			Services.UI.Info.ClearMessage();
 		}
 	}
 	

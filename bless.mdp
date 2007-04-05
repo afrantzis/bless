@@ -89,7 +89,6 @@
     <File name="./src/gui/FileService.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/Services.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/SessionService.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/gui/InfoService.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/EditOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/ConversionTablePlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/InfobarPlugin.cs" subtype="Code" buildaction="Compile" />
@@ -135,6 +134,7 @@
     <File name="./src/util/ConfigureDefines.cs.in" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/DataBookFinder.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/UIService.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/ProgressDisplayPlugin.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

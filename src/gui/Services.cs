@@ -24,18 +24,12 @@ namespace Bless.Gui
 public class Services
 {
 	static FileService fileService;
-	static InfoService infoService;
 	static SessionService sessionService;
 	static UIService uiService;
 	
 	public static FileService File {
 		get { return fileService; }
 		set { fileService=value; }
-	}
-	
-	public static InfoService Info {
-		get { return infoService; }
-		set { infoService=value; }
 	}
 	
 	public static SessionService Session {

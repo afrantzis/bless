@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Fri Mar 30 14:21:45 2007 by alf@ALF
+<!--Generated with glade3 3.0.3 on Thu Apr  5 15:41:58 2007 by alf@ALF
 	Version: 3.0.1
 	Date: Thu Dec 28 23:43:12 2006
 	User: alf
@@ -2845,6 +2845,34 @@ Text</property>
           <packing>
             <property name="expand">False</property>
             <property name="pack_type">GTK_PACK_END</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkWindow" id="ProgressBarWindow">
+    <child>
+      <widget class="GtkHBox" id="ProgressBarHBox">
+        <property name="visible">True</property>
+        <property name="border_width">6</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkProgressBar" id="ProgressBar">
+            <property name="visible">True</property>
+            <property name="show_text">True</property>
+          </widget>
+        </child>
+        <child>
+          <widget class="GtkButton" id="CancelButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">gtk-cancel</property>
+            <property name="use_stock">True</property>
+            <signal name="clicked" handler="OnCancelButtonClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </widget>

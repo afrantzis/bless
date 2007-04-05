@@ -262,7 +262,7 @@ public class ExportDialog : Dialog
 		ExportOperation eo=(ExportOperation)ar.AsyncState;
 		
 		if (eo.Result == ExportOperation.OperationResult.Finished) {
-			Services.Info.DisplayMessage(string.Format(Catalog.GetString("Exported data to '{0}'"),  (eo.Exporter.Builder.OutputStream as FileStream).Name));
+			Services.UI.Info.DisplayMessage(string.Format(Catalog.GetString("Exported data to '{0}'"),  (eo.Exporter.Builder.OutputStream as FileStream).Name));
 			this.Hide();
 		}
 		else if (eo.Result == ExportOperation.OperationResult.CaughtException) {
