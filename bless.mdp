@@ -135,6 +135,7 @@
     <File name="./src/gui/DataBookFinder.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/UIService.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/ProgressDisplayPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/plugins/BitwiseOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

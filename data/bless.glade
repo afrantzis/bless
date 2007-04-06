@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.0.3 on Thu Apr  5 15:41:58 2007 by alf@ALF
+<!--Generated with glade3 3.0.3 on Thu Apr  5 16:25:12 2007 by alf@ALF
 	Version: 3.0.1
 	Date: Thu Dec 28 23:43:12 2006
 	User: alf
@@ -2873,6 +2873,113 @@ Text</property>
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkWindow" id="BitwiseOperationsWindow">
+    <child>
+      <widget class="GtkHBox" id="BitwiseOperationsHBox">
+        <property name="visible">True</property>
+        <property name="border_width">6</property>
+        <property name="spacing">6</property>
+        <child>
+          <widget class="GtkEventBox" id="SourceLabelEB">
+            <property name="visible">True</property>
+            <signal name="button_press_event" handler="OnSourceLabelButtonPress"/>
+            <child>
+              <widget class="GtkLabel" id="SourceLabel">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="use_markup">True</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="OperationComboBox">
+            <property name="visible">True</property>
+            <property name="items" translatable="yes">AND
+OR
+XOR
+NOT</property>
+            <signal name="changed" handler="OnOperationComboBoxChanged"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="OperandEntry">
+            <property name="visible">True</property>
+            <signal name="changed" handler="OnOperandEntryChanged"/>
+          </widget>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label8">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">as</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="OperandAsComboBox">
+            <property name="visible">True</property>
+            <property name="items" translatable="yes">Hexadecimal
+Decimal
+Octal
+Binary
+Text</property>
+          </widget>
+          <packing>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="DoOperationButton">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Operate</property>
+            <signal name="clicked" handler="OnDoOperationClicked"/>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="CloseButton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="relief">GTK_RELIEF_NONE</property>
+            <property name="focus_on_click">False</property>
+            <signal name="clicked" handler="OnCloseButtonClicked"/>
+            <child>
+              <widget class="GtkImage" id="image8">
+                <property name="visible">True</property>
+                <property name="stock">gtk-close</property>
+                <property name="icon_size">1</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">6</property>
           </packing>
         </child>
       </widget>
