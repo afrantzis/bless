@@ -218,12 +218,12 @@ public class ByteBuffer : IBuffer {
 	}
 	
 	///<summary>Append bytes at the end of the buffer</summary>
-	public void Append(byte[] data) 
+	public void Append(byte[] data, long index, long length) 
 	{	
 		lock (LockObj) {
 			if (!modifyAllowed) return;
 		
-			AppendAction aa=new AppendAction(data, this);	
+			AppendAction aa=new AppendAction(data, index, length, this);	
 			aa.Do();
 			
 			// if action isn't handled as chained (ActionChaining==false)
@@ -237,8 +237,13 @@ public class ByteBuffer : IBuffer {
 		}
 	}
 
+	public void Append(byte[] data) 
+	{
+		Append(data, 0, data.Length);
+	}
+	
 	///<summary>Insert bytes into the buffer</summary>
-	public void Insert(long pos, byte[] data) 
+	public void Insert(long pos, byte[] data, long index, long length) 
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
@@ -248,7 +253,7 @@ public class ByteBuffer : IBuffer {
 				return;
 			}
 			
-			InsertAction ia=new InsertAction(pos, data, this);
+			InsertAction ia=new InsertAction(pos, data, index, length, this);
 			ia.Do();
 			
 			// if action isn't handled as chained (ActionChaining==false)
@@ -262,6 +267,11 @@ public class ByteBuffer : IBuffer {
 		}
 	}		
 
+	public void Insert(long pos, byte[] data)
+	{
+		Insert(pos, data, 0, data.Length);
+	}
+	
 	///<summary>Delete bytes from the buffer</summary>
 	public void Delete(long pos1, long pos2) 
 	{
@@ -283,12 +293,12 @@ public class ByteBuffer : IBuffer {
 	}
 	
 	///<summary>Replace bytes in the buffer</summary>
-	public void Replace(long pos1, long pos2, byte[] data) 
+	public void Replace(long pos1, long pos2, byte[] data, long index, long length) 
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
 			
-			ReplaceAction ra=new ReplaceAction(pos1, pos2, data, this);
+			ReplaceAction ra=new ReplaceAction(pos1, pos2, data, index, length, this);
 			ra.Do();
 			
 			// if action isn't handled as chained (ActionChaining==false)
@@ -300,6 +310,11 @@ public class ByteBuffer : IBuffer {
 			
 			EmitChanged();
 		}
+	}
+	
+	public void Replace(long pos1, long pos2, byte[] data) 
+	{
+		Replace(pos1, pos2, data, 0, data.Length);
 	}
 	
 	///<summary>Undo the last action</summary>

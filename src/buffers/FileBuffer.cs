@@ -45,7 +45,7 @@ public class FileBuffer: IBuffer {
 		return (pos >= winOffset && pos < winOffset + winOccupied);
 	}
 	
-	public void Insert(long pos, byte[] data) { /*read only buffer*/}
+	public void Insert(long pos, byte[] data, long index, long length) { /*read only buffer*/}
 	
 	public int Read(byte[] ba, long pos, int len) 
 	{
@@ -65,7 +65,7 @@ public class FileBuffer: IBuffer {
 	
 	public int GetIndex(long pos, int len) { return 0;}
 	
-	public void Append(byte[] data) { /*read only buffer*/}
+	public void Append(byte[] data, long index, long length) { /*read only buffer*/}
 	
 	public void Append(byte data){ /*read only buffer*/}
 	

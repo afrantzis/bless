@@ -33,10 +33,11 @@ public class ChangeBuffer : IBuffer  {
 		data = new List<byte>();
 	}
 	
-	public void Insert(long pos, byte[] d) 
+	public void Insert(long pos, byte[] d, long index, long length) 
 	{
 		//if (pos < data.Count && pos+d.Length < data.Count)
-			data.InsertRange((int)pos, d);
+		for(long i = 0; i < length; i++)
+			data.Insert((int)(pos + i) , d[index + i]);
 	}
 	
 	public int Read(byte[] ba, long pos, int len) 
@@ -47,9 +48,10 @@ public class ChangeBuffer : IBuffer  {
 		return len;
 	}
 	
-	public void Append(byte[] d) 
-	{ 
-			data.AddRange(d);
+	public void Append(byte[] d, long index, long length) 
+	{
+		for(long i = 0; i < length; i++)
+			data.Add(d[index + i]);
 	}
 	
 	public void Append(byte b) 

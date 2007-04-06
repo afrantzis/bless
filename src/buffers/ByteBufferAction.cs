@@ -35,34 +35,34 @@ class AppendAction: ByteBufferAction {
 	Segment seg;
 	ByteBuffer byteBuf;
 	
-	public AppendAction(byte[] d, ByteBuffer bb) {
-		byteBuf=bb;
+	public AppendAction(byte[] d, long index, long length, ByteBuffer bb) {
+		byteBuf = bb;
 		
 		// if there is no data to append
 		// don't create a segment
-		if (d.Length==0)
-			seg=null;
+		if (d.Length == 0)
+			seg = null;
 		else {
-			SimpleBuffer cb=new SimpleBuffer();
-			seg=new Segment(cb, cb.Size, cb.Size+d.Length-1);
+			SimpleBuffer cb = new SimpleBuffer();
+			seg = new Segment(cb, cb.Size, cb.Size + length - 1);
 			
-			cb.Append(d);
+			cb.Append(d, index, length);
 		}
 	}
 	
 	public override void Do() {
-		if (seg==null)
+		if (seg == null)
 			return;
 		// use copy of segment seg to protect it from alterations 
 		byteBuf.segCol.Append(new Segment(seg.Buffer, seg.Start, seg.End));
-		byteBuf.size+=seg.Size;
+		byteBuf.size += seg.Size;
 	}
 	
 	public override void Undo() {
-		if (seg==null)
+		if (seg == null)
 			return;
-		byteBuf.size-=seg.Size;
-		byteBuf.segCol.DeleteRange(byteBuf.size, byteBuf.size+seg.Size-1);
+		byteBuf.size -= seg.Size;
+		byteBuf.segCol.DeleteRange(byteBuf.size, byteBuf.size + seg.Size - 1);
 	}
 }
 
@@ -73,36 +73,36 @@ class InsertAction: ByteBufferAction {
 	long pos;
 	ByteBuffer byteBuf;
 	
-	public InsertAction(long p, byte[] d, ByteBuffer bb) {
-		byteBuf=bb;
-		pos=p;
+	public InsertAction(long p, byte[] d, long index, long length, ByteBuffer bb) {
+		byteBuf = bb;
+		pos = p;
 		
 		// if there is no data to insert
 		// don't create a segment
-		if (d.Length==0)
-			seg=null;
+		if (length == 0)
+			seg = null;
 		else {
-			SimpleBuffer cb=new SimpleBuffer();
-			seg=new Segment(cb, cb.Size, cb.Size+d.Length-1);
-			cb.Append(d);
+			SimpleBuffer cb = new SimpleBuffer();
+			seg = new Segment(cb, cb.Size, cb.Size + length - 1);
+			cb.Append(d, index, length);
 		}
 	}
 	
 	public override void Do() {
-		if (seg==null)
+		if (seg == null)
 			return;
-		SegmentCollection tmp=new SegmentCollection();
+		SegmentCollection tmp = new SegmentCollection();
 		// use copy of segment seg to protect it from alterations
 		tmp.Append(new Segment(seg.Buffer, seg.Start, seg.End));
 		byteBuf.segCol.Insert(tmp, pos);
-		byteBuf.size+=seg.Size;
+		byteBuf.size += seg.Size;
 	}
 	
 	public override void Undo() {
-		if (seg==null)
+		if (seg == null)
 			return;
-		byteBuf.segCol.DeleteRange(pos, pos+seg.Size-1);
-		byteBuf.size-=seg.Size;
+		byteBuf.segCol.DeleteRange(pos, pos + seg.Size - 1);
+		byteBuf.size -= seg.Size;
 	}
 
 }
@@ -115,19 +115,19 @@ class DeleteAction: ByteBufferAction {
 	ByteBuffer byteBuf;
 	
 	public DeleteAction(long p1, long p2, ByteBuffer bb) {
-		byteBuf=bb;
-		pos1=p1;
-		pos2=p2;
+		byteBuf = bb;
+		pos1 = p1;
+		pos2 = p2;
 	}
 	
 	public override void Do() {
-		del=byteBuf.segCol.DeleteRange(pos1, pos2);
-		byteBuf.size-=pos2-pos1+1;
+		del = byteBuf.segCol.DeleteRange(pos1, pos2);
+		byteBuf.size -= pos2 - pos1 + 1;
 	}
 	
 	public override void Undo() {
 		byteBuf.segCol.Insert(del, pos1);
-		byteBuf.size+=pos2-pos1+1;
+		byteBuf.size += pos2 - pos1 + 1;
 	}
 }
 
@@ -137,9 +137,9 @@ class ReplaceAction: ByteBufferAction {
 	DeleteAction del;
 	InsertAction ins;
 	
-	public ReplaceAction(long p1, long p2, byte[] d, ByteBuffer bb) {
-		del=new DeleteAction(p1, p2, bb);
-		ins=new InsertAction(p1, d, bb);
+	public ReplaceAction(long p1, long p2, byte[] d, long index, long length, ByteBuffer bb) {
+		del = new DeleteAction(p1, p2, bb);
+		ins = new InsertAction(p1, d, index, length, bb);
 	}
 	
 	public override void Do() {

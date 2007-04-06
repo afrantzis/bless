@@ -35,7 +35,7 @@ public class SimpleBuffer : IBuffer
 		data=new byte[0];
 	}
 	
-	public void Insert(long pos, byte[] d) 
+	public void Insert(long pos, byte[] d, long index, long length) 
 	{
 		throw new NotImplementedException();
 	}
@@ -46,20 +46,20 @@ public class SimpleBuffer : IBuffer
 		return len;
 	}
 	
-	public void Append(byte[] d) 
+	public void Append(byte[] d, long index, long length) 
 	{
-		if (d.Length == 0)
+		if (length == 0)
 			return;
 		
-		if (data.Length>0) {
-			byte[] tmp=new byte[data.LongLength+d.LongLength];
+		if (data.Length > 0) {
+			byte[] tmp = new byte[data.LongLength + length];
 			data.CopyTo(tmp, 0);
-			d.CopyTo(tmp, data.LongLength);
-			data=tmp;
+			Array.Copy(d, index, data, data.LongLength, length);
+			data = tmp;
 		}
 		else {
-			data = new byte[d.Length];
-			d.CopyTo(data, 0);
+			data = new byte[length];
+			Array.Copy(d, index, data, 0, length);
 		}
 	}
 	
