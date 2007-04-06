@@ -54,14 +54,14 @@ public class DataView {
 	bool notification;
 	
 	//undo-redo related
-	Deque cursorUndoDeque;
-	Deque cursorRedoDeque;
+	Deque<CursorState> cursorUndoDeque;
+	Deque<CursorState> cursorRedoDeque;
 	
-	public Deque CursorUndoDeque {
+	public Deque<CursorState> CursorUndoDeque {
 		get { return cursorUndoDeque; }
 	}  
 	
-	public Deque CursorRedoDeque {
+	public Deque<CursorState> CursorRedoDeque {
 		get { return cursorRedoDeque; }
 	}
 	
@@ -285,8 +285,8 @@ public class DataView {
 		clipboard=Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true));
 		
 		// initialize undo/redo cursor offset stacks
-		cursorUndoDeque=new Deque();
-		cursorRedoDeque=new Deque();
+		cursorUndoDeque=new Deque<CursorState>();
+		cursorRedoDeque=new Deque<CursorState>();
 		
 		prefID="dv"+this.GetHashCode().ToString();
 		PreferencesChangedHandler handler=new PreferencesChangedHandler(OnPreferencesChanged);

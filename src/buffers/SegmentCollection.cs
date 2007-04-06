@@ -25,22 +25,22 @@ namespace Bless.Buffers {
 public class SegmentCollection {
 
 #region private data
-	Util.List list;
+	Util.List<Segment> list;
 	
 	// cache
-	Util.List.Node cachedNode;
+	Util.List<Segment>.Node cachedNode;
 	long cachedMapping;
 #endregion
 	
 #region Properties	
-	public Util.List List {
+	public Util.List<Segment> List {
 		get { return list; }
 	}
 	
 #endregion
 	
 	public SegmentCollection() {
-		list= new Util.List();
+		list= new Util.List<Segment>();
 	}
 	
 	
@@ -50,7 +50,7 @@ public class SegmentCollection {
 		cachedMapping=0;
 	}
 	
-	private void SetCache(Util.List.Node n, long map) 
+	private void SetCache(Util.List<Segment>.Node n, long map) 
 	{
 		cachedNode=n;
 		cachedMapping=map;
@@ -65,7 +65,7 @@ public class SegmentCollection {
 	///
 	public void Append(Segment s) 
 	{
-		Util.List.Node n=list.Last;
+		Util.List<Segment>.Node n=list.Last;
 		if (n!=null && n.data!=null) {
 			Segment ls=(Segment)n.data;
 			if ((s.Buffer==ls.Buffer) && (s.Start==ls.End+1)) {
@@ -78,7 +78,7 @@ public class SegmentCollection {
 
 	///<summary>Inserts a segment after a node 
 	///and merges them if possible</summary>
-	private Util.List.Node InsertAfter(Util.List.Node n, Segment s) 
+	private Util.List<Segment>.Node InsertAfter(Util.List<Segment>.Node n, Segment s) 
 	{
 		if (n!=null && n.data!=null) {
 			Segment ls=(Segment)n.data;
@@ -92,7 +92,7 @@ public class SegmentCollection {
 	
 	///<summary>Inserts a segment before a node 
 	///and merges them if possible</summary>
-	private Util.List.Node InsertBefore(Util.List.Node n, Segment s) 
+	private Util.List<Segment>.Node InsertBefore(Util.List<Segment>.Node n, Segment s) 
 	{
 		if (n!=null && n.data!=null) {
 			Segment ls=(Segment)n.data;
@@ -107,7 +107,7 @@ public class SegmentCollection {
 	///
 	///<summary>Find the segment that the given offset is mapped into</summary>
 	///
-	public Segment FindSegment(long offset, out long OutMapping, out Util.List.Node OutNode) 
+	public Segment FindSegment(long offset, out long OutMapping, out Util.List<Segment>.Node OutNode) 
 	{
 		OutMapping=0;
 		OutNode=null;
@@ -122,7 +122,7 @@ public class SegmentCollection {
 		
 		Segment s=(Segment)cachedNode.data;
 		long curMapping=cachedMapping;	
-		Util.List.Node curNode=cachedNode;
+		Util.List<Segment>.Node curNode=cachedNode;
 		
 		// is the cached node the one we want?
 		if (s.Contains(offset, curMapping)==true) {
@@ -171,16 +171,16 @@ public class SegmentCollection {
 	public void Insert(SegmentCollection sc, long offset) 
 	{
 		long mapping;
-		Util.List.Node node;
+		Util.List<Segment>.Node node;
 		
 		Segment s=FindSegment(offset, out mapping, out node);
 		
 		// offset not found, check if we have to append
 		if (s==null) {
 			if ( (node==null && offset==0 ) || (node !=null && offset == mapping + (node.data as Segment).Size)) {
-				Util.List lst = sc.List;
+				Util.List<Segment> lst = sc.List;
 				int N=lst.Count;
-				Util.List.Node n=lst.First;
+				Util.List<Segment>.Node n=lst.First;
 				for (int i=0;i<N;i++) {
 					Append((Segment)n.data);
 					n=n.next;
@@ -191,9 +191,9 @@ public class SegmentCollection {
 		
 		if (mapping==offset) { // start of segment?
 			// insert data from the current node backwards
-			Util.List lst = sc.List;
+			Util.List<Segment> lst = sc.List;
 			int N=lst.Count;
-			Util.List.Node n=lst.Last;
+			Util.List<Segment>.Node n=lst.Last;
 			for (int i=0;i<N;i++) { 
 				node = InsertBefore(node, (Segment)n.data);
 				n=n.prev;
@@ -205,9 +205,9 @@ public class SegmentCollection {
 			Segment s1=s.SplitAt(offset-mapping);
 			list.InsertAfter(node, s1);
 			
-			Util.List lst = sc.List;
+			Util.List<Segment> lst = sc.List;
 			int N=lst.Count;
-			Util.List.Node n=lst.First;
+			Util.List<Segment>.Node n=lst.First;
 			for (int i=0;i<N;i++) {
 				node = InsertAfter(node, (Segment)n.data);
 				n=n.next;
@@ -220,8 +220,8 @@ public class SegmentCollection {
 	public SegmentCollection DeleteRange(long pos1, long pos2) 
 	{
 		long mapping1, mapping2;
-		Util.List.Node node1;
-		Util.List.Node node2;
+		Util.List<Segment>.Node node1;
+		Util.List<Segment>.Node node2;
 		
 		// Find the segments of the end points.
 		// Search for the ending point first so that we won't
@@ -291,7 +291,7 @@ public class SegmentCollection {
 			list.InsertAfter(node2, sl); 
 			
 			
-		Util.List.Node n=node1.next;
+		Util.List<Segment>.Node n=node1.next;
 		
 		// try to split the starting segment
 		Segment sf=s1.SplitAt(pos1-mapping1);
@@ -320,7 +320,7 @@ public class SegmentCollection {
 		// all segments up to node2
 		while(ReferenceEquals(n, node2)==false) {
 			sc.Append((Segment)n.data);
-			Util.List.Node p=n;
+			Util.List<Segment>.Node p=n;
 			n=n.next;
 			// Remove() must be placed after n.next
 			// because it sets n.next=null

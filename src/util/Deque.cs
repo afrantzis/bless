@@ -25,24 +25,24 @@ namespace Bless.Util {
 ///<summary>
 /// Double-ended queue data structure 
 ///</summary>
-public class Deque
+public class Deque<T>
 {
-	Bless.Util.List list;
+	Bless.Util.List<T> list;
 	
 	public Deque()
 	{
-		list=new Bless.Util.List();
+		list = new Bless.Util.List<T>();
 	}
 	
 	///<summary>
 	/// Add an object to the front of the queue 
 	///</summary>
-	public void AddFront(object o)
+	public void AddFront(T o)
 	{
 		list.InsertBefore(list.First, o);
 	}
 	
-	public void AddEnd(object o)
+	public void AddEnd(T o)
 	{
 		list.InsertAfter(list.Last, o);
 	}
@@ -50,13 +50,13 @@ public class Deque
 	///<summary>
 	/// Remove an object from the front of the queue (LIFO) 
 	///</summary>
-	public object RemoveFront()
+	public T RemoveFront()
 	{
-		object o=null;
+		T o = default(T);
 		
-		if (list.First!=null) {
-			o=list.First.data;
-			list.First.data=null;
+		if (list.First != null) {
+			o = list.First.data;
+			list.First.data = default(T);
 			list.Remove(list.First);
 		}
 		
@@ -66,13 +66,13 @@ public class Deque
 	///<summary>
 	/// Remove an object from the end of the queue (FIFO) 
 	///</summary>
-	public object RemoveEnd()
+	public T RemoveEnd()
 	{
-		object o=null;
+		T o = default(T);
 		
-		if (list.Last!=null) {
-			o=list.Last.data;
-			list.Last.data=null;
+		if (list.Last != null) {
+			o = list.Last.data;
+			list.Last.data = default(T);
 			list.Remove(list.Last);
 		}
 		
@@ -82,12 +82,12 @@ public class Deque
 	///<summary>
 	/// Peek the object at the front of the queue 
 	///</summary>
-	public object PeekFront()
+	public T PeekFront()
 	{
-		object o=null;
+		T o = default(T);
 		
-		if (list.First!=null)
-			o=list.First.data;
+		if (list.First != null)
+			o = list.First.data;
 		
 		return o;
 	}
@@ -95,12 +95,12 @@ public class Deque
 	///<summary>
 	/// Peek the object at the end of the queue 
 	///</summary>
-	public object PeekEnd()
+	public T PeekEnd()
 	{
-		object o=null;
+		T o = default(T);
 		
-		if (list.Last!=null)
-			o=list.Last.data;
+		if (list.Last !=null)
+			o = list.Last.data;
 		
 		return o;
 	}

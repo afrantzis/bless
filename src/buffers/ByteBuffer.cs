@@ -37,8 +37,8 @@ public class ByteBuffer : IBuffer {
 
 	internal FileBuffer	fileBuf;
 	internal SegmentCollection segCol;
-	Deque undoDeque;
-	Deque redoDeque;
+	Deque<ByteBufferAction> undoDeque;
+	Deque<ByteBufferAction> redoDeque;
 	object SaveCheckpoint;
 	FileSystemWatcher fsw;
 	int maxUndoActions;
@@ -120,8 +120,8 @@ public class ByteBuffer : IBuffer {
 	public ByteBuffer() 
 	{
 		segCol=new SegmentCollection();
-		undoDeque= new Deque();
-		redoDeque= new Deque();
+		undoDeque= new Deque<ByteBufferAction>();
+		redoDeque= new Deque<ByteBufferAction>();
 		size=0;
 		SaveCheckpoint=null;
 		
@@ -325,7 +325,7 @@ public class ByteBuffer : IBuffer {
 		
 			// while there are more actions
 			if (undoDeque.Count>0) {
-				ByteBufferAction action=(ByteBufferAction)undoDeque.RemoveFront();
+				ByteBufferAction action=undoDeque.RemoveFront();
 				action.Undo();
 				redoDeque.AddFront(action);
 				
@@ -343,7 +343,7 @@ public class ByteBuffer : IBuffer {
 			
 			// while there are more actions
 			if (redoDeque.Count>0) {
-				ByteBufferAction action=(ByteBufferAction)redoDeque.RemoveFront();
+				ByteBufferAction action=redoDeque.RemoveFront();
 				action.Do();
 				AddUndoAction(action);
 				
@@ -658,7 +658,7 @@ public class ByteBuffer : IBuffer {
 				if (!readAllowed) { return 0;}
 				
 				long map; 
-				Util.List.Node node;
+				Util.List<Segment>.Node node;
 				Segment seg=segCol.FindSegment(index, out map, out node);
 				//Console.WriteLine("Searching index {0} at {1}:{2}", index, map, seg);
 				if (seg==null)
@@ -797,7 +797,7 @@ public class ByteBuffer : IBuffer {
 					changedBeyondUndo=true;
 				// clear all undo actions beyond the limit
 				while (undoDeque.Count > maxUndoActions) {
-					undoDeque.RemoveEnd();
+					ByteBufferAction action = undoDeque.RemoveEnd();
 				}
 				
 			}

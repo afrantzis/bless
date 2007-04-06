@@ -122,7 +122,7 @@ public class SaveAsOperation : ThreadedAsyncOperation
 		byte[] baTemp=new byte[blockSize];
 		
 		// for every node
-		Util.List.Node node=byteBuffer.segCol.List.First;
+		Util.List<Segment>.Node node=byteBuffer.segCol.List.First;
 		
 		while (node!=null && !cancelled)
 		{

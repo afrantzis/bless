@@ -22,18 +22,20 @@ using System;
 namespace Bless.Util {
 
 ///<summary>A double-linked list</summary>
-public class List {
+public class List<T>
+{
 
 	///<summary>A node of the list</summary>
-	public class Node {
-		public object data;
+	public class Node
+	{
+		public T data;
 		public Node next;
 		public Node prev;
 	
-		public Node(object d, Node p, Node n) {
-			data=d;
-			prev=p;
-			next=n;
+		public Node(T d, Node p, Node n) {
+			data = d;
+			prev = p;
+			next = n;
 		}
 		
 	}
@@ -52,7 +54,7 @@ public class List {
 	}
 	
 	
-	private Node AddFirst(object o) 
+	private Node AddFirst(T o) 
 	{
 		m_first = new Node(o, null, null);
 		m_last = m_first;
@@ -61,42 +63,42 @@ public class List {
 	}
 	
 	///<summary>Append an object to the list</summary>
-	public Node Append(object o) 
+	public Node Append(T o) 
 	{
 		return InsertAfter(m_last, o);
 	}
 	
 	///<summary>Insert an object before a node in the list</summary>
-	public Node InsertBefore(Node n, object o) 
+	public Node InsertBefore(Node n, T o) 
 	{
-		if (m_last==null) { // first entry?
+		if (m_last == null) { // first entry?
 			return AddFirst(o);
 		}	
 		else {
 			Node tmp = new Node(o, n.prev, n);
-			if (n.prev!=null) 
-				n.prev.next=tmp;
-			n.prev=tmp;
+			if (n.prev != null) 
+				n.prev.next = tmp;
+			n.prev = tmp;
 			if (ReferenceEquals(n, m_first)) 
-				m_first=tmp;
+				m_first = tmp;
 			++m_count;
 			return tmp;
 		}
 	}
 	
 	///<summary>Insert an object after a node in the list</summary>
-	public Node InsertAfter(Node n, object o) 
+	public Node InsertAfter(Node n, T o) 
 	{
-		if (m_last==null) { // first entry?
+		if (m_last == null) { // first entry?
 			return AddFirst(o);
 		}	
 		else {
 			Node tmp = new Node(o, n, n.next);
-			if (n.next!=null)
-				n.next.prev=tmp;
-			n.next=tmp;
+			if (n.next != null)
+				n.next.prev = tmp;
+			n.next = tmp;
 			if (ReferenceEquals(n, m_last)) 
-				m_last=tmp;
+				m_last = tmp;
 			++m_count;
 			return tmp;
 		}
@@ -105,37 +107,37 @@ public class List {
 	///<summary>Remove a node (unlink it)</summary>
 	public void Remove(Node n) 
 	{
-		if (n.prev!=null) 
-			n.prev.next=n.next;
-		if (n.next!=null)
-			n.next.prev=n.prev;
+		if (n.prev != null) 
+			n.prev.next = n.next;
+		if (n.next != null)
+			n.next.prev = n.prev;
 		if (ReferenceEquals(n, m_first)) 
-			m_first=n.next;
+			m_first = n.next;
 		if (ReferenceEquals(n, m_last)) 
-			m_last=n.prev;
-		n.next=null;
-		n.prev=null;
+			m_last = n.prev;
+		n.next = null;
+		n.prev = null;
 		--m_count;
 	}
 	
-	public object this[int index] {
+	public T this[int index] {
 		get {
 			//Console.WriteLine("Asking for index {0}", index);
 			if (index > m_count)
-				return null; 
-			Node n=m_first;
-			for(int i=0;i<index; i++)
-				n=n.next;
+				return default(T); 
+			Node n = m_first;
+			for(int i = 0; i < index; i++)
+				n = n.next;
 			return n.data;
 		  }
 	}
 
 	public void Display() 
 	{
-		Node n=m_first;
-		while (n!=null) {
-			Console.Write("{0}<=>",n.data);
-			n=n.next;
+		Node n = m_first;
+		while (n != null) {
+			Console.Write("{0}<=>", n.data);
+			n = n.next;
 		}
 		Console.WriteLine();
 	}
