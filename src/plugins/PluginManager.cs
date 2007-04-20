@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.IO;
+using System.Globalization;
 using Bless.Util;
 
 namespace Bless.Plugins
@@ -56,9 +57,10 @@ public class PluginManager
 		// find system-wide plugins
 		string systemPluginDir=FileResourcePath.GetSystemPath("");
 		string[] systemPluginFiles=Directory.GetFiles(systemPluginDir);
+		CompareInfo compare = CultureInfo.InvariantCulture.CompareInfo;
 		
 		foreach (string file in systemPluginFiles) {
-			if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0
+			if (compare.IndexOf(file, "plugin", CompareOptions.IgnoreCase) >= 0
 				&& file.EndsWith(".dll")) {
 				//Console.WriteLine("Searching File {0}", file);
 				AddPluginFile(file);
@@ -71,7 +73,7 @@ public class PluginManager
 			string[] userPluginFiles=Directory.GetFiles(userPluginDir);
 			
 			foreach (string file in userPluginFiles) {
-				if (file.IndexOf("plugin", StringComparison.CurrentCultureIgnoreCase) > 0
+				if (compare.IndexOf(file, "plugin", CompareOptions.IgnoreCase) >= 0
 					&& file.EndsWith(".dll")) {
 					//Console.WriteLine("Searching File {0}", file);
 					AddPluginFile(file);
