@@ -19,13 +19,15 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Bless.Util {
 
 ///<summary>
 /// Double-ended queue data structure 
 ///</summary>
-public class Deque<T>
+public class Deque<T>: IEnumerable<T>
 {
 	Bless.Util.List<T> list;
 	
@@ -113,6 +115,16 @@ public class Deque<T>
 	
 	public int Count {
 		get { return list.Count; }
+	}
+	
+	public IEnumerator<T> GetEnumerator()
+	{
+		return list.GetEnumerator();
+	}
+	
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
 	}
 }
 

@@ -18,11 +18,13 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Bless.Util {
 
 ///<summary>A double-linked list</summary>
-public class List<T>
+public class List<T> : IEnumerable<T>
 {
 
 	///<summary>A node of the list</summary>
@@ -132,6 +134,21 @@ public class List<T>
 		  }
 	}
 
+	public IEnumerator<T> GetEnumerator()
+	{
+		Node currentNode = First;
+		
+		while (currentNode != null) {
+			yield return currentNode.data;
+			currentNode = currentNode.next;
+		}
+	}
+	
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
+	}
+	
 	public void Display() 
 	{
 		Node n = m_first;
