@@ -96,8 +96,12 @@ public class FileBuffer: IBuffer {
 	
 	public void Load(string filename) 
 	{
+		if (reader != null)
+			reader.Close();
+		
 		FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
 		FileLength=fs.Length;
+		
 		reader=new BinaryReader(fs);
 		
 		winOccupied=reader.Read(window, 0, window.Length);

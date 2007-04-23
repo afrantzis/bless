@@ -144,7 +144,7 @@ public class ByteBuffer : IBuffer {
 	{
 		ByteBuffer bb=new ByteBuffer();
 		// 64 KB buffer
-		bb.LoadWithFileBuffer(new FileBuffer(filename, 0xffff));
+		bb.LoadWithFile(filename);
 		
 		// fix automatic file naming
 		ByteBuffer.autoNum--;
@@ -400,8 +400,9 @@ public class ByteBuffer : IBuffer {
 			
 			// make sure Save As went smoothly before doing anything
 			if (so.Result==SaveAsOperation.OperationResult.Finished) {
+				MakePrivateCopyOfUndoRedo();
 				CloseFile();
-				LoadWithFileBuffer(new FileBuffer(so.SavePath));
+				LoadWithFile(so.SavePath);
 				
 				if (undoDeque.Count > 0)
 					SaveCheckpoint=undoDeque.PeekFront();
@@ -486,7 +487,7 @@ public class ByteBuffer : IBuffer {
 			
 			
 			if (so.Result==SaveOperation.OperationResult.Finished) { // save went ok
-				LoadWithFileBuffer(new FileBuffer(so.SavePath));
+				LoadWithFile(so.SavePath);
 				
 				if (undoDeque.Count > 0)
 					SaveCheckpoint=undoDeque.PeekFront();
@@ -507,7 +508,7 @@ public class ByteBuffer : IBuffer {
 					// cancel has no effect during move.
 					// mark operation as successful
 					so.Result=SaveOperation.OperationResult.Finished;
-					LoadWithFileBuffer(new FileBuffer(so.SavePath));
+					LoadWithFile(so.SavePath);
 				
 					if (undoDeque.Count > 0)
 						SaveCheckpoint=undoDeque.PeekFront();
@@ -568,10 +569,13 @@ public class ByteBuffer : IBuffer {
 					throw new FileNotFoundException(filename);
 			
 				fileBuf.Close();
-				LoadWithFileBuffer(new FileBuffer(filename));
-
+				
 				undoDeque.Clear();
 				redoDeque.Clear();
+				
+				LoadWithFile(filename);
+
+				
 				SaveCheckpoint=null;
 				changedBeyondUndo=false;
 				
@@ -606,15 +610,35 @@ public class ByteBuffer : IBuffer {
 	///<summary> 
 	/// Sets the file buffer and resets the segment collection
 	///</summary> 
-	private void LoadWithFileBuffer(FileBuffer fb)
+	private void LoadWithFile(string filename)
 	{
-		fileBuf=fb;
+		if (fileBuf == null)
+			fileBuf = new FileBuffer(filename, 0xffff);
+		else {
+			fileBuf.Load(filename);
+		}
+		
 		Segment s=new Segment(fileBuf, 0, fileBuf.Size-1);
 		segCol=new SegmentCollection();
 		segCol.Append(s);
 		size=fileBuf.Size;
 		
 		SetupFSW();
+		
+		 
+	}
+	
+	internal void MakePrivateCopyOfUndoRedo()
+	{
+		// Data in the actions may reference a file buffer that 
+		// can become invalid (eg after saving a file)
+		// Copy the data to private in-memory buffers to avoid data corruption
+		// and crashes...
+		foreach(ByteBufferAction action in undoDeque)
+			action.MakePrivateCopyOfData();
+		
+		foreach(ByteBufferAction action in redoDeque)
+			action.MakePrivateCopyOfData();
 	}
 	
 	private void SetupFSW()

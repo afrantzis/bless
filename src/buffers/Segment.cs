@@ -69,6 +69,7 @@ public class Segment {
 
 	public IBuffer Buffer {
 		get { return m_buffer;}
+		set { m_buffer = value;}
 	}
 	
 	

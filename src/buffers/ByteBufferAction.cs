@@ -27,6 +27,7 @@ namespace Bless.Buffers {
 abstract class ByteBufferAction {
 	abstract public void Do();
 	abstract public void Undo();
+	virtual public void MakePrivateCopyOfData() { }
 }
 
 ///<summary>Action for appending at the end of a ByteBuffer</summary>
@@ -129,6 +130,24 @@ class DeleteAction: ByteBufferAction {
 		byteBuf.segCol.Insert(del, pos1);
 		byteBuf.size += pos2 - pos1 + 1;
 	}
+	
+	public override void MakePrivateCopyOfData()
+	{
+		foreach(Segment seg in del.List) {
+			
+			if (seg.Buffer.GetType() == typeof(FileBuffer)) {
+				SimpleBuffer sb = new SimpleBuffer();
+				byte[] data = new byte[seg.Size];
+				seg.Buffer.Read(data, seg.Start, (int)seg.Size);
+				sb.Append(data, 0, data.Length);
+				System.Console.WriteLine("Segment {0:x} {1} {2}", seg.GetHashCode(), seg.Size, sb.Size);
+				seg.Buffer = sb;
+				seg.Start = 0;
+				seg.End = data.Length - 1;
+			}
+		}
+	}
+	
 }
 
 ///<summary>Convenience action for replacing data in ByteBuffer</summary>
@@ -178,6 +197,13 @@ class MultiAction: ByteBufferAction {
 	{
 		for(int i=list.Count-1; i>=0; i--)
 			(list[i] as ByteBufferAction).Undo();
+	}
+	
+	public override void MakePrivateCopyOfData()
+	{
+		foreach(ByteBufferAction a in list) {
+			a.MakePrivateCopyOfData();
+		}
 	}
 }
 

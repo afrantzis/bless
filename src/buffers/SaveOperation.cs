@@ -94,6 +94,9 @@ public class SaveOperation : SaveAsOperation
 			// close the file, make sure that File Operations
 			// are temporarily allowed
 			lock(byteBuffer.LockObj) {
+				// CloseFile invalidates the file buffer,
+				// so make sure undo/redo data stays valid
+				byteBuffer.MakePrivateCopyOfUndoRedo();
 				byteBuffer.FileOperationsAllowed=true;
 				byteBuffer.CloseFile();
 				byteBuffer.FileOperationsAllowed=false;
