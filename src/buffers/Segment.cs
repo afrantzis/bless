@@ -58,6 +58,18 @@ public class Segment {
 		return s;
 	}
 	
+	public void MakePrivateCopyOfData()
+	{
+		SimpleBuffer sb = new SimpleBuffer();
+		byte[] data = new byte[Size];
+		m_buffer.Read(data, m_start, data.Length);
+		sb.Append(data, 0, data.Length);
+		
+		m_buffer = sb;
+		m_start = 0;
+		m_end = data.Length - 1;
+	}
+	
 	public override string ToString() 
 	{
 		return string.Format("({0}->{1})", m_start, m_end);

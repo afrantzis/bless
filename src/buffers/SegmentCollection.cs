@@ -334,7 +334,53 @@ public class SegmentCollection {
 		
 	}
 	
-	
+	public SegmentCollection GetRange(long pos1, long pos2)
+	{
+		long mapping1, mapping2;
+		Util.List<Segment>.Node node1;
+		Util.List<Segment>.Node node2;
+		
+		// Find the segments of the end points.
+		// Search for the ending point first so that we won't
+		// have to invalidate the cache later
+		Segment s2=FindSegment(pos2, out mapping2, out node2);
+		Segment s1=FindSegment(pos1, out mapping1, out node1);
+		
+		if (s1==null || s2==null)
+			return null;
+			
+		if (ReferenceEquals(node1, node2)) {
+			SegmentCollection scTemp = new SegmentCollection();
+			Segment seg = new Segment(s1.Buffer, pos1 - mapping1 + s1.Start, pos2 - mapping1 + s1.Start);
+			scTemp.Append(seg);
+			return scTemp;
+		}
+		
+		// try to split the ending segment	
+		Segment sl = new Segment(s2.Buffer, s2.Start, pos2 - mapping2 + s2.Start );
+		
+		// try to split the starting segment
+		Segment sf = new Segment(s1.Buffer, pos1 - mapping1 + s1.Start, s1.End);
+		
+				
+		SegmentCollection sc = new SegmentCollection();
+		
+		// append the first segment 
+		sc.Append(sf);
+		
+		Util.List<Segment>.Node n = node1.next;
+		
+		// append to new and remove from old
+		// all segments up to node2
+		while(ReferenceEquals(n, node2) == false) {
+			sc.Append(new Segment(n.data.Buffer, n.data.Start, n.data.End));
+			n = n.next;	
+		}
+		
+		sc.Append(sl);
+		
+		return sc;
+	}
 }
 
 } // end namespace

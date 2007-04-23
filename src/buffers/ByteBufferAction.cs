@@ -136,14 +136,7 @@ class DeleteAction: ByteBufferAction {
 		foreach(Segment seg in del.List) {
 			
 			if (seg.Buffer.GetType() == typeof(FileBuffer)) {
-				SimpleBuffer sb = new SimpleBuffer();
-				byte[] data = new byte[seg.Size];
-				seg.Buffer.Read(data, seg.Start, (int)seg.Size);
-				sb.Append(data, 0, data.Length);
-				System.Console.WriteLine("Segment {0:x} {1} {2}", seg.GetHashCode(), seg.Size, sb.Size);
-				seg.Buffer = sb;
-				seg.Start = 0;
-				seg.End = data.Length - 1;
+				seg.MakePrivateCopyOfData();
 			}
 		}
 	}
