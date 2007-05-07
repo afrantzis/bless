@@ -173,7 +173,6 @@ public class ReplaceAllOperation: GenericFindOperation
 		numReplaced=0;
 		
 		strategy.Buffer.BeginActionChaining();
-		strategy.Buffer.ReadAllowed=false;
 		strategy.Buffer.ModifyAllowed=false;
 		strategy.Buffer.FileOperationsAllowed=false;
 		strategy.Buffer.EmitEvents=false;
