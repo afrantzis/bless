@@ -23,12 +23,22 @@ using System;
 
 namespace Bless.Buffers {
 
-public class FileBuffer: IBuffer {
-
+///<summary>
+/// A buffer that allows access to a file by using a moving window
+///</summary>
+public class FileBuffer: IBuffer
+{
+	///<summary>The offset in the file of the start of the buffer window</summary>
 	long winOffset;
+	
+	///<summary>The number of bytes in the window that contain valid file data</summary>
 	int winOccupied;
+	
+	///<summary>The data window</summary>
 	byte[] window;
-	BinaryReader reader; 
+	
+	BinaryReader reader;
+	
 	long FileLength;
 	const int default_size=4096; 
 	
@@ -36,10 +46,13 @@ public class FileBuffer: IBuffer {
 	public FileBuffer(string fn): this(fn,default_size) { }
 	public FileBuffer(string fn, int size) 
 	{
-		window=new byte[size];
+		window = new byte[size];
 		Load(fn);
 	}
-
+	
+	///<summary>
+	/// Whether offset pos is contained in the current window 
+	///</summary>
 	private bool InWindow(long pos) 
 	{
 		return (pos >= winOffset && pos < winOffset + winOccupied);
@@ -47,6 +60,9 @@ public class FileBuffer: IBuffer {
 	
 	public void Insert(long pos, byte[] data, long index, long length) { /*read only buffer*/}
 	
+	///<summary>
+	/// Read data from the buffer 
+	///</summary>
 	public int Read(byte[] ba, long pos, int len) 
 	{
 		// bounds checking
@@ -63,25 +79,26 @@ public class FileBuffer: IBuffer {
 		return len;
 	}
 	
-	public int GetIndex(long pos, int len) { return 0;}
+	public void Append(byte[] data, long index, long length) { /* read only buffer */}
 	
-	public void Append(byte[] data, long index, long length) { /*read only buffer*/}
-	
-	public void Append(byte data){ /*read only buffer*/}
+	public void Append(byte data){ /* read only buffer */}
 	
 	public byte this[long index] {
-		set {/*read only buffer*/ }
+		set { /* read only buffer */ }
 		get {
-			
+			// if the offset we are trying to read is not in the
+			// current window, load the window with data from the file
+			// so that the offset is in the middle of the window
 			if (!InWindow(index)) {
 				if (index >= FileLength) {
 					throw new IndexOutOfRangeException();
 				}	
-				winOffset=index-window.Length/2;
-				if (winOffset<0)
-					winOffset=0;
+				winOffset = index - window.Length / 2;
+				if (winOffset < 0)
+					winOffset = 0;
+					
 				reader.BaseStream.Seek(winOffset, SeekOrigin.Begin);
-				winOccupied=reader.Read(window, 0, window.Length);
+				winOccupied = reader.Read(window, 0, window.Length);
 			}
 			
 			return window[index-winOffset];
@@ -94,32 +111,36 @@ public class FileBuffer: IBuffer {
 		get { return FileLength; }
 	}
 	
+	///<summary>
+	/// Load the buffer with a file
+	///</summary>
 	public void Load(string filename) 
 	{
 		if (reader != null)
 			reader.Close();
 		
 		FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-		FileLength=fs.Length;
+		FileLength = fs.Length;
 		
-		reader=new BinaryReader(fs);
+		reader = new BinaryReader(fs);
 		
-		winOccupied=reader.Read(window, 0, window.Length);
-		winOffset=0;
+		winOccupied = reader.Read(window, 0, window.Length);
+		winOffset = 0;
 	}
 
 	public string Filename {
-		get {	if (reader != null) 
-					return (reader.BaseStream as FileStream).Name;
-				else
-					return null;
-			}
+		get {
+			if (reader != null)
+				return (reader.BaseStream as FileStream).Name;
+			else
+				return null;
+		}
 	}
 	
 	public void Close()
 	{
 		reader.Close();
-		reader=null;
+		reader = null;
 	}
 	
 }

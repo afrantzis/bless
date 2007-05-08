@@ -53,12 +53,12 @@ public class SaveOperation : SaveAsOperation
 	{
 #if ENABLE_UNIX_SPECIFIC
 		// get info about the device the file will be saved on
-		FileInfo fi=new FileInfo(bb.Filename);
+		FileInfo fi = new FileInfo(bb.Filename);
 			
-		Mono.Unix.Native.Statvfs stat=new Mono.Unix.Native.Statvfs();
+		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
 		Mono.Unix.Native.Syscall.statvfs(bb.Filename, out stat);
 			
-		long freeSpace=(long)(stat.f_bavail*stat.f_bsize) + fi.Length;
+		long freeSpace = (long)(stat.f_bavail * stat.f_bsize) + fi.Length;
 			
 		// make sure there is enough disk space in the device
 		if (freeSpace < bb.Size) {
@@ -72,24 +72,24 @@ public class SaveOperation : SaveAsOperation
 	
 	protected override bool StartProgress()
 	{
-		progressCallback(string.Format("Saving '{0}'", byteBuffer.Filename), ProgressAction.Message);
+		progressCallback(string.Format(Catalog.GetString("Saving '{0}'"), byteBuffer.Filename), ProgressAction.Message);
 		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
 	}
 	
 	protected override void DoOperation()
 	{
-		stageReached=SaveStage.BeforeSaveAs;
-		tempPath=savePath;
+		stageReached = SaveStage.BeforeSaveAs;
+		tempPath = savePath;
 		
 		// Save ByteBuffer as a temp file
 		base.DoOperation();
 		
-		savePath=byteBuffer.Filename;
+		savePath = byteBuffer.Filename;
 		
 		// if user hasn't cancelled, move temp file to 
 		// its final location	
 		if (!cancelled) {
-			stageReached=SaveStage.BeforeDelete;
+			stageReached = SaveStage.BeforeDelete;
 			
 			// close the file, make sure that File Operations
 			// are temporarily allowed
@@ -97,15 +97,15 @@ public class SaveOperation : SaveAsOperation
 				// CloseFile invalidates the file buffer,
 				// so make sure undo/redo data stays valid
 				byteBuffer.MakePrivateCopyOfUndoRedo();
-				byteBuffer.FileOperationsAllowed=true;
+				byteBuffer.FileOperationsAllowed = true;
 				byteBuffer.CloseFile();
-				byteBuffer.FileOperationsAllowed=false;
+				byteBuffer.FileOperationsAllowed = false;
 			}
 			
 			if (System.IO.File.Exists(savePath))
 				System.IO.File.Delete(savePath);
 			
-			stageReached=SaveStage.BeforeMove;
+			stageReached = SaveStage.BeforeMove;
 			System.IO.File.Move(tempPath, savePath);
 		}	
 	}

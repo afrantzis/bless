@@ -99,7 +99,6 @@
     <File name="./src/tools/export/IExporter.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/ByteBuffer.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/ByteBufferAction.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/buffers/ChangeBuffer.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/FileBuffer.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/IBuffer.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/buffers/SaveAsOperation.cs" subtype="Code" buildaction="Compile" />

@@ -24,23 +24,23 @@ namespace Bless.Buffers {
 ///<summary>Represents a portion of a buffer</summary>
 public class Segment {
 
-	IBuffer m_buffer;
+	IBuffer buffer;
 
-	long m_start;
-	long m_end;
+	long start;
+	long end;
 
 	/// <summary>Create a segment of a buffer</summary>
 	public Segment(IBuffer buffer, long start, long end)
 	{
-		m_buffer=buffer;
-		m_start=start;
-		m_end=end;
+		this.buffer = buffer;
+		this.start = start;
+		this.end = end;
 	}
 
 	///<summary>Does this segment contain an offset</summary>
 	public bool Contains(long offset, long mapping) 
 	{
-		if (offset>=mapping && offset<= mapping+m_end-m_start)
+		if (offset >= mapping && offset <= mapping + end - start)
 			return true;
 		else
 			return false;
@@ -49,11 +49,11 @@ public class Segment {
 	///<summary>Split a segment into two</summary>
 	public Segment SplitAt(long pos) 
 	{
-		if (pos > m_end-m_start || pos==0)
+		if (pos > end - start || pos == 0)
 			return null;
  
-		Segment s=new Segment(m_buffer, m_start+pos, m_end);	
-		this.m_end=m_start+pos-1;
+		Segment s = new Segment(buffer, start + pos, end);	
+		this.end = start + pos - 1;
 		
 		return s;
 	}
@@ -62,37 +62,37 @@ public class Segment {
 	{
 		SimpleBuffer sb = new SimpleBuffer();
 		byte[] data = new byte[Size];
-		m_buffer.Read(data, m_start, data.Length);
+		buffer.Read(data, start, data.Length);
 		sb.Append(data, 0, data.Length);
 		
-		m_buffer = sb;
-		m_start = 0;
-		m_end = data.Length - 1;
+		buffer = sb;
+		start = 0;
+		end = data.Length - 1;
 	}
 	
 	public override string ToString() 
 	{
-		return string.Format("({0}->{1})", m_start, m_end);
+		return string.Format("({0}->{1})", start, end);
 	}
 	
 	public long Size {
-		get {return m_end-m_start+1;}	
+		get { return end - start + 1; }	
 	}
 
 	public IBuffer Buffer {
-		get { return m_buffer;}
-		set { m_buffer = value;}
+		get { return buffer;}
+		set { buffer = value;}
 	}
 	
 	
 	public long Start {
-		get { return m_start;}
-		set { m_start=value; }
+		get { return start;}
+		set { start = value; }
 	}
 	
 	public long End {
-		get { return m_end;}
-		set { m_end=value; }
+		get { return end;}
+		set { end = value; }
 	}
 	
 }

@@ -35,19 +35,29 @@ namespace Bless.Buffers {
 ///</summary>
 public class ByteBuffer : IBuffer {
 
+	///<summary>The file buffer associated with the ByteBuffer</summary>
 	internal FileBuffer	fileBuf;
+	
+	///<summary>The collection of segments that comprise the ByteBuffer</summary>
 	internal SegmentCollection segCol;
+	
+	///<summary>Double ended queues to hold undo/redo actions</summary>
 	Deque<ByteBufferAction> undoDeque;
 	Deque<ByteBufferAction> redoDeque;
-	object SaveCheckpoint;
+	
+	///<summary>The last action before a Save was made</summary>
+	ByteBufferAction SaveCheckpoint;
+	
+	///<summary>Watches the file for external changes (outside Bless)</summary>
 	FileSystemWatcher fsw;
+	
 	int maxUndoActions;
 	bool changedBeyondUndo;
 	string tempDir;
 	
 	// automatic file naming
 	string autoFilename;
-	static int autoNum=1;
+	static int autoNum = 1;
 	
 	internal long size;
 	
@@ -56,8 +66,13 @@ public class ByteBuffer : IBuffer {
 	bool actionChainingFirst;
 	MultiAction multiAction;
 	
+	
+	///<summary>
+	///  Object to use for synchronized access to the ByteBuffer
+	///</summary>
+	readonly public object LockObj = new object();
+	
 	// buffer permissions
-	readonly public object LockObj=new object();
 	bool readAllowed;
 	bool modifyAllowed;
 	bool fileOperationsAllowed;
@@ -119,31 +134,35 @@ public class ByteBuffer : IBuffer {
 	
 	public ByteBuffer() 
 	{
-		segCol=new SegmentCollection();
-		undoDeque= new Deque<ByteBufferAction>();
-		redoDeque= new Deque<ByteBufferAction>();
-		size=0;
-		SaveCheckpoint=null;
+		segCol = new SegmentCollection();
+		undoDeque = new Deque<ByteBufferAction>();
+		redoDeque = new Deque<ByteBufferAction>();
+		size = 0;
+		SaveCheckpoint = null;
 		
 		// name the buffer automatically
-		autoFilename="Untitled " + ByteBuffer.autoNum;
+		autoFilename = "Untitled " + ByteBuffer.autoNum;
 		ByteBuffer.autoNum++;
-		readAllowed=true;
-		fileOperationsAllowed=true;
-		modifyAllowed=true;
-		saveFinishedEvent=new AutoResetEvent(false);
-		saveAsFinishedEvent=new AutoResetEvent(false);
-		useGLibIdle=false;
-		emitEvents=true;
-		maxUndoActions=-1; // unlimited undo
+		
+		// set default permissions 
+		readAllowed = true;
+		fileOperationsAllowed = true;
+		modifyAllowed = true;
+		
+		saveFinishedEvent = new AutoResetEvent(false);
+		saveAsFinishedEvent = new AutoResetEvent(false);
+		useGLibIdle = false;
+		emitEvents = true;
+		
+		maxUndoActions = -1; // unlimited undo
 		tempDir = Path.GetTempPath();
 	}
 	
 	///<summary>Create a ByteBuffer loaded with a file</summary>
 	static public ByteBuffer FromFile(string filename)
 	{
-		ByteBuffer bb=new ByteBuffer();
-		// 64 KB buffer
+		ByteBuffer bb = new ByteBuffer();
+		
 		bb.LoadWithFile(filename);
 		
 		// fix automatic file naming
@@ -155,7 +174,7 @@ public class ByteBuffer : IBuffer {
 	///<summary>Create a ByteBuffer with a dummy-name</summary>
 	public ByteBuffer(string filename): this() 
 	{
-		this.autoFilename=filename;
+		this.autoFilename = filename;
 		
 		// fix automatic file naming
 		ByteBuffer.autoNum--;
@@ -164,18 +183,18 @@ public class ByteBuffer : IBuffer {
 	///<summary>Regard all following actions as a single one</summary>
 	public void BeginActionChaining()
 	{
-		actionChaining=true;
-		actionChainingFirst=true;
-		multiAction=new MultiAction();
-		emitEvents=false;
+		actionChaining = true;
+		actionChainingFirst = true;
+		multiAction = new MultiAction();
+		emitEvents = false;
 	}
 	
 	///<summary>Stop regarding actions as a single one</summary>
 	public void EndActionChaining()
 	{
-		actionChaining=false;
-		actionChainingFirst=false;
-		emitEvents=true;
+		actionChaining = false;
+		actionChainingFirst = false;
+		emitEvents = true;
 		
 		EmitChanged();
 	}
@@ -189,7 +208,7 @@ public class ByteBuffer : IBuffer {
 		// add the multiAction to the undo deque	
 		if (actionChainingFirst) {
 			AddUndoAction(multiAction);
-			actionChainingFirst=false;
+			actionChainingFirst = false;
 		}
 		
 		multiAction.Add(action);
@@ -206,7 +225,7 @@ public class ByteBuffer : IBuffer {
 		if (maxUndoActions!=-1)
 			while (undoDeque.Count >= maxUndoActions) {
 				undoDeque.RemoveEnd();
-				changedBeyondUndo=true;
+				changedBeyondUndo = true;
 			}
 			
 		undoDeque.AddFront(action);
@@ -223,7 +242,7 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {
 			if (!modifyAllowed) return;
 		
-			AppendAction aa=new AppendAction(data, index, length, this);	
+			AppendAction aa = new AppendAction(data, index, length, this);	
 			aa.Do();
 			
 			// if action isn't handled as chained (ActionChaining==false)
@@ -253,10 +272,10 @@ public class ByteBuffer : IBuffer {
 				return;
 			}
 			
-			InsertAction ia=new InsertAction(pos, data, index, length, this);
+			InsertAction ia = new InsertAction(pos, data, index, length, this);
 			ia.Do();
 			
-			// if action isn't handled as chained (ActionChaining==false)
+			// if action isn't handled as chained (ActionChaining == false)
 			// handle it manually
 			if (!HandleChaining(ia)) {		
 				AddUndoAction(ia);
@@ -278,10 +297,10 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {
 			if (!modifyAllowed) return;
 		
-			DeleteAction da=new DeleteAction(pos1, pos2, this);
+			DeleteAction da = new DeleteAction(pos1, pos2, this);
 			da.Do();
 			
-			// if action isn't handled as chained (ActionChaining==false)
+			// if action isn't handled as chained (ActionChaining == false)
 			// handle it manually
 			if (!HandleChaining(da)) {	
 				AddUndoAction(da);
@@ -298,10 +317,10 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {
 			if (!modifyAllowed) return;
 			
-			ReplaceAction ra=new ReplaceAction(pos1, pos2, data, index, length, this);
+			ReplaceAction ra = new ReplaceAction(pos1, pos2, data, index, length, this);
 			ra.Do();
 			
-			// if action isn't handled as chained (ActionChaining==false)
+			// if action isn't handled as chained (ActionChaining == false)
 			// handle it manually
 			if (!HandleChaining(ra)) {
 				AddUndoAction(ra);
@@ -323,9 +342,9 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {	
 			if (!modifyAllowed) return;
 		
-			// while there are more actions
-			if (undoDeque.Count>0) {
-				ByteBufferAction action=undoDeque.RemoveFront();
+			// if there is an action to undo
+			if (undoDeque.Count > 0) {
+				ByteBufferAction action = undoDeque.RemoveFront();
 				action.Undo();
 				redoDeque.AddFront(action);
 				
@@ -341,9 +360,9 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {	
 			if (!modifyAllowed) return;
 			
-			// while there are more actions
-			if (redoDeque.Count>0) {
-				ByteBufferAction action=redoDeque.RemoveFront();
+			// if there is an action to redo
+			if (redoDeque.Count > 0) {
+				ByteBufferAction action = redoDeque.RemoveFront();
 				action.Do();
 				AddUndoAction(action);
 				
@@ -362,23 +381,23 @@ public class ByteBuffer : IBuffer {
 			if (!fileOperationsAllowed) return null;
 			
 			saveAsFinishedEvent.Reset();
-			userSaveAsAsyncCallback=ac;
+			userSaveAsAsyncCallback = ac;
 			
-			SaveAsOperation so=new SaveAsOperation(this, filename, progressCallback, SaveAsAsyncCallback, useGLibIdle);
+			SaveAsOperation so = new SaveAsOperation(this, filename, progressCallback, SaveAsAsyncCallback, useGLibIdle);
 			
 			// don't allow messing up with the buffer
 			// while we are saving
 			// ...ReadAllowed is set in SaveOperation
-			//this.ReadAllowed=false;
-			this.ModifyAllowed=false;
-			this.FileOperationsAllowed=false;
-			this.EmitEvents=false;
-			if (fsw!=null)
-				fsw.EnableRaisingEvents=false;
+			// this.ReadAllowed = false;
+			this.ModifyAllowed = false;
+			this.FileOperationsAllowed = false;
+			this.EmitEvents = false;
+			if (fsw != null)
+				fsw.EnableRaisingEvents = false;
 			
 			// start save thread
-			Thread saveThread=new Thread(so.OperationThread);
-			saveThread.IsBackground=true;
+			Thread saveThread = new Thread(so.OperationThread);
+			saveThread.IsBackground = true;
 			saveThread.Start();
 			
 			return new ThreadedAsyncResult(so, saveAsFinishedEvent, false);
@@ -392,28 +411,31 @@ public class ByteBuffer : IBuffer {
 	void SaveAsAsyncCallback(IAsyncResult ar)
 	{
 		lock (LockObj) {
-			SaveAsOperation so=(SaveAsOperation)ar.AsyncState;
+			SaveAsOperation so = (SaveAsOperation)ar.AsyncState;
 			
 			// re-allow buffer usage
-			this.FileOperationsAllowed=true;
+			this.FileOperationsAllowed = true;
 			
 			
 			// make sure Save As went smoothly before doing anything
 			if (so.Result==SaveAsOperation.OperationResult.Finished) {
+				// make sure data in undo redo are stored safely
+				// because we are going to close the file
 				MakePrivateCopyOfUndoRedo();
 				CloseFile();
 				LoadWithFile(so.SavePath);
 				
 				if (undoDeque.Count > 0)
-					SaveCheckpoint=undoDeque.PeekFront();
+					SaveCheckpoint = undoDeque.PeekFront();
 				else
-					SaveCheckpoint=null;
+					SaveCheckpoint = null;
 					
-				changedBeyondUndo=false;
+				changedBeyondUndo = false;
 			}
-			else { // if cancelled or caught an exception
+			else {
+				// if cancelled or caught an exception
 				// delete the file only if we have altered it
-				if (so.StageReached!=SaveAsOperation.SaveAsStage.BeforeCreate) {
+				if (so.StageReached != SaveAsOperation.SaveAsStage.BeforeCreate) {
 					try {
 						System.IO.File.Delete(so.SavePath);
 					}
@@ -424,20 +446,20 @@ public class ByteBuffer : IBuffer {
 			}
 			
 			// re-allow buffer usage
-			this.ReadAllowed=true;
-			this.ModifyAllowed=true;
+			this.ReadAllowed = true;
+			this.ModifyAllowed = true;
 			
-			this.EmitEvents=true;
+			this.EmitEvents = true;
 			
-			if (fsw!=null)
-				fsw.EnableRaisingEvents=true;
+			if (fsw != null)
+				fsw.EnableRaisingEvents = true;
 			
 			// notify the world about the changes			
 			EmitPermissionsChanged();
 			EmitChanged();
 				
 			// if user provided a callback, call it now
-			if (userSaveAsAsyncCallback!=null)
+			if (userSaveAsAsyncCallback != null)
 				userSaveAsAsyncCallback(ar);
 			
 			// notify that Save As has finished
@@ -454,23 +476,23 @@ public class ByteBuffer : IBuffer {
 			if (!fileOperationsAllowed) return null;
 			
 			saveFinishedEvent.Reset();
-			userSaveAsyncCallback=ac;
+			userSaveAsyncCallback = ac;
 			
-			SaveOperation so=new SaveOperation(this, TempFile.CreateName(tempDir), progressCallback, SaveAsyncCallback, useGLibIdle);
+			SaveOperation so = new SaveOperation(this, TempFile.CreateName(tempDir), progressCallback, SaveAsyncCallback, useGLibIdle);
 			
 			// don't allow messing up with the buffer
 			// while we are saving
 			// ...ReadAllowed is set in SaveOperation
 			//this.ReadAllowed=false;
-			this.ModifyAllowed=false;
-			this.FileOperationsAllowed=false;
+			this.ModifyAllowed = false;
+			this.FileOperationsAllowed = false;
 			
-			this.EmitEvents=false;
-			fsw.EnableRaisingEvents=false;
+			this.EmitEvents = false;
+			fsw.EnableRaisingEvents = false;
 			
 			// start save thread
-			Thread saveThread=new Thread(so.OperationThread);
-			saveThread.IsBackground=true;
+			Thread saveThread = new Thread(so.OperationThread);
+			saveThread.IsBackground = true;
 			saveThread.Start();
 			
 			return new ThreadedAsyncResult(so, saveFinishedEvent, false);
@@ -483,70 +505,70 @@ public class ByteBuffer : IBuffer {
 	void SaveAsyncCallback(IAsyncResult ar)
 	{
 		lock (LockObj) {
-			SaveOperation so=(SaveOperation)ar.AsyncState;
+			SaveOperation so = (SaveOperation)ar.AsyncState;
 			
 			
-			if (so.Result==SaveOperation.OperationResult.Finished) { // save went ok
+			if (so.Result == SaveOperation.OperationResult.Finished) { // save went ok
 				LoadWithFile(so.SavePath);
 				
 				if (undoDeque.Count > 0)
-					SaveCheckpoint=undoDeque.PeekFront();
+					SaveCheckpoint = undoDeque.PeekFront();
 				else
-					SaveCheckpoint=null;
+					SaveCheckpoint = null;
 				
-				changedBeyondUndo=false;
+				changedBeyondUndo = false;
 			}
-			else if (so.Result==SaveOperation.OperationResult.Cancelled) { // save cancelled
-				if (so.StageReached==SaveOperation.SaveStage.BeforeSaveAs) {
+			else if (so.Result == SaveOperation.OperationResult.Cancelled) { // save cancelled
+				if (so.StageReached == SaveOperation.SaveStage.BeforeSaveAs) {
 					System.IO.File.Delete(so.TempPath);
 				}
-				else if (so.StageReached==SaveOperation.SaveStage.BeforeDelete) {
+				else if (so.StageReached == SaveOperation.SaveStage.BeforeDelete) {
 					System.IO.File.Delete(so.TempPath);
 					fileBuf.Load(so.SavePath);
 				}
-				else if (so.StageReached==SaveOperation.SaveStage.BeforeMove) {
+				else if (so.StageReached == SaveOperation.SaveStage.BeforeMove) {
 					// cancel has no effect during move.
 					// mark operation as successful
-					so.Result=SaveOperation.OperationResult.Finished;
+					so.Result = SaveOperation.OperationResult.Finished;
 					LoadWithFile(so.SavePath);
 				
 					if (undoDeque.Count > 0)
-						SaveCheckpoint=undoDeque.PeekFront();
+						SaveCheckpoint = undoDeque.PeekFront();
 					else
-						SaveCheckpoint=null;
+						SaveCheckpoint = null;
 				}
 			}
-			else if (so.Result==SaveOperation.OperationResult.CaughtException) {
-				if (so.StageReached==SaveOperation.SaveStage.BeforeSaveAs) {
+			else if (so.Result == SaveOperation.OperationResult.CaughtException) {
+				if (so.StageReached == SaveOperation.SaveStage.BeforeSaveAs) {
 					System.IO.File.Delete(so.TempPath);
 				}
-				else if (so.StageReached==SaveOperation.SaveStage.BeforeDelete) {
+				else if (so.StageReached == SaveOperation.SaveStage.BeforeDelete) {
 					System.IO.File.Delete(so.TempPath);
 					fileBuf.Load(so.SavePath);
 					// make sure FSW is valid (it is probably not
 					// because bb.CloseFile has been called in SaveOperation)
 					SetupFSW();
 				}
-				else if (so.StageReached==SaveOperation.SaveStage.BeforeMove) {
+				else if (so.StageReached == SaveOperation.SaveStage.BeforeMove) {
 					// TO-DO: better handling?
 					fileBuf.Load(so.SavePath);
 				}
 			}
 			
 			// re-allow buffer usage
-			this.ReadAllowed=true;
-			this.ModifyAllowed=true;
-			this.FileOperationsAllowed=true;
+			this.ReadAllowed = true;
+			this.ModifyAllowed = true;
+			this.FileOperationsAllowed = true;
 			
-			this.EmitEvents=true;
-			fsw.EnableRaisingEvents=true;
+			this.EmitEvents = true;
+			fsw.EnableRaisingEvents = true;
 			
 			// notify the world about the changes			
 			EmitPermissionsChanged();
 			EmitChanged();			
 			
 			// if user provided a callback, call it now
-			if (userSaveAsyncCallback!=null)
+			if (userSaveAsyncCallback != null)
 				userSaveAsyncCallback(ar);
 			
 			// notify that Save has finished	
@@ -564,7 +586,7 @@ public class ByteBuffer : IBuffer {
 			
 			if (this.HasFile) {
 				// reload file
-				string filename=fileBuf.Filename;
+				string filename = fileBuf.Filename;
 				if (!File.Exists(filename))
 					throw new FileNotFoundException(filename);
 			
@@ -576,8 +598,8 @@ public class ByteBuffer : IBuffer {
 				LoadWithFile(filename);
 
 				
-				SaveCheckpoint=null;
-				changedBeyondUndo=false;
+				SaveCheckpoint = null;
+				changedBeyondUndo = false;
 				
 				// emit bytebuffer changed event
 				EmitChanged();		
@@ -606,6 +628,17 @@ public class ByteBuffer : IBuffer {
 		return rangeData;
 	}
 	
+	///<summary>
+	/// Returns as a SegmentCollection the data contained in 
+	/// the specified range in the buffer.  
+	///</summary>
+	public SegmentCollection RangeToSegmentCollection(Range range)
+	{
+		if (range.Size == 0)
+			return null;
+		
+		return segCol.GetRange(range.Start, range.End);
+	}
 	
 	///<summary> 
 	/// Sets the file buffer and resets the segment collection
@@ -613,15 +646,15 @@ public class ByteBuffer : IBuffer {
 	private void LoadWithFile(string filename)
 	{
 		if (fileBuf == null)
-			fileBuf = new FileBuffer(filename, 0xffff);
+			fileBuf = new FileBuffer(filename, 0xffff); // 64KB buffer
 		else {
 			fileBuf.Load(filename);
 		}
 		
-		Segment s=new Segment(fileBuf, 0, fileBuf.Size-1);
-		segCol=new SegmentCollection();
+		Segment s = new Segment(fileBuf, 0, fileBuf.Size-1);
+		segCol = new SegmentCollection();
 		segCol.Append(s);
-		size=fileBuf.Size;
+		size = fileBuf.Size;
 		
 		SetupFSW();
 		
@@ -644,16 +677,15 @@ public class ByteBuffer : IBuffer {
 	private void SetupFSW()
 	{	
 		// monitor the file for changes
-		//
-		if (fsw!=null) {
+		if (fsw != null) {
 			fsw.Dispose();
-			fsw=null;
+			fsw = null;
 		}
 			
-		fsw=new FileSystemWatcher();
-		fsw.Path=Path.GetDirectoryName(fileBuf.Filename);
-		fsw.Filter=Path.GetFileName(fileBuf.Filename);
-		fsw.NotifyFilter=NotifyFilters.FileName|NotifyFilters.LastAccess|NotifyFilters.LastWrite;
+		fsw = new FileSystemWatcher();
+		fsw.Path = Path.GetDirectoryName(fileBuf.Filename);
+		fsw.Filter = Path.GetFileName(fileBuf.Filename);
+		fsw.NotifyFilter = NotifyFilters.FileName|NotifyFilters.LastAccess|NotifyFilters.LastWrite;
 		fsw.Changed += new FileSystemEventHandler(OnFileChanged);
 		//fsw.Deleted += new FileSystemEventHandler(OnFileChanged);
 		
@@ -683,9 +715,9 @@ public class ByteBuffer : IBuffer {
 				
 				long map; 
 				Util.List<Segment>.Node node;
-				Segment seg=segCol.FindSegment(index, out map, out node);
+				Segment seg = segCol.FindSegment(index, out map, out node);
 				//Console.WriteLine("Searching index {0} at {1}:{2}", index, map, seg);
-				if (seg==null)
+				if (seg == null)
 					throw new IndexOutOfRangeException(string.Format("ByteBuffer[{0}]",index));
 				else {
 					try {
@@ -700,7 +732,9 @@ public class ByteBuffer : IBuffer {
 		}
 	}
 	
-	
+	///<summary>
+	/// Close the file associated with the ByteBuffer 
+	///</summary>
 	public void CloseFile()
 	{
 		lock (LockObj) {
@@ -708,7 +742,7 @@ public class ByteBuffer : IBuffer {
 			if (fileBuf != null && fileOperationsAllowed) {
 				fileBuf.Close();
 				fsw.Dispose();
-				fsw=null;
+				fsw = null;
 				segCol = null;
 				// buffer is in an unreadable state...
 				this.ReadAllowed = false;
@@ -736,7 +770,7 @@ public class ByteBuffer : IBuffer {
 
 	public bool HasChanged {
 		get {
-			if (undoDeque.Count>0)
+			if (undoDeque.Count > 0)
 				return (changedBeyondUndo || SaveCheckpoint != undoDeque.PeekFront());
 			else
 				return (changedBeyondUndo || SaveCheckpoint != null);
@@ -745,11 +779,11 @@ public class ByteBuffer : IBuffer {
 	}
 	
 	public bool CanUndo {
-		get { return (undoDeque.Count>0); }
+		get { return (undoDeque.Count > 0); }
 	}
 	
 	public bool CanRedo {
-		get { return (redoDeque.Count>0); }
+		get { return (redoDeque.Count > 0); }
 	}
 	
 	public bool ActionChaining {
@@ -760,19 +794,16 @@ public class ByteBuffer : IBuffer {
 	// (eg Changed event)
 	public bool EmitEvents {
 		get { return emitEvents; }
-		set {
-			emitEvents=value; 
-			//if (emitEvents && Changed!=null)
-			//	Changed(this);
-		}
+		set { emitEvents = value; }
 	}
 	
 	// whether buffer can be safely read
 	// by user eg to display data in a DataView.
+	// if false reading from the buffer just returns zeroes
 	public bool ReadAllowed { 
 		get { return readAllowed; }
 		set { 
-			readAllowed=value;
+			readAllowed = value;
 			EmitPermissionsChanged();
 		}
 	}
@@ -784,7 +815,7 @@ public class ByteBuffer : IBuffer {
 	public bool ModifyAllowed {
 		get { return modifyAllowed;}
 		set { 
-			modifyAllowed=value; 
+			modifyAllowed = value; 
 			EmitPermissionsChanged();
 		}
 	}
@@ -795,7 +826,7 @@ public class ByteBuffer : IBuffer {
 	public bool FileOperationsAllowed {
 		get { return fileOperationsAllowed;}
 		set { 
-			fileOperationsAllowed=value; 
+			fileOperationsAllowed = value; 
 			EmitPermissionsChanged();
 		}
 	}
@@ -804,7 +835,7 @@ public class ByteBuffer : IBuffer {
 	// Mandatory if progress reporting involves Gtk+ widgets.
 	public bool UseGLibIdle {
 		get { return useGLibIdle; }
-		set { useGLibIdle=value; }
+		set { useGLibIdle = value; }
 	}
 	
 	// The maximum number of actions the Buffer
@@ -812,27 +843,34 @@ public class ByteBuffer : IBuffer {
 	public int MaxUndoActions {
 		get { return maxUndoActions; }
 		set { 
-			maxUndoActions=value;
-			if (maxUndoActions!=-1) {
+			maxUndoActions = value;
+			if (maxUndoActions != -1) {
 				// if we are going to remove undo actions,
 				// mark that we won't be able to get back to 
 				// the original buffer state
 				if (undoDeque.Count > maxUndoActions)
-					changedBeyondUndo=true;
+					changedBeyondUndo = true;
+				
 				// clear all undo actions beyond the limit
 				while (undoDeque.Count > maxUndoActions) {
-					ByteBufferAction action = undoDeque.RemoveEnd();
+					undoDeque.RemoveEnd();
 				}
 				
 			}
 		}
 	}
 	
+	///<summary>
+	/// The directory where temporary files are stored 
+	///</summary>
 	public string TempDir {
 		get { return tempDir; }
 		set { tempDir = value;}
 	}
 	
+	///<summary>
+	/// The range of the buffer as a Util.Range 
+	///</summary>
 	public Util.Range Range {
 		get { 
 			Util.Range range = new Util.Range();
@@ -844,7 +882,8 @@ public class ByteBuffer : IBuffer {
 			return range;
 		}
 	}
-	internal void Display(string s) 
+	
+	internal void Display(string s)
 	{
 		Console.Write(s);
 		segCol.List.Display();

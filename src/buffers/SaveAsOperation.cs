@@ -64,10 +64,10 @@ public class SaveAsOperation : ThreadedAsyncOperation
 	{
 #if ENABLE_UNIX_SPECIFIC
 		// get info about the device the file will be saved on
-		Mono.Unix.Native.Statvfs stat=new Mono.Unix.Native.Statvfs();
+		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
 		Mono.Unix.Native.Syscall.statvfs(Path.GetDirectoryName(fn), out stat);
 			
-		long freeSpace=(long)(stat.f_bavail*stat.f_bsize);
+		long freeSpace = (long)(stat.f_bavail * stat.f_bsize);
 			
 		// make sure there is enough disk space in the device
 		if (freeSpace < bb.Size) {
@@ -83,7 +83,7 @@ public class SaveAsOperation : ThreadedAsyncOperation
 	
 	protected override bool StartProgress()
 	{
-		progressCallback(string.Format("Saving '{0}'", SavePath), ProgressAction.Message);
+		progressCallback(string.Format(Catalog.GetString("Saving '{0}'"), SavePath), ProgressAction.Message);
 		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
 	}
 	
@@ -104,64 +104,64 @@ public class SaveAsOperation : ThreadedAsyncOperation
 	
 	protected override void DoOperation()
 	{
-		stageReached=SaveAsStage.BeforeCreate;
+		stageReached = SaveAsStage.BeforeCreate;
 		
 		// try to open in append mode first, so that a sharing violation
 		// doesn't end up with the file truncated (as opposed
 		// to using FileMode.Create)
-		fs=new FileStream(savePath, FileMode.Append, FileAccess.Write);
+		fs = new FileStream(savePath, FileMode.Append, FileAccess.Write);
 		fs.Close();
 		
 		// do the actual create
-		fs=new FileStream(savePath, FileMode.Create, FileAccess.Write);
+		fs = new FileStream(savePath, FileMode.Create, FileAccess.Write);
 		
-		stageReached=SaveAsStage.BeforeWrite;
+		stageReached = SaveAsStage.BeforeWrite;
 		
-		const int blockSize=0xffff;
+		const int blockSize = 0xffff;
 		
-		byte[] baTemp=new byte[blockSize];
+		byte[] baTemp = new byte[blockSize];
 		
 		// for every node
-		Util.List<Segment>.Node node=byteBuffer.segCol.List.First;
+		Util.List<Segment>.Node node = byteBuffer.segCol.List.First;
 		
-		while (node!=null && !cancelled)
+		while (node != null && !cancelled)
 		{
 			// Save the data in the node 
 			// in blocks of blockSize each
-			Segment s=(Segment)node.data;
-			long len=s.Size;
-			long nBlocks=len/blockSize;
-			int last=(int)(len%blockSize); // bytes in last block
+			Segment s = node.data;
+			long len = s.Size;
+			long nBlocks = len/blockSize;
+			int last = (int)(len % blockSize); // bytes in last block
 			long i;
 		
 			// for every full block
-			for (i=0;i<nBlocks;i++) {
-				s.Buffer.Read(baTemp, s.Start+i*blockSize, blockSize);
+			for (i = 0; i < nBlocks; i++) {
+				s.Buffer.Read(baTemp, s.Start + i * blockSize, blockSize);
 				fs.Write(baTemp, 0, blockSize);
-				bytesSaved=(i+1)*blockSize;
+				bytesSaved = (i + 1) * blockSize;
 				
 				if (cancelled)
 					break;	
 			}
 		
 			// if last non-full block is not empty
-			if (last!=0 && !cancelled) {
-				s.Buffer.Read(baTemp, s.Start+i*blockSize, last);
+			if (last != 0 && !cancelled) {
+				s.Buffer.Read(baTemp, s.Start + i * blockSize, last);
 				fs.Write(baTemp, 0, last);
 			}
 					
-			node=node.next;
+			node = node.next;
 		}	
 		
 		fs.Close();
-		fs=null;	
+		fs = null;	
 	}
 	
 	protected override void EndOperation()
 	{
-		if (fs!=null) {
+		if (fs != null) {
 			fs.Close();
-			fs=null;
+			fs = null;
 		}
 	}
 }
