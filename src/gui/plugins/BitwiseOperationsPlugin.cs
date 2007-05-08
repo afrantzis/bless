@@ -277,10 +277,12 @@ public class BitwiseOperationsWidget : Gtk.HBox
 	{
 		if ((OperationType)OperationComboBox.Active == OperationType.Not) {
 			OperandEntry.Sensitive = false;
+			OperandAsComboBox.Sensitive = false;
 			DoOperationButton.Sensitive = true;	
 		}
 		else {
 			OperandEntry.Sensitive = true;
+			OperandAsComboBox.Sensitive = true;
 			OnOperandEntryChanged(null, null);
 		}
 	}
@@ -526,7 +528,7 @@ public class BitwiseOperation : ThreadedAsyncOperation
 		if (byteArray.Length > 0) {
 			long numberOfRepetitions = range.Size / byteArray.Length;
 		
-			// two many repetitions... create new array
+			// too many repetitions... create new array
 			if (numberOfRepetitions > 1024) {
 				int len = ((4096 / byteArray.Length) + 1) * byteArray.Length;
 				operandArray = new byte[len];

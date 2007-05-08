@@ -184,13 +184,13 @@
 			To build and run &app; &appversion; you need:
 			<itemizedlist>
 				<listitem>
-					<para>GTK+ &gt;=2.8.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
+					<para>GTK+ &gt;=2.10.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>mono/.NET runtime and C# compiler &gt;= 1.1.14 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
 				</listitem>
 				<listitem>
-					<para>Gtk#  &gt;=2.8 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
+					<para>Gtk#  &gt;=2.10 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
@@ -1265,8 +1265,8 @@
 				The exporting is based on an export pattern. The pattern consists of string literals and special command strings. 
 				The literals are printed in the output file as they are whereas the command strings tell the exporter to 
 				do something. Commands strings are enclosed in '%'s and specify the command and its parameters. The command 
-				is specified by an uppercase letter and the parameter by lowercase letters. Each letter (whether it corresponds
-				to a command or a paramter) may be followed by an argument enclosed in double quotes '"'.
+				is specified by an uppercase letter and the parameters by lowercase letters. Each letter (whether it corresponds
+				to a command or a parameter) may be followed by an argument enclosed in double quotes '"'.
 			</para>
 			<informaltable>
 				<tgroup cols="3">
@@ -1454,6 +1454,58 @@
 				</varlistentry>
 			</variablelist>
 		</section>
+	</section>
+	
+	<section id="bless-usage-bitwiseops">
+	<title>Performing bitwise operations</title>
+		<para>To access the Bitwise Operations Bar use
+			<menuchoice>
+				<shortcut>
+					<keycombo>
+						<keycap>Ctrl</keycap>
+						<keycap>B</keycap>
+					</keycombo>
+				</shortcut>	
+				<guisubmenu>Tools</guisubmenu>
+				<guimenuitem>Bitwise Operations</guimenuitem>
+			</menuchoice>.
+		</para>
+		<figure>
+			<title>Bitwise Operations Bar</title>
+			<screenshot>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="figures/bless_bitwise_ops.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<phrase>Bitwise Operations Bar</phrase>
+					</textobject>
+				</mediaobject>
+			</screenshot>
+		</figure>
+		<para>
+			To apply a bitwise operation on a range of data:
+			<orderedlist>
+				<listitem>
+					<para>Select the range to apply the operation on (see <xref linkend="bless-usage-edit-basic-select"/>). If no range
+					is selected the operation will be performed on the current offset.
+					The selected range is displayed at the far left of the bar. Clicking
+					on the displayed range cycles the number base used to display it (Hexadecimal, Octal, Decimal).</para>
+				</listitem>
+				<listitem>
+					<para>Select the desired operation from the operations list. Available operations are AND, OR, XOR and NOT.</para>
+				</listitem>
+				<listitem>
+					<para>Type the data to use for the operation in the data text entry (if applicable).</para>
+				</listitem>
+				<listitem>
+					<para>Select the type of the data from the data type list.</para>
+				</listitem>
+				<listitem>
+					<para>Press the <guibutton>Execute</guibutton> button to perform the operation.</para>
+				</listitem>
+			</orderedlist>
+		</para>
 	</section>
 </chapter>
 
