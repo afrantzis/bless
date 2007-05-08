@@ -214,7 +214,11 @@ public class EditOperationsPlugin : GuiPlugin
 		PasteAction=(Action)uim.GetAction("/menubar/Edit/Paste");
 		DeleteAction=(Action)uim.GetAction("/menubar/Edit/Delete");
 		
+		
 		foreach (Action a in editActionGroup.ListActions()) {
+			// for some reason the accelerators are connected twice
+			// ... so disconnect them twice
+			for (int i = 0; i < 2; i++)
 				a.DisconnectAccelerator();	
 		}
 		editAccelCount=0;
