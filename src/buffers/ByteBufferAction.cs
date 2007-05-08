@@ -19,7 +19,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Bless.Buffers {
 
@@ -168,11 +168,11 @@ class ReplaceAction: ByteBufferAction {
 ///<summary>Container fo many related ByteBufferActions</summary>
 class MultiAction: ByteBufferAction {
 
-	ArrayList list;
+	List<ByteBufferAction> list;
 	
 	public MultiAction()
 	{ 
-		list=new ArrayList();
+		list = new List<ByteBufferAction>();
 	}
 	
 	public void Add(ByteBufferAction action)
@@ -182,14 +182,16 @@ class MultiAction: ByteBufferAction {
 	
 	public override void Do()
 	{
-		for(int i=0; i<list.Count; i++)
-			(list[i] as ByteBufferAction).Do();
+		// do the actions in normal order
+		for(int i = 0; i < list.Count; i++)
+			list[i].Do();
 	}
 	
 	public override void Undo()
 	{
-		for(int i=list.Count-1; i>=0; i--)
-			(list[i] as ByteBufferAction).Undo();
+		// undo the actions in reverse order
+		for(int i = list.Count - 1; i >= 0; i--)
+			list[i].Undo();
 	}
 	
 	public override void MakePrivateCopyOfData()
