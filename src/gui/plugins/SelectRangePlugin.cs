@@ -78,7 +78,7 @@ public class SelectRangePlugin : GuiPlugin
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("SelectAllAction", null, null, "<control>A", "Select All",
+			new ActionEntry ("SelectAllAction", null, Catalog.GetString("Select _All"), "<control>A", null,
 			                    new EventHandler(OnSelectAllActivated)),
 			new ActionEntry ("SelectRangeAction", Stock.JumpTo, Catalog.GetString("_Select Range"), "<shift><control>R", null,
 			                    new EventHandler(OnSelectRangeActivated)),
