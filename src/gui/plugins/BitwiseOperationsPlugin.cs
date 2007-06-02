@@ -39,6 +39,7 @@ public class BitwiseOperationsPlugin : GuiPlugin
 {	
 	BitwiseOperationsWidget widget;
 	DataBook dataBook;
+	Gtk.Action performAction;
 	
 	const string uiXml=
 	"<menubar>"+
@@ -69,13 +70,15 @@ public class BitwiseOperationsPlugin : GuiPlugin
 	
 	public override bool Load()
 	{
-		widget = new BitwiseOperationsWidget((DataBook)GetDataBook(mainWindow));
+		AddMenuItems(uiManager);
+		
+		widget = new BitwiseOperationsWidget((DataBook)GetDataBook(mainWindow), performAction);
 		widget.Visible = false;
 		
 		WidgetGroup wgroup = (WidgetGroup)GetWidgetGroup(mainWindow, 0);
 		wgroup.Add(widget);
 		
-		AddMenuItems(uiManager);
+		
 		dataBook.PageAdded += new DataView.DataViewEventHandler(OnDataViewAdded);
 		dataBook.Removed += new RemovedHandler(OnDataViewRemoved);
 		dataBook.SwitchPage += new SwitchPageHandler(OnSwitchPage);
@@ -89,7 +92,7 @@ public class BitwiseOperationsPlugin : GuiPlugin
 		ActionEntry[] actionEntries = new ActionEntry[] {
 			new ActionEntry ("BitwiseOperationsAction", Stock.Execute, Catalog.GetString("_Bitwise Operations"), "<control>B", null,
 			                    new EventHandler(OnBitwiseOperationsActivated)),
-			new ActionEntry ("PerformBitwiseOperationAction", null, Catalog.GetString("Perform Operation"), "<control><shift>B", null,
+			new ActionEntry ("PerformBitwiseOperationAction", Stock.Execute, Catalog.GetString("Perform Operation"), "<control><shift>B", null,
 			                    new EventHandler(OnPerformBitwiseOperation)),			                    
 		};
 		
@@ -98,6 +101,8 @@ public class BitwiseOperationsPlugin : GuiPlugin
 		
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
+		
+		performAction = (Action)uim.GetAction("/DefaultAreaPopup/ExtraAreaPopupItems/PerformBitwiseOperation");
 		
 		uim.EnsureUpdate();
 		
@@ -198,6 +203,7 @@ public class BitwiseOperationsWidget : Gtk.HBox
 	
 	DataBook dataBook;
 	int numberBase;
+	Gtk.Action performAction;
 	
 	enum OperandAsComboIndex { Hexadecimal, Decimal, Octal, Binary, Text }
 	public enum OperationType { And, Or, Xor, Not }
@@ -221,9 +227,10 @@ public class BitwiseOperationsWidget : Gtk.HBox
 		}
 	}
 	
-	public BitwiseOperationsWidget(DataBook db)
+	public BitwiseOperationsWidget(DataBook db, Gtk.Action action)
 	{
 		dataBook = db;
+		performAction = action;
 		
 		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "BitwiseOperationsHBox", "bless");
 		gxml.Autoconnect (this);
@@ -261,10 +268,14 @@ public class BitwiseOperationsWidget : Gtk.HBox
 	
 	void OnOperandEntryChanged(object o, EventArgs args)
 	{
-		if (OperandEntry.Text.Length > 0)
+		if (OperandEntry.Text.Length > 0) {
 			DoOperationButton.Sensitive = true;
-		else
+			performAction.Sensitive = true;
+		}
+		else {
 			DoOperationButton.Sensitive = false;
+			performAction.Sensitive = false;
+		}
 	}
 	
 	void OnOperandEntryActivated(object o, EventArgs args)
@@ -278,7 +289,8 @@ public class BitwiseOperationsWidget : Gtk.HBox
 		if ((OperationType)OperationComboBox.Active == OperationType.Not) {
 			OperandEntry.Sensitive = false;
 			OperandAsComboBox.Sensitive = false;
-			DoOperationButton.Sensitive = true;	
+			DoOperationButton.Sensitive = true;
+			performAction.Sensitive = true;
 		}
 		else {
 			OperandEntry.Sensitive = true;
