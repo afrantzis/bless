@@ -36,17 +36,15 @@ public class ProgressDisplayPlugin : GuiPlugin
 {
 	ProgressDisplayWidget widget;
 	Window mainWindow;
-	UIManager uiManager;
 	
 	
 	public ProgressDisplayPlugin(Window mw, UIManager uim)
 	{
 		mainWindow = mw;
-		uiManager=uim;
 		
-		name="ProgressDisplay";
-		author="Alexandros Frantzis";
-		description="Progress Display Bar";
+		name = "ProgressDisplay";
+		author = "Alexandros Frantzis";
+		description = "Progress Display Bar";
 		loadAfter.Add("Infobar");
 	}
 	

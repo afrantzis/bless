@@ -1,3 +1,12 @@
+Bless v0.5.1 20070602
+---------------------
+
+* New Select All action.
+* Plugin to perform bitwise operations on data.
+* Added right-click popup menus.
+* Workaround for Mono 1.1.x bug that caused incomplete gui (gna.org #8975)
+* Various bug fixes (gna.org #8916, #9084, #9094)
+
 Bless v0.5.0 20070330
 ---------------------
 
@@ -8,10 +17,10 @@ Bless v0.5.0 20070330
 * Localization support.
 * New ways to select data ranges.
 
-Bless v0.4.1 20060803                                                           
----------------------                                                           
-                                                                                
-* Fixed compilation problems with newer versions of Mono.                       
+Bless v0.4.1 20060803                                                  
+---------------------
+                     
+* Fixed compilation problems with newer versions of Mono.
 * Added a work-around for the long standing garbled display issue (See README). 
 
 Bless v0.4.0 20051009

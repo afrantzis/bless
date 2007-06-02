@@ -7,6 +7,7 @@
       <Entry build="False" name="bless" configuration="Debug" />
     </Configuration>
   </Configurations>
+  <DeployTargets />
   <StartMode startupentry="bless" single="True">
     <Execute type="None" entry="bless" />
   </StartMode>
