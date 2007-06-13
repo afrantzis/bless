@@ -27,6 +27,7 @@ using Gtk;
 using Glade;
 using Bless.Buffers;
 using Bless.Gui;
+using Bless.Gui.Areas;
 using Bless.Gui.Dialogs;
 using Bless.Tools.Find;
 using Bless.Tools;
@@ -188,10 +189,16 @@ public class BlessMain
 		Services.UI=new UIService(uiManager);
 		//Services.Info=new InfoService(infobar);
 		
+		// Add area plugins
+		PluginManager areaPlugins=new PluginManager(typeof(AreaPlugin), new object[0]);
+		foreach (AreaPlugin p in areaPlugins.Plugins) {
+			Area.AddFactoryItem(p.Name, p.CreateArea);
+		}
+		
+		// Load GUI plugins
 		PluginManager guiPlugins=new PluginManager(typeof(GuiPlugin), new object[]{MainWindow, uiManager});
 		foreach (Plugin p in guiPlugins.Plugins) {
 			guiPlugins.LoadPlugin(p);
-			//Console.WriteLine("Loaded Plugin: {0}", p.Name);
 		}
 		
 		// load recent file history

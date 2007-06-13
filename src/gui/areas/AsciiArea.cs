@@ -22,8 +22,23 @@ using System;
 using Gtk;
 using Gdk;
 using Bless.Gui.Drawers;
+using Bless.Plugins;
 
 namespace Bless.Gui.Areas {
+
+public class AsciiAreaPlugin : AreaPlugin
+{
+	public AsciiAreaPlugin()
+	{
+		name = "ascii";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new AsciiArea();
+	}
+} 
 
 ///<summary>An area that displays ascii</summary>
 public class AsciiArea : Area {
@@ -178,6 +193,13 @@ public class AsciiArea : Area {
 		else
 			return false;
 	}
+	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new AsciiDrawer(da, drawerInformation);
+		base.Realize(da);	
+	}
+
 }
 
 

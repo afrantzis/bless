@@ -22,6 +22,7 @@ using System;
 using Gtk;
 using Gdk;
 using Bless.Gui.Drawers;
+using System.Xml;
 
 namespace Bless.Gui.Areas {
 
@@ -193,7 +194,16 @@ abstract public class GroupedArea : Area {
 	
 	}
 	
-
+	public override void Configure(XmlNode parentNode)
+	{
+		base.Configure(parentNode);
+		
+		XmlNodeList childNodes = parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name == "grouping")
+				this.Grouping = Convert.ToInt32(node.InnerText);
+		}
+	}
 
 }// end GroupedArea
 

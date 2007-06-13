@@ -49,6 +49,16 @@
 	<dir>gui/areas</dir>
 </module>
 
+<module name="Bless.Gui.Areas.Plugins">
+	<depends>Bless.Gui.Areas</depends>
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<depends>Bless.Gui.Drawers</depends>
+	<depends>Bless.Plugins</depends>
+	<dir>gui/areas</dir>
+</module>
+
+
 <module name="Bless.Gui.Drawers">
 	<dir>gui/drawers</dir>
 </module>
@@ -56,6 +66,7 @@
 <module name="Bless.Plugins">
 	<depends>Bless.Util</depends>
 	<depends>Bless.Tools.Export</depends>
+	<depends>Bless.Gui.Areas</depends>
 	<dir>plugins</dir>
 </module>
 
@@ -90,6 +101,7 @@
 	<depends>Bless.Plugins</depends>
 	<depends>Bless.Gui.Plugins</depends>
 	<depends>Bless.Tools.Export.Plugins</depends>
+	<depends>Bless.Gui.Areas.Plugins</depends>
 	<dir>gui</dir>
 </module>
 

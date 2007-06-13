@@ -18,9 +18,26 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+using System.Xml;
+using Bless.Plugins;
+using Bless.Gui.Drawers;
+using Gtk;
 
 namespace Bless.Gui.Areas {
 
+public class HexAreaPlugin : AreaPlugin
+{
+	public HexAreaPlugin()
+	{
+		name = "hexadecimal";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new HexArea();
+	}
+} 
 ///<summary>An area that displays hexadecimal</summary>
 public class HexArea : GroupedArea {
 	
@@ -86,6 +103,23 @@ public class HexArea : GroupedArea {
 				
 		} else
 			return false;
+	}
+	
+	public override void Configure(XmlNode parentNode)
+	{
+		base.Configure(parentNode);
+		
+		XmlNodeList childNodes = parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name == "case")
+				drawerInformation.Uppercase = (node.InnerText == "upper");
+		}
+	}
+	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new HexDrawer(da, drawerInformation);
+		base.Realize(da);	
 	}
 }
 

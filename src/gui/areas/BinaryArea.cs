@@ -18,8 +18,25 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+using Bless.Plugins;
+using Bless.Gui.Drawers;
+using Gtk;
 
 namespace Bless.Gui.Areas {
+
+public class BinaryAreaPlugin : AreaPlugin
+{
+	public BinaryAreaPlugin()
+	{
+		name = "binary";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new BinaryArea();
+	}
+} 
 
 ///<summary>An area that displays binary</summary>
 public class BinaryArea : GroupedArea {
@@ -68,7 +85,12 @@ public class BinaryArea : GroupedArea {
 		else
 			return false;
 	}
-
+	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new BinaryDrawer(da, drawerInformation);
+		base.Realize(da);	
+	}
 }
 
 }//namespace

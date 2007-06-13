@@ -23,8 +23,23 @@ using Gtk;
 using Gdk;
 using Bless.Gui.Drawers;
 using Bless.Util;
+using Bless.Plugins;
 
 namespace Bless.Gui.Areas {
+
+public class SeparatorAreaPlugin : AreaPlugin
+{
+	public SeparatorAreaPlugin()
+	{
+		name = "separator";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new SeparatorArea();
+	}
+} 
 
 ///<summary>An area that contains a vertical separator line</summary>
 public class SeparatorArea : Area {
@@ -37,13 +52,15 @@ public class SeparatorArea : Area {
 		type="separator";
 	}
 	
-	public override void Realize(Gtk.DrawingArea da, Drawer d)
+	public override void Realize(Gtk.DrawingArea da)
 	{
-		base.Realize(da, d);
+		drawer = new DummyDrawer(da, drawerInformation);
 		
-		lineGC=new Gdk.GC(da.GdkWindow);
+		lineGC = new Gdk.GC(da.GdkWindow);
 		
-		lineGC.RgbFgColor=drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even];
+		lineGC.RgbFgColor = drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even];
+		
+		base.Realize(da);
 	}
 	
 	protected override void RenderRange(Bless.Util.Range range, Drawer.HighlightType ht)

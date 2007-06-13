@@ -24,8 +24,24 @@ using Gtk;
 using Gdk;
 using Bless.Gui.Drawers;
 using Bless.Util;
+using System.Xml;
+using Bless.Plugins;
 
 namespace Bless.Gui.Areas {
+
+public class OffsetAreaPlugin : AreaPlugin
+{
+	public OffsetAreaPlugin()
+	{
+		name = "offset";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new OffsetArea();
+	}
+} 
 
 ///<summary>An area that display the offsets</summary>
 public class OffsetArea : Area {
@@ -161,6 +177,25 @@ public class OffsetArea : Area {
 	public override void MoveCursor(long offset, int digit)
 	{
 		MoveCursorNoRender(offset, digit);
+	}
+	
+	public override void Configure(XmlNode parentNode)
+	{
+		base.Configure(parentNode);
+		
+		XmlNodeList childNodes = parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name == "case")
+				drawerInformation.Uppercase = (node.InnerText == "upper");
+			if (node.Name == "bytes")
+				this.Bytes = Convert.ToInt32(node.InnerText);
+		}
+	}
+	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new HexDrawer(da, drawerInformation);
+		base.Realize(da);	
 	}
 }
 

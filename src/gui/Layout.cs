@@ -18,7 +18,7 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Xml;
 using System.IO;
@@ -35,13 +35,13 @@ namespace Bless.Gui {
 ///</summary>
 public class Layout {
 
-	ArrayList areas;
+	List<Area> areas;
 	XmlDocument layoutDoc;
 	Drawer font;
 	string filePath;
 	DateTime timeStamp;
 	
-	public ArrayList Areas {
+	public List<Area> Areas {
 		get {return areas;}
 	}
 	
@@ -55,7 +55,7 @@ public class Layout {
 	
 	public Layout() 
 	{
-		areas=new ArrayList();
+		areas=new List<Area>();
 		layoutDoc=new XmlDocument();
 		filePath=null;
 	}
@@ -96,34 +96,8 @@ public class Layout {
 				continue;
 			
 			areas.Add(area);
-			
-			switch(type) {
-				case "hexadecimal":
-					ConfigureHex(areaNode, (area as HexArea));
-					break;
-				case "decimal":
-					ConfigureDecimal(areaNode, (area as DecimalArea));
-					break;
-				case "octal":
-					ConfigureOctal(areaNode, (area as OctalArea));
-					break;
-				case "binary":
-					ConfigureBinary(areaNode, (area as BinaryArea));
-					break;
-				case "ascii":
-					ConfigureAscii(areaNode, (area as AsciiArea));
-					break;
-				case "separator":
-					ConfigureSeparator(areaNode, (area as SeparatorArea));
-					break;
-				case "offset":
-					ConfigureOffset(areaNode, (area as OffsetArea));
-					break;					
-				default:
-					break;	
-			}
-		
-		} // end foreach
+			area.Configure(areaNode);
+		}
 		
 		// give the focus to the first applicable area
 		foreach(Area a in areas) {
@@ -142,231 +116,12 @@ public class Layout {
 	}
 	
 	///<summary>
-	/// Realizes the areas. If sharedLayout is not null, use its 
-	/// resources instead of creating new ones.
+	/// Realizes the areas.
 	///</summary>
 	public void Realize(Gtk.DrawingArea da)
 	{	
-		foreach(Area area in areas) {
-			Drawer d=null;
-			
-			switch(area.Type) {
-				case "hexadecimal":
-					d=new HexDrawer(da, area.DrawerInformation);
-					break;
-				case "decimal":
-					d=new DecimalDrawer(da, area.DrawerInformation);
-					break;
-				case "octal":
-					d=new OctalDrawer(da, area.DrawerInformation);
-					break;
-				case "binary":
-					d=new BinaryDrawer(da, area.DrawerInformation);
-					break;
-				case "ascii":
-					d=new AsciiDrawer(da, area.DrawerInformation);
-					break;
-				case "separator":
-					d=new DummyDrawer(da, area.DrawerInformation);
-					break;
-				case "offset":
-					d=new HexDrawer(da, area.DrawerInformation);
-					break;					
-				default:
-					break;	
-			}
-			
-			if (d!=null)
-				area.Realize(da, d); 
-		} // end foreach
-		
-	}
-	
-	///<summary>Configures a grouped area with the properties in the node</summary>
-	void ConfigureGrouped(XmlNode parentNode, GroupedArea area) 
-	{
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="bpr")
-				area.FixedBytesPerRow=Convert.ToInt32(node.InnerText);
-			if (node.Name=="grouping")
-				area.Grouping=Convert.ToInt32(node.InnerText);
-		}							
-	}
-	
-	///<summary>Configures a hex area with the properties in the node</summary>
-	void ConfigureHex(XmlNode parentNode, HexArea area) 
-	{
-		ConfigureGrouped(parentNode, area);
-		
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="case")
-				info.Uppercase=(node.InnerText=="upper");	
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}							
-		
-		area.DrawerInformation=info;
-	}
-
-	///<summary>Configure a decimal area with the properties in the node</summary>	
-	void ConfigureDecimal(XmlNode parentNode, DecimalArea area)
-	{
-		ConfigureGrouped(parentNode, area);
-		
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}
-		
-		area.DrawerInformation=info;
-	}
-
-	///<summary>Configure a octal area with the properties in the node</summary>		
-	void ConfigureOctal(XmlNode parentNode, OctalArea area)
-	{
-		ConfigureGrouped(parentNode, area);
-		
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}
-		
-		area.DrawerInformation=info;
-	}
-	
-	///<summary>Configure a binary area with the properties in the node</summary>
-	void ConfigureBinary(XmlNode parentNode, BinaryArea area)
-	{
-		ConfigureGrouped(parentNode, area);
-		
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}
-		
-		area.DrawerInformation=info;
-	}
-	
-	///<summary>Configure an ascii area with the properties in the node</summary>
-	void ConfigureAscii(XmlNode parentNode, AsciiArea area)
-	{
-		Drawer.Information info=new Drawer.Information();
-
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="bpr")
-				area.FixedBytesPerRow=Convert.ToInt32(node.InnerText);
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}
-		
-		area.DrawerInformation=info;
-	}
-	
-	///<summary>Configure a separator area with the properties in the node</summary>
-	void ConfigureSeparator(XmlNode parentNode, SeparatorArea area)
-	{
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-		}
-		
-		area.DrawerInformation=info;
-	}
-	
-	///<summary>Configure an offset area with the properties in the node</summary>
-	void ConfigureOffset(XmlNode parentNode, OffsetArea area)
-	{
-		Drawer.Information info=new Drawer.Information();
-		
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="case")
-				info.Uppercase=(node.InnerText=="upper");
-			if (node.Name=="display")
-				ParseDisplay(node, info);
-			if (node.Name=="bytes")
-				area.Bytes=Convert.ToInt32(node.InnerText);
-		}
-		
-		area.DrawerInformation=info;
-	}
-	///<summary>Parse the <display> tag in layout files</summary>
-	void ParseDisplay(XmlNode parentNode, Drawer.Information info) 
-	{
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="evenrow")
-				ParseDisplayRow(node, info, Drawer.RowType.Even);
-			else if (node.Name=="oddrow")
-				ParseDisplayRow(node, info, Drawer.RowType.Odd);
-			else if (node.Name=="font")
-				info.FontName=node.InnerText;
-		}		
-	}
-	
-	void ParseDisplayRow(XmlNode parentNode, Drawer.Information info, Drawer.RowType rowType)
-	{
-		Gdk.Color fg, bg;
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			ParseDisplayType(node, out fg, out bg);
-			
-			if (node.Name=="evencolumn") {	
-				if (!bg.Equal(Gdk.Color.Zero))
-					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Even]=bg;
-				if (!fg.Equal(Gdk.Color.Zero))
-					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Even]=fg;
-			}
-			else if (node.Name=="oddcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
-					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Odd]=bg;
-				if (!fg.Equal(Gdk.Color.Zero))
-					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Odd]=fg;
-			}
-			else if (node.Name=="selectedcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
-					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection]=bg;
-				if (!fg.Equal(Gdk.Color.Zero))
-					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection]=fg;
-			}
-			else if (node.Name=="patternmatchcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
-					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch]=bg;
-				if (!fg.Equal(Gdk.Color.Zero))
-					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch]=fg;
-			}
-		}
-	}
-	
-	///<summary>Parse a font type</summary>
-	void ParseDisplayType(XmlNode parentNode, out Gdk.Color fg, out Gdk.Color bg)
-	{
-		fg=Gdk.Color.Zero;
-		bg=Gdk.Color.Zero;
-		XmlNodeList childNodes=parentNode.ChildNodes;
-		foreach(XmlNode node in childNodes) {
-			if (node.Name=="foreground")
-				Gdk.Color.Parse(node.InnerText, ref fg);
-			if (node.Name=="background")
-				Gdk.Color.Parse(node.InnerText, ref bg);
-		}
+		foreach(Area a in areas)
+			a.Realize(da);		
 	}
 	
 	///<summary>Dispose the pixmap resources used by the layout</summary>

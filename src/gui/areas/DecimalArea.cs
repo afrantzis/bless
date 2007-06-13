@@ -18,8 +18,25 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+using Bless.Plugins;
+using Bless.Gui.Drawers;
+using Gtk;
 
 namespace Bless.Gui.Areas {
+
+public class DecimalAreaPlugin : AreaPlugin
+{
+	public DecimalAreaPlugin()
+	{
+		name = "decimal";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new DecimalArea();
+	}
+} 
 
 ///<summary>An area that displays decimal</summary>
 public class DecimalArea : GroupedArea {
@@ -81,7 +98,12 @@ public class DecimalArea : GroupedArea {
 		} else
 			return false;
 	}
-
+	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new DecimalDrawer(da, drawerInformation);
+		base.Realize(da);	
+	}
 }
 
 }//namespace

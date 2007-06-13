@@ -23,6 +23,8 @@ using Bless.Gui.Drawers;
 using Bless.Util; 
 using Bless.Buffers;
 using Bless.Tools.Find;
+using System.Collections.Generic;
+using System.Xml;
   
 namespace Bless.Gui.Areas {
 
@@ -91,39 +93,31 @@ public abstract class Area {
 	///</summary>
 	abstract public int CalcWidth(int n, bool force);
 	
-	static public Area Factory(string name)
-	{
-		Area a;
-		
-		switch (name) {
-			case "hexadecimal":
-				a=new HexArea();
-				break;
-			case "binary":
-				a=new BinaryArea();
-				break;
-			case "decimal":
-				a=new DecimalArea();
-				break;
-			case "octal":
-				a=new OctalArea();
-				break;
-			case "ascii":
-				a=new AsciiArea();
-				break;
-			case "separator":
-				a=new SeparatorArea();
-				break;
-			case "offset":
-				a=new OffsetArea();
-				break;				
-			default:
-				a=null;
-				break;
-		}	
-		
-		return a;
+	public delegate Area AreaCreatorFunc();
 	
+	static private Dictionary<string, AreaCreatorFunc> pluginTable;
+	
+	static public void AddFactoryItem(string name, AreaCreatorFunc createArea)
+	{
+		if (pluginTable == null) {
+			pluginTable = new Dictionary<string, AreaCreatorFunc>();
+		}
+		System.Console.WriteLine("Adding plugin name {0}", name);
+		pluginTable.Add(name, createArea);
+	}
+	
+	static public Area Factory(string name)
+	{	
+		
+		try {
+			AreaCreatorFunc acf = pluginTable[name];
+			return acf();
+		}
+		catch(KeyNotFoundException e) {
+			System.Console.WriteLine(e.Message);
+		}
+		
+		return null;
 	}
 	
 	///<summary>
@@ -141,16 +135,91 @@ public abstract class Area {
 		
 		findStrategy=new BMFindStrategy();
 		
+		drawerInformation = new Drawer.Information();
+		
 		canFocus=false;
 		dpb=1024; // arbitrary large int
 		fixedBpr=-1;
 		isAreaRealized=false;
 	}
 	
+	public virtual void Configure(XmlNode parentNode)
+	{
+		XmlNodeList childNodes = parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name == "bpr")
+				this.FixedBytesPerRow = System.Convert.ToInt32(node.InnerText);
+			if (node.Name == "display")
+				ParseDisplay(node, drawerInformation);
+		}
+	}
+	
+	///<summary>Parse the <display> tag in layout files</summary>
+	void ParseDisplay(XmlNode parentNode, Drawer.Information info) 
+	{
+		XmlNodeList childNodes=parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name=="evenrow")
+				ParseDisplayRow(node, info, Drawer.RowType.Even);
+			else if (node.Name=="oddrow")
+				ParseDisplayRow(node, info, Drawer.RowType.Odd);
+			else if (node.Name=="font")
+				info.FontName=node.InnerText;
+		}		
+	}
+	
+	void ParseDisplayRow(XmlNode parentNode, Drawer.Information info, Drawer.RowType rowType)
+	{
+		Gdk.Color fg, bg;
+		XmlNodeList childNodes=parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			ParseDisplayType(node, out fg, out bg);
+			
+			if (node.Name=="evencolumn") {	
+				if (!bg.Equal(Gdk.Color.Zero))
+					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Even]=bg;
+				if (!fg.Equal(Gdk.Color.Zero))
+					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Even]=fg;
+			}
+			else if (node.Name=="oddcolumn") {
+				if (!bg.Equal(Gdk.Color.Zero))
+					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Odd]=bg;
+				if (!fg.Equal(Gdk.Color.Zero))
+					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Odd]=fg;
+			}
+			else if (node.Name=="selectedcolumn") {
+				if (!bg.Equal(Gdk.Color.Zero))
+					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection]=bg;
+				if (!fg.Equal(Gdk.Color.Zero))
+					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection]=fg;
+			}
+			else if (node.Name=="patternmatchcolumn") {
+				if (!bg.Equal(Gdk.Color.Zero))
+					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch]=bg;
+				if (!fg.Equal(Gdk.Color.Zero))
+					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch]=fg;
+			}
+		}
+	}
+	
+	///<summary>Parse a font type</summary>
+	void ParseDisplayType(XmlNode parentNode, out Gdk.Color fg, out Gdk.Color bg)
+	{
+		fg=Gdk.Color.Zero;
+		bg=Gdk.Color.Zero;
+		XmlNodeList childNodes=parentNode.ChildNodes;
+		foreach(XmlNode node in childNodes) {
+			if (node.Name=="foreground")
+				Gdk.Color.Parse(node.InnerText, ref fg);
+			if (node.Name=="background")
+				Gdk.Color.Parse(node.InnerText, ref bg);
+		}
+	}
+	
 	///<summary>
 	/// Realize the area.
 	///</summary>
-	public virtual void Realize(Gtk.DrawingArea da, Drawer d)
+	public virtual void Realize(Gtk.DrawingArea da)
 	{
 		drawingArea=da;
 		
@@ -159,7 +228,6 @@ public abstract class Area {
 		activeCursorGC=new Gdk.GC(da.GdkWindow);
 		inactiveCursorGC=new Gdk.GC(da.GdkWindow);
 		
-		drawer=d; 
 		Gdk.Color col=new Gdk.Color();
 		
 		

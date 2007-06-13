@@ -18,8 +18,25 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+using Bless.Plugins;
+using Bless.Gui.Drawers;
+using Gtk;
 
 namespace Bless.Gui.Areas {
+
+public class OctalAreaPlugin : AreaPlugin
+{
+	public OctalAreaPlugin()
+	{
+		name = "octal";
+		author = "Alexandros Frantzis";
+	}
+
+	public override Area CreateArea()
+	{
+		return new OctalArea();
+	}
+}
 
 ///<summary>An area that displays octal</summary>
 public class OctalArea : GroupedArea {
@@ -83,6 +100,11 @@ public class OctalArea : GroupedArea {
 			return false;
 	}
 	
+	public override void Realize (DrawingArea da)
+	{
+		drawer = new OctalDrawer(da, drawerInformation);
+		base.Realize(da);	
+	}
 }
 
 }//namespace
