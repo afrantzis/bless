@@ -193,17 +193,20 @@ public class FileService
 	public ByteBuffer OpenFile(string filename)
 	{
 		Uri uri;
+		string fullPath = null;
 		
 		// handle normal paths, as well as uris
 		try {
 			// first try filename as a uri
 			uri=new Uri(filename);
+			// get an unescaped representation of the uri
+			fullPath = uri.LocalPath;
 		}
 		catch {
 			try {
 				// filename is not a uri...
 				// try to expand it as a local path
-				uri=new Uri(Path.Combine("file://", Path.GetFullPath(filename)));
+				fullPath = Path.GetFullPath(filename);
 			}
 			catch(Exception ex) {
 				string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), filename);
@@ -214,8 +217,6 @@ public class FileService
 			}
 		}
 		
-		// get an unescaped representation of the uri
-		string fullPath=uri.LocalPath;
 		
 		try {	
 			ByteBuffer bb = ByteBuffer.FromFile(fullPath);
