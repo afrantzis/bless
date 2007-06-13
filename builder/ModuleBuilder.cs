@@ -8,15 +8,24 @@ namespace BlessBuilder {
 
 public enum BuildStatus { UpToDate, Rebuilt, Failed };
 
+public class ModuleDependencyException : System.Exception 
+{ 
+	public ModuleDependencyException(string msg)
+	: base(msg)
+	{ }
+}
+
 public class ModuleBuilder
 {	
 	private ModuleTree moduleTree;
 	private List<string> extraOptions;
+	private List<string> modulesVisited;
 	
 	public ModuleBuilder(ModuleTree moduleTree)
 	{
 		this.moduleTree=moduleTree;
 		this.extraOptions = new List<string>();
+		this.modulesVisited = new List<string>();
 	}
 	
 	public void AddOption(string option)
@@ -35,6 +44,17 @@ public class ModuleBuilder
 	
 	public BuildStatus Build(Module module)
 	{
+		// detect cyclic dependencies
+		if (modulesVisited.Contains(module.Name)) {
+			modulesVisited.Add(module.Name);
+			string sa = "Cyclic dependency detected: ";
+			foreach (string s in modulesVisited)
+				sa += "->" + s;
+			throw new ModuleDependencyException(sa);
+		}
+		
+		modulesVisited.Add(module.Name);
+		
 		BuildStatus status=BuildStatus.UpToDate;
 		
 		string output=moduleTree.GetOutputFile(module);
@@ -56,8 +76,10 @@ public class ModuleBuilder
 			sb.Append("-r:"+depOutput+" ");
 		}
 		
+		modulesVisited.Remove(module.Name);
+		
 		if (module.UpToDate && status==BuildStatus.UpToDate) {
-			//System.Console.WriteLine("{0} Already Built", module.Name);
+			//System.Console.WriteLine("{0} Already Built", module.Name);	
 			return BuildStatus.UpToDate;
 		}
 		
@@ -82,7 +104,7 @@ public class ModuleBuilder
 		
 		sb.Append(module.Extra);
 		
-		//System.Console.WriteLine("mcs {0}", sb.ToString());
+		//System.Console.WriteLine("gmcs {0}", sb.ToString());
 		System.Console.WriteLine(">> Building module {0}...", module.Name);
 		
 		Process buildProcess=Process.Start("gmcs", sb.ToString());
