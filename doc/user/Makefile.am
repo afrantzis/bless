@@ -16,7 +16,7 @@ $(OMF): $(OMF).in
 	fi
 
 doc:
-	xsltproc /usr/share/xml/docbook/xsl-stylesheets-current/html/chunk.xsl bless-manual.xml
+	xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/html/chunk.xsl bless-manual.xml
 
 dist-hook: doc
 	cp --parents $(DOCS) $(OMF).in $(wildcard *.html) $(FIGURES) $(distdir)

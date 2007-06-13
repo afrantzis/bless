@@ -13,7 +13,6 @@
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
-  <DeployTargets />
   <Contents>
     <File name="./src/gui/DataView.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/MainWindow.cs" subtype="Code" buildaction="Compile" />
@@ -21,7 +20,6 @@
     <File name="./src/gui/dialogs" subtype="Directory" buildaction="Compile" />
     <File name="./src/gui/dialogs/LayoutSelectionDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas" subtype="Directory" buildaction="Compile" />
-    <File name="./src/gui/areas/Area.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas/AsciiArea.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas/BinaryArea.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas/DecimalArea.cs" subtype="Code" buildaction="Compile" />
@@ -136,8 +134,9 @@
     <File name="./src/gui/UIService.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/ProgressDisplayPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/BitwiseOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/plugins/AreaPlugin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/gui/areas/Area.cs" subtype="Code" buildaction="Compile" />
   </Contents>
-  <References />
   <DeploymentInformation strategy="File">
     <excludeFiles />
   </DeploymentInformation>
