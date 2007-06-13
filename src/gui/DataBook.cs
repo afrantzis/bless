@@ -229,15 +229,14 @@ class DataBookTabLabel : Gtk.HBox
 		
 		label=new Gtk.Label(str);
 		label.UseMarkup=true;
+		label.UseUnderline = false;
 		
 		Gtk.Image img=new Gtk.Image(Gtk.Stock.Close, Gtk.IconSize.Menu);
 		img.SetSizeRequest(8, 8);
 		
 		// This doesn't compile in 1.0.2 and older,
 		// keep it for later eg gtk# 2.0
-		// closeButton=new Gtk.Button(img);
-		closeButton=new Gtk.Button();
-		closeButton.Add(img);
+		closeButton=new Gtk.Button(img);
 		
 		closeButton.Relief=Gtk.ReliefStyle.None;
 		closeButton.Clicked+=OnCloseClicked;
