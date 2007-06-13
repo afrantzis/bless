@@ -36,73 +36,73 @@ public class DecimalAreaPlugin : AreaPlugin
 	{
 		return new DecimalArea();
 	}
-} 
+}
 
 ///<summary>An area that displays decimal</summary>
 public class DecimalArea : GroupedArea {
-	
+
 	public DecimalArea()
-	: base()
+			: base()
 	{
-		type="decimal";
-		dpb=3;
+		type = "decimal";
+		dpb = 3;
 	}
-	
+
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
 		//System.Console.WriteLine("Decimal: {0}", key);
-		
+
 		if ((key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_9) || (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_9)) {
 			byte b;
 			if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_9)
 				b = (byte)(key - Gdk.Key.Key_0);
 			else
 				b = (byte)(key - Gdk.Key.KP_0);
-			
+
 			byte orig;
-			
+
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite==false && cursorDigit==0))
-				orig = 0; 
+			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+				orig = 0;
 			else
 				orig = byteBuffer[cursorOffset];
-				
+
 			byte orig1 = (byte)(orig % 10);
-			byte orig10 = (byte)((orig/10) % 10);
-			byte orig100 = (byte)((orig/100) % 10);
-			
-			if (cursorDigit == 0) 
-				orig100=b;
+			byte orig10 = (byte)((orig / 10) % 10);
+			byte orig100 = (byte)((orig / 100) % 10);
+
+			if (cursorDigit == 0)
+				orig100 = b;
 			else if (cursorDigit == 1)
-				orig10=b;
+				orig10 = b;
 			else if (cursorDigit == 2)
-				orig1=b;
-				
-			int repl= orig100*100 + orig10*10 + orig1;
-			if (repl>255)
+				orig1 = b;
+
+			int repl = orig100 * 100 + orig10 * 10 + orig1;
+			if (repl > 255)
 				return false;
-				
-			byte[] ba=new byte[]{(byte)repl};
-			
-			if (cursorOffset==byteBuffer.Size)
-				byteBuffer.Append(ba);	
-			else if (overwrite==false && cursorDigit==0)
+
+			byte[] ba = new byte[]{(byte)repl};
+
+			if (cursorOffset == byteBuffer.Size)
+				byteBuffer.Append(ba);
+			else if (overwrite == false && cursorDigit == 0)
 				byteBuffer.Insert(cursorOffset, ba);
 			else /*(if (overwrite==true || cursorDigit > 0)*/
 				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
 
-				   
+
 			return true;
-				
+
 		} else
 			return false;
 	}
-	
+
 	public override void Realize (DrawingArea da)
 	{
 		drawer = new DecimalDrawer(da, drawerInformation);
-		base.Realize(da);	
+		base.Realize(da);
 	}
 }
 

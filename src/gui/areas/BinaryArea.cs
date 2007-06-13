@@ -36,60 +36,60 @@ public class BinaryAreaPlugin : AreaPlugin
 	{
 		return new BinaryArea();
 	}
-} 
+}
 
 ///<summary>An area that displays binary</summary>
 public class BinaryArea : GroupedArea {
 
 	public BinaryArea()
-	: base()
+			: base()
 	{
-		type="binary";
-		dpb=8;
+		type = "binary";
+		dpb = 8;
 	}
-	
+
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
 		//System.Console.WriteLine("Binary: {0}", key);
-		
+
 		if (key == Gdk.Key.Key_0 || key == Gdk.Key.Key_1 || key == Gdk.Key.KP_0 || key == Gdk.Key.KP_1) {
 			byte orig;
-			
+
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite==false && cursorDigit==0))
-				orig = 0; 
+			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+				orig = 0;
 			else
 				orig = byteBuffer[cursorOffset];
-				
+
 			byte repl;
-			
+
 			if (key == Gdk.Key.Key_1 || key == Gdk.Key.KP_1 )
-				repl = (byte)((1 << (dpb-cursorDigit-1)) | orig);
+				repl = (byte)((1 << (dpb - cursorDigit - 1)) | orig);
 			else
-				repl = (byte)((~(1 << (dpb-cursorDigit-1))) & orig);
-				
-			byte[] ba=new byte[]{repl};
-			
-			if (cursorOffset==byteBuffer.Size)
-				byteBuffer.Append(ba);	
-			else if (overwrite==false && cursorDigit==0)
+				repl = (byte)((~(1 << (dpb - cursorDigit - 1))) & orig);
+
+			byte[] ba = new byte[]{repl};
+
+			if (cursorOffset == byteBuffer.Size)
+				byteBuffer.Append(ba);
+			else if (overwrite == false && cursorDigit == 0)
 				byteBuffer.Insert(cursorOffset, ba);
 			else /*(if (overwrite==true || cursorDigit > 0)*/
 				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
 
-				   
+
 			return true;
-				
-		} 
+
+		}
 		else
 			return false;
 	}
-	
+
 	public override void Realize (DrawingArea da)
 	{
 		drawer = new BinaryDrawer(da, drawerInformation);
-		base.Realize(da);	
+		base.Realize(da);
 	}
 }
 

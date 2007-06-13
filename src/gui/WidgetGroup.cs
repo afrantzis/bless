@@ -22,40 +22,40 @@ using Gtk;
 
 namespace Bless.Gui
 {
-	
+
 public class WidgetGroup : HBox
 {
-	
+
 	public WidgetGroup()
 	{
 	}
-	
+
 	protected override void OnAdded(Widget w)
 	{
 		w.Hide();
 		w.Shown += OnWidgetShown;
-		
-		
+
+
 		base.OnAdded(w);
 	}
-	
+
 	protected override void OnRemoved(Widget w)
 	{
 		w.Shown -= OnWidgetShown;
-		
+
 		base.OnRemoved(w);
 	}
-	
-	
+
+
 	void OnWidgetShown(object sender, EventArgs e)
 	{
-		Widget w=(Widget)sender;
+		Widget w = (Widget)sender;
 		// Make sure only one widget is visible
 		foreach(Widget child in Children) {
-			if (child!=w)
+			if (child != w)
 				child.Hide();
 		}
-		
+
 		// don't use ShowAll(): causes loop
 		this.Show();
 	}

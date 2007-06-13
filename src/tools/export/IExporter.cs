@@ -30,15 +30,15 @@ namespace Bless.Tools.Export
 public interface IExporter
 {
 	void Export(IBuffer buffer, long start, long end, ref bool cancelled);
-	
+
 	IExportBuilder Builder {
 		get;
-	}
-	
-	long CurrentPosition {
-		get;
-	}
-}
+		}
+
+		long CurrentPosition {
+			get;
+			}
+		}
 
 
 

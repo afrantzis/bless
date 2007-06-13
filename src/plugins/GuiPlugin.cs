@@ -19,98 +19,98 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 using Gtk;
- 
+
 namespace Bless.Plugins
 {
-	
+
 public class GuiPlugin : Plugin
 {
-	
+
 	public GuiPlugin()
 	{
-		
+
 	}
-	
+
 	protected Widget GetDataBook(Window win)
 	{
-		VBox vbox=(VBox)win.Child;
+		VBox vbox = (VBox)win.Child;
 		foreach (Widget child in vbox.Children) {
 			//System.Console.WriteLine("Child: {0}", child.GetType().ToString());
-			if (child.GetType()==typeof(HBox)) {
+			if (child.GetType() == typeof(HBox)) {
 				foreach (Widget child1 in ((HBox)child).Children) {
-					if (child1.GetType().ToString()=="Bless.Gui.DataBook")
+					if (child1.GetType().ToString() == "Bless.Gui.DataBook")
 						return child1;
 				}
 			}
-			
-		} 
+
+		}
 		return null;
 	}
-	
+
 	protected Widget GetMenuBar(Window win)
 	{
-		VBox vbox=(VBox)win.Child;
+		VBox vbox = (VBox)win.Child;
 		foreach (Widget child in vbox.Children) {
 			//System.Console.WriteLine("Child: {0}", child.GetType().ToString());
-			if (child.GetType()==typeof(MenuBar)) {
+			if (child.GetType() == typeof(MenuBar)) {
 				return child;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	protected Widget GetWidgetGroup(Window win, int n)
 	{
-		VBox vbox=(VBox)win.Child;
-		int i=0;
+		VBox vbox = (VBox)win.Child;
+		int i = 0;
 		foreach (Widget child in vbox.Children) {
 			//System.Console.WriteLine("Child: {0}", child.GetType().ToString());
-			if (child.GetType().ToString()=="Bless.Gui.WidgetGroup") {
-				if (i==n)
+			if (child.GetType().ToString() == "Bless.Gui.WidgetGroup") {
+				if (i == n)
 					return child;
 				else
 					i++;
 			}
 		}
-		
+
 		return null;
 	}
 
 	protected Widget GetSideWidgetGroup(Window win, int n)
 	{
-		VBox vbox=(VBox)win.Child;
-		int i=0;
-		HBox hbox=null;
-		
+		VBox vbox = (VBox)win.Child;
+		int i = 0;
+		HBox hbox = null;
+
 		foreach (Widget child in vbox.Children) {
 			System.Console.WriteLine("Child: {0}", child.GetType().ToString());
-			if (child.GetType().ToString()=="Gtk.HBox") {
-				hbox=(HBox)child;
+			if (child.GetType().ToString() == "Gtk.HBox") {
+				hbox = (HBox)child;
 				break;
 			}
 		}
-		if (hbox==null)
+		if (hbox == null)
 			return null;
-		
+
 		foreach (Widget child in hbox.Children) {
 			System.Console.WriteLine("Child: {0}", child.GetType().ToString());
-			if (child.GetType().ToString()=="Bless.Gui.WidgetGroup") {
-				if (i==n)
+			if (child.GetType().ToString() == "Bless.Gui.WidgetGroup") {
+				if (i == n)
 					return child;
 				else
 					i++;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	
+
+
 }
-	
-	
-	
+
+
+
 }
- 
- 
+
+

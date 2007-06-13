@@ -6,14 +6,14 @@ class MainClass
 {
 	public static void Main(string[] args)
 	{
-		ModuleTree mt=new ModuleTree("bless.mi");
-		ModuleBuilder mb=new ModuleBuilder(mt);
-		
+		ModuleTree mt = new ModuleTree("bless.mi");
+		ModuleBuilder mb = new ModuleBuilder(mt);
+
 		foreach (string option in args) {
 			if (option.StartsWith("-"))
 				mb.AddOption(option);
 		}
-		
+
 		foreach (string moduleName in args) {
 			if (moduleName.StartsWith("-"))
 				continue;

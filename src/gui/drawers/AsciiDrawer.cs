@@ -1,7 +1,7 @@
 // created on 6/28/2004 at 4:46 PM
 /*
  *   Copyright (c) 2004, Alexandros Frantzis (alf82 [at] freemail [dot] gr)
- * 
+ *
  *   This file is part of Bless.
  *
  *   Bless is free software; you can redistribute it and/or modify
@@ -24,10 +24,10 @@ namespace Bless.Gui.Drawers {
 ///<summary>Draws the ascii representation of a byte</summary>
 public class AsciiDrawer : Drawer {
 
-	static readonly string AsciiTable="................................ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~.................................................................................................................................";
-	
+	static readonly string AsciiTable = "................................ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~.................................................................................................................................";
+
 	public AsciiDrawer(Gtk.Widget wid, Information inf)
-	:base(wid, inf)
+			: base(wid, inf)
 	{
 	}
 
@@ -35,29 +35,29 @@ public class AsciiDrawer : Drawer {
 	{
 		dest.DrawDrawable(gc, pix, b*width, 0, x, y, width, height);
 	}
-	
+
 	protected override Gdk.Pixmap Create(Gdk.Color fg, Gdk.Color bg)
 	{
-		Gdk.Window win=widget.GdkWindow;
-		
-		Gdk.GC gc=new Gdk.GC(win);
-		Gdk.Pixmap pix=new Gdk.Pixmap(win, 256*width, height, -1);
-		
-		// draw the background		
-		gc.RgbFgColor=bg;
-		pix.DrawRectangle(gc, true, 0, 0, 256*width, height);	
-	
+		Gdk.Window win = widget.GdkWindow;
+
+		Gdk.GC gc = new Gdk.GC(win);
+		Gdk.Pixmap pix = new Gdk.Pixmap(win, 256*width, height, -1);
+
+		// draw the background
+		gc.RgbFgColor = bg;
+		pix.DrawRectangle(gc, true, 0, 0, 256*width, height);
+
 		// render the bytes
-		string s=AsciiDrawer.AsciiTable;
-		
+		string s = AsciiDrawer.AsciiTable;
+
 		//System.Console.WriteLine(s);
-		
+
 		pangoLayout.SetText(s);
-		
-		
-		gc.RgbFgColor=fg;
+
+
+		gc.RgbFgColor = fg;
 		pix.DrawLayout(gc, 0, 0, pangoLayout);
-		
+
 		return pix;
 	}
 

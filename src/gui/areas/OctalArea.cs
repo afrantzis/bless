@@ -42,68 +42,68 @@ public class OctalAreaPlugin : AreaPlugin
 public class OctalArea : GroupedArea {
 
 	public OctalArea()
-	: base()
+			: base()
 	{
-		type="octal";
-		dpb=3;
+		type = "octal";
+		dpb = 3;
 	}
-	
+
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
 		//System.Console.WriteLine("Octal: {0}", key);
-		
+
 		if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_7 || (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_7)) {
 			byte b;
 			if (key >= Gdk.Key.Key_0 && key <= Gdk.Key.Key_7)
 				b = (byte)(key - Gdk.Key.Key_0);
 			else
 				b = (byte)(key - Gdk.Key.KP_0);
-			
+
 			byte orig;
-			
+
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite==false && cursorDigit==0))
-				orig = 0; 
+			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+				orig = 0;
 			else
 				orig = byteBuffer[cursorOffset];
-				
+
 			byte orig1 = (byte)(orig % 8);
-			byte orig8 = (byte)((orig/8) % 8);
-			byte orig64 = (byte)((orig/64) % 8);
-			
+			byte orig8 = (byte)((orig / 8) % 8);
+			byte orig64 = (byte)((orig / 64) % 8);
+
 			if (cursorDigit == 0)
-				orig64=b;
+				orig64 = b;
 			else if (cursorDigit == 1)
-				orig8=b;
+				orig8 = b;
 			else if (cursorDigit == 2)
-				orig1=b;
-				
-			int repl = orig64*64 + orig8*8 + orig1;
-			
+				orig1 = b;
+
+			int repl = orig64 * 64 + orig8 * 8 + orig1;
+
 			if (repl > 255)
 				return false;
-				
-			byte[] ba=new byte[]{(byte)repl};
-			
-			if (cursorOffset==byteBuffer.Size)
-				byteBuffer.Append(ba);	
-			else if (overwrite==false && cursorDigit==0)
+
+			byte[] ba = new byte[]{(byte)repl};
+
+			if (cursorOffset == byteBuffer.Size)
+				byteBuffer.Append(ba);
+			else if (overwrite == false && cursorDigit == 0)
 				byteBuffer.Insert(cursorOffset, ba);
 			else /*(if (overwrite==true || cursorDigit > 0)*/
 				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
 
-				  
+
 			return true;
-				
+
 		} else
 			return false;
 	}
-	
+
 	public override void Realize (DrawingArea da)
 	{
 		drawer = new OctalDrawer(da, drawerInformation);
-		base.Realize(da);	
+		base.Realize(da);
 	}
 }
 

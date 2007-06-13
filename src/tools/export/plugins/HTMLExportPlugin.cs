@@ -24,10 +24,10 @@ using Bless.Plugins;
 using Bless.Tools.Export;
 
 namespace Bless.Tools.Export.Plugins {
-	
+
 public class HTMLExportPlugin : ExportPlugin
 {
-	
+
 	public HTMLExportPlugin()
 	{
 		name = "HTMLExport";
@@ -35,12 +35,12 @@ public class HTMLExportPlugin : ExportPlugin
 		description = "Export as HTML";
 		dependencies.Add("TextExport");
 	}
-	
+
 	public override IExportBuilder CreateBuilder(Stream s)
 	{
 		return new HTMLExportBuilder(s);
 	}
-	
+
 }
 
 }

@@ -23,22 +23,22 @@ using Bless.Plugins;
 using Bless.Tools.Export;
 
 namespace Bless.Tools.Export.Plugins {
-	
+
 public class TextExportPlugin : ExportPlugin
 {
-	
+
 	public TextExportPlugin()
 	{
 		name = "TextExport";
 		author = "Alexandros Frantzis";
 		description = "Export as Text";
 	}
-	
+
 	public override IExportBuilder CreateBuilder(Stream s)
 	{
 		return new TextExportBuilder(s);
 	}
-	
+
 }
 
 }

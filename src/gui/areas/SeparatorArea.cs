@@ -39,108 +39,108 @@ public class SeparatorAreaPlugin : AreaPlugin
 	{
 		return new SeparatorArea();
 	}
-} 
+}
 
 ///<summary>An area that contains a vertical separator line</summary>
 public class SeparatorArea : Area {
-	
+
 	Gdk.GC lineGC;
-	
+
 	public SeparatorArea()
-	: base() 
+			: base()
 	{
-		type="separator";
+		type = "separator";
 	}
-	
+
 	public override void Realize(Gtk.DrawingArea da)
 	{
 		drawer = new DummyDrawer(da, drawerInformation);
-		
+
 		lineGC = new Gdk.GC(da.GdkWindow);
-		
+
 		lineGC.RgbFgColor = drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even];
-		
+
 		base.Realize(da);
 	}
-	
+
 	protected override void RenderRange(Bless.Util.Range range, Drawer.HighlightType ht)
 	{
 	}
-	
+
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
 	{
 	}
-	
+
 	protected override void RenderRowHighlight(int i, int p, int n, bool blank, Drawer.HighlightType ht)
 	{
 	}
-	
+
 	public override void Scroll(long offset)
 	{
-		if (isAreaRealized==false)
+		if (isAreaRealized == false)
 			return;
-		
-		int nrows=height/drawer.Height;
-		long bleft=nrows*bpr;
-		int rfull=0;
-		int blast=0;
-		
-		if (bpr>0) {
-			if (bleft+offset > byteBuffer.Size)
-				bleft=byteBuffer.Size - offset + 1;
-		
+
+		int nrows = height / drawer.Height;
+		long bleft = nrows * bpr;
+		int rfull = 0;
+		int blast = 0;
+
+		if (bpr > 0) {
+			if (bleft + offset > byteBuffer.Size)
+				bleft = byteBuffer.Size - offset + 1;
+
 			// calculate number of full rows
 			// and number of bytes in last (non-full)
-			rfull=(int)(bleft/bpr);
-			blast=(int)(bleft%bpr);
-		
-			if (blast!=0)
+			rfull = (int)(bleft / bpr);
+			blast = (int)(bleft % bpr);
+
+			if (blast != 0)
 				rfull++;
 		}
-		
-		if (rfull==0)
+
+		if (rfull == 0)
 			return;
-		
-		this.offset=offset;
-		
-		// draw seperator 
-		backPixmap.DrawLine(lineGC, x+drawer.Width/2, 0, x+drawer.Width/2, drawer.Height*rfull);
-	
+
+		this.offset = offset;
+
+		// draw seperator
+		backPixmap.DrawLine(lineGC, x + drawer.Width / 2, 0, x + drawer.Width / 2, drawer.Height*rfull);
+
 	}
 
-	public override int CalcWidth(int n, bool force) 
+	public override int CalcWidth(int n, bool force)
 	{
-		return drawer.Width; 
+		return drawer.Width;
 	}
-	
+
 	public override void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy)
-	{	 
-		orow=(int)((off-offset)/bpr);
-		obyte=(int)((off-offset)%bpr);
-			
-		oy=orow*drawer.Height;
-		
-		ox=0;
-	} 
+	{
+		orow = (int)((off - offset) / bpr);
+		obyte = (int)((off - offset) % bpr);
+
+		oy = orow * drawer.Height;
+
+		ox = 0;
+	}
 
 	public override long GetOffsetByDisplayInfo(int x, int y, out int digit, out  GetOffsetFlags flags)
 	{
-		flags=0;
-		int row=y/drawer.Height;
-		long off=row*bpr+offset;
+		flags = 0;
+		int row = y / drawer.Height;
+		long off = row * bpr + offset;
 		if (off >= byteBuffer.Size)
 			flags |= GetOffsetFlags.Eof;
-			
-		digit=0;
-	
+
+		digit = 0;
+
 		return off;
 	}
-	
+
 	public override void SetSelection(long start, long end)
 	{
 		SetSelectionNoRender(start, end);
 	}
-	
+
 	public override void MoveCursor(long offset, int digit)
 	{
 		MoveCursorNoRender(offset, digit);

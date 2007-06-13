@@ -36,32 +36,32 @@ public class ProgressDisplayPlugin : GuiPlugin
 {
 	ProgressDisplayWidget widget;
 	Window mainWindow;
-	
-	
+
+
 	public ProgressDisplayPlugin(Window mw, UIManager uim)
 	{
 		mainWindow = mw;
-		
+
 		name = "ProgressDisplay";
 		author = "Alexandros Frantzis";
 		description = "Progress Display Bar";
 		loadAfter.Add("Infobar");
 	}
-	
+
 	public override bool Load()
-	{	
+	{
 		widget = new ProgressDisplayWidget();
 		widget.Visible = true;
-		
+
 		// register the service
 		Services.UI.Progress = widget;
-		
+
 		((VBox)mainWindow.Child).PackEnd(widget, false, false, 0);
-		
+
 		loaded = true;
 		return true;
 	}
-	
+
 }
 
 ///<summary>
@@ -72,50 +72,50 @@ public class ProgressDisplayWidget : Gtk.VBox, IProgressDisplay
 
 	public ProgressDisplayWidget()
 	{
-		
+
 	}
-	
+
 	///<summary>
 	/// Get a callback for a new progress bar
 	///</summary>
 	public ProgressCallback NewCallback()
 	{
 		ProgressDisplayBar pdb = new ProgressDisplayBar();
-		
+
 		this.PackStart(pdb);
 		pdb.DestroyEvent += OnProgressDisplayBarDestroyed;
-		
+
 		return pdb.Update;
 	}
-	
+
 	void OnProgressDisplayBarDestroyed (object o, DestroyEventArgs args)
 	{
 		ProgressDisplayBar pdb = (ProgressDisplayBar)o;
-		
+
 		pdb.DestroyEvent -= OnProgressDisplayBarDestroyed;
-		
+
 		this.Remove(pdb);
 	}
 
 }
 
 public class ProgressDisplayBar : Gtk.HBox {
-	
+
 	[Glade.Widget]Gtk.HBox ProgressBarHBox;
 	[Glade.Widget]Gtk.Button CancelButton;
 	[Glade.Widget]Gtk.ProgressBar ProgressBar;
-	
+
 	bool cancelClicked;
-	
+
 	public ProgressDisplayBar()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "ProgressBarHBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "ProgressBarHBox", "bless");
 		gxml.Autoconnect (this);
-			
+
 		this.Add(ProgressBarHBox);
 		this.Hide();
 	}
-	
+
 	///<summary>
 	/// Handles the various progress actions
 	///</summary>
@@ -123,7 +123,7 @@ public class ProgressDisplayBar : Gtk.HBox {
 	{
 		if (action == ProgressAction.Hide) {
 			this.Visible = false;
-			return false; 
+			return false;
 		}
 		else if (action == ProgressAction.Show) {
 			this.Visible = true;
@@ -137,17 +137,17 @@ public class ProgressDisplayBar : Gtk.HBox {
 			this.Destroy();
 			return false;
 		}
-		
+
 		ProgressBar.Fraction = (double)o;
-		
-      	if (cancelClicked == true) {
-      		cancelClicked = false;
-      		return true;
-      	}
-      	else
-      		return false;
-	}	
-		
+
+		if (cancelClicked == true) {
+			cancelClicked = false;
+			return true;
+		}
+		else
+			return false;
+	}
+
 	public void OnCancelButtonClicked(object o, EventArgs args)
 	{
 		cancelClicked = true;

@@ -37,16 +37,16 @@ public class HexAreaPlugin : AreaPlugin
 	{
 		return new HexArea();
 	}
-} 
+}
 ///<summary>An area that displays hexadecimal</summary>
 public class HexArea : GroupedArea {
-	
+
 
 	public HexArea()
-	: base()
+			: base()
 	{
-		type="hexadecimal";
-		dpb=2;
+		type = "hexadecimal";
+		dpb = 2;
 	}
 
 	private int KeyToHex(Gdk.Key key)
@@ -60,66 +60,66 @@ public class HexArea : GroupedArea {
 		else if (key >= Gdk.Key.KP_0 && key <= Gdk.Key.KP_9)
 			return key - Gdk.Key.KP_0;
 		else
-			return -1;	
+			return -1;
 	}
 
 	public override bool HandleKey(Gdk.Key key, bool overwrite)
 	{
-		int hex=KeyToHex(key);
-		
+		int hex = KeyToHex(key);
+
 		if (hex != -1) {
 			byte b = (byte)hex;
 			byte orig;
-			
+
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite==false && cursorDigit==0))
-				orig = 0; 
+			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+				orig = 0;
 			else
 				orig = byteBuffer[cursorOffset];
-				
+
 			byte orig1 = (byte)(orig % 16);
-			byte orig16 = (byte)((orig/16) % 16);
-			
-			
+			byte orig16 = (byte)((orig / 16) % 16);
+
+
 			if (cursorDigit == 0)
-				orig16=b;
+				orig16 = b;
 			else if (cursorDigit == 1)
-				orig1=b;
-				
-			byte repl= (byte)(orig16*16 + orig1);
-	
-			byte[] ba=new byte[]{repl};
-			
-			if (cursorOffset==byteBuffer.Size)
-				byteBuffer.Append(ba);	
-			else if (overwrite==false && cursorDigit==0)
+				orig1 = b;
+
+			byte repl = (byte)(orig16 * 16 + orig1);
+
+			byte[] ba = new byte[]{repl};
+
+			if (cursorOffset == byteBuffer.Size)
+				byteBuffer.Append(ba);
+			else if (overwrite == false && cursorDigit == 0)
 				byteBuffer.Insert(cursorOffset, ba);
 			else /*(if (overwrite==true || cursorDigit > 0)*/
 				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
 
-				   
+
 			return true;
-				
+
 		} else
 			return false;
 	}
-	
+
 	public override void Configure(XmlNode parentNode)
 	{
 		base.Configure(parentNode);
-		
+
 		XmlNodeList childNodes = parentNode.ChildNodes;
 		foreach(XmlNode node in childNodes) {
 			if (node.Name == "case")
 				drawerInformation.Uppercase = (node.InnerText == "upper");
 		}
 	}
-	
+
 	public override void Realize (DrawingArea da)
 	{
 		drawer = new HexDrawer(da, drawerInformation);
-		base.Realize(da);	
+		base.Realize(da);
 	}
 }
 

@@ -24,27 +24,27 @@ using Mono.Unix;
 
 namespace Bless.Gui.Dialogs {
 
-	///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
-	public class FileOverwriteAlert : Alert
+///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
+public class FileOverwriteAlert : Alert
+{
+	static readonly string msg1 = Catalog.GetString("A file named '{0}' already exists");
+	static readonly string msg2 = Catalog.GetString("Do you want to replace it with the one you are saving?");
+
+	public FileOverwriteAlert(string primary, Gtk.Window parent)
+			: base(string.Format(msg1, primary), msg2, parent)
 	{
-		static readonly string msg1 = Catalog.GetString("A file named '{0}' already exists");
-		static readonly string msg2 = Catalog.GetString("Do you want to replace it with the one you are saving?");
-		
-		public FileOverwriteAlert(string primary, Gtk.Window parent)
-		: base(string.Format(msg1, primary), msg2, parent)
-		{
-			image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
-			
-			this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Catalog.GetString("Replace"), ResponseType.Ok);
-			
-			this.DefaultResponse=ResponseType.Cancel;
-			
-			this.ShowAll();
-		}
-		
-	}	
+		image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
+
+		this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
+		this.AddButton(Catalog.GetString("Replace"), ResponseType.Ok);
+
+		this.DefaultResponse = ResponseType.Cancel;
+
+		this.ShowAll();
+	}
+
+}
 
 
 
-} 
+}

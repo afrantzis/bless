@@ -28,58 +28,58 @@ namespace Bless.Tools.Export
 public class ExportOperation : ThreadedAsyncOperation
 {
 	IExporter exporter;
-	
+
 	IBuffer buffer;
 	long rangeStart;
 	long rangeEnd;
-	
-	
+
+
 	public IExporter Exporter {
 		get { return exporter; }
 	}
-	
+
 	public ExportOperation(IExporter ex, IBuffer buf, long start, long end, ProgressCallback progressCb, AsyncCallback endCb)
-	: base(progressCb, endCb, true)
+			: base(progressCb, endCb, true)
 	{
 		exporter = ex;
 		buffer = buf;
 		rangeStart = start;
 		rangeEnd = end;
 	}
-	
+
 	private double CalculatePercentDone()
 	{
-		return ((double)(exporter.CurrentPosition - rangeStart))/(rangeEnd - rangeStart);
+		return ((double)(exporter.CurrentPosition - rangeStart)) / (rangeEnd - rangeStart);
 	}
-	
+
 	protected override bool StartProgress()
 	{
 		return progressCallback(CalculatePercentDone(), ProgressAction.Show);
 	}
-	
+
 	protected override bool UpdateProgress()
 	{
 		return progressCallback(CalculatePercentDone(), ProgressAction.Update);
 	}
-	
+
 	protected override bool EndProgress()
 	{
 		return progressCallback(CalculatePercentDone(), ProgressAction.Hide);
 	}
-	
+
 	protected override void IdleHandlerEnd()
 	{
-	
+
 	}
-	
+
 	protected override void DoOperation()
 	{
 		System.Console.WriteLine("Starting export");
 		exporter.Export(buffer, rangeStart, rangeEnd, ref cancelled);
 		System.Console.WriteLine("Ending export");
 	}
-	
-	
+
+
 	protected override void EndOperation()
 	{
 

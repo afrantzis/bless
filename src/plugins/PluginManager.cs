@@ -28,74 +28,74 @@ using Bless.Util;
 namespace Bless.Plugins
 {
 
-public class PluginDependencyException : Exception 
-{ 
+public class PluginDependencyException : Exception
+{
 	public PluginDependencyException(string msg)
-	: base(msg)
+			: base(msg)
 	{ }
 }
 
 public class PluginManager
 {
 	Dictionary<string, Plugin> plugins;
-	
+
 	Type[] ctorArgTypes;
 	object[] ctorArgs;
 	Type pluginType;
-	
+
 	public PluginManager(Type pluginType, object[] args)
 	{
 		plugins = new Dictionary<string, Plugin>();
-		this.pluginType=pluginType;
-		
-		ctorArgTypes=new Type[args.Length];
-		ctorArgs=args;
-		
-		for (int i=0; i < ctorArgs.Length; i++)
-			ctorArgTypes[i]= ctorArgs[i].GetType();
-		
+		this.pluginType = pluginType;
+
+		ctorArgTypes = new Type[args.Length];
+		ctorArgs = args;
+
+		for (int i = 0; i < ctorArgs.Length; i++)
+			ctorArgTypes[i] = ctorArgs[i].GetType();
+
 		// find system-wide plugins
-		string systemPluginDir=FileResourcePath.GetSystemPath("");
-		string[] systemPluginFiles=Directory.GetFiles(systemPluginDir);
+		string systemPluginDir = FileResourcePath.GetSystemPath("");
+		string[] systemPluginFiles = Directory.GetFiles(systemPluginDir);
 		CompareInfo compare = CultureInfo.InvariantCulture.CompareInfo;
-		
+
 		foreach (string file in systemPluginFiles) {
 			if (compare.IndexOf(file, "plugin", CompareOptions.IgnoreCase) >= 0
-				&& file.EndsWith(".dll")) {
+					&& file.EndsWith(".dll")) {
 				//Console.WriteLine("Searching File {0}", file);
 				AddPluginFile(file);
 			}
 		}
-		
+
 		try {
 			// find local user plugins
-			string userPluginDir=FileResourcePath.GetUserPath("plugins");
-			string[] userPluginFiles=Directory.GetFiles(userPluginDir);
-			
+			string userPluginDir = FileResourcePath.GetUserPath("plugins");
+			string[] userPluginFiles = Directory.GetFiles(userPluginDir);
+
 			foreach (string file in userPluginFiles) {
 				if (compare.IndexOf(file, "plugin", CompareOptions.IgnoreCase) >= 0
-					&& file.EndsWith(".dll")) {
+						&& file.EndsWith(".dll")) {
 					//Console.WriteLine("Searching File {0}", file);
 					AddPluginFile(file);
 				}
 			}
 		}
-		catch(DirectoryNotFoundException e) { 
+		catch (DirectoryNotFoundException e) {
 			System.Console.WriteLine(e.Message);
 		}
-		
+
 	}
-	
+
 	private void AddPluginFile(string file)
 	{
 		try {
-			Assembly asm=Assembly.LoadFile(file);
+			Assembly asm = Assembly.LoadFile(file);
 			Type[] types = asm.GetTypes();
-			
+
 			foreach(Type t in types) {
-				if (t.BaseType==pluginType) {
+				if (t.BaseType == pluginType) {
 					//Console.WriteLine("    Found Type {0}", t.FullName);
-					ConstructorInfo ctor=t.GetConstructor(ctorArgTypes);
+					ConstructorInfo ctor = t.GetConstructor(ctorArgTypes);
 					AddToPluginCollection((Plugin)ctor.Invoke(ctorArgs));
 				}
 			}
@@ -103,64 +103,64 @@ public class PluginManager
 		catch (Exception e) {
 			System.Console.WriteLine(e.Message);
 		}
-	
+
 	}
-	
+
 	private void AddToPluginCollection(Plugin plugin)
 	{
 		plugins.Add(plugin.Name, plugin);
-		//System.Console.WriteLine("Added plugin {0}", plugin.Name);	
+		//System.Console.WriteLine("Added plugin {0}", plugin.Name);
 	}
-	
+
 	public bool LoadPlugin(Plugin plugin)
 	{
 		StringCollection visited = new StringCollection();
 		return LoadPluginInternal(plugin, visited);
 	}
-	
+
 	private bool LoadPluginInternal(Plugin plugin, StringCollection visited)
 	{
 		visited.Add(plugin.Name);
 		if (plugin.Loaded)
 			return true;
-		
+
 		foreach(string dep in plugin.Dependencies) {
 			if (visited.Contains(dep))
 				throw new PluginDependencyException("Cyclic dependency detected!");
 			if (!plugins.ContainsKey(dep))
 				throw new PluginDependencyException(string.Format("Cannot find plugin '{0}' needed by '{1}'", dep, plugin.Name));
-				
+
 			if (LoadPluginInternal(plugins[dep], visited) == false)
 				return false;
 		}
-		
+
 		foreach(string la in plugin.LoadAfter) {
 			if (visited.Contains(la))
 				throw new PluginDependencyException("Cyclic LoadAfter association detected!");
 			if (plugins.ContainsKey(la))
 				LoadPluginInternal(plugins[la], visited);
 		}
-		
-		
+
+
 		return plugin.Load();
 	}
-	
+
 	public Plugin[] Plugins {
 		get {
-			Plugin[] pa=new Plugin[plugins.Count];
-			int i=0;
+			Plugin[] pa = new Plugin[plugins.Count];
+			int i = 0;
 			foreach (Plugin p in plugins.Values)
-				pa[i++]=p;
-		
+			pa[i++] = p;
+
 			return pa;
 		}
-			
+
 	}
-	
+
 	public Plugin GetPlugin()
 	{
-		return null;	
+		return null;
 	}
 }
-	
+
 }

@@ -18,26 +18,26 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using System;
 using Bless.Util;
 using Bless.Buffers;
- 
+
 namespace Bless.Tools.Find {
-                
+
 public interface IFindStrategy
 {
 	byte[] Pattern { get; set; }
-	ByteBuffer Buffer {	get; set; }
-	long Position { get; set; } 
- 
- 	Range FindNext();
- 	Range FindPrevious();
- 	
+			ByteBuffer Buffer {	get; set; }
+				long Position { get; set; }
+
+						Range FindNext();
+	Range FindPrevious();
+
 	Range FindNext(long limit);
 	Range FindPrevious(long limit);
-	
+
 	bool Cancelled { get; set; }
-}
- 
+		}
+
 } // end namespace

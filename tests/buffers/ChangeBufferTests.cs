@@ -18,11 +18,11 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using NUnit.Framework; 
-using System; 
+using NUnit.Framework;
+using System;
 
 using Bless.Buffers;
- 
+
 namespace BlessTests.Buffers {
 
 [TestFixture]
@@ -30,8 +30,8 @@ public class ChangeBufferTests {
 
 	[Test]
 	public void AppendTest() {
-		ChangeBuffer cb=new ChangeBuffer();
-		byte[] ba={2,3};
+		ChangeBuffer cb = new ChangeBuffer();
+		byte[] ba = {2, 3};
 		cb.Append(1);
 		cb.Append(ba);
 		Assert.AreEqual(1, cb[0]);
@@ -43,13 +43,13 @@ public class ChangeBufferTests {
 
 	[Test]
 	public void PutTest() {
-		ChangeBuffer cb=new ChangeBuffer();
-		byte[] ba={1,2,3,4,5};
-		byte[] ba2={11,22,33};
+		ChangeBuffer cb = new ChangeBuffer();
+		byte[] ba = {1, 2, 3, 4, 5};
+		byte[] ba2 = {11, 22, 33};
 		cb.Append(ba);
 		try {
-		cb.Put(1, ba2);
-		cb.Put(3, ba2);
+			cb.Put(1, ba2);
+			cb.Put(3, ba2);
 		}
 		catch (Exception e) {
 		}
@@ -62,17 +62,17 @@ public class ChangeBufferTests {
 
 	[Test]
 	public void GetTest() {
-		ChangeBuffer cb=new ChangeBuffer();
-		byte[] ba={1,2,3,4,5};
-		
+		ChangeBuffer cb = new ChangeBuffer();
+		byte[] ba = {1, 2, 3, 4, 5};
+
 		cb.Append(ba);
-		
-		byte[] ba1=new byte[3];
-		cb.Get(ba1, 1,3);
+
+		byte[] ba1 = new byte[3];
+		cb.Get(ba1, 1, 3);
 		Assert.AreEqual(3, ba1.Length);
 		Assert.AreEqual(2, ba1[0]);
 		Assert.AreEqual(3, ba1[1]);
-		Assert.AreEqual(4, ba1[2]);	
+		Assert.AreEqual(4, ba1[2]);
 	}
 
 }

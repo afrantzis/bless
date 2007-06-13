@@ -31,49 +31,49 @@ public class Plugin
 	protected bool loaded;
 	protected List<string> dependencies;
 	protected List<string> loadAfter;
-	
+
 	public Plugin()
 	{
 		dependencies = new List<string>();
 		loadAfter = new List<string>();
 	}
-	
+
 	public virtual bool Load()
 	{
 		return false;
 	}
-	
+
 	public virtual bool UnLoad()
 	{
-		return false;	
+		return false;
 	}
-	
+
 	public string Name {
 		get { return name; }
-		set { name=value; }
+		set { name = value; }
 	}
-	
+
 	public string Author {
 		get { return author;}
-		set { author=value; }
+		set { author = value; }
 	}
-	
+
 	public string Description {
 		get { return description; }
-		set { description=value; }
+		set { description = value; }
 	}
-	
+
 	public bool Loaded {
 		get { return loaded; }
 	}
-	
+
 	public IList<string> Dependencies {
 		get { return dependencies; }
 	}
-	
+
 	public IList<string> LoadAfter {
 		get { return loadAfter; }
 	}
 }
-	
+
 }

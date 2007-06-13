@@ -20,25 +20,24 @@
  */
 using System;
 using Gtk;
- 
+
 namespace Bless.Gui.Dialogs {
 
 ///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
 public class InformationAlert : Alert
 {
-	
-	public InformationAlert(string primary, string secondary, Gtk.Window parent) 
-	: base(primary, secondary, parent)
+
+	public InformationAlert(string primary, string secondary, Gtk.Window parent)
+			: base(primary, secondary, parent)
 	{
 		image.SetFromStock(Gtk.Stock.DialogInfo, Gtk.IconSize.Dialog);
 		this.AddButton(Gtk.Stock.Ok, ResponseType.Ok);
-		
+
 		this.ShowAll();
 	}
-	
-}	
+
+}
 
 
 
 } // namespace
- 

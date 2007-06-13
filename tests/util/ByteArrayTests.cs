@@ -18,11 +18,11 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using NUnit.Framework; 
-using System; 
+using NUnit.Framework;
+using System;
 
 using Bless.Util;
- 
+
 namespace BlessTests.Util {
 
 [TestFixture]
@@ -31,60 +31,60 @@ public class ByteArrayTests
 	[Test]
 	public void ByteArrayHexTest1()
 	{
-		byte[] ba=ByteArray.FromString("0305ffFa66", 16);
-		
-		Assert.AreEqual(5, ba.Length,"#Length");
-		Assert.AreEqual(0x03, ba[0],"#0");
-		Assert.AreEqual(0x05, ba[1],"#1");
-		Assert.AreEqual(0xff, ba[2],"#2");
-		Assert.AreEqual(0xfa, ba[3],"#3");
-		Assert.AreEqual(0x66, ba[4],"#4");
-			
+		byte[] ba = ByteArray.FromString("0305ffFa66", 16);
+
+		Assert.AreEqual(5, ba.Length, "#Length");
+		Assert.AreEqual(0x03, ba[0], "#0");
+		Assert.AreEqual(0x05, ba[1], "#1");
+		Assert.AreEqual(0xff, ba[2], "#2");
+		Assert.AreEqual(0xfa, ba[3], "#3");
+		Assert.AreEqual(0x66, ba[4], "#4");
+
 	}
-	
+
 	[Test]
 	public void ByteArrayHexTest2()
 	{
-		byte[] ba=ByteArray.FromString(" 63a5 fe DD Cb  ", 16);
-		
-		Assert.AreEqual(5, ba.Length,"#Length");
-		Assert.AreEqual(0x63, ba[0],"#0");
-		Assert.AreEqual(0xa5, ba[1],"#1");
-		Assert.AreEqual(0xfe, ba[2],"#2");
-		Assert.AreEqual(0xdd, ba[3],"#3");
-		Assert.AreEqual(0xcb, ba[4],"#4");
-			
+		byte[] ba = ByteArray.FromString(" 63a5 fe DD Cb  ", 16);
+
+		Assert.AreEqual(5, ba.Length, "#Length");
+		Assert.AreEqual(0x63, ba[0], "#0");
+		Assert.AreEqual(0xa5, ba[1], "#1");
+		Assert.AreEqual(0xfe, ba[2], "#2");
+		Assert.AreEqual(0xdd, ba[3], "#3");
+		Assert.AreEqual(0xcb, ba[4], "#4");
+
 	}
-	
-	[Test] 
+
+	[Test]
 	public void ByteArrayHexTest3()
 	{
-		byte[] ba=ByteArray.FromString(" 63a fe DDCb  ", 16);
-		
-		Assert.AreEqual(5, ba.Length,"#Length");
-		Assert.AreEqual(0x63, ba[0],"#0");
-		Assert.AreEqual(0x0a, ba[1],"#1");
-		Assert.AreEqual(0xfe, ba[2],"#2");
-		Assert.AreEqual(0xdd, ba[3],"#3");
-		Assert.AreEqual(0xcb, ba[4],"#4");
+		byte[] ba = ByteArray.FromString(" 63a fe DDCb  ", 16);
+
+		Assert.AreEqual(5, ba.Length, "#Length");
+		Assert.AreEqual(0x63, ba[0], "#0");
+		Assert.AreEqual(0x0a, ba[1], "#1");
+		Assert.AreEqual(0xfe, ba[2], "#2");
+		Assert.AreEqual(0xdd, ba[3], "#3");
+		Assert.AreEqual(0xcb, ba[4], "#4");
 	}
-	
+
 	[Test]
 	[ExpectedException(typeof(FormatException))]
 	public void ByteArrayHexTest4()
 	{
-		ByteArray.FromString(" 63 a5 fg DD Cb  ", 16);	
+		ByteArray.FromString(" 63 a5 fg DD Cb  ", 16);
 	}
-	
+
 	[Test]
 	public void ByteArrayHexTest5()
 	{
-		string s=ByteArray.ToString(new byte[]{0x63, 0xff,0x12,0x00,0xca}, 16);
-		
-		Assert.AreEqual(14, s.Length,"#Length");
-		Assert.AreEqual(s, "63 ff 12 00 ca","#0");	
+		string s = ByteArray.ToString(new byte[]{0x63, 0xff, 0x12, 0x00, 0xca}, 16);
+
+		Assert.AreEqual(14, s.Length, "#Length");
+		Assert.AreEqual(s, "63 ff 12 00 ca", "#0");
 	}
-	
+
 }
 
 } // end namespace

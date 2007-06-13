@@ -22,12 +22,12 @@ using Bless.Tools.Export;
 
 namespace Bless.Plugins
 {
-	
+
 public class ExportPlugin : Plugin
 {
 	protected ExportPlugin()
 	{
-		
+
 	}
 
 	public virtual IExportBuilder CreateBuilder(Stream s)
@@ -35,7 +35,7 @@ public class ExportPlugin : Plugin
 		return null;
 	}
 }
-	
-	
-	
+
+
+
 }

@@ -29,17 +29,17 @@ namespace Bless.Tools.Find {
 ///<summary>
 /// Class to hold information about an asynchronous find operation
 ///</summary>
-public class FindAsyncResult:IAsyncResult {
+public class FindAsyncResult: IAsyncResult {
 	object asyncState;
 	WaitHandle asyncWaitHandle;
 	bool isCompleted;
-	
+
 	public FindAsyncResult(object state, WaitHandle handle, bool complete)
 	{
-		asyncState=state;
-		asyncWaitHandle=handle;
-		isCompleted=complete;
-	} 
+		asyncState = state;
+		asyncWaitHandle = handle;
+		isCompleted = complete;
+	}
 	public object AsyncState {
 		get { return asyncState;}
 	}

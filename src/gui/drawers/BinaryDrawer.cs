@@ -1,7 +1,7 @@
 // created on 6/28/2004 at 4:48 PM
 /*
  *   Copyright (c) 2004, Alexandros Frantzis (alf82 [at] freemail [dot] gr)
- * 
+ *
  *   This file is part of Bless.
  *
  *   Bless is free software; you can redistribute it and/or modify
@@ -23,48 +23,48 @@ namespace Bless.Gui.Drawers {
 
 ///<summary>Draws the binary representation of a byte</summary>
 public class BinaryDrawer : Drawer {
-	
+
 	public BinaryDrawer(Gtk.Widget wid, Information inf)
-	:base(wid, inf)
+			: base(wid, inf)
 	{
 	}
 
-	
-	protected override void Draw(Gdk.GC gc, Gdk.Drawable dest, int x, int y, byte b, Gdk.Pixmap pix) 
+
+	protected override void Draw(Gdk.GC gc, Gdk.Drawable dest, int x, int y, byte b, Gdk.Pixmap pix)
 	{
-		// draw from the end backwards	
-		x+=6*width;
-		for (int i=0; i<4; i++) {
-			byte k=(byte)(b & 3);
+		// draw from the end backwards
+		x += 6 * width;
+		for (int i = 0; i < 4; i++) {
+			byte k = (byte)(b & 3);
 			dest.DrawDrawable(gc, pix, k*2*width, 0, x, y, 2*width, height);
-			x-=2*width;
+			x -= 2 * width;
 			b = (byte)(b >> 2);
 		}
 	}
-	
+
 	protected override Gdk.Pixmap Create(Gdk.Color fg, Gdk.Color bg)
 	{
-		Gdk.Window win=widget.GdkWindow;
-		
-		Gdk.GC gc=new Gdk.GC(win);
-		Gdk.Pixmap pix=new Gdk.Pixmap(win, 4*2*width, height, -1);
-		
-		// draw the background		
-		gc.RgbFgColor=bg;
-		pix.DrawRectangle(gc, true, 0, 0, 4*2*width, height);	
-	
+		Gdk.Window win = widget.GdkWindow;
+
+		Gdk.GC gc = new Gdk.GC(win);
+		Gdk.Pixmap pix = new Gdk.Pixmap(win, 4*2*width, height, -1);
+
+		// draw the background
+		gc.RgbFgColor = bg;
+		pix.DrawRectangle(gc, true, 0, 0, 4*2*width, height);
+
 		// render the bytes
-		string s="00011011";
-		
-		
+		string s = "00011011";
+
+
 		//Console.WriteLine(s);
-		
+
 		pangoLayout.SetText(s);
-		
-		
-		gc.RgbFgColor=fg;
+
+
+		gc.RgbFgColor = fg;
 		pix.DrawLayout(gc, 0, 0, pangoLayout);
-		
+
 		return pix;
 	}
 

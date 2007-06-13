@@ -30,110 +30,110 @@ public delegate void PreferencesChangedHandler(Preferences prefs);
 ///<summary>
 /// A class that holds the application preferences (using singletons)
 ///</summary>
-public class Preferences 
+public class Preferences
 {
 	Hashtable prefs;
 	string autoSavePath;
-	
-	static Preferences instance=null;
-	static Preferences defaultPrefs=null;
-	static PreferencesProxy proxy=null;
-	
+
+	static Preferences instance = null;
+	static Preferences defaultPrefs = null;
+	static PreferencesProxy proxy = null;
+
 	///<summary>
 	/// The current preferences
 	///</summary>
 	static public Preferences Instance {
-		get { 
-			if (instance==null)
-				instance=new Preferences();
+		get {
+			if (instance == null)
+				instance = new Preferences();
 			return instance;
 		}
 	}
-	
+
 	///<summary>
 	/// The default preferences
 	///</summary>
 	static public Preferences Default {
-		get { 
-			if (defaultPrefs==null)
-				defaultPrefs=new Preferences();
+		get {
+			if (defaultPrefs == null)
+				defaultPrefs = new Preferences();
 			return defaultPrefs;
 		}
 	}
 
 	static public PreferencesProxy Proxy {
-		get { 
-			if (proxy==null)
-				proxy=new PreferencesProxy(Preferences.Instance);
+		get {
+			if (proxy == null)
+				proxy = new PreferencesProxy(Preferences.Instance);
 			return proxy;
 		}
 	}
-	
-	private Preferences() 
-	{ 
-		prefs=new Hashtable();
-		autoSavePath=null;
-		notifyWhenSetting=true;
+
+	private Preferences()
+	{
+		prefs = new Hashtable();
+		autoSavePath = null;
+		notifyWhenSetting = true;
 	}
-	
+
 	///<summary>
-	/// Get or Set the value of a preference 
+	/// Get or Set the value of a preference
 	///</summary>
 	public string this[string key] {
-		get { 
-			string s=(string)prefs[key];
-			if (s==null)
-				s=string.Empty;
+		get {
+			string s = (string)prefs[key];
+			if (s == null)
+				s = string.Empty;
 			return s;
 		}
-		
+
 		set {
-			prefs[key]=value;
+			prefs[key] = value;
 			// save the preferences if autoSavePath is set
 			// ignore exceptions
 			try {
-				if (autoSavePath!=null)
+				if (autoSavePath != null)
 					Save(autoSavePath);
 			}
 			catch (Exception e) {
 				System.Console.WriteLine(e.Message);
 			}
-			
+
 			if (notifyWhenSetting)
 				Preferences.Proxy.Change(key, value, "__Preferences__");
-			
+
 		}
 	}
-	
+
 	public string AutoSavePath {
-		get { return autoSavePath; }
-		set { autoSavePath=value; }	
+	get { return autoSavePath; }
+		set { autoSavePath = value; }
 	}
-	
-	public IEnumerator GetEnumerator() 
+
+	public IEnumerator GetEnumerator()
 	{
 		return prefs.GetEnumerator();
 	}
-	
+
 	public void SetWithoutNotify(string pref, string val)
 	{
-		notifyWhenSetting=false;
-		this[pref]=val;
-		notifyWhenSetting=true;
+		notifyWhenSetting = false;
+		this[pref] = val;
+		notifyWhenSetting = true;
 	}
-	
+
 	///<summary>
-	/// Save preferences to an Xml file 
+	/// Save preferences to an Xml file
 	///</summary>
 	public void Save(string path)
 	{
-		XmlTextWriter xml=new XmlTextWriter(path, null);
-		xml.Formatting=Formatting.Indented;
-		xml.Indentation=1;
-		xml.IndentChar='\t';
-		
+		XmlTextWriter xml = new XmlTextWriter(path, null);
+		xml.Formatting = Formatting.Indented;
+		xml.Indentation = 1;
+		xml.IndentChar = '\t';
+
 		xml.WriteStartElement(null, "preferences", null);
-		
+
 		foreach (DictionaryEntry entry in prefs) {
 			xml.WriteStartElement(null, "pref", null);
 			xml.WriteStartAttribute(null, "name", null);
@@ -142,43 +142,43 @@ public class Preferences
 			xml.WriteString((string)entry.Value);
 			xml.WriteEndElement();
 		}
-        	
-		
+
+
 		xml.WriteEndElement();
 		xml.WriteEndDocument();
 		xml.Close();
 	}
-	
+
 	///<summary>
-	/// Load preferences from an Xml file 
+	/// Load preferences from an Xml file
 	///</summary>
 	public void Load(string path)
 	{
-		XmlDocument xmlDoc=new XmlDocument();
+		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.Load(path);
-		
+
 		XmlNodeList prefList = xmlDoc.GetElementsByTagName("pref");
-		
+
 		foreach(XmlNode prefNode in prefList) {
 			XmlAttributeCollection attrColl = prefNode.Attributes;
-			string name=attrColl["name"].Value;
-			prefs[name]=prefNode.InnerText;
+			string name = attrColl["name"].Value;
+			prefs[name] = prefNode.InnerText;
 		}
 	}
 
 	///<summary>
-	/// Load preferences from another Preferences instance 
+	/// Load preferences from another Preferences instance
 	///</summary>
 	public void Load(Preferences p)
 	{
-		if (p!=null) {
+		if (p != null) {
 			foreach (DictionaryEntry entry in p)
-				prefs[entry.Key]=entry.Value;
+			prefs[entry.Key] = entry.Value;
 		}
 	}
-	
+
 	///<summary>
-	/// Display preferences 
+	/// Display preferences
 	///</summary>
 	public void Display()
 	{
@@ -186,7 +186,7 @@ public class Preferences
 			System.Console.WriteLine("[{0}]: {1}", entry.Key, entry.Value);
 		}
 	}
-	
+
 	private bool notifyWhenSetting;
 }
 
@@ -195,21 +195,21 @@ public class PreferencesProxy
 	Hashtable prefSubscribers;
 	Preferences prefs;
 	Hashtable currentlyHandling;
-	
+
 	public PreferencesProxy(Preferences prefs)
 	{
-		prefSubscribers=new Hashtable();
-		currentlyHandling=new Hashtable();
-		this.prefs=prefs;
-		this.enable=true;
+		prefSubscribers = new Hashtable();
+		currentlyHandling = new Hashtable();
+		this.prefs = prefs;
+		this.enable = true;
 	}
-	
-	
+
+
 	public void Subscribe(string pref, string id, PreferencesChangedHandler handler)
 	{
 		if (!prefSubscribers.Contains(pref))
 			prefSubscribers[pref] = new Hashtable();
-			
+
 		(prefSubscribers[pref] as Hashtable).Add(id, handler);
 	}
 
@@ -217,60 +217,60 @@ public class PreferencesProxy
 	{
 		if (!prefSubscribers.Contains(pref))
 			return;
-			
+
 		(prefSubscribers[pref] as Hashtable).Remove(id);
-		
+
 	}
-	
+
 	public void Change(string pref, string val, string id)
 	{
-		if (enable==false)
+		if (enable == false)
 			return;
-			
+
 		if (currentlyHandling.Contains(pref))
 			return;
-		
-		if (id!="__Preferences__") {
-			prefs.SetWithoutNotify(pref, val);	
+
+		if (id != "__Preferences__") {
+			prefs.SetWithoutNotify(pref, val);
 		}
-		
+
 		if (!prefSubscribers.Contains(pref))
 			return;
-		
-		
+
+
 		currentlyHandling.Add(pref, null);
-		
+
 		foreach(DictionaryEntry subscriber in (prefSubscribers[pref] as Hashtable))
-			if ((subscriber.Key as string)!=id) {
-				(subscriber.Value as PreferencesChangedHandler)(prefs);
-			}
-		
-		currentlyHandling.Remove(pref);	
+		if ((subscriber.Key as string) != id) {
+			(subscriber.Value as PreferencesChangedHandler)(prefs);
+		}
+
+		currentlyHandling.Remove(pref);
 	}
-	
+
 	public void NotifyAll()
 	{
-		if (enable==false)
+		if (enable == false)
 			return;
-		
+
 		foreach(DictionaryEntry prefSub in prefSubscribers) {
 			currentlyHandling.Add(prefSub.Key, null);
-			foreach(DictionaryEntry subscriber in (prefSub.Value as Hashtable)) 
-				(subscriber.Value as PreferencesChangedHandler)(prefs);
+			foreach(DictionaryEntry subscriber in (prefSub.Value as Hashtable))
+			(subscriber.Value as PreferencesChangedHandler)(prefs);
 			currentlyHandling.Remove(prefSub.Key);
 		}
 	}
-	
+
 	bool enable;
-		
+
 	///<summary>
-	/// Enable or disable emission of the Changed event 
+	/// Enable or disable emission of the Changed event
 	///</summary>
 	public bool Enable {
 		get { return enable; }
-		set { enable=value; }
-	} 
-	
+		set { enable = value; }
+	}
+
 }
 
 } // end namespace

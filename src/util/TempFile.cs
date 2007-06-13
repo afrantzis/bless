@@ -18,32 +18,32 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using System;
 using System.IO;
- 
+
 namespace Bless.Util {
- 
+
 public class TempFile
 {
- 
+
 	private TempFile() { }
- 
+
 	static public string CreateName(string dir)
 	{
 		string str;
-		Random rand=new Random();
-		
+		Random rand = new Random();
+
 		do {
-			str=string.Empty;
-			for (int i=0; i<8; i++) {
-				str+=Convert.ToChar(rand.Next()%26 + Convert.ToInt32('a'));
+			str = string.Empty;
+			for (int i = 0; i < 8; i++) {
+				str += Convert.ToChar(rand.Next() % 26 + Convert.ToInt32('a'));
 			}
-		} while (File.Exists(dir + Path.DirectorySeparatorChar + str + ".bless")==true);
-			
+		} while (File.Exists(dir + Path.DirectorySeparatorChar + str + ".bless") == true);
+
 		//System.Console.WriteLine("Created random: {0}",str);
-		return Path.Combine(dir, str + ".bless");	
-	 }
+		return Path.Combine(dir, str + ".bless");
+	}
 }
- 
+
 }//end namespace

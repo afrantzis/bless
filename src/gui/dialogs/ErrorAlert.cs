@@ -20,24 +20,24 @@
  */
 using System;
 using Gtk;
- 
+
 namespace Bless.Gui.Dialogs {
 
-	///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
-	public class ErrorAlert : Alert
+///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
+public class ErrorAlert : Alert
+{
+
+	public ErrorAlert(string primary, string secondary, Gtk.Window parent)
+			: base(primary, secondary, parent)
 	{
-	
-		public ErrorAlert(string primary, string secondary, Gtk.Window parent) 
-		: base(primary, secondary, parent)
-		{
-			image.SetFromStock(Gtk.Stock.DialogError, Gtk.IconSize.Dialog);
-			this.AddButton(Gtk.Stock.Ok, ResponseType.Ok);
-			
-			this.ShowAll();
-		}
-		
-	}	
+		image.SetFromStock(Gtk.Stock.DialogError, Gtk.IconSize.Dialog);
+		this.AddButton(Gtk.Stock.Ok, ResponseType.Ok);
+
+		this.ShowAll();
+	}
+
+}
 
 
 
-} 
+}

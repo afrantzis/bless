@@ -29,90 +29,90 @@ using Gtk;
 using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
-	
+
 public class FileExportPlugin : GuiPlugin
 {
 	Gtk.Action ExportAction;
-		
-	const string uiXml=
-	"<menubar>"+
-	"	<menu action=\"File\">"+
-	"		<placeholder name=\"Extra\">"+
-	"			<menuitem name=\"Export\" action=\"ExportAction\"/>"+
-	"		</placeholder>"+
-	"	</menu>"+
-	"</menubar>";
-	
+
+	const string uiXml =
+		"<menubar>" +
+		"	<menu action=\"File\">" +
+		"		<placeholder name=\"Extra\">" +
+		"			<menuitem name=\"Export\" action=\"ExportAction\"/>" +
+		"		</placeholder>" +
+		"	</menu>" +
+		"</menubar>";
+
 	DataBook dataBook;
 	Window mainWindow;
 	UIManager uiManager;
 	ExportDialog exportDialog;
-	
+
 	public FileExportPlugin(Window mw, UIManager uim)
 	{
 		mainWindow = mw;
 		uiManager = uim;
-		
+
 		name = "FileExport";
 		author = "Alexandros Frantzis";
 		description = "Export a file to various formats";
 		loadAfter.Add("FileOperations");
 	}
-	
+
 	public override bool Load()
 	{
 		dataBook = (DataBook) GetDataBook(mainWindow);
-		
+
 		AddMenuItems(uiManager);
-		
+
 		dataBook.PageRemoved += new DataView.DataViewEventHandler(OnDataViewRemoved);
 		dataBook.SwitchPage += new SwitchPageHandler(OnSwitchPage);
-		
+
 		exportDialog = new ExportDialog(dataBook, mainWindow);
-		
-		loaded=true;
+
+		loaded = true;
 		return true;
 	}
-	
+
 	void OnDataViewRemoved(DataView dv)
 	{
 		// if there are no pages left update the menu
 		if (dataBook.NPages == 0)
 			UpdateActions(null);
 	}
-	
+
 	void OnSwitchPage(object o, SwitchPageArgs args)
 	{
 		DataView dv = ((DataViewDisplay)dataBook.GetNthPage((int)args.PageNum)).View;
-		
+
 		UpdateActions(dv);
 	}
-	
+
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("ExportAction", null, Catalog.GetString("_Export..."), null, null,
-			                    new EventHandler(OnExportActivated)),
-		};
-		
+										  new ActionEntry ("ExportAction", null, Catalog.GetString("_Export..."), null, null,
+														   new EventHandler(OnExportActivated)),
+									  };
+
 		ActionGroup group = new ActionGroup ("ExportActions");
 		group.Add (actionEntries);
-		
+
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
-		
+
 		ExportAction = uim.GetAction("/menubar/File/Extra/Export");
-		
+
 		uim.EnsureUpdate();
-		
+
 	}
-	
+
 	///<summary>Handle file->export command from menu</summary>
-	public void OnExportActivated(object o, EventArgs args) 
+	public void OnExportActivated(object o, EventArgs args)
 	{
 		exportDialog.Show();
 	}
-	
+
 	void UpdateActions(DataView dv)
 	{
 		if (dv == null)

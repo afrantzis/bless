@@ -18,11 +18,11 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using NUnit.Framework; 
-using System; 
+using NUnit.Framework;
+using System;
 
 using Bless.Util;
- 
+
 namespace BlessTests.Util {
 
 [TestFixture]
@@ -33,12 +33,12 @@ public class ListTests {
 		List list = new List();
 		list.Append(4);
 		list.Append(7);
-		List.Node n=list.First;
+		List.Node n = list.First;
 		Assert.AreEqual(4, (int)n.data);
 		Assert.AreEqual(7, (int)n.next.data);
 	}
-	
-	
+
+
 	[Test]
 	public void CountTest() {
 		List list = new List();
@@ -49,7 +49,7 @@ public class ListTests {
 		Assert.AreEqual(3, list.Count);
 	}
 
-	
+
 	[Test]
 	public void InsertBeforeTest() {
 		List list = new List();
@@ -57,8 +57,8 @@ public class ListTests {
 		list.InsertBefore(list.First, 1);
 		list.InsertBefore(list.Last, 2);
 
-		
-		List.Node n=list.First;
+
+		List.Node n = list.First;
 		Assert.AreEqual(1, (int)n.data);
 		Assert.AreEqual(2, (int)n.next.data);
 		Assert.AreEqual(3, (int)n.next.next.data);
@@ -71,8 +71,8 @@ public class ListTests {
 		list.InsertAfter(list.Last, 3);
 		list.InsertAfter(list.First, 2);
 
-		
-		List.Node n=list.First;
+
+		List.Node n = list.First;
 		Assert.AreEqual(1, (int)n.data);
 		Assert.AreEqual(2, (int)n.next.data);
 		Assert.AreEqual(3, (int)n.next.next.data);
@@ -89,50 +89,50 @@ public class ListTests {
 		Assert.AreEqual(1, list[0]);
 		Assert.AreEqual(2, list[1]);
 		Assert.AreEqual(3, list[2]);
-		//if (list[3]!=null) 
-			//Assert.Fail("Expected: null!");
+		//if (list[3]!=null)
+		//Assert.Fail("Expected: null!");
 	}
 
 	[Test]
 	public void RemoveTest() {
 		List list = new List();
-		List.Node n1=list.Append(1);
+		List.Node n1 = list.Append(1);
 		list.Append(2);
-		List.Node n3=list.Append(3);
-		List.Node n4=list.Append(4);
-		
+		List.Node n3 = list.Append(3);
+		List.Node n4 = list.Append(4);
+
 		list.Remove(n1);
-		Assert.AreEqual(3, list.Count,"#1");
-		Assert.AreEqual(2, list[0],"#2");
-		Assert.AreEqual(3, list[1],"#3");
-		Assert.AreEqual(4, list[2],"#4");
-		
+		Assert.AreEqual(3, list.Count, "#1");
+		Assert.AreEqual(2, list[0], "#2");
+		Assert.AreEqual(3, list[1], "#3");
+		Assert.AreEqual(4, list[2], "#4");
+
 		list.Remove(n3);
-		Assert.AreEqual(2, list.Count,"#5");
-		Assert.AreEqual(2, list[0],"#6");
-		Assert.AreEqual(4, list[1],"#7");
-		
+		Assert.AreEqual(2, list.Count, "#5");
+		Assert.AreEqual(2, list[0], "#6");
+		Assert.AreEqual(4, list[1], "#7");
+
 		list.Remove(n4);
-		Assert.AreEqual(1, list.Count,"#8");
-		Assert.AreEqual(2, list[0],"#9");
-		
-		//if (list[3]!=null) 
-			//Assert.Fail("Expected: null!");
+		Assert.AreEqual(1, list.Count, "#8");
+		Assert.AreEqual(2, list[0], "#9");
+
+		//if (list[3]!=null)
+		//Assert.Fail("Expected: null!");
 	}
 
 	[Test]
 	public void RemoveLastTest() {
 		List list = new List();
 		list.Append(1);
-		List.Node n2=list.Append(2);
-		
+		List.Node n2 = list.Append(2);
+
 		list.Remove(n2);
 		list.Append(3);
-		
-		Assert.AreEqual(2, list.Count,"#1");
-		Assert.AreEqual(1, list[0],"#2");
-		Assert.AreEqual(3, list[1],"#3");
-		
+
+		Assert.AreEqual(2, list.Count, "#1");
+		Assert.AreEqual(1, list[0], "#2");
+		Assert.AreEqual(3, list[1], "#3");
+
 	}
 
 

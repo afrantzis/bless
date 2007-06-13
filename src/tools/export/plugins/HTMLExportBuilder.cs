@@ -32,31 +32,31 @@ namespace Bless.Tools.Export.Plugins
 ///</summary>
 public class HTMLExportBuilder : TextExportBuilder
 {
-	
+
 	public HTMLExportBuilder(Stream stream)
-	: base(stream)
-	{ 
+			: base(stream)
+	{
 	}
-	
+
 	public override void BuildPrologue()
 	{
 		System.Console.WriteLine("Writing prologue");
 		BuildString("<html><body><pre>");
 	}
-	
+
 	public override void BuildEpilogue()
 	{
 		System.Console.WriteLine("Writing epilogue");
 		BuildString("</pre></body></html>");
 	}
-	
+
 	protected override int BuildByte(IBuffer buf, long offset, BuildBytesInfo info, bool dummy)
 	{
 		if (offset % 2 == 0)
 			BuildString("<span style=\"color:blue\">");
-			
-		int n = base.BuildByte(buf, offset, info, dummy); 
-	
+
+		int n = base.BuildByte(buf, offset, info, dummy);
+
 		if (offset % 2 == 0)
 			BuildString("</span>");
 		return n;

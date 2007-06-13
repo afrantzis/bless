@@ -23,12 +23,12 @@ using Bless.Gui.Areas;
 
 namespace Bless.Plugins
 {
-	
+
 public class AreaPlugin : Plugin
 {
 	protected AreaPlugin()
 	{
-		
+
 	}
 
 	public virtual Area CreateArea()
@@ -36,7 +36,7 @@ public class AreaPlugin : Plugin
 		return null;
 	}
 }
-	
-	
-	
+
+
+
 }

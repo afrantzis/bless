@@ -28,176 +28,176 @@ namespace Bless.Gui.Areas {
 
 ///<summary>An area that displays grouped bytes</summary>
 abstract public class GroupedArea : Area {
-	
+
 	int grouping;
 
 	public GroupedArea()
-	: base()
+			: base()
 	{
-		grouping=1;
-		canFocus=true;
+		grouping = 1;
+		canFocus = true;
 	}
-	
-		
+
+
 	public int Grouping {
-		set {  grouping=value; }
+		set {  grouping = value; }
 		get {  return grouping; }
-	
+
 	}
-	
+
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
 	{
-		int rx=0+x;
-		int ry=i*drawer.Height+y;
-		long roffset=offset+i*bpr+p;
+		int rx = 0 + x;
+		int ry = i * drawer.Height + y;
+		long roffset = offset + i * bpr + p;
 		bool odd;
-		Gdk.GC backEvenGC=drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
-		Gdk.GC backOddGC=drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
-		
+		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
+		Gdk.GC backOddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
+
 		// odd row?
-		odd=(((roffset/bpr)%2)==1);
-		
-		if (blank==true) {
+		odd = (((roffset / bpr) % 2) == 1);
+
+		if (blank == true) {
 			if (odd)
 				backPixmap.DrawRectangle(backOddGC, true, rx, ry, width, drawer.Height);
 			else
 				backPixmap.DrawRectangle(backEvenGC, true, rx, ry, width, drawer.Height);
 		}
-		
+
 		Drawer.ColumnType colType;
 		Drawer.RowType rowType;
-				
+
 		if (odd)
-			rowType=Drawer.RowType.Odd;
+			rowType = Drawer.RowType.Odd;
 		else
-			rowType=Drawer.RowType.Even;
-		
-		int pos=0;
+			rowType = Drawer.RowType.Even;
+
+		int pos = 0;
 		// draw bytes
 		while (true) {
-			
-			if (pos>=p) { //don't draw until we reach p
-				if ((pos/grouping)%2 == 0)
-					colType=Drawer.ColumnType.Even;
+
+			if (pos >= p) { //don't draw until we reach p
+				if ((pos / grouping) % 2 == 0)
+					colType = Drawer.ColumnType.Even;
 				else
-					colType=Drawer.ColumnType.Odd;
-				
+					colType = Drawer.ColumnType.Odd;
+
 				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, byteBuffer[roffset++], rowType, colType);
-				if (--n<=0)
+				if (--n <= 0)
 					break;
 			}
-			
+
 			// space if necessary
-			if (pos%grouping == grouping-1) 
-				rx=rx+(dpb+1)*drawer.Width;
-			else 
-				rx=rx+dpb*drawer.Width;
-			
+			if (pos % grouping == grouping - 1)
+				rx = rx + (dpb + 1) * drawer.Width;
+			else
+				rx = rx + dpb * drawer.Width;
+
 			pos++;
 		}
 	}
-	
+
 	protected override void RenderRowHighlight(int i, int p, int n, bool blank, Drawer.HighlightType ht)
 	{
-		int rx=0+x;
-		int ry=i*drawer.Height+y;
-		long roffset=offset+i*bpr+p;
+		int rx = 0 + x;
+		int ry = i * drawer.Height + y;
+		long roffset = offset + i * bpr + p;
 		bool odd;
-		Gdk.GC backEvenGC=drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
-		Gdk.GC backOddGC=drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
-		
+		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
+		Gdk.GC backOddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
+
 		// odd row?
-		odd=(((roffset/bpr)%2)==1);
-		
-		if (blank==true) {
+		odd = (((roffset / bpr) % 2) == 1);
+
+		if (blank == true) {
 			if (odd)
 				backPixmap.DrawRectangle(backOddGC, true, rx, ry, width, drawer.Height);
 			else
 				backPixmap.DrawRectangle(backEvenGC, true, rx, ry, width, drawer.Height);
 		}
-		
+
 		Drawer.RowType rowType;
-				
+
 		if (odd)
-			rowType=Drawer.RowType.Odd;
+			rowType = Drawer.RowType.Odd;
 		else
-			rowType=Drawer.RowType.Even;
-		
-		int pos=0;
+			rowType = Drawer.RowType.Even;
+
+		int pos = 0;
 		// draw bytes
 		while (true) {
-			
-			if (pos>=p) { //don't draw until we reach p
+
+			if (pos >= p) { //don't draw until we reach p
 				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, byteBuffer[roffset++], rowType, ht);
-				if (--n<=0)
+				if (--n <= 0)
 					break;
 			}
-			
+
 			// space if necessary
-			if (pos%grouping == grouping-1) 
-				rx=rx+(dpb+1)*drawer.Width;
-			else 
-				rx=rx+dpb*drawer.Width;
-			
+			if (pos % grouping == grouping - 1)
+				rx = rx + (dpb + 1) * drawer.Width;
+			else
+				rx = rx + dpb * drawer.Width;
+
 			pos++;
 		}
 	}
-	
-	public override int CalcWidth(int n, bool force) 
+
+	public override int CalcWidth(int n, bool force)
 	{
-		if (n==0)
+		if (n == 0)
 			return 0;
-		if (fixedBpr > 0 && n>fixedBpr && !force) // must adhere to fixed length
+		if (fixedBpr > 0 && n > fixedBpr && !force) // must adhere to fixed length
 			return -1;
 		if (n % grouping != 0 && !force) // can't break the grouping
 			return -1;
-		
-		int ngroups=n/grouping;
-		int groupWidth=grouping*dpb*drawer.Width;
-		
-		return ngroups*groupWidth+(ngroups-1)*drawer.Width;
+
+		int ngroups = n / grouping;
+		int groupWidth = grouping * dpb * drawer.Width;
+
+		return ngroups*groupWidth + (ngroups - 1)*drawer.Width;
 	}
-	
+
 	public override void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy)
-	{	 
-		orow=(int)((off-offset)/bpr);
-		obyte=(int)((off-offset)%bpr);
-			
-		oy=orow*drawer.Height;
-	
-		int group=obyte/grouping;
-		int groupOffset=obyte%grouping;
-		ox=group*(grouping*dpb*drawer.Width+drawer.Width) + dpb*drawer.Width*groupOffset;
+	{
+		orow = (int)((off - offset) / bpr);
+		obyte = (int)((off - offset) % bpr);
+
+		oy = orow * drawer.Height;
+
+		int group = obyte / grouping;
+		int groupOffset = obyte % grouping;
+		ox = group * (grouping * dpb * drawer.Width + drawer.Width) + dpb * drawer.Width * groupOffset;
 	}
- 
+
 	public override long GetOffsetByDisplayInfo(int x, int y, out int digit, out GetOffsetFlags flags)
 	{
-		flags=0;
-		int groupWidth=(grouping*dpb*drawer.Width+drawer.Width);
+		flags = 0;
+		int groupWidth = (grouping * dpb * drawer.Width + drawer.Width);
 
-		int row=y/drawer.Height;
-		int group=x/groupWidth;
-		int groupByte=(x-group*groupWidth)/(dpb*drawer.Width);
-		
-		digit = (x - group*groupWidth - groupByte*dpb*drawer.Width)/drawer.Width;
-		
+		int row = y / drawer.Height;
+		int group = x / groupWidth;
+		int groupByte = (x - group * groupWidth) / (dpb * drawer.Width);
+
+		digit = (x - group * groupWidth - groupByte * dpb * drawer.Width) / drawer.Width;
+
 		if (groupByte >= grouping) {
-			groupByte=grouping-1;
+			groupByte = grouping - 1;
 			flags |= GetOffsetFlags.Abyss;
 		}
-		
-		long off=row*bpr + (group*grouping+groupByte) + offset;
+
+		long off = row * bpr + (group * grouping + groupByte) + offset;
 		if (off >= byteBuffer.Size)
 			flags |= GetOffsetFlags.Eof;
-			
+
 		return off;
-	
+
 	}
-	
+
 	public override void Configure(XmlNode parentNode)
 	{
 		base.Configure(parentNode);
-		
+
 		XmlNodeList childNodes = parentNode.ChildNodes;
 		foreach(XmlNode node in childNodes) {
 			if (node.Name == "grouping")

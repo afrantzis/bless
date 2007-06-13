@@ -21,25 +21,25 @@
 using System;
 using Gtk;
 using Mono.Unix;
- 
+
 namespace Bless.Gui.Dialogs {
 
 ///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
 public class RevertConfirmationAlert : Alert
 {
-	
-	public RevertConfirmationAlert(string primary, Gtk.Window parent) 
-	: base(string.Format(Catalog.GetString("Revert file '{0}' to its last saved state?"), primary),
-		Catalog.GetString("If you revert, all changes made since the last save will be lost."), parent)
+
+	public RevertConfirmationAlert(string primary, Gtk.Window parent)
+			: base(string.Format(Catalog.GetString("Revert file '{0}' to its last saved state?"), primary),
+				   Catalog.GetString("If you revert, all changes made since the last save will be lost."), parent)
 	{
 		image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
-		
+
 		this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
 		this.AddButton(Gtk.Stock.RevertToSaved, ResponseType.Ok);
-		
+
 		this.ShowAll();
 	}
-	
-}	
+
+}
 
 } // namespace

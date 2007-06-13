@@ -20,27 +20,27 @@
  */
 namespace Bless.Gui
 {
-	
+
 public class Services
 {
 	static FileService fileService;
 	static SessionService sessionService;
 	static UIService uiService;
-	
+
 	public static FileService File {
 		get { return fileService; }
-		set { fileService=value; }
+		set { fileService = value; }
 	}
-	
+
 	public static SessionService Session {
 		get { return sessionService; }
-		set { sessionService=value; }
+		set { sessionService = value; }
 	}
-	
+
 	public static UIService UI {
 		get { return uiService; }
-		set { uiService=value; }
+		set { uiService = value; }
 	}
 }
-	
+
 }

@@ -18,11 +18,11 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using NUnit.Framework; 
-using System; 
+using NUnit.Framework;
+using System;
 
 using Bless.Buffers;
- 
+
 namespace BlessTests.Buffers {
 
 [TestFixture]
@@ -30,8 +30,8 @@ public class SegmentTests {
 
 	[Test]
 	public void SplitTest1() {
-		Segment	s=new Segment(null, 3, 8);
-		Segment s1=s.SplitAt(3);
+		Segment	s = new Segment(null, 3, 8);
+		Segment s1 = s.SplitAt(3);
 		Assert.AreEqual(3, s.Start);
 		Assert.AreEqual(5, s.End);
 		Assert.AreEqual(6, s1.Start);
@@ -40,18 +40,18 @@ public class SegmentTests {
 
 	[Test]
 	public void SplitTest2() {
-		Segment	s=new Segment(null, 3, 8);
-		Segment s1=s.SplitAt(0);
+		Segment	s = new Segment(null, 3, 8);
+		Segment s1 = s.SplitAt(0);
 		Assert.IsNull(s1);
 	}
-	
+
 	[Test]
 	public void ToStringTest() {
-		Segment	s=new Segment(null, 3, 8);
+		Segment	s = new Segment(null, 3, 8);
 		Assert.AreEqual("(3->8)", s.ToString());
 	}
-	
-		
+
+
 }
 
 } // end namespace

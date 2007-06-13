@@ -18,21 +18,21 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using System.Reflection;
 using System.IO;
 using System;
- 
+
 namespace Bless.Util {
 
 ///<summary>Path of a file resource</summary>
 public class FileResourcePath
 {
 	private FileResourcePath() { }
-	
+
 	///<summary>
-	/// Gets the full path of a file resource 
-	/// which is given relatively to the 
+	/// Gets the full path of a file resource
+	/// which is given relatively to the
 	/// assembly path
 	///</summary>
 	public static string GetSystemPath(params string[] dirs)
@@ -41,27 +41,27 @@ public class FileResourcePath
 		string assemblyPath = Assembly.GetCallingAssembly().Location;
 		// Get assembly dir
 		string assemblyDir = Path.GetDirectoryName(assemblyPath);
-		
+
 		string resourcePath = assemblyDir;
-		
-		foreach (string s in dirs) 
-			resourcePath = Path.Combine(resourcePath, s);
-		
+
+		foreach (string s in dirs)
+		resourcePath = Path.Combine(resourcePath, s);
+
 		return resourcePath;
-	} 
-	
+	}
+
 	public static string GetUserPath(params string[] dirs)
 	{
-		string resourcePath=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bless");
-		
-		foreach (string s in dirs) 
-			resourcePath = Path.Combine(resourcePath, s);
-		
+		string resourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bless");
+
+		foreach (string s in dirs)
+		resourcePath = Path.Combine(resourcePath, s);
+
 		return resourcePath;
-	} 
-	
- 		
+	}
+
+
 }
- 
+
 } // end namespace
- 
+

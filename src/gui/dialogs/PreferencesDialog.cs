@@ -35,7 +35,7 @@ public class PreferencesDialog : Dialog
 {
 	Preferences prefs;
 	Window mainWindow;
-	
+
 	[Glade.Widget] Notebook PreferencesNotebook;
 	[Glade.Widget] Entry LayoutFileEntry;
 	[Glade.Widget] CheckButton UseCurrentLayoutCheckButton;
@@ -47,45 +47,45 @@ public class PreferencesDialog : Dialog
 	[Glade.Widget] Entry TempDirEntry;
 	[Glade.Widget] Button SelectTempDirButton;
 	[Glade.Widget] CheckButton HighlightPatternMatchCheckButton;
-	
+
 	[Glade.Widget] CheckButton LoadPreviousSessionCheckButton;
 	[Glade.Widget] CheckButton AskBeforeLoadingSessionCheckButton;
 	[Glade.Widget] CheckButton RememberCursorPositionCheckButton;
 	[Glade.Widget] CheckButton RememberWindowGeometryCheckButton;
-	
+
 	enum EditModeEnum { Insert, Overwrite }
 	enum NumberBaseEnum { Hexadecimal, Decimal, Octal }
-	
+
 	public PreferencesDialog(Preferences p, Window parent)
-	: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
+			: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..","data","bless.glade"), "PreferencesNotebook", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "PreferencesNotebook", "bless");
 		gxml.Autoconnect (this);
-		
-		prefs=p;
+
+		prefs = p;
 		mainWindow = parent;
 		LoadPreferences();
-		
+
 		// connect handlers
-		LayoutFileEntry.Changed+=OnPreferencesChanged;
-		UseCurrentLayoutCheckButton.Toggled+=OnPreferencesChanged;
-		UndoLimitedRadioButton.Toggled+=OnPreferencesChanged;
-		UndoUnlimitedRadioButton.Toggled+=OnPreferencesChanged;
-		UndoActionsSpinButton.ValueChanged+=OnPreferencesChanged;
-		DefaultEditModeComboBox.Changed+=OnPreferencesChanged;
-		DefaultNumberBaseComboBox.Changed+=OnPreferencesChanged;
-		HighlightPatternMatchCheckButton.Toggled+=OnPreferencesChanged;
-		
-		LoadPreviousSessionCheckButton.Toggled+=OnPreferencesChanged;
-		AskBeforeLoadingSessionCheckButton.Toggled+=OnPreferencesChanged;
-		RememberCursorPositionCheckButton.Toggled+=OnPreferencesChanged;
-		RememberWindowGeometryCheckButton.Toggled+=OnPreferencesChanged;
-		
-		this.Modal=false;
-		this.TransientFor=parent;
-		this.BorderWidth=6;
+		LayoutFileEntry.Changed += OnPreferencesChanged;
+		UseCurrentLayoutCheckButton.Toggled += OnPreferencesChanged;
+		UndoLimitedRadioButton.Toggled += OnPreferencesChanged;
+		UndoUnlimitedRadioButton.Toggled += OnPreferencesChanged;
+		UndoActionsSpinButton.ValueChanged += OnPreferencesChanged;
+		DefaultEditModeComboBox.Changed += OnPreferencesChanged;
+		DefaultNumberBaseComboBox.Changed += OnPreferencesChanged;
+		HighlightPatternMatchCheckButton.Toggled += OnPreferencesChanged;
+
+		LoadPreviousSessionCheckButton.Toggled += OnPreferencesChanged;
+		AskBeforeLoadingSessionCheckButton.Toggled += OnPreferencesChanged;
+		RememberCursorPositionCheckButton.Toggled += OnPreferencesChanged;
+		RememberWindowGeometryCheckButton.Toggled += OnPreferencesChanged;
+
+		this.Modal = false;
+		this.TransientFor = parent;
+		this.BorderWidth = 6;
 		this.AddButton("Close", ResponseType.Close);
-		this.Response+=new ResponseHandler(OnDialogResponse);
+		this.Response += new ResponseHandler(OnDialogResponse);
 		this.VBox.Add(PreferencesNotebook);
 	}
 
@@ -95,87 +95,87 @@ public class PreferencesDialog : Dialog
 	void LoadPreferences()
 	{
 		string val;
-		
+
 		//
 		//
-		val=prefs["Default.Layout.File"];
-		LayoutFileEntry.Text=val;
-		
+		val = prefs["Default.Layout.File"];
+		LayoutFileEntry.Text = val;
+
 		LoadCheckButtonPreference(
 			"Default.Layout.UseCurrent",
 			UseCurrentLayoutCheckButton,
 			false);
-		
+
 		//
 		//
-		val=prefs["Undo.Limited"];
-		
+		val = prefs["Undo.Limited"];
+
 		try {
-			bool limited=Convert.ToBoolean(val);
-			UndoLimitedRadioButton.Active=limited;
-			UndoUnlimitedRadioButton.Active=!limited;	
+			bool limited = Convert.ToBoolean(val);
+			UndoLimitedRadioButton.Active = limited;
+			UndoUnlimitedRadioButton.Active = !limited;
 		}
-		catch(FormatException e) {
+		catch (FormatException e) {
 			System.Console.WriteLine(e.Message);
-			UndoLimitedRadioButton.Active=true;	
+			UndoLimitedRadioButton.Active = true;
 		}
-		
+
 		//
-		val=prefs["Undo.Actions"];
-		
+		val = prefs["Undo.Actions"];
+
 		try {
-			int actions=Convert.ToInt32(val);
-			UndoActionsSpinButton.Value=actions;	
+			int actions = Convert.ToInt32(val);
+			UndoActionsSpinButton.Value = actions;
 		}
-		catch(FormatException e) {
+		catch (FormatException e) {
 			System.Console.WriteLine(e.Message);
-			UndoActionsSpinButton.Value=100;	
+			UndoActionsSpinButton.Value = 100;
 		}
-		
+
 		//
 		//
-		val=prefs["Default.EditMode"];
-		if (val!="Insert" && val!="Overwrite")
-			val="Insert";
-		
+		val = prefs["Default.EditMode"];
+		if (val != "Insert" && val != "Overwrite")
+			val = "Insert";
+
 		{
 			EditModeEnum index;
-			if (val=="Insert")
-				index=EditModeEnum.Insert;
+			if (val == "Insert")
+				index = EditModeEnum.Insert;
 			else
-				index=EditModeEnum.Overwrite;
-				 
-			DefaultEditModeComboBox.Active=(int)index;
+				index = EditModeEnum.Overwrite;
+
+			DefaultEditModeComboBox.Active = (int)index;
 		}
-		
+
 		//
 		//
-		val=prefs["Default.NumberBase"];
-		if (val!="Octal" && val!="Decimal" && val!="Hexadecimal")
-			val="Hexadecimal";
-		
+		val = prefs["Default.NumberBase"];
+		if (val != "Octal" && val != "Decimal" && val != "Hexadecimal")
+			val = "Hexadecimal";
+
 		{
 			NumberBaseEnum index;
-			if (val=="Hexadecimal")
-				index=NumberBaseEnum.Hexadecimal;
-			else if (val=="Decimal")
-				index=NumberBaseEnum.Decimal;
+			if (val == "Hexadecimal")
+				index = NumberBaseEnum.Hexadecimal;
+			else if (val == "Decimal")
+				index = NumberBaseEnum.Decimal;
 			else
-				index=NumberBaseEnum.Octal;	
-				 
-			DefaultNumberBaseComboBox.Active=(int)index;
+				index = NumberBaseEnum.Octal;
+
+			DefaultNumberBaseComboBox.Active = (int)index;
 		}
-		
+
 		if (prefs["ByteBuffer.TempDir"] != System.IO.Path.GetTempPath())
 			TempDirEntry.Text = prefs["ByteBuffer.TempDir"];
 		else
 			TempDirEntry.Text = "";
-		
+
 		LoadCheckButtonPreference(
 			"Highlight.PatternMatch",
 			HighlightPatternMatchCheckButton,
 			true);
-		
+
 		//
 		// Session
 		//
@@ -183,38 +183,38 @@ public class PreferencesDialog : Dialog
 			"Session.LoadPrevious",
 			LoadPreviousSessionCheckButton,
 			true);
-		
+
 		LoadCheckButtonPreference(
 			"Session.AskBeforeLoading",
 			AskBeforeLoadingSessionCheckButton,
 			false);
-		
+
 		LoadCheckButtonPreference(
 			"Session.RememberCursorPosition",
 			RememberCursorPositionCheckButton,
 			true);
-		
+
 		LoadCheckButtonPreference(
 			"Session.RememberWindowGeometry",
 			RememberWindowGeometryCheckButton,
 			true);
 	}
-	
+
 	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
 	{
-		string val=prefs[key];
-		
+		string val = prefs[key];
+
 		try {
-			bool b=Convert.ToBoolean(val);
-			cb.Active=b;
+			bool b = Convert.ToBoolean(val);
+			cb.Active = b;
 		}
-		catch(FormatException e) {
+		catch (FormatException e) {
 			System.Console.WriteLine(e.Message);
-			cb.Active=defaultValue;
+			cb.Active = defaultValue;
 		}
-	
+
 	}
-	
+
 	///<summary>
 	/// Save the preferences from the gui
 	///</summary>
@@ -223,89 +223,89 @@ public class PreferencesDialog : Dialog
 		// temporarily disable autosave
 		// so that we don't save every time
 		// a preference changes
-		string autoSavePath=prefs.AutoSavePath;
-		prefs.AutoSavePath=null;
-		
-		prefs["Default.Layout.File"]=LayoutFileEntry.Text;
-		prefs["Default.Layout.UseCurrent"]=UseCurrentLayoutCheckButton.Active.ToString();
-		prefs["Undo.Limited"]=UndoLimitedRadioButton.Active.ToString();
-		prefs["Undo.Actions"]=UndoActionsSpinButton.ValueAsInt.ToString();
-		prefs["Highlight.PatternMatch"]=HighlightPatternMatchCheckButton.Active.ToString();
-		
+		string autoSavePath = prefs.AutoSavePath;
+		prefs.AutoSavePath = null;
+
+		prefs["Default.Layout.File"] = LayoutFileEntry.Text;
+		prefs["Default.Layout.UseCurrent"] = UseCurrentLayoutCheckButton.Active.ToString();
+		prefs["Undo.Limited"] = UndoLimitedRadioButton.Active.ToString();
+		prefs["Undo.Actions"] = UndoActionsSpinButton.ValueAsInt.ToString();
+		prefs["Highlight.PatternMatch"] = HighlightPatternMatchCheckButton.Active.ToString();
+
 		TreeIter iter;
 
 		if (DefaultEditModeComboBox.GetActiveIter (out iter))
-			prefs["Default.EditMode"]=(string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
-        
+			prefs["Default.EditMode"] = (string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
+
 		if (DefaultNumberBaseComboBox.GetActiveIter (out iter))
-			prefs["Default.NumberBase"]=(string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
-		
+			prefs["Default.NumberBase"] = (string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
+
 		if (TempDirEntry.Text != "")
 			prefs["ByteBuffer.TempDir"] = TempDirEntry.Text;
 		else
 			prefs["ByteBuffer.TempDir"] = System.IO.Path.GetTempPath();
-			
-		prefs["Session.LoadPrevious"]=LoadPreviousSessionCheckButton.Active.ToString();
-		prefs["Session.AskBeforeLoading"]=AskBeforeLoadingSessionCheckButton.Active.ToString();
-		prefs["Session.RememberCursorPosition"]=RememberCursorPositionCheckButton.Active.ToString();
-		
+
+		prefs["Session.LoadPrevious"] = LoadPreviousSessionCheckButton.Active.ToString();
+		prefs["Session.AskBeforeLoading"] = AskBeforeLoadingSessionCheckButton.Active.ToString();
+		prefs["Session.RememberCursorPosition"] = RememberCursorPositionCheckButton.Active.ToString();
+
 		// re-enable autosave
 		// to save the preferences when setting the last preference
-		prefs.AutoSavePath=autoSavePath;
-		
+		prefs.AutoSavePath = autoSavePath;
+
 		// set the last preference
-		prefs["Session.RememberWindowGeometry"]=RememberWindowGeometryCheckButton.Active.ToString();
+		prefs["Session.RememberWindowGeometry"] = RememberWindowGeometryCheckButton.Active.ToString();
 	}
-		
+
 	void OnDialogResponse(object o, Gtk.ResponseArgs args)
 	{
 		// update and save the preferences
 		UpdatePreferences();
-		
-		this.Destroy();		
+
+		this.Destroy();
 	}
-	
+
 	void OnSelectLayoutClicked(object o, EventArgs args)
 	{
-		LayoutSelectionDialog lsd=new LayoutSelectionDialog(null);
-		Gtk.ResponseType response=(Gtk.ResponseType)lsd.Run();
-		
-		if (response==Gtk.ResponseType.Ok && lsd.SelectedLayout!=null) {
-			LayoutFileEntry.Text=lsd.SelectedLayout;
+		LayoutSelectionDialog lsd = new LayoutSelectionDialog(null);
+		Gtk.ResponseType response = (Gtk.ResponseType)lsd.Run();
+
+		if (response == Gtk.ResponseType.Ok && lsd.SelectedLayout != null) {
+			LayoutFileEntry.Text = lsd.SelectedLayout;
 		}
-		
+
 		lsd.Destroy();
 	}
-	
+
 	void OnLoadPreviousSessionToggled(object o, EventArgs args)
 	{
 		if (LoadPreviousSessionCheckButton.Active) {
-			AskBeforeLoadingSessionCheckButton.Sensitive=true;
-			RememberCursorPositionCheckButton.Sensitive=true;
-			RememberWindowGeometryCheckButton.Sensitive=true;
+			AskBeforeLoadingSessionCheckButton.Sensitive = true;
+			RememberCursorPositionCheckButton.Sensitive = true;
+			RememberWindowGeometryCheckButton.Sensitive = true;
 		}
 		else {
-			AskBeforeLoadingSessionCheckButton.Sensitive=false;
-			RememberCursorPositionCheckButton.Sensitive=false;
-			RememberWindowGeometryCheckButton.Sensitive=false;
+			AskBeforeLoadingSessionCheckButton.Sensitive = false;
+			RememberCursorPositionCheckButton.Sensitive = false;
+			RememberWindowGeometryCheckButton.Sensitive = false;
 		}
 	}
-	
+
 	private void OnSelectTempDirButtonClicked(object o, EventArgs args)
 	{
 		FileChooserDialog fcd = new FileChooserDialog(Catalog.GetString("Select Directory"), mainWindow, FileChooserAction.CreateFolder,  Catalog.GetString("Cancel"), ResponseType.Cancel,
-                                      Catalog.GetString("Select"), ResponseType.Accept);
+								Catalog.GetString("Select"), ResponseType.Accept);
 		if ((ResponseType)fcd.Run() == ResponseType.Accept)
 			TempDirEntry.Text = fcd.Filename;
 		fcd.Destroy();
 	}
-	
+
 	void OnPreferencesChanged(object o, EventArgs args)
 	{
 		// update preferences only when closing the dialog...
 		// UpdatePreferences();
 	}
-	
+
 }
 
 } // end namespace

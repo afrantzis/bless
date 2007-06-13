@@ -23,7 +23,7 @@ using Bless.Buffers;
 
 namespace Bless.Tools.Export
 {
-	
+
 public struct BuildBytesInfo
 {
 	public int Count;
@@ -47,11 +47,11 @@ public interface IExportBuilder
 	void BuildCharacter(char c);
 	void BuildAlignment(int align);
 	void BuildOffset(long offset, int length, char type);
-	
+
 	Stream OutputStream {
 		get;
+		}
 	}
-}
 
 
 

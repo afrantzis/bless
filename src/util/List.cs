@@ -33,73 +33,73 @@ public class List<T> : IEnumerable<T>
 		public T data;
 		public Node next;
 		public Node prev;
-	
+
 		public Node(T d, Node p, Node n) {
 			data = d;
 			prev = p;
 			next = n;
 		}
-		
+
 	}
 
 
 	Node m_first;
 	Node m_last;
-	
+
 	int m_count;
-	
-	
-	public List() 
+
+
+	public List()
 	{
-		m_first=null;
-		m_last=null;
+		m_first = null;
+		m_last = null;
 	}
-	
-	
-	private Node AddFirst(T o) 
+
+
+	private Node AddFirst(T o)
 	{
 		m_first = new Node(o, null, null);
 		m_last = m_first;
 		++m_count;
 		return m_first;
 	}
-	
+
 	///<summary>Append an object to the list</summary>
-	public Node Append(T o) 
+	public Node Append(T o)
 	{
 		return InsertAfter(m_last, o);
 	}
-	
+
 	///<summary>Insert an object before a node in the list</summary>
-	public Node InsertBefore(Node n, T o) 
+	public Node InsertBefore(Node n, T o)
 	{
 		if (m_last == null) { // first entry?
 			return AddFirst(o);
-		}	
+		}
 		else {
 			Node tmp = new Node(o, n.prev, n);
-			if (n.prev != null) 
+			if (n.prev != null)
 				n.prev.next = tmp;
 			n.prev = tmp;
-			if (ReferenceEquals(n, m_first)) 
+			if (ReferenceEquals(n, m_first))
 				m_first = tmp;
 			++m_count;
 			return tmp;
 		}
 	}
-	
+
 	///<summary>Insert an object after a node in the list</summary>
-	public Node InsertAfter(Node n, T o) 
+	public Node InsertAfter(Node n, T o)
 	{
 		if (m_last == null) { // first entry?
 			return AddFirst(o);
-		}	
+		}
 		else {
 			Node tmp = new Node(o, n, n.next);
 			if (n.next != null)
 				n.next.prev = tmp;
 			n.next = tmp;
-			if (ReferenceEquals(n, m_last)) 
+			if (ReferenceEquals(n, m_last))
 				m_last = tmp;
 			++m_count;
 			return tmp;
@@ -107,49 +107,49 @@ public class List<T> : IEnumerable<T>
 	}
 
 	///<summary>Remove a node (unlink it)</summary>
-	public void Remove(Node n) 
+	public void Remove(Node n)
 	{
-		if (n.prev != null) 
+		if (n.prev != null)
 			n.prev.next = n.next;
 		if (n.next != null)
 			n.next.prev = n.prev;
-		if (ReferenceEquals(n, m_first)) 
+		if (ReferenceEquals(n, m_first))
 			m_first = n.next;
-		if (ReferenceEquals(n, m_last)) 
+		if (ReferenceEquals(n, m_last))
 			m_last = n.prev;
 		n.next = null;
 		n.prev = null;
 		--m_count;
 	}
-	
+
 	public T this[int index] {
 		get {
 			//Console.WriteLine("Asking for index {0}", index);
 			if (index > m_count)
-				return default(T); 
+			return default(T);
 			Node n = m_first;
-			for(int i = 0; i < index; i++)
+			for (int i = 0; i < index; i++)
 				n = n.next;
 			return n.data;
-		  }
+		}
 	}
 
 	public IEnumerator<T> GetEnumerator()
 	{
 		Node currentNode = First;
-		
+
 		while (currentNode != null) {
 			yield return currentNode.data;
 			currentNode = currentNode.next;
 		}
 	}
-	
+
 	IEnumerator IEnumerable.GetEnumerator()
 	{
 		return GetEnumerator();
 	}
-	
-	public void Display() 
+
+	public void Display()
 	{
 		Node n = m_first;
 		while (n != null) {
@@ -158,7 +158,7 @@ public class List<T> : IEnumerable<T>
 		}
 		Console.WriteLine();
 	}
-	
+
 	public Node First {
 		get { return m_first; }
 	}

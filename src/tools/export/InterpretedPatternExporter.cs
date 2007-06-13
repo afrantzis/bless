@@ -31,26 +31,26 @@ namespace Bless.Tools.Export
 /// Exports a range of data to various formats
 /// using a specific pattern which is constantly
 /// interpreted
-///</summary>	
+///</summary>
 public class InterpretedPatternExporter : IPatternExporter
 {
 	IExportBuilder builder;
-	
+
 	string pattern;
 	int patternIndex;
-	
+
 	char characterData;
 	string stringData;
-	
+
 	Stack<long> positionStack;
-	
+
 	long rangeStart;
 	long rangeEnd;
 	long bufPos;
 	IBuffer buffer;
-	
+
 	enum Token { LeftBracket, RightBracket, Percent, Character, String, Error, End }
-	
+
 	public InterpretedPatternExporter(IExportBuilder ieb)
 	{
 		builder = ieb;
@@ -63,18 +63,18 @@ public class InterpretedPatternExporter : IPatternExporter
 		rangeStart = start;
 		rangeEnd = end;
 		bufPos = rangeStart;
-		
+
 		long prevLoop = bufPos;
 		bool finished = false;
 		builder.BuildAlignment(1);
 		Hashtable cmds = new Hashtable();
-		
+
 		builder.BuildPrologue();
-		
+
 		while (!finished && !cancelled) {
-			
+
 			Token tok = NextToken();
-			switch(tok) {
+			switch (tok) {
 				case Token.LeftBracket:
 					SavePosition(bufPos);
 					break;
@@ -104,52 +104,52 @@ public class InterpretedPatternExporter : IPatternExporter
 					}
 					// if we reached the end of the pattern and we haven't moved forwards
 					// in the file, this is never going to end!
-					else if (prevLoop >= bufPos && bufPos <= rangeEnd) 
+					else if (prevLoop >= bufPos && bufPos <= rangeEnd)
 						throw new FormatException(string.Format("Pattern causes infinite loop"));
-					else 
+					else
 						finished = true;
 					break;
 				default:
 					break;
 			}
-			
+
 			if (tok == Token.Error)
 				throw new FormatException(string.Format("Error at format position {0}", patternIndex));
 		}
-		
+
 		if (!cancelled)
 			builder.BuildEpilogue();
 	}
-	
+
 	public IExportBuilder Builder {
-		get { return builder; }
+	get { return builder; }
 	}
-	
+
 	public long CurrentPosition {
 		get { return bufPos; }
 	}
-	
+
 	public string Pattern {
 		get { return pattern; }
 		set { pattern = value; }
 	}
-	
-	
-	
+
+
+
 	///<summary>
 	/// Execute the command described by the cmds hashtable
 	///</summary>
 	private int ExecuteCommand(Hashtable cmds)
 	{
-		
+
 		// Export command
 		if (cmds.Contains('E')) {
 			BuildBytesInfo bbi = new BuildBytesInfo();
-			
+
 			bbi.Count = 1;
 			if ((cmds['E'] as string) != "")
 				bbi.Count = Convert.ToInt32(cmds['E'] as string);
-			
+
 			if (cmds.Contains('p'))
 				bbi.Prefix = cmds['p'] as string;
 			if (cmds.Contains('s'))
@@ -160,16 +160,16 @@ public class InterpretedPatternExporter : IPatternExporter
 				bbi.Separator = cmds['x'] as string;
 			if (cmds.Contains('e'))
 				bbi.Empty = cmds['e'] as string;
-			
+
 			if (cmds.Contains('t'))
 				bbi.Type = Convert.ToChar(cmds['e'] as string);
 			else
 				bbi.Type = 'H';
-				
+
 			bbi.Commands = cmds;
 			return builder.BuildBytes(buffer, bufPos, bbi);
 		}
-		
+
 		// Ignore command
 		if (cmds.Contains('I')) {
 			if ((cmds['I'] as string) == "")
@@ -177,55 +177,55 @@ public class InterpretedPatternExporter : IPatternExporter
 			else
 				return Convert.ToInt32(cmds['I'] as string);
 		}
-		
+
 		// Offset command
 		if (cmds.Contains('O')) {
 			char type = 'H';
 			if (cmds.Contains('t'))
 				type = Convert.ToChar(cmds['t'] as string);
-			
+
 			int length = 8;
 			if ((cmds['O'] as string) != "")
 				length = Convert.ToInt32(cmds['O'] as string);
-				
+
 			builder.BuildOffset(bufPos, length, type);
 			return 0;
 		}
-		
+
 		// Alignment command
 		if (cmds.Contains('A')) {
 			builder.BuildAlignment(Convert.ToInt32(cmds['A'] as string));
 			return 0;
 		}
-		
-		
+
+
 		return 0;
 	}
-	
+
 	private void SavePosition(long cur)
 	{
 		positionStack.Push(cur);
 	}
-	
+
 	private long RestorePosition()
 	{
 		return positionStack.Pop();
 	}
-	
-	
+
+
 	private void RestartInterpreter()
 	{
 		patternIndex = 0;
 	}
-	
+
 	private Token NextToken()
 	{
 		if (patternIndex >= pattern.Length)
 			return Token.End;
-		
+
 		Token tok = Token.Error;
-		
-		switch(pattern[patternIndex]) {
+
+		switch (pattern[patternIndex]) {
 			case '[':
 				patternIndex++;
 				tok = Token.LeftBracket;
@@ -250,19 +250,19 @@ public class InterpretedPatternExporter : IPatternExporter
 				tok = Token.Character;
 				break;
 		}
-		
+
 		return tok;
 	}
-	
+
 	private Token ParseString()
 	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		patternIndex++;
 		bool finished = false;
 		while (patternIndex < pattern.Length && !finished) {
-			
-			switch(pattern[patternIndex]) {
+
+			switch (pattern[patternIndex]) {
 				case '\\':
 					Token tok = ParseEscapedCharacter();
 					if (tok == Token.Error)
@@ -279,21 +279,21 @@ public class InterpretedPatternExporter : IPatternExporter
 					patternIndex++;
 					break;
 			}
-			
+
 		}
-		
+
 		if (!finished)
 			return Token.Error;
-			
+
 		stringData = sb.ToString();
-		
+
 		return Token.String;
 	}
-	
+
 	private Token ParseEscapedCharacter()
 	{
 		Token ret = Token.Error;
-		
+
 		if (patternIndex + 1 < pattern.Length) {
 			switch (pattern[patternIndex + 1]) {
 				case 'n':
@@ -312,26 +312,26 @@ public class InterpretedPatternExporter : IPatternExporter
 		}
 		else
 			ret = Token.Error;
-		
+
 		patternIndex += 2;
-		
+
 		return ret;
 	}
-	
+
 	///<summary>
-	/// Parse a pattern command eg %E"4"p"0x"% 
+	/// Parse a pattern command eg %E"4"p"0x"%
 	///</summary>
 	private Token ParseCommand(Hashtable cmds)
 	{
 		bool finished = false;
-		
+
 		Token tok = Token.Error;
 		char currentChar = ' ';
-		
+
 		while (!finished) {
-			
+
 			tok = NextToken();
-			switch(tok) {
+			switch (tok) {
 				case Token.Percent:
 					finished = true;
 					break;
@@ -350,12 +350,12 @@ public class InterpretedPatternExporter : IPatternExporter
 					finished = true;
 					break;
 			}
-			
+
 		}
-		
+
 		return tok;
 	}
-	
+
 }
 
 }

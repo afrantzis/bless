@@ -32,9 +32,9 @@ public interface IPatternExporter : IExporter
 {
 	string Pattern {
 		get;
-		set;
-	}
-}
+			set;
+			}
+		}
 
 
 

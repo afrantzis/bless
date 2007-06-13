@@ -27,75 +27,75 @@ using Gtk;
 using Mono.Unix;
 
 namespace Bless.Gui.Plugins {
-	
+
 public class HelpOperationsPlugin : GuiPlugin
 {
-	const string uiXml=
-	"<menubar>"+
-	"	<menu action=\"Help\">"+
-	"		<menuitem name=\"Contents\" action=\"ContentsAction\" />"+
-	"		<menuitem name=\"About\" action=\"AboutAction\" />"+
-	"		<separator/>"+
-	"	</menu>"+
-	"</menubar>";
-	
+	const string uiXml =
+		"<menubar>" +
+		"	<menu action=\"Help\">" +
+		"		<menuitem name=\"Contents\" action=\"ContentsAction\" />" +
+		"		<menuitem name=\"About\" action=\"AboutAction\" />" +
+		"		<separator/>" +
+		"	</menu>" +
+		"</menubar>";
+
 	DataBook dataBook;
 	Window mainWindow;
 	UIManager uiManager;
-	
+
 	public HelpOperationsPlugin(Window mw, UIManager uim)
 	{
 		//mainWindow=mw;
-		uiManager=uim;
-		
-		name="HelpOperations";
-		author="Alexandros Frantzis";
-		description="Provides access to basic help operations";
+		uiManager = uim;
+
+		name = "HelpOperations";
+		author = "Alexandros Frantzis";
+		description = "Provides access to basic help operations";
 	}
-	
+
 	public override bool Load()
 	{
 		AddMenuItems(uiManager);
-		
-		loaded=true;
+
+		loaded = true;
 		return true;
 	}
-	
+
 	private void AddMenuItems(UIManager uim)
 	{
 		ActionEntry[] actionEntries = new ActionEntry[] {
-			new ActionEntry ("ContentsAction", Stock.Help, Catalog.GetString("_Contents"), "F1", null,
-			                    new EventHandler(OnContentsActivated)),
-			new ActionEntry ("AboutAction", null, Catalog.GetString("_About"), null, null,
-			                    new EventHandler(OnAboutActivated)),
-		};
-		
+										  new ActionEntry ("ContentsAction", Stock.Help, Catalog.GetString("_Contents"), "F1", null,
+														   new EventHandler(OnContentsActivated)),
+										  new ActionEntry ("AboutAction", null, Catalog.GetString("_About"), null, null,
+														   new EventHandler(OnAboutActivated)),
+									  };
+
 		ActionGroup group = new ActionGroup ("HelpActions");
 		group.Add (actionEntries);
-		
+
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
-		
+
 		uim.EnsureUpdate();
-		
+
 	}
 	///<summary>Handle edit->undo command from menu</summary>
-	public void OnContentsActivated(object o, EventArgs args) 
+	public void OnContentsActivated(object o, EventArgs args)
 	{
 #if ENABLE_UNIX_SPECIFIC
-		string helpScript=FileResourcePath.GetSystemPath("..", "data", "help_script.sh");
+		string helpScript = FileResourcePath.GetSystemPath("..", "data", "help_script.sh");
 		System.Diagnostics.Process.Start(helpScript);
 #endif
 	}
-	
+
 	///<summary>Handle edit->redo command from menu</summary>
-	public void OnAboutActivated(object o, EventArgs args) 
+	public void OnAboutActivated(object o, EventArgs args)
 	{
 		Gtk.Dialog aboutDialog = new Bless.Gui.Dialogs.AboutDialog();
 		aboutDialog.Run();
 		aboutDialog.Destroy();
 	}
-		
+
 }
 
 } //end namespace

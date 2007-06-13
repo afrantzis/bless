@@ -32,243 +32,255 @@ public delegate void CloseViewDelegate(DataView dv);
 ///<summary>A notebook containing DataViews</summary>
 public class DataBook : Gtk.Notebook
 {
- 
+
 	public DataBook()
 	{
-		this.Scrollable=true;
-		this.CanFocus=true;
-		this.EnablePopup=false;
+		this.Scrollable = true;
+		this.CanFocus = true;
+		this.EnablePopup = false;
 	}
-	
+
 	///<summary>Insert a DataView into the databook.</summary>
 	public void InsertView(DataView dv, CloseViewDelegate deleg, string text, int pos)
 	{
 		base.InsertPage(dv.Display, new DataBookTabLabel(dv, deleg, text), pos);
 		this.ShowAll();
-		
+
 		dv.Buffer.Changed += new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
 		dv.BufferChanged += new DataView.DataViewEventHandler(OnBufferChanged);
-		
-		if (PageAdded!=null)
+
+		if (PageAdded != null)
 			PageAdded(dv);
-		
+
 		// this must be placed after the page added signal,
 		// so that the page change is caught by others (eg EditOperationsPlugin)
-		this.CurrentPage=pos;
-		
-		this.FocusChild=dv.Display;
+		this.CurrentPage = pos;
+
+		this.FocusChild = dv.Display;
 	}
-	
+
 	///<summary>Append a DataView to the databook.</summary>
 	public void AppendView(DataView dv, CloseViewDelegate deleg, string text)
 	{
 		this.InsertView(dv, deleg, text, this.NPages);
-	} 
-	
+	}
+
 	///<summary>Remove a DataView from databook.</summary>
 	public void RemoveView(DataView dv)
 	{
 		dv.Buffer.Changed -= new ByteBuffer.ChangedHandler(OnBufferContentsChanged);
 		dv.BufferChanged -= new DataView.DataViewEventHandler(OnBufferChanged);
-		
+
 		((DataBookTabLabel)this.GetTabLabel(dv.Display)).Cleanup();
-		
+
 		this.RemovePage(this.PageNum(dv.Display));
-		
-		if (PageRemoved!=null)
+
+		if (PageRemoved != null)
 			PageRemoved(dv);
 	}
-	
- 	///<summary>Replace a DataView from databook with a new one.</summary>
+
+	///<summary>Replace a DataView from databook with a new one.</summary>
 	public void ReplaceView(DataView oldDv, DataView newDv, CloseViewDelegate deleg, string text)
 	{
 		// find pos of old dataview
 		int pos = this.PageNum(oldDv.Display);
-		
+
 		RemoveView(oldDv);
-		
+
 		InsertView(newDv, deleg, text, pos);
 	}
-	
+
 	///<summary>
 	/// Whether a databook page can be replaced by a new one.
 	///</summary>
 	public bool CanReplacePage(int nPage)
 	{
-		// if there isn't such a page, it can't be replaced 
+		// if there isn't such a page, it can't be replaced
 		if (nPage >= this.NPages || nPage < 0)
 			return false;
-	
-		DataView dv=((DataViewDisplay)this.GetNthPage(nPage)).View;
-	
-		ByteBuffer bb=dv.Buffer;
-	
-        if (bb.HasChanged==false && bb.Size==0 && !bb.HasFile)
+
+		DataView dv = ((DataViewDisplay)this.GetNthPage(nPage)).View;
+
+		ByteBuffer bb = dv.Buffer;
+
+		if (bb.HasChanged == false && bb.Size == 0 && !bb.HasFile)
 			return true;
 		else
-			return false; 
+			return false;
 	}
-	
+
 	///<summary>
 	/// Sets the sensitivity status of the close button of a tab containing 'w'.
 	///</summary>
 	public void SetCloseSensitivity(Widget w, bool sensitive)
 	{
-		DataBookTabLabel dbt=(DataBookTabLabel)this.GetTabLabel(w);
-		
-		dbt.Button.Sensitive=sensitive;
+		DataBookTabLabel dbt = (DataBookTabLabel)this.GetTabLabel(w);
+
+		dbt.Button.Sensitive = sensitive;
 	}
-	
+
 	///<summary>
 	/// Sets the text on tab label of the tab containg 'w'.
 	///</summary>
 	public new void SetTabLabelText(Widget w, string text)
 	{
-		DataBookTabLabel dbt=(DataBookTabLabel)this.GetTabLabel(w);
-		
-		dbt.Text=text;
+		DataBookTabLabel dbt = (DataBookTabLabel)this.GetTabLabel(w);
+
+		dbt.Text = text;
 	}
-	
+
 	///<summary>
 	/// Updates the title of the tab with the specified DataView
 	///</summary>
 	void UpdateTabLabel(DataView dv)
 	{
-		ByteBuffer bb=dv.Buffer;
-		
+		ByteBuffer bb = dv.Buffer;
+
 		if (bb.HasChanged)
-			SetTabLabelText(dv.Display, System.IO.Path.GetFileName(bb.Filename) +"*");
+			SetTabLabelText(dv.Display, System.IO.Path.GetFileName(bb.Filename) + "*");
 		else
 			SetTabLabelText(dv.Display, System.IO.Path.GetFileName(bb.Filename));
 	}
-	
+
 	protected override bool OnKeyPressEvent(Gdk.EventKey e)
 	{
-		int page=-1;
-		
+		int page = -1;
+
 		// if alt is pressed
 		if ((e.State & ModifierType.Mod1Mask) == ModifierType.Mod1Mask) {
 			// select a page
-			switch(e.Key) {
-				case Gdk.Key.Key_1: page=0; break;
-				case Gdk.Key.Key_2: page=1; break;
-				case Gdk.Key.Key_3: page=2; break;
-				case Gdk.Key.Key_4: page=3; break;
-				case Gdk.Key.Key_5: page=4; break;
-				case Gdk.Key.Key_6: page=5; break;
-				case Gdk.Key.Key_7: page=6; break;
-				case Gdk.Key.Key_8: page=7; break;
-				case Gdk.Key.Key_9: page=8; break;
-				case Gdk.Key.Left: page=this.CurrentPage-1; break;
-				case Gdk.Key.Right: page=this.CurrentPage+1; break;
-				default: break;
+			switch (e.Key) {
+				case Gdk.Key.Key_1:
+					page = 0; break;
+				case Gdk.Key.Key_2:
+					page = 1; break;
+				case Gdk.Key.Key_3:
+					page = 2; break;
+				case Gdk.Key.Key_4:
+					page = 3; break;
+				case Gdk.Key.Key_5:
+					page = 4; break;
+				case Gdk.Key.Key_6:
+					page = 5; break;
+				case Gdk.Key.Key_7:
+					page = 6; break;
+				case Gdk.Key.Key_8:
+					page = 7; break;
+				case Gdk.Key.Key_9:
+					page = 8; break;
+				case Gdk.Key.Left:
+					page = this.CurrentPage - 1; break;
+				case Gdk.Key.Right:
+					page = this.CurrentPage + 1; break;
+				default:
+					break;
 			}
 		}
-		
+
 		// change the current page if the new one is valid
 		if (page >= 0 && page < this.NPages)
-			this.Page=page;
-			
+			this.Page = page;
+
 		return true;
 	}
-	
+
 	protected override bool OnKeyReleaseEvent(Gdk.EventKey k)
 	{
 		return true;
 	}
-	
+
 	void OnBufferChanged(DataView dv)
 	{
 		UpdateTabLabel(dv);
 	}
-	
+
 	///<summary>Handle ByteBuffer changes</summary>
 	void OnBufferContentsChanged(ByteBuffer bb)
 	{
-		DataView dv=null;
-		
+		DataView dv = null;
+
 		// find DataView that owns bb
 		foreach (DataViewDisplay dvtemp in this.Children) {
-			if (dvtemp.View.Buffer==bb) {
-				dv=dvtemp.View;
-				break;	
+			if (dvtemp.View.Buffer == bb) {
+				dv = dvtemp.View;
+				break;
 			}
 		}
 
 		UpdateTabLabel(dv);
 	}
-	
-	
+
+
 	public new event DataView.DataViewEventHandler PageAdded;
 	public new event DataView.DataViewEventHandler PageRemoved;
 }
 
 ///<summary>A widget to display on each tab label</summary>
-class DataBookTabLabel : Gtk.HBox 
+class DataBookTabLabel : Gtk.HBox
 {
 	Gtk.Label label;
 	Gtk.Button closeButton;
 	DataView dataView;
 	CloseViewDelegate doCloseFile;
-	
+
 	public string Text {
 		get { return label.Text; }
-		set { label.Text=value; }
+		set { label.Text = value; }
 	}
-	
+
 	public Gtk.Button Button {
 		get { return closeButton; }
 	}
-			
+
 	public DataBookTabLabel(DataView dv, CloseViewDelegate deleg, string str)
 	{
-		dataView=dv;
-		doCloseFile=deleg;
-		
-		dataView.NotificationChanged+=OnNotificationChanged;
-		
-		label=new Gtk.Label(str);
-		label.UseMarkup=true;
+		dataView = dv;
+		doCloseFile = deleg;
+
+		dataView.NotificationChanged += OnNotificationChanged;
+
+		label = new Gtk.Label(str);
+		label.UseMarkup = true;
 		label.UseUnderline = false;
-		
-		Gtk.Image img=new Gtk.Image(Gtk.Stock.Close, Gtk.IconSize.Menu);
+
+		Gtk.Image img = new Gtk.Image(Gtk.Stock.Close, Gtk.IconSize.Menu);
 		img.SetSizeRequest(8, 8);
-		
+
 		// This doesn't compile in 1.0.2 and older,
 		// keep it for later eg gtk# 2.0
-		closeButton=new Gtk.Button(img);
-		
-		closeButton.Relief=Gtk.ReliefStyle.None;
-		closeButton.Clicked+=OnCloseClicked;
-		closeButton.CanFocus=false;
-		
-		this.Spacing=2;
+		closeButton = new Gtk.Button(img);
+
+		closeButton.Relief = Gtk.ReliefStyle.None;
+		closeButton.Clicked += OnCloseClicked;
+		closeButton.CanFocus = false;
+
+		this.Spacing = 2;
 		this.PackStart(label, false, false, 0);
 		this.PackStart(closeButton, false, false, 0);
-		
+
 		this.ShowAll();
 	}
-	
+
 	private void OnNotificationChanged(DataView dv)
 	{
-		if (dv.Notification==true) {
-			label.Markup="<span foreground=\"blue\" underline=\"single\">"+label.Text+"</span>";
+		if (dv.Notification == true) {
+			label.Markup = "<span foreground=\"blue\" underline=\"single\">" + label.Text + "</span>";
 		}
 		else {
-			label.Markup=label.Text;
+			label.Markup = label.Text;
 		}
 	}
-	
+
 	private void OnCloseClicked(object o, EventArgs args)
 	{
 		doCloseFile(dataView);
 	}
-	
+
 	public void Cleanup()
 	{
 		dataView.NotificationChanged -= OnNotificationChanged;
 		dataView = null;
 	}
-}  
- 
+}
+
 }

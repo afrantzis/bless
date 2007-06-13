@@ -18,11 +18,11 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using System;
 using Bless.Util;
 using Bless.Buffers;
- 
+
 namespace Bless.Tools.Find {
 
 public delegate void FirstFindHandler();
@@ -30,15 +30,15 @@ public delegate void FirstFindHandler();
 public interface IFinder
 {
 	IFindStrategy Strategy { get; set; }
-	Range LastFound { get; set; }
-	
-	
-	event FirstFindHandler FirstFind;
-	
+			Range LastFound { get; set; }
+
+
+					event FirstFindHandler FirstFind;
+
 	IAsyncResult FindNext(AsyncCallback ac);
 	IAsyncResult FindPrevious(AsyncCallback ac);
 	bool Replace(byte[] ba);
 	IAsyncResult ReplaceAll(byte[] ba, AsyncCallback ac);
 }
- 
+
 } // end namespace

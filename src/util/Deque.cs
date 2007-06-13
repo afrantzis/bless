@@ -25,103 +25,103 @@ using System.Collections.Generic;
 namespace Bless.Util {
 
 ///<summary>
-/// Double-ended queue data structure 
+/// Double-ended queue data structure
 ///</summary>
 public class Deque<T>: IEnumerable<T>
 {
 	Bless.Util.List<T> list;
-	
+
 	public Deque()
 	{
 		list = new Bless.Util.List<T>();
 	}
-	
+
 	///<summary>
-	/// Add an object to the front of the queue 
+	/// Add an object to the front of the queue
 	///</summary>
 	public void AddFront(T o)
 	{
 		list.InsertBefore(list.First, o);
 	}
-	
+
 	public void AddEnd(T o)
 	{
 		list.InsertAfter(list.Last, o);
 	}
-	
+
 	///<summary>
-	/// Remove an object from the front of the queue (LIFO) 
+	/// Remove an object from the front of the queue (LIFO)
 	///</summary>
 	public T RemoveFront()
 	{
-		T o = default(T);
-		
+	T o = default(T);
+
 		if (list.First != null) {
 			o = list.First.data;
-			list.First.data = default(T);
+		list.First.data = default(T);
 			list.Remove(list.First);
 		}
-		
+
 		return o;
 	}
-	
+
 	///<summary>
-	/// Remove an object from the end of the queue (FIFO) 
+	/// Remove an object from the end of the queue (FIFO)
 	///</summary>
 	public T RemoveEnd()
 	{
-		T o = default(T);
-		
+	T o = default(T);
+
 		if (list.Last != null) {
 			o = list.Last.data;
-			list.Last.data = default(T);
+		list.Last.data = default(T);
 			list.Remove(list.Last);
 		}
-		
+
 		return o;
 	}
-	
+
 	///<summary>
-	/// Peek the object at the front of the queue 
+	/// Peek the object at the front of the queue
 	///</summary>
 	public T PeekFront()
 	{
-		T o = default(T);
-		
+	T o = default(T);
+
 		if (list.First != null)
 			o = list.First.data;
-		
+
 		return o;
 	}
-	
+
 	///<summary>
-	/// Peek the object at the end of the queue 
+	/// Peek the object at the end of the queue
 	///</summary>
 	public T PeekEnd()
 	{
-		T o = default(T);
-		
-		if (list.Last !=null)
+	T o = default(T);
+
+		if (list.Last != null)
 			o = list.Last.data;
-		
+
 		return o;
 	}
-	
+
 	public void Clear()
 	{
 		while (Count > 0)
 			RemoveFront();
 	}
-	
+
 	public int Count {
-		get { return list.Count; }
+	get { return list.Count; }
 	}
-	
+
 	public IEnumerator<T> GetEnumerator()
 	{
 		return list.GetEnumerator();
 	}
-	
+
 	IEnumerator IEnumerable.GetEnumerator()
 	{
 		return GetEnumerator();

@@ -28,25 +28,25 @@ public class RangeCollection: ArrayList
 	public Range LastAdded {
 		get { return (Range)this[Count-1]; }
 	}
-	
+
 	public RangeCollection()
-	{	
+	{
 		Add(new Range());
 	}
 
 	public void UpdateRange(Range oldRange, Range newRange)
 	{
-		int index=IndexOf(oldRange);
+		int index = IndexOf(oldRange);
 		RemoveAt(index);
 		Insert(index, newRange);
 	}
-	
+
 	public new void Clear()
 	{
 		base.Clear();
 		Add(new Range());
 	}
-		
+
 }
 
 

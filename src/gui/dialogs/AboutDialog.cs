@@ -18,13 +18,13 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 using System;
 using Gtk;
 using Gdk;
 using Bless.Util;
 using Mono.Unix;
- 
+
 namespace Bless.Gui.Dialogs {
 
 public class AboutDialog: Gtk.AboutDialog
@@ -38,7 +38,7 @@ public class AboutDialog: Gtk.AboutDialog
 		Version = ConfigureDefines.VERSION;
 		Comments = Catalog.GetString("Bless is a Hex Editor for Gtk#");
 		Website = "http://home.gna.org/bless";
-		Logo =  new Gdk.Pixbuf(FileResourcePath.GetSystemPath("..","data","bless-about.png"));
+		Logo =  new Gdk.Pixbuf(FileResourcePath.GetSystemPath("..", "data", "bless-about.png"));
 	}
 }
 

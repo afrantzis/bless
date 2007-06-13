@@ -30,12 +30,12 @@ namespace Bless.Gui.Drawers {
 class PixmapManager
 {
 	static private PixmapManager manager;
-	
+
 	static public PixmapManager Instance {
-		get { 
+		get {
 			if (manager == null)
 				manager = new PixmapManager();
-			
+
 			return manager;
 		}
 	}
@@ -48,45 +48,45 @@ class PixmapManager
 		pixmaps = new Dictionary<string, Gdk.Pixmap>();
 		references = new Dictionary<string, int>();
 	}
-	
+
 	///<summary>
-	/// Get the id of the pixmap with the specified properties 
+	/// Get the id of the pixmap with the specified properties
 	///</summary>
 	public string GetPixmapId(System.Type type, Drawer.Information info, Gdk.Color fg, Gdk.Color bg)
 	{
 		return string.Format("{0}{1}{2}{3}{4}{5}", type, info.FontName, info.FontLanguage, info.Uppercase, fg.ToString(), bg.ToString());
 	}
-	
+
 	///<summary>
 	/// Get the pixmap with the specified id.
 	/// Returns null if the pixmap doesn't exist
 	///</summary>
 	public Gdk.Pixmap GetPixmap(string id)
-	{	
+	{
 		Gdk.Pixmap pix = null;
 		if (pixmaps.ContainsKey(id))
-		 	pix = pixmaps[id];
-		 	
+			pix = pixmaps[id];
+
 		return pix;
 	}
-	
+
 	///<summary>
-	/// Add the pixmap to the collection 
+	/// Add the pixmap to the collection
 	///</summary>
 	public void AddPixmap(string id, Gdk.Pixmap pix)
 	{
 		pixmaps[id] = pix;
 		references[id] = 0;
 	}
-	
+
 	///<summary>
-	/// Mark that we are using the pixmap  
+	/// Mark that we are using the pixmap
 	///</summary>
 	public void ReferencePixmap(string id)
 	{
 		++references[id];
 	}
-	
+
 	///<summary>
 	/// Mark that we aren't using the pixmap anymore.
 	/// If nobody uses it, dispose of it
@@ -100,7 +100,7 @@ class PixmapManager
 			references.Remove(id);
 		}
 	}
-	
+
 }
 
 

@@ -40,90 +40,90 @@ public class Layout {
 	Drawer font;
 	string filePath;
 	DateTime timeStamp;
-	
+
 	public List<Area> Areas {
 		get {return areas;}
 	}
-	
+
 	public string FilePath {
 		get { return filePath; }
 	}
-	
+
 	public DateTime TimeStamp {
 		get { return timeStamp; }
 	}
-	
-	public Layout() 
+
+	public Layout()
 	{
-		areas=new List<Area>();
-		layoutDoc=new XmlDocument();
-		filePath=null;
+		areas = new List<Area>();
+		layoutDoc = new XmlDocument();
+		filePath = null;
 	}
-	
-	public Layout(string name): this() 
+
+	public Layout(string name): this()
 	{
 		Load(name);
 	}
 
 	///<summary>Loads the layout from a file containing xml</summary>
-	public void Load(string name) 
+	public void Load(string name)
 	{
 		layoutDoc.Load(name);
 		Configure();
-		filePath=name;
-		timeStamp=File.GetLastWriteTime(name);
+		filePath = name;
+		timeStamp = File.GetLastWriteTime(name);
 	}
-	
+
 	///<summary>Loads the layout from string containing xml</summary>
 	public void LoadXml(string xml)
 	{
 		layoutDoc.LoadXml(xml);
 	}
-	
+
 	///<summary>
 	/// Create and configure the areas, as defined in the layout file.
 	///</summary>
 	void Configure()
 	{
 		XmlNodeList areaList = layoutDoc.GetElementsByTagName("area");
-		
+
 		foreach(XmlNode areaNode in areaList) {
 			XmlAttributeCollection attrColl =  areaNode.Attributes;
-			string type=attrColl["type"].Value;
-			
-			Area area=Area.Factory(type);
-			if (area==null)
+			string type = attrColl["type"].Value;
+
+			Area area = Area.Factory(type);
+			if (area == null)
 				continue;
-			
+
 			areas.Add(area);
 			area.Configure(areaNode);
 		}
-		
+
 		// give the focus to the first applicable area
 		foreach(Area a in areas) {
-			if (a.Type!="offset" && a.Type !="separator") {
-				a.HasCursorFocus=true;
+			if (a.Type != "offset" && a.Type != "separator") {
+				a.HasCursorFocus = true;
 				break;
 			}
 		}
-		
+
 		// reset cursor
 		foreach(Area a in areas) {
-			a.CursorOffset=0;
-			a.CursorDigit=0;		
+			a.CursorOffset = 0;
+			a.CursorDigit = 0;
 		}
-	
+
 	}
-	
+
 	///<summary>
 	/// Realizes the areas.
 	///</summary>
 	public void Realize(Gtk.DrawingArea da)
-	{	
+	{
 		foreach(Area a in areas)
-			a.Realize(da);		
+		a.Realize(da);
 	}
-	
+
 	///<summary>Dispose the pixmap resources used by the layout</summary>
 	public void DisposePixmaps()
 	{

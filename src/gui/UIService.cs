@@ -45,12 +45,12 @@ public class UIService
 	UIManager uiManager;
 	IInfoDisplay infoDisplay;
 	IProgressDisplay progressDisplay;
-	
+
 	public UIService(UIManager uim)
 	{
 		uiManager = uim;
 	}
-	
+
 	///<summary>
 	/// Service for showing status messages
 	///</summary>
@@ -58,7 +58,7 @@ public class UIService
 		get { return infoDisplay; }
 		set { infoDisplay = value; }
 	}
-	
+
 	///<summary>
 	/// Service for displaying the progress of various actions
 	///</summary>
@@ -66,14 +66,14 @@ public class UIService
 		get { return progressDisplay; }
 		set { progressDisplay = value; }
 	}
-	
+
 	///<summary>
 	/// The global UIManager
 	///</summary>
 	public UIManager Manager {
 		get { return uiManager;}
 	}
-	
+
 }
 
 } // end namespace

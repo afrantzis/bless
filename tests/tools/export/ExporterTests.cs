@@ -17,13 +17,13 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using NUnit.Framework; 
+using NUnit.Framework;
 using System;
 using System.IO;
 
 using Bless.Tools.Export;
 using Bless.Buffers;
- 
+
 namespace BlessTests.Export {
 
 [TestFixture]
@@ -32,15 +32,15 @@ public class ExporterTests {
 	[Test]
 	public void AppendTest() {
 		TextExportBuilder teb = new TextExportBuilder(new FileStream("skata", FileMode.Create, FileAccess.Write));
-		
+
 		InterpretedPatternExporter ipe = new InterpretedPatternExporter(teb);
-		
+
 		IBuffer buffer = new SimpleBuffer();
-		buffer.Append(new byte[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,16,17,18,19,20});
-		
+		buffer.Append(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 16, 17, 18, 19, 20});
+
 		ipe.Pattern = "%A\"4\"%[%O\"4\"%: %E\"4\"e\"_\"p\"0x\"x\"|\"%] - %E\"2\"s\"*\"%%I\"2\"%\n";
-		ipe.Export(buffer, 2, buffer.Size-1);
-		
+		ipe.Export(buffer, 2, buffer.Size - 1);
+
 	}
 
 }

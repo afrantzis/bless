@@ -21,29 +21,29 @@
 using System;
 using Gtk;
 using Mono.Unix;
- 
+
 namespace Bless.Gui.Dialogs {
-	
-	///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
-	public class SaveConfirmationAlert : Alert
+
+///<summary>An alert dialog box as recommended in the Gnome HIG</summary>
+public class SaveConfirmationAlert : Alert
+{
+	public SaveConfirmationAlert(string primary, Gtk.Window parent)
+			: base(string.Format(Catalog.GetString("Save changes to file '{0}' before closing?"), primary),
+				   Catalog.GetString("If you don't save, all changes made since the last save will be lost."), parent)
 	{
-		public SaveConfirmationAlert(string primary, Gtk.Window parent) 
-		: base(string.Format(Catalog.GetString("Save changes to file '{0}' before closing?"), primary),
-			Catalog.GetString("If you don't save, all changes made since the last save will be lost."), parent)
-		{
-			image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
-			
-			this.AddButton(Catalog.GetString("Close without Saving"), ResponseType.No);
-			this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
-			this.AddButton(Gtk.Stock.Save, ResponseType.Ok);
-			
-			this.DefaultResponse=ResponseType.Cancel;
-			
-			this.ShowAll();
-		}
-		
-	}	
+		image.SetFromStock(Gtk.Stock.DialogWarning, Gtk.IconSize.Dialog);
+
+		this.AddButton(Catalog.GetString("Close without Saving"), ResponseType.No);
+		this.AddButton(Gtk.Stock.Cancel, ResponseType.Cancel);
+		this.AddButton(Gtk.Stock.Save, ResponseType.Ok);
+
+		this.DefaultResponse = ResponseType.Cancel;
+
+		this.ShowAll();
+	}
+
+}
 
 
 
-} 
+}
