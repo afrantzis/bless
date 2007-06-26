@@ -32,5 +32,5 @@ install-exec-local: bless
 	$(INSTALL_SCRIPT) bless $(DESTDIR)$(bindir)
 
 uninstall-local:
-	rm -rf $(DESTDIR)$(libdir)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/bin
+	rm -rf $(DESTDIR)$(libdir)/$(PACKAGE_NAME)
 	rm -f $(DESTDIR)$(bindir)/bless
