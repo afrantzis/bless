@@ -109,7 +109,7 @@ public class ProgressDisplayBar : Gtk.HBox {
 
 	public ProgressDisplayBar()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "ProgressBarHBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ProgressBarHBox", "bless");
 		gxml.Autoconnect (this);
 
 		this.Add(ProgressBarHBox);

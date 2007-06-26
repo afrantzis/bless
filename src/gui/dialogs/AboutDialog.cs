@@ -38,7 +38,7 @@ public class AboutDialog: Gtk.AboutDialog
 		Version = ConfigureDefines.VERSION;
 		Comments = Catalog.GetString("Bless is a Hex Editor for Gtk#");
 		Website = "http://home.gna.org/bless";
-		Logo =  new Gdk.Pixbuf(FileResourcePath.GetSystemPath("..", "data", "bless-about.png"));
+		Logo =  new Gdk.Pixbuf(FileResourcePath.GetDataPath("bless-about.png"));
 	}
 }
 

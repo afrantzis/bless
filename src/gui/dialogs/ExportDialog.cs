@@ -60,7 +60,7 @@ public class ExportDialog : Dialog
 	public ExportDialog(DataBook db, Gtk.Window mw)
 			: base(Catalog.GetString("Export Bytes"), null, 0)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "ExportDialogVBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ExportDialogVBox", "bless");
 		gxml.Autoconnect (this);
 
 		dataBook = db;

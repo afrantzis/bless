@@ -29,13 +29,15 @@ namespace Bless.Util {
 public class FileResourcePath
 {
 	private FileResourcePath() { }
-
+	
+	private static string dataPath = null;
+	
 	///<summary>
 	/// Gets the full path of a file resource
 	/// which is given relatively to the
 	/// assembly path
 	///</summary>
-	public static string GetSystemPath(params string[] dirs)
+	public static string GetBinPath(params string[] dirs)
 	{
 		// Get assembly path
 		string assemblyPath = Assembly.GetCallingAssembly().Location;
@@ -45,17 +47,46 @@ public class FileResourcePath
 		string resourcePath = assemblyDir;
 
 		foreach (string s in dirs)
-		resourcePath = Path.Combine(resourcePath, s);
+			resourcePath = Path.Combine(resourcePath, s);
 
 		return resourcePath;
 	}
+	
+	///<summary>
+	/// Gets the full path of a file resource
+	/// located in the Bless data directory
+	///</summary>
+	public static string GetDataPath(params string[] dirs)
+	{
+		if (dataPath == null) {
+			
+			// get the local data path (eg when running bless from within the build directory)
+			string localDataDir = GetBinPath("..", "data");
+			
+			// if the local data path exists and is valid use it
+			// else try to use the installation data path
+			if (Directory.Exists(localDataDir) && File.Exists(Path.Combine(localDataDir, "bless.glade")))
+				dataPath = localDataDir;
+			else if (Directory.Exists(ConfigureDefines.DATADIR) && File.Exists(Path.Combine(ConfigureDefines.DATADIR, "bless.glade")))
+				dataPath = ConfigureDefines.DATADIR;
+			else
+				throw new DirectoryNotFoundException(localDataDir + " or " +  ConfigureDefines.DATADIR);
+		}
+		
+		string resourcePath = dataPath;
+		
+		foreach (string s in dirs)
+			resourcePath = Path.Combine(resourcePath, s);
 
+		return resourcePath;
+	}
+	
 	public static string GetUserPath(params string[] dirs)
 	{
 		string resourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bless");
 
 		foreach (string s in dirs)
-		resourcePath = Path.Combine(resourcePath, s);
+			resourcePath = Path.Combine(resourcePath, s);
 
 		return resourcePath;
 	}

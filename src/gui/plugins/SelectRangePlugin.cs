@@ -134,7 +134,7 @@ public class SelectRangeWidget : Gtk.HBox
 	{
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "SelectRangeHBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "SelectRangeHBox", "bless");
 		gxml.Autoconnect (this);
 
 		// set up entry completions

@@ -232,7 +232,7 @@ public class BitwiseOperationsWidget : Gtk.HBox
 		dataBook = db;
 		performAction = action;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "BitwiseOperationsHBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "BitwiseOperationsHBox", "bless");
 		gxml.Autoconnect (this);
 
 		OperationComboBox.Active = 0;

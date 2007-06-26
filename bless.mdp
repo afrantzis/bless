@@ -129,13 +129,13 @@
     <File name="./src/gui/plugins/SelectRangePlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/HistoryPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/drawers/PixmapManager.cs" subtype="Code" buildaction="Compile" />
-    <File name="./src/util/ConfigureDefines.cs.in" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/DataBookFinder.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/UIService.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/ProgressDisplayPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/plugins/BitwiseOperationsPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/plugins/AreaPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas/Area.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/util/ConfigureDefines.cs.tmpl.in" subtype="Code" buildaction="Nothing" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

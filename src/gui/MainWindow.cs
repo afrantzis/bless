@@ -98,16 +98,16 @@ public class BlessMain
 	public BlessMain (string[] args)
 	{
 		Application.Init();
-
+		
 		//
 		Catalog.Init(ConfigureDefines.GETTEXT_PACKAGE, ConfigureDefines.LOCALE_DIR);
 
 		// load main window from glade XML
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "MainWindow", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "MainWindow", "bless");
 		gxml.Autoconnect (this);
 
 		// set the application icon
-		MainWindow.Icon = new Gdk.Pixbuf(FileResourcePath.GetSystemPath("..", "data", "bless-48x48.png"));
+		MainWindow.Icon = new Gdk.Pixbuf(FileResourcePath.GetDataPath("bless-48x48.png"));
 
 		string blessConfDir = FileResourcePath.GetUserPath();
 
@@ -125,8 +125,8 @@ public class BlessMain
 
 		Preferences.Proxy.Enable = false;
 		// load default preferences
-		Preferences.Default.Load(FileResourcePath.GetSystemPath("..", "data", "default-preferences.xml"));
-		Preferences.Default["Default.Layout.File"] = FileResourcePath.GetSystemPath("..", "data", "bless-default.layout");
+		Preferences.Default.Load(FileResourcePath.GetDataPath("default-preferences.xml"));
+		Preferences.Default["Default.Layout.File"] = FileResourcePath.GetDataPath("bless-default.layout");
 
 		// load user preferences
 		LoadPreferences(Path.Combine(blessConfDir, "preferences.xml"));

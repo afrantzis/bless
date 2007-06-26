@@ -113,7 +113,7 @@ AC_CONFIG_FILES([Makefile po/Makefile.in
  				 src/tools/export/Makefile
 				 src/tools/export/plugins/Makefile
 				 src/util/Makefile
-				 src/util/ConfigureDefines.cs
+				 src/util/ConfigureDefines.cs.tmpl
 				 src/plugins/Makefile
 				 tests/Makefile
 				 tests/buffers/Makefile

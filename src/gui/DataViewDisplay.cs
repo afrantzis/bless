@@ -119,7 +119,7 @@ public class DataViewDisplay : Gtk.VBox {
 		dataView = dv;
 
 		// load the default layout from the data directory
-		layout = new Layout(FileResourcePath.GetSystemPath("..", "data", "bless-default.layout"));
+		layout = new Layout(FileResourcePath.GetDataPath("bless-default.layout"));
 
 		// initialize scrollbar
 		Gtk.Adjustment

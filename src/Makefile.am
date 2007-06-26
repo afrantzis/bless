@@ -18,8 +18,11 @@ endif
 
 noinst_SCRIPTS = bless.exe
 
-bless.exe: bless
+bless.exe: bless util/ConfigureDefines.cs
 	$(MONO_PROGRAM) ../builder/bless-builder.exe Bless $(MCS_FLAGS)
+
+util/ConfigureDefines.cs: util/ConfigureDefines.cs.tmpl
+	sed -e 's,@blessdatadir\@,$(datadir),g' util/ConfigureDefines.cs.tmpl > util/ConfigureDefines.cs
 
 bless: bless-script
 	sed -e 's,@blesslibdir\@,$(libdir),g' bless-script > bless

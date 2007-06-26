@@ -55,7 +55,7 @@ public class PluginManager
 			ctorArgTypes[i] = ctorArgs[i].GetType();
 
 		// find system-wide plugins
-		string systemPluginDir = FileResourcePath.GetSystemPath("");
+		string systemPluginDir = FileResourcePath.GetBinPath();
 		string[] systemPluginFiles = Directory.GetFiles(systemPluginDir);
 		CompareInfo compare = CultureInfo.InvariantCulture.CompareInfo;
 

@@ -140,7 +140,7 @@ public class ConversionTable: Gtk.HBox
 
 	public ConversionTable(DataBook db)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "ConversionTableWidget", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ConversionTableWidget", "bless");
 		gxml.Autoconnect (this);
 
 		littleEndian = true;

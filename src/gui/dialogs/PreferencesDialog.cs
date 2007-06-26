@@ -59,7 +59,7 @@ public class PreferencesDialog : Dialog
 	public PreferencesDialog(Preferences p, Window parent)
 			: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "PreferencesNotebook", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "PreferencesNotebook", "bless");
 		gxml.Autoconnect (this);
 
 		prefs = p;

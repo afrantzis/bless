@@ -113,7 +113,7 @@ public class GotoOffsetWidget : Gtk.HBox
 	{
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "GotoOffsetHBox", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "GotoOffsetHBox", "bless");
 		gxml.Autoconnect (this);
 
 		OffsetEntry.Completion = new EntryCompletion();

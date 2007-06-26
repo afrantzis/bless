@@ -83,7 +83,7 @@ public class HelpOperationsPlugin : GuiPlugin
 	public void OnContentsActivated(object o, EventArgs args)
 	{
 #if ENABLE_UNIX_SPECIFIC
-		string helpScript = FileResourcePath.GetSystemPath("..", "data", "help_script.sh");
+		string helpScript = FileResourcePath.GetDataPath("help_script.sh");
 		System.Diagnostics.Process.Start(helpScript);
 #endif
 	}

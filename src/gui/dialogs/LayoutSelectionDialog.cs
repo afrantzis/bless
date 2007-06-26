@@ -52,7 +52,7 @@ public class LayoutSelectionDialog : Dialog {
 	public LayoutSelectionDialog(DataBook db)
 			: base(Catalog.GetString("Select Layout"), null, 0)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "LayoutSelectionPaned", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "LayoutSelectionPaned", "bless");
 		gxml.Autoconnect (this);
 
 		dataBook = db;
@@ -93,7 +93,7 @@ public class LayoutSelectionDialog : Dialog {
 		TreeIter ti = ts.AppendValues(Catalog.GetString("System-wide Layouts"), string.Empty);
 
 		// fill list from bless data dir
-		string dataDir = FileResourcePath.GetSystemPath("..", "data");
+		string dataDir = FileResourcePath.GetDataPath("data");
 		if (Directory.Exists(dataDir)) {
 			string[] files = Directory.GetFiles(dataDir, "*.layout");
 			foreach (string s in files) {

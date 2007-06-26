@@ -333,7 +333,7 @@ public class FindReplaceWidget : Gtk.HBox
 		finder = iFinder;
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetSystemPath("..", "data", "bless.glade"), "FindReplaceTable", "bless");
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "FindReplaceTable", "bless");
 		gxml.Autoconnect (this);
 
 		this.Shown += OnWidgetShown;
