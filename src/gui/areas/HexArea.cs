@@ -23,7 +23,7 @@ using Bless.Plugins;
 using Bless.Gui.Drawers;
 using Gtk;
 
-namespace Bless.Gui.Areas {
+namespace Bless.Gui.Areas.Plugins {
 
 public class HexAreaPlugin : AreaPlugin
 {

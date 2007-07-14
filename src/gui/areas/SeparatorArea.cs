@@ -25,7 +25,7 @@ using Bless.Gui.Drawers;
 using Bless.Util;
 using Bless.Plugins;
 
-namespace Bless.Gui.Areas {
+namespace Bless.Gui.Areas.Plugins {
 
 public class SeparatorAreaPlugin : AreaPlugin
 {

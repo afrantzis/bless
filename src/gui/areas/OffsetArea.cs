@@ -27,7 +27,7 @@ using Bless.Util;
 using System.Xml;
 using Bless.Plugins;
 
-namespace Bless.Gui.Areas {
+namespace Bless.Gui.Areas.Plugins {
 
 public class OffsetAreaPlugin : AreaPlugin
 {

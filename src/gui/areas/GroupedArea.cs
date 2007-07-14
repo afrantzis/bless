@@ -24,7 +24,7 @@ using Gdk;
 using Bless.Gui.Drawers;
 using System.Xml;
 
-namespace Bless.Gui.Areas {
+namespace Bless.Gui.Areas.Plugins {
 
 ///<summary>An area that displays grouped bytes</summary>
 abstract public class GroupedArea : Area {
