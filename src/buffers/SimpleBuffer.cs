@@ -54,7 +54,7 @@ public class SimpleBuffer : IBuffer
 		if (data.Length > 0) {
 			byte[] tmp = new byte[data.LongLength + length];
 			data.CopyTo(tmp, 0);
-			Array.Copy(d, index, data, data.LongLength, length);
+			Array.Copy(d, index, tmp, data.LongLength, length);
 			data = tmp;
 		}
 		else {
