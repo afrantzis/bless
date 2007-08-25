@@ -1,0 +1,52 @@
+<Type Name="ProgressAction" FullName="Bless.Util.ProgressAction">
+  <TypeSignature Language="C#" Value="public enum ProgressAction" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Util</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Members>
+    <Member MemberName="Destroy">
+      <MemberSignature Language="C#" Value="Destroy" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Details">
+      <MemberSignature Language="C#" Value="Details" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Hide">
+      <MemberSignature Language="C#" Value="Hide" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Message">
+      <MemberSignature Language="C#" Value="Message" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Show">
+      <MemberSignature Language="C#" Value="Show" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Update">
+      <MemberSignature Language="C#" Value="Update" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ProgressAction</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

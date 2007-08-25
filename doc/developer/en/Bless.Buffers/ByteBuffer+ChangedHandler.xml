@@ -1,0 +1,21 @@
+<Type Name="ByteBuffer+ChangedHandler" FullName="Bless.Buffers.ByteBuffer+ChangedHandler">
+  <TypeSignature Language="C#" Value="public delegate void ByteBuffer.ChangedHandler(ByteBuffer bb);" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Parameters>
+    <Parameter Name="bb" Type="Bless.Buffers.ByteBuffer" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+  <Docs>
+    <param name="bb">To be added.</param>
+    <summary>Handler for <see cref="T:Bless.Buffers.ByteBuffer" /> events.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

@@ -1,0 +1,105 @@
+<Type Name="FileBuffer" FullName="Bless.Buffers.FileBuffer">
+  <TypeSignature Language="C#" Value="public class FileBuffer : Bless.Buffers.IBuffer" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Bless.Buffers.IBuffer</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember("Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public FileBuffer (string fn);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="fn" Type="System.String" /></Parameters>
+      <Docs><param name="fn">The path of the file.</param><summary>Creates a <see cref="T:Bless.Buffers.FileBuffer" /> from a file.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public FileBuffer (string fn, int size);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="fn" Type="System.String" /><Parameter Name="size" Type="System.Int32" /></Parameters>
+      <Docs><param name="fn">The path of the file.</param><param name="size">The size of the moving data window.</param><summary>Creates a <see cref="T:Bless.Buffers.FileBuffer" /> from a file and using the specified window size.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte data);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="data" Type="System.Byte" /></Parameters>
+      <Docs><param name="data">To be added.</param><summary>This is a read-only buffer.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte[] data, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="data">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>This is a read-only buffer.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Close">
+      <MemberSignature Language="C#" Value="public void Close ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Filename">
+      <MemberSignature Language="C#" Value="public string Filename { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>The path of the file loaded in this <see cref="T:Bless.Buffers.FileBuffer" />.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Insert">
+      <MemberSignature Language="C#" Value="public void Insert (long pos, byte[] data, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos" Type="System.Int64" /><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos">To be added.</param><param name="data">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>This is a read-only buffer.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public byte this[long index] { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Byte</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="index" Type="System.Int64" /></Parameters>
+      <Docs><param name="index">To be added.</param><summary>Provides access to the bytes in this <see cref="T:Bless.Buffers.FileBuffer" />.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Load">
+      <MemberSignature Language="C#" Value="public void Load (string filename);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="filename" Type="System.String" /></Parameters>
+      <Docs><param name="filename">To be added.</param><summary>Loads a file in this <see cref="T:Bless.Buffers.FileBuffer" />.</summary><remarks>If the <see cref="T:Bless.Buffers.FileBuffer" /> already has a file loaded, the old file is closed first.</remarks></Docs>
+    </Member>
+    <Member MemberName="Read">
+      <MemberSignature Language="C#" Value="public int Read (byte[] ba, long pos, int len);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int32</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="ba" Type="System.Byte[]" /><Parameter Name="pos" Type="System.Int64" /><Parameter Name="len" Type="System.Int32" /></Parameters>
+      <Docs><param name="ba">To be added.</param><param name="pos">To be added.</param><param name="len">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public long Size { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Docs><summary>The size of this <see cref="T:Bless.Buffers.FileBuffer" />.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>A buffer that allows efficient access to a file by using a moving data window.</summary>
+    <remarks><para>
+This is a read-only buffer, so any attempt to modify it is silently ignored.
+</para>
+<para>
+The buffer works by keeping only a portion of the file's data in memory, in what is called the data window. An attempt to read
+data that is currently outside the data window causes the data window to be reloaded. Ofcourse, this procedure is transparent to the caller.
+</para></remarks>
+  </Docs>
+</Type>

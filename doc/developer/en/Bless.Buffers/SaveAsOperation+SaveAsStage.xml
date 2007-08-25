@@ -1,0 +1,28 @@
+<Type Name="SaveAsOperation+SaveAsStage" FullName="Bless.Buffers.SaveAsOperation+SaveAsStage">
+  <TypeSignature Language="C#" Value="public enum SaveAsOperation.SaveAsStage" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Members>
+    <Member MemberName="BeforeCreate">
+      <MemberSignature Language="C#" Value="BeforeCreate" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SaveAsOperation+SaveAsStage</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="BeforeWrite">
+      <MemberSignature Language="C#" Value="BeforeWrite" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SaveAsOperation+SaveAsStage</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

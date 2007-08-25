@@ -1,0 +1,64 @@
+<Type Name="SegmentCollection" FullName="Bless.Buffers.SegmentCollection">
+  <TypeSignature Language="C#" Value="public class SegmentCollection" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SegmentCollection ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (Bless.Buffers.Segment s);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="s" Type="Bless.Buffers.Segment" /></Parameters>
+      <Docs><param name="s">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="DeleteRange">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.SegmentCollection DeleteRange (long pos1, long pos2);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SegmentCollection</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos1" Type="System.Int64" /><Parameter Name="pos2" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos1">To be added.</param><param name="pos2">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="FindSegment">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.Segment FindSegment (long offset, out long OutMapping, out Bless.Util.List&lt;Bless.Buffers.Segment&gt;.Node OutNode);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.Segment</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="offset" Type="System.Int64" /><Parameter Name="OutMapping" Type="System.Int64&amp;" RefType="out" /><Parameter Name="OutNode" Type="Bless.Util.List&lt;Bless.Buffers.Segment&gt;+Node&amp;" RefType="out" /></Parameters>
+      <Docs><param name="offset">To be added.</param><param name="OutMapping">To be added.</param><param name="OutNode">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="GetRange">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.SegmentCollection GetRange (long pos1, long pos2);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SegmentCollection</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos1" Type="System.Int64" /><Parameter Name="pos2" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos1">To be added.</param><param name="pos2">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Insert">
+      <MemberSignature Language="C#" Value="public void Insert (Bless.Buffers.SegmentCollection sc, long offset);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="sc" Type="Bless.Buffers.SegmentCollection" /><Parameter Name="offset" Type="System.Int64" /></Parameters>
+      <Docs><param name="sc">To be added.</param><param name="offset">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="List">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;Bless.Buffers.Segment&gt; List { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;Bless.Buffers.Segment&gt;</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

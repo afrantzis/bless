@@ -1,0 +1,73 @@
+<Type Name="SimpleBuffer" FullName="Bless.Buffers.SimpleBuffer">
+  <TypeSignature Language="C#" Value="public class SimpleBuffer : Bless.Buffers.IBuffer" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Bless.Buffers.IBuffer</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember("Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SimpleBuffer ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte b);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="b" Type="System.Byte" /></Parameters>
+      <Docs><param name="b">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte[] d, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="d" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="d">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Insert">
+      <MemberSignature Language="C#" Value="public void Insert (long pos, byte[] d, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos" Type="System.Int64" /><Parameter Name="d" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos">To be added.</param><param name="d">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>This is an append-only buffer.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public byte this[long index] { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Byte</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="index" Type="System.Int64" /></Parameters>
+      <Docs><param name="index">To be added.</param><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Read">
+      <MemberSignature Language="C#" Value="public int Read (byte[] ba, long pos, int len);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int32</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="ba" Type="System.Byte[]" /><Parameter Name="pos" Type="System.Int64" /><Parameter Name="len" Type="System.Int32" /></Parameters>
+      <Docs><param name="ba">To be added.</param><param name="pos">To be added.</param><param name="len">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public long Size { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>A simple and lightweight append-only buffer implementing the <see cref="T:Bless.Buffers.IBuffer" /> interface.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

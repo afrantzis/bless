@@ -1,0 +1,412 @@
+<Type Name="ByteBuffer" FullName="Bless.Buffers.ByteBuffer">
+  <TypeSignature Language="C#" Value="public class ByteBuffer : Bless.Buffers.IBuffer" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Bless.Buffers.IBuffer</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember("Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ByteBuffer ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs><summary>Create a new empty <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ByteBuffer (string filename);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="filename" Type="System.String" /></Parameters>
+      <Docs><param name="filename">The filename of this <see cref="T:Bless.Buffers.ByteBuffer" />.</param><summary>Create a new  <see cref="T:Bless.Buffers.ByteBuffer" /> with a name.</summary><remarks>  <para>
+This doesn't load a file into the <see cref="T:Bless.Buffers.ByteBuffer" />. It just gives it the specified name.
+  </para>
+  <para>
+To create a <see cref="T:Bless.Buffers.ByteBuffer" /> from a file use  <see cref="M:Bless.Buffers.ByteBuffer.FromFile(string)" />.
+  </para></remarks></Docs>
+    </Member>
+    <Member MemberName="ActionChaining">
+      <MemberSignature Language="C#" Value="public bool ActionChaining { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte b);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="b" Type="System.Byte" /></Parameters>
+      <Docs><param name="b">The <see cref="T:byte" /> to append.</param><summary>Appends a byte to this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte[] data);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="data" Type="System.Byte[]" /></Parameters>
+      <Docs><param name="data">The array of bytes to append.</param><summary>Appends an array of bytes to this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public void Append (byte[] data, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="data">The array of bytes to get the data from.</param><param name="index">The starting index in the array <paramref name="data" /> of the sub-array to append.</param><param name="length">The length of the sub-array to append.</param><summary>Appends to this <see cref="T:Bless.Buffers.ByteBuffer" /> a sub-array of bytes contained in a byte array.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="BeginActionChaining">
+      <MemberSignature Language="C#" Value="public void BeginActionChaining ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Treat subsequent actions in this <see cref="T:Bless.Buffers.ByteBuffer" /> as a single one.</summary><remarks>See also <see cref="M:Bless.Buffers.ByteBuffer.EndActionChaining()" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="BeginSave">
+      <MemberSignature Language="C#" Value="public IAsyncResult BeginSave (Bless.Util.ProgressCallback progressCallback, AsyncCallback ac);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.IAsyncResult</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="progressCallback" Type="Bless.Util.ProgressCallback" /><Parameter Name="ac" Type="System.AsyncCallback" /></Parameters>
+      <Docs><param name="progressCallback">A callback used to report progress.</param><param name="ac">A callback called when the save operation has finished (successfully or not).</param><summary>Saves this <see cref="T:Bless.Buffers.ByteBuffer" /> under the same filename.</summary><returns>An object used to represent the state of the asynchronous save operation. It can be used to wait for the operation to complete.</returns><remarks><para>
+During the save operation no read, modify or file operations are allowed on this <see cref="T:Bless.Buffers.ByteBuffer" />.
+</para>
+
+<para>
+When saving (under the same filename), the <see cref="T:Bless.Buffers.ByteBuffer" /> is first saved to a temporary file in the  <see cref="P:Bless.Buffers.ByteBuffer.TempDir" /> directory and then moved over to its final location.
+</para>
+
+<para>
+The <see cref="P:IAsyncResult.AsyncState" /> returned by the method and also passed in  the <paramref name="ac" /> callback is a <see cref="T:Bless.Buffers.SaveOperation" /> object.
+</para>
+
+<example>
+  <code lang="C#">bool doSaveProgressCallback(object o, ProgressAction action)
+{
+	...
+}
+
+void doSaveFinishedCallback(IAsyncResult ar)
+{
+	SaveOperation so = (SaveOperation)ar.AsyncState;
+
+	if (so.Result == SaveOperation.OperationResult.Finished) { // save went ok
+		System.Console.WriteLine("Save went OK!");
+	}
+	else if (so.Result == SaveOperation.OperationResult.Cancelled) { // save cancelled
+		System.Console.WriteLine("Save was cancelled");
+	}
+	else if (so.Result == SaveOperation.OperationResult.CaughtException) {
+		System.Console.WriteLine("Save caught exception: {0}", so.ThreadException.Message);
+	}
+}
+
+void doSave()
+{
+	ByteBuffer bb = new ByteBuffer("test.txt");
+	bb[10] = 0xff;
+	
+	bb.BeginSave(doSaveProgressCallback, doSaveFinishedCallback);
+}</code>
+</example></remarks></Docs>
+    </Member>
+    <Member MemberName="BeginSaveAs">
+      <MemberSignature Language="C#" Value="public IAsyncResult BeginSaveAs (string filename, Bless.Util.ProgressCallback progressCallback, AsyncCallback ac);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.IAsyncResult</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="filename" Type="System.String" /><Parameter Name="progressCallback" Type="Bless.Util.ProgressCallback" /><Parameter Name="ac" Type="System.AsyncCallback" /></Parameters>
+      <Docs><param name="filename">The filename of the file to save this <see cref="T:Bless.Buffers.ByteBuffer" /> to.</param><param name="progressCallback">A callback used to report progress.</param><param name="ac">A callback called when the save as operation has finished (successfully or not).</param><summary>Saves this <see cref="T:Bless.Buffers.ByteBuffer" /> under the specified filename.</summary><returns>An object used to represent the state of the asynchronous save operation. It can be used to wait for the operation to complete.</returns><remarks><para>
+During the save as operation no read, modify or file operations are allowed on this <see cref="T:Bless.Buffers.ByteBuffer" />.
+</para>
+
+<para>
+The <see cref="P:IAsyncResult.AsyncState" /> returned by the method and also passed in  the <paramref name="ac" /> callback is a <see cref="T:Bless.Buffers.SaveAsOperation" /> object.
+</para>
+
+<example>
+  <code lang="C#">bool doSaveAsProgressCallback(object o, ProgressAction action)
+{
+	...
+}
+
+void doSaveAsFinishedCallback(IAsyncResult ar)
+{
+	SaveAsOperation so = (SaveAsOperation)ar.AsyncState;
+
+	if (so.Result == SaveAsOperation.OperationResult.Finished) { // save went ok
+		System.Console.WriteLine("Save went OK!");
+	}
+	else if (so.Result == SaveAsOperation.OperationResult.Cancelled) { // save cancelled
+		System.Console.WriteLine("Save was cancelled");
+	}
+	else if (so.Result == SaveAsOperation.OperationResult.CaughtException) {
+		System.Console.WriteLine("Save caught exception: {0}", so.ThreadException.Message);
+	}
+}
+
+void doSave()
+{
+	ByteBuffer bb = new ByteBuffer("test.txt");
+	bb[10] = 0xff;
+	
+	bb.BeginSaveAs("new_test.txt", doSaveAsProgressCallback, doSaveAsFinishedCallback);
+}
+
+
+
+  </code>
+</example></remarks></Docs>
+    </Member>
+    <Member MemberName="CanRedo">
+      <MemberSignature Language="C#" Value="public bool CanRedo { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> has any actions that were undone and can be redone.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="CanUndo">
+      <MemberSignature Language="C#" Value="public bool CanUndo { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> has any actions that can be undone.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Changed">
+      <MemberSignature Language="C#" Value="public event Bless.Buffers.ByteBuffer.ChangedHandler Changed;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer+ChangedHandler</ReturnType></ReturnValue>
+      <Docs><summary>Event launched when this <see cref="T:Bless.Buffers.ByteBuffer" /> is modified.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="CloseFile">
+      <MemberSignature Language="C#" Value="public void CloseFile ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Closes the file associated with this <see cref="T:Bless.Buffers.ByteBuffer" />.
+</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Delete">
+      <MemberSignature Language="C#" Value="public void Delete (long pos1, long pos2);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos1" Type="System.Int64" /><Parameter Name="pos2" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos1">The position of the first byte to delete.</param><param name="pos2">The position of the last byte to delete.</param><summary>Deletes the bytes in the specified range.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="EmitChanged">
+      <MemberSignature Language="C#" Value="public void EmitChanged ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Emits the changed event.</summary><remarks>See <see cref="E:Bless.Buffers.ByteBuffer.Changed" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="EmitEvents">
+      <MemberSignature Language="C#" Value="public bool EmitEvents { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> will emit events.</summary><value>To be added.</value><remarks>See <see cref="T:Bless.Buffers.ByteBuffer/E" /> for a list of events that <see cref="T:Bless.Buffers.ByteBuffer" /> emits.</remarks></Docs>
+    </Member>
+    <Member MemberName="EmitFileChanged">
+      <MemberSignature Language="C#" Value="public void EmitFileChanged ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Emits the File Changed event.</summary><remarks>See <see cref="E:Bless.Buffers.ByteBuffer.FileChanged" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="EmitPermissionsChanged">
+      <MemberSignature Language="C#" Value="public void EmitPermissionsChanged ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Emits the Permission Changed event.</summary><remarks>See <see cref="E:Bless.Buffers.ByteBuffer.PermissionsChanged" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="EndActionChaining">
+      <MemberSignature Language="C#" Value="public void EndActionChaining ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Stop treating subsequent actions in this <see cref="T:Bless.Buffers.ByteBuffer" /> as a single one.</summary><remarks>See also <see cref="T:Bless.Buffers.ByteBuffer.BeginActionChaining()" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="FileChanged">
+      <MemberSignature Language="C#" Value="public event Bless.Buffers.ByteBuffer.ChangedHandler FileChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer+ChangedHandler</ReturnType></ReturnValue>
+      <Docs><summary>Event launched when the file associated with this <see cref="T:Bless.Buffers.ByteBuffer" /> is modified outside of this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Filename">
+      <MemberSignature Language="C#" Value="public string Filename { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>The path of the file associated to this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="FileOperationsAllowed">
+      <MemberSignature Language="C#" Value="public bool FileOperationsAllowed { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether file operations are allowed on this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><value>To be added.</value><remarks>If set to <see langword="false" /> all file operations (save, close etc) are silently ignored.</remarks></Docs>
+    </Member>
+    <Member MemberName="FromFile">
+      <MemberSignature Language="C#" Value="public static Bless.Buffers.ByteBuffer FromFile (string filename);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="filename" Type="System.String" /></Parameters>
+      <Docs><param name="filename">The path of the file to load into the created <see cref="T:Bless.Buffers.ByteBuffer" />.</param><summary>Create a new  <see cref="T:Bless.Buffers.ByteBuffer" /> and initialize it with the contents of a file.</summary><returns>The created <see cref="T:Bless.Buffers.ByteBuffer" />.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="HasChanged">
+      <MemberSignature Language="C#" Value="public bool HasChanged { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> has changed since the previous save.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="HasFile">
+      <MemberSignature Language="C#" Value="public bool HasFile { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> has a file associated with it.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Insert">
+      <MemberSignature Language="C#" Value="public void Insert (long pos, byte[] data);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos" Type="System.Int64" /><Parameter Name="data" Type="System.Byte[]" /></Parameters>
+      <Docs><param name="pos">To be added.</param><param name="data">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Insert">
+      <MemberSignature Language="C#" Value="public void Insert (long pos, byte[] data, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos" Type="System.Int64" /><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos">To be added.</param><param name="data">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public byte this[long index] { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Byte</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="index" Type="System.Int64" /></Parameters>
+      <Docs><param name="index">The index (position) in the <see cref="T:Bless.Buffers.ByteBuffer" /> of the byte to access.</param><summary>Provides access to the bytes in this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><value>The byte to write to or read from the specified index. If the <see cref="P:Bless.Buffers.ByteBuffer.ReadAllowed" /> property is set to <see langword="false" /> all attempts to read return the byte 0.</value><remarks>If the index is outside the range of the <see cref="T:Bless.Buffers.ByteBuffer" /> this method throws a <see cref="T:System.IndexOutOfRangeException" />.</remarks></Docs>
+    </Member>
+    <Member MemberName="LockObj">
+      <MemberSignature Language="C#" Value="public readonly object LockObj;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>System.Object</ReturnType></ReturnValue>
+      <Docs><summary>Object used to ensure synchronized access to this <see cref="T:Bless.Buffer.ByteBuffer" />.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="MaxUndoActions">
+      <MemberSignature Language="C#" Value="public int MaxUndoActions { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int32</ReturnType></ReturnValue>
+      <Docs><summary>The maximun number of actions that can be undone.</summary><value>The number of actions or -1 for unlimited undo actions.</value><remarks>When the number of undo actions is set to be less than the current number, older undo actions are lost.</remarks></Docs>
+    </Member>
+    <Member MemberName="ModifyAllowed">
+      <MemberSignature Language="C#" Value="public bool ModifyAllowed { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> can be modified.
+</summary><value>To be added.</value><remarks>If set to <see langword="false" />, all buffer actions that can modify the buffer are silently ignored.</remarks></Docs>
+    </Member>
+    <Member MemberName="PermissionsChanged">
+      <MemberSignature Language="C#" Value="public event Bless.Buffers.ByteBuffer.ChangedHandler PermissionsChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer+ChangedHandler</ReturnType></ReturnValue>
+      <Docs><summary>Event launched when the permissions of this <see cref="T:Bless.Buffers.ByteBuffer" /> are modified.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Range">
+      <MemberSignature Language="C#" Value="public Bless.Util.Range Range { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.Range</ReturnType></ReturnValue>
+      <Docs><summary>The range of this <see cref="T:Bless.Buffers.ByteBuffer" />.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="RangeToByteArray">
+      <MemberSignature Language="C#" Value="public byte[] RangeToByteArray (Bless.Util.Range range);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Byte[]</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="range" Type="Bless.Util.Range" /></Parameters>
+      <Docs><param name="range">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="RangeToSegmentCollection">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.SegmentCollection RangeToSegmentCollection (Bless.Util.Range range);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SegmentCollection</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="range" Type="Bless.Util.Range" /></Parameters>
+      <Docs><param name="range">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Read">
+      <MemberSignature Language="C#" Value="public int Read (byte[] data, long pos, int len);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int32</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="pos" Type="System.Int64" /><Parameter Name="len" Type="System.Int32" /></Parameters>
+      <Docs><param name="data">To be added.</param><param name="pos">To be added.</param><param name="len">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="ReadAllowed">
+      <MemberSignature Language="C#" Value="public bool ReadAllowed { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether this <see cref="T:Bless.Buffers.ByteBuffer" /> can be safely read.</summary><value>To be added.</value><remarks>If it is set to <see langword="false" />, all attempts to read from this <see cref="T:Bless.Buffers.ByteBuffer" /> return one or more bytes of value 0.</remarks></Docs>
+    </Member>
+    <Member MemberName="Redo">
+      <MemberSignature Language="C#" Value="public void Redo ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Redo the last undone action.</summary><remarks>This method does nothing if there is no action to redo.</remarks></Docs>
+    </Member>
+    <Member MemberName="Replace">
+      <MemberSignature Language="C#" Value="public void Replace (long pos1, long pos2, byte[] data);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos1" Type="System.Int64" /><Parameter Name="pos2" Type="System.Int64" /><Parameter Name="data" Type="System.Byte[]" /></Parameters>
+      <Docs><param name="pos1">To be added.</param><param name="pos2">To be added.</param><param name="data">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Replace">
+      <MemberSignature Language="C#" Value="public void Replace (long pos1, long pos2, byte[] data, long index, long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="pos1" Type="System.Int64" /><Parameter Name="pos2" Type="System.Int64" /><Parameter Name="data" Type="System.Byte[]" /><Parameter Name="index" Type="System.Int64" /><Parameter Name="length" Type="System.Int64" /></Parameters>
+      <Docs><param name="pos1">To be added.</param><param name="pos2">To be added.</param><param name="data">To be added.</param><param name="index">To be added.</param><param name="length">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Revert">
+      <MemberSignature Language="C#" Value="public void Revert ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Revert this <see cref="T:Bless.Buffers.ByteBuffer" /> to its saved state.</summary><remarks>The method only works if this <see cref="T:Bless.Buffers.ByteBuffer" /> has a file assocciated with it.</remarks></Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public long Size { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Docs><summary>The size of this <see cref="T:Bless.Buffers.ByteBuffer" /> in bytes.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="TempDir">
+      <MemberSignature Language="C#" Value="public string TempDir { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>The directory where temporary files related to this <see cref="T:Bless.Buffers.ByteBuffer" /> are stored.</summary><value>To be added.</value><remarks>When saving under the same filename, the <see cref="T:Bless.Buffers.ByteBuffer" /> is first saved to a temporary file in this directory and then moved over to its final location.</remarks></Docs>
+    </Member>
+    <Member MemberName="Undo">
+      <MemberSignature Language="C#" Value="public void Undo ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>Undo the last done action.</summary><remarks>This method does nothing if there is no action to undo.</remarks></Docs>
+    </Member>
+    <Member MemberName="UseGLibIdle">
+      <MemberSignature Language="C#" Value="public bool UseGLibIdle { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Boolean</ReturnType></ReturnValue>
+      <Docs><summary>Whether to use the GLib Idle handler for progress reporting.</summary><value>To be added.</value><remarks><para>
+The default value is <see langword="false" />.
+</para>
+This should be set to <see langword="true" /> if progress reporting involves Gtk+ widgets.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>A buffer for holding bytes in a versatile manner.
+It supports undo-redo and can easily handle large files.
+Editing is also very cheap.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

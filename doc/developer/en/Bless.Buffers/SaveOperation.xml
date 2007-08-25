@@ -1,0 +1,35 @@
+<Type Name="SaveOperation" FullName="Bless.Buffers.SaveOperation">
+  <TypeSignature Language="C#" Value="public class SaveOperation : Bless.Buffers.SaveAsOperation" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Bless.Buffers.SaveAsOperation</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SaveOperation (Bless.Buffers.ByteBuffer bb, string tempFilename, Bless.Util.ProgressCallback pc, AsyncCallback ac, bool glibIdle);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="bb" Type="Bless.Buffers.ByteBuffer" /><Parameter Name="tempFilename" Type="System.String" /><Parameter Name="pc" Type="Bless.Util.ProgressCallback" /><Parameter Name="ac" Type="System.AsyncCallback" /><Parameter Name="glibIdle" Type="System.Boolean" /></Parameters>
+      <Docs><param name="bb">To be added.</param><param name="tempFilename">To be added.</param><param name="pc">To be added.</param><param name="ac">To be added.</param><param name="glibIdle">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="StageReached">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.SaveOperation.SaveStage StageReached { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SaveOperation+SaveStage</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="TempPath">
+      <MemberSignature Language="C#" Value="public string TempPath { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

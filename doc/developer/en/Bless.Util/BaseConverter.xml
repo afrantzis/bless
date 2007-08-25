@@ -1,0 +1,58 @@
+<Type Name="BaseConverter" FullName="Bless.Util.BaseConverter">
+  <TypeSignature Language="C#" Value="public class BaseConverter" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Util</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName="ConvertToNum">
+      <MemberSignature Language="C#" Value="public static long ConvertToNum (string s, int b);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="s" Type="System.String" /><Parameter Name="b" Type="System.Int32" /></Parameters>
+      <Docs><param name="s">The string to convert.</param><param name="b">The number base of the number <paramref name="s" /> represents.</param><summary>Converts a string to a number assuming it is represented in the specified number base.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="ConvertToNum">
+      <MemberSignature Language="C#" Value="public static long ConvertToNum (string s, int startIndex, int endIndex, int b);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="s" Type="System.String" /><Parameter Name="startIndex" Type="System.Int32" /><Parameter Name="endIndex" Type="System.Int32" /><Parameter Name="b" Type="System.Int32" /></Parameters>
+      <Docs><param name="s">The string to read the sub-string from.</param><param name="startIndex">The starting index of the sub-string in <paramref name="s" />.</param><param name="endIndex">The ending index of the sub-string in <paramref name="s" />.</param><param name="b">The number base of the number that the sub-string represents.</param><summary>Converts a sub-string of string to a number assuming it is represented in the specified number base.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="ConvertToString">
+      <MemberSignature Language="C#" Value="public static string ConvertToString (long num, int b);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="num" Type="System.Int64" /><Parameter Name="b" Type="System.Int32" /></Parameters>
+      <Docs><param name="num">To be added.</param><param name="b">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="ConvertToString">
+      <MemberSignature Language="C#" Value="public static string ConvertToString (long num, int b, bool prependPrefix, bool lowercase, int minDigits);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="num" Type="System.Int64" /><Parameter Name="b" Type="System.Int32" /><Parameter Name="prependPrefix" Type="System.Boolean" /><Parameter Name="lowercase" Type="System.Boolean" /><Parameter Name="minDigits" Type="System.Int32" /></Parameters>
+      <Docs><param name="num">To be added.</param><param name="b">To be added.</param><param name="prependPrefix">To be added.</param><param name="lowercase">To be added.</param><param name="minDigits">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="DefaultMinDigits">
+      <MemberSignature Language="C#" Value="public static int[] DefaultMinDigits;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>System.Int32[]</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Parse">
+      <MemberSignature Language="C#" Value="public static long Parse (string s);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="s" Type="System.String" /></Parameters>
+      <Docs><param name="s">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Class to convert numbers to strings and vice-versa using any number base (up to 16).</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

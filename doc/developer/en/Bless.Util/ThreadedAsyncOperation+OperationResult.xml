@@ -1,0 +1,34 @@
+<Type Name="ThreadedAsyncOperation+OperationResult" FullName="Bless.Util.ThreadedAsyncOperation+OperationResult">
+  <TypeSignature Language="C#" Value="public enum ThreadedAsyncOperation.OperationResult" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Util</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Members>
+    <Member MemberName="Cancelled">
+      <MemberSignature Language="C#" Value="Cancelled" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ThreadedAsyncOperation+OperationResult</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="CaughtException">
+      <MemberSignature Language="C#" Value="CaughtException" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ThreadedAsyncOperation+OperationResult</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+    <Member MemberName="Finished">
+      <MemberSignature Language="C#" Value="Finished" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.ThreadedAsyncOperation+OperationResult</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

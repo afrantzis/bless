@@ -1,0 +1,65 @@
+<Type Name="SaveAsOperation" FullName="Bless.Buffers.SaveAsOperation">
+  <TypeSignature Language="C#" Value="public class SaveAsOperation : Bless.Util.ThreadedAsyncOperation" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Buffers</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Bless.Util.ThreadedAsyncOperation</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public SaveAsOperation (Bless.Buffers.ByteBuffer bb, string fn, Bless.Util.ProgressCallback pc, AsyncCallback ac, bool glibIdle);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="bb" Type="Bless.Buffers.ByteBuffer" /><Parameter Name="fn" Type="System.String" /><Parameter Name="pc" Type="Bless.Util.ProgressCallback" /><Parameter Name="ac" Type="System.AsyncCallback" /><Parameter Name="glibIdle" Type="System.Boolean" /></Parameters>
+      <Docs><param name="bb">To be added.</param><param name="fn">To be added.</param><param name="pc">To be added.</param><param name="ac">To be added.</param><param name="glibIdle">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Buffer">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.ByteBuffer Buffer { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="byteBuffer">
+      <MemberSignature Language="C#" Value="protected Bless.Buffers.ByteBuffer byteBuffer;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.ByteBuffer</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="bytesSaved">
+      <MemberSignature Language="C#" Value="protected long bytesSaved;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="BytesSaved">
+      <MemberSignature Language="C#" Value="public long BytesSaved { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int64</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="SavePath">
+      <MemberSignature Language="C#" Value="public string SavePath { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="savePath">
+      <MemberSignature Language="C#" Value="protected string savePath;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>System.String</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="StageReached">
+      <MemberSignature Language="C#" Value="public Bless.Buffers.SaveAsOperation.SaveAsStage StageReached { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Buffers.SaveAsOperation+SaveAsStage</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

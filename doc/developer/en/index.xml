@@ -1,0 +1,53 @@
+<Overview>
+  <Assemblies>
+    <Assembly Name="Bless.Buffers" Version="0.0.0.0">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+    <Assembly Name="Bless.Util" Version="0.0.0.0">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+  </Assemblies>
+  <Remarks>To be added.</Remarks>
+  <Copyright>To be added.</Copyright>
+  <Types>
+    <Namespace Name="Bless.Buffers">
+      <Type Name="ByteBuffer" />
+      <Type Name="FileBuffer" />
+      <Type Name="IBuffer" />
+      <Type Name="SaveAsOperation" />
+      <Type Name="SaveAsOperation+SaveAsStage" />
+      <Type Name="SaveOperation" />
+      <Type Name="SaveOperation+SaveStage" />
+      <Type Name="Segment" />
+      <Type Name="SegmentCollection" />
+      <Type Name="SimpleBuffer" />
+      <Type Name="ByteBuffer+ChangedHandler" />
+    </Namespace>
+    <Namespace Name="Bless.Util">
+      <Type Name="BaseConverter" />
+      <Type Name="ByteArray" />
+      <Type Name="ConfigureDefines" />
+      <Type Name="Deque`1" DisplayName="Deque&lt;T&gt;" />
+      <Type Name="FileResourcePath" />
+      <Type Name="List`1" DisplayName="List&lt;T&gt;" />
+      <Type Name="List`1+Node" DisplayName="List&lt;T&gt;+Node" />
+      <Type Name="ProgressAction" />
+      <Type Name="Range" />
+      <Type Name="RangeCollection" />
+      <Type Name="TempFile" />
+      <Type Name="ThreadedAsyncOperation" />
+      <Type Name="ThreadedAsyncOperation+OperationResult" />
+      <Type Name="ThreadedAsyncResult" />
+      <Type Name="ProgressCallback" />
+    </Namespace>
+  </Types>
+  <Title>Bless</Title>
+</Overview>

@@ -1,0 +1,44 @@
+<Type Name="List&lt;T&gt;+Node" FullName="Bless.Util.List&lt;T&gt;+Node">
+  <TypeSignature Language="C#" Value="public class List&lt;T&gt;.Node" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Util</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <TypeParameters>
+    <TypeParameter>T</TypeParameter>
+  </TypeParameters>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Node (T d, Bless.Util.List&lt;T&gt;.Node p, Bless.Util.List&lt;T&gt;.Node n);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters><Parameter Name="d" Type="T" /><Parameter Name="p" Type="Bless.Util.List&lt;T&gt;+Node" /><Parameter Name="n" Type="Bless.Util.List&lt;T&gt;+Node" /></Parameters>
+      <Docs><param name="d">To be added.</param><param name="p">To be added.</param><param name="n">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="data">
+      <MemberSignature Language="C#" Value="public T data;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>T</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="next">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node next;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="prev">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node prev;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

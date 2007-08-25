@@ -1,0 +1,103 @@
+<Type Name="List&lt;T&gt;" FullName="Bless.Util.List&lt;T&gt;">
+  <TypeSignature Language="C#" Value="public class List&lt;T&gt; : System.Collections.Generic.IEnumerable&lt;T&gt;" />
+  <AssemblyInfo>
+    <AssemblyName>Bless.Util</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <TypeParameters>
+    <TypeParameter>T</TypeParameter>
+  </TypeParameters>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.Collections.Generic.IEnumerable&lt;T&gt;</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember("Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public List ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Append">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node Append (T o);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="o" Type="T" /></Parameters>
+      <Docs><param name="o">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Count">
+      <MemberSignature Language="C#" Value="public int Count { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>System.Int32</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Display">
+      <MemberSignature Language="C#" Value="public void Display ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="First">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node First { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="GetEnumerator">
+      <MemberSignature Language="C#" Value="public System.Collections.Generic.IEnumerator&lt;T&gt; GetEnumerator ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Collections.Generic.IEnumerator&lt;T&gt;</ReturnType></ReturnValue>
+      <Parameters />
+      <Docs><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="InsertAfter">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node InsertAfter (Bless.Util.List&lt;T&gt;.Node n, T o);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="n" Type="Bless.Util.List&lt;T&gt;+Node" /><Parameter Name="o" Type="T" /></Parameters>
+      <Docs><param name="n">To be added.</param><param name="o">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="InsertBefore">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node InsertBefore (Bless.Util.List&lt;T&gt;.Node n, T o);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="n" Type="Bless.Util.List&lt;T&gt;+Node" /><Parameter Name="o" Type="T" /></Parameters>
+      <Docs><param name="n">To be added.</param><param name="o">To be added.</param><summary>To be added.</summary><returns>To be added.</returns><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public T this[int index] { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>T</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="index" Type="System.Int32" /></Parameters>
+      <Docs><param name="index">To be added.</param><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Last">
+      <MemberSignature Language="C#" Value="public Bless.Util.List&lt;T&gt;.Node Last { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue><ReturnType>Bless.Util.List&lt;T&gt;+Node</ReturnType></ReturnValue>
+      <Docs><summary>To be added.</summary><value>To be added.</value><remarks>To be added.</remarks></Docs>
+    </Member>
+    <Member MemberName="Remove">
+      <MemberSignature Language="C#" Value="public void Remove (Bless.Util.List&lt;T&gt;.Node n);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue><ReturnType>System.Void</ReturnType></ReturnValue>
+      <Parameters><Parameter Name="n" Type="Bless.Util.List&lt;T&gt;+Node" /></Parameters>
+      <Docs><param name="n">To be added.</param><summary>To be added.</summary><remarks>To be added.</remarks></Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <typeparam name="T">To be added.</typeparam>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>
