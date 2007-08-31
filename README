@@ -1,4 +1,4 @@
-Bless - Gtk# Hex Editor v0.5.1
+Bless - Gtk# Hex Editor v0.5.2
 ==============================
 Copyright (c) 2004-2007, Alexandros Frantzis
 
@@ -122,7 +122,7 @@ Enjoy!
 The doc/ directory contains documentation directed both at the user and at the 
 developer who wants to explore Bless. The doc/user/ subdirectory contains 
 information about using bless whereas doc/developer/ contains developer 
-information (plugin development etc). 
+information (bless api etc). 
 Note: The developer documentation is almost non-existant.
 
 ---------------

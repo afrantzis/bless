@@ -1,3 +1,10 @@
+Bless v0.5.2 20070831
+---------------------
+
+* Pluginified Areas subsystem.
+* Bless is now installed in a more standard location.
+* Various bug fixes (gna.org #9313, #9543, #9664, #9659)
+
 Bless v0.5.1 20070602
 ---------------------
 
