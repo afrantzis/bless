@@ -102,7 +102,7 @@ public abstract class Area {
 		if (pluginTable == null) {
 			pluginTable = new Dictionary<string, AreaCreatorFunc>();
 		}
-		System.Console.WriteLine("Adding plugin name {0}", name);
+		// System.Console.WriteLine("Adding plugin name {0}", name);
 		pluginTable.Add(name, createArea);
 	}
 
