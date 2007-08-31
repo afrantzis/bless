@@ -1,4 +1,4 @@
-#SUBDIRS= buffers gui tools util
+SUBDIRS= buffers gui tools util plugins
 
 DIST_SUBDIRS = buffers gui tools util plugins
 
