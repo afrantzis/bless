@@ -184,13 +184,13 @@
 			To build and run &app; &appversion; you need:
 			<itemizedlist>
 				<listitem>
-					<para>GTK+ &gt;=2.10.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
+					<para>GTK+ &gt;=2.8.x (Included in all modern GNU/Linux distributions, <ulink url="http://www.gtk.org" type="http">http://www.gtk.org</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>mono/.NET runtime and C# compiler &gt;= 1.1.14 (<ulink url="http://www.mono-project.com" type="http">http://www.mono-project.com</ulink>)</para>
 				</listitem>
 				<listitem>
-					<para>Gtk#  &gt;=2.10 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
+					<para>Gtk#  &gt;=2.8 bindings for GTK+ (<ulink url="http://gtk-sharp.sourceforge.net" type="http">http://gtk-sharp.sourceforge.net</ulink>)</para>
 				</listitem>
 				<listitem>
 					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
