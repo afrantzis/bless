@@ -192,32 +192,51 @@ public class FileService
 	///</summary>
 	public ByteBuffer OpenFile(string filename)
 	{
-		Uri uri;
-		string fullPath = null;
-
-		// handle normal paths, as well as uris
-		try {
-			// first try filename as a uri
+		Uri uri = null;
+		
+		// first try filename as a URI
+		try {	
 			uri = new Uri(filename);
-			// get an unescaped representation of the uri
-			fullPath = uri.LocalPath;
 		}
-		catch {
+		catch { }
+		
+		// if filename is a valid URI
+		if (uri != null) {
+		
+			// try to open the URI as an unescaped path
 			try {
-				// filename is not a uri...
-				// try to expand it as a local path
-				fullPath = Path.GetFullPath(filename);
-				}
-				catch (Exception ex) {
-				string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), filename);
-					ErrorAlert ea = new ErrorAlert(msg, ex.Message, mainWindow);
-					ea.Run();
-					ea.Destroy();
-					return null;
-				}
+				return OpenFileInternal(uri.LocalPath, false);
+			}
+			catch (FileNotFoundException) {
+				
+			}
+			
+			// try to open the URI as an escaped path
+			try {
+				return OpenFileInternal(uri.AbsolutePath, false);
+			}
+			catch (FileNotFoundException) {
+				
+			}
 		}
-
-
+		
+		// filename is not a valid URI... (eg the path contains invalid URI characters like ':')
+		// try to expand it as a local path
+		try {
+			string fullPath = Path.GetFullPath(filename);
+			return OpenFileInternal(fullPath, false);
+		}
+		catch (Exception ex) {
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), filename);
+			ErrorAlert ea = new ErrorAlert(msg, ex.Message, mainWindow);
+			ea.Run();
+			ea.Destroy();
+			return null;
+		}
+	}
+	
+	private ByteBuffer OpenFileInternal(string fullPath, bool handleFileNotFound)
+	{
 		try {
 			ByteBuffer bb = ByteBuffer.FromFile(fullPath);
 			bb.UseGLibIdle = true;
@@ -235,6 +254,8 @@ public class FileService
 			ea.Destroy();
 		}
 		catch (System.IO.FileNotFoundException) {
+			if (handleFileNotFound == false)
+				throw;
 			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
 			ErrorAlert ea = new ErrorAlert(msg, Catalog.GetString("The file you requested does not exist."), mainWindow);
 			ea.Run();
