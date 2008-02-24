@@ -224,7 +224,7 @@ public class FileService
 		// try to expand it as a local path
 		try {
 			string fullPath = Path.GetFullPath(filename);
-			return OpenFileInternal(fullPath, false);
+			return OpenFileInternal(fullPath, true);
 		}
 		catch (Exception ex) {
 			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), filename);
@@ -268,6 +268,12 @@ public class FileService
 			ea.Destroy();
 		}
 		catch (System.ArgumentException ex) {
+			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
+			ErrorAlert ea = new ErrorAlert(msg, ex.Message, mainWindow);
+			ea.Run();
+			ea.Destroy();
+		}
+		catch (System.NotSupportedException ex) {
 			string msg = string.Format(Catalog.GetString("Error opening file '{0}'"), fullPath);
 			ErrorAlert ea = new ErrorAlert(msg, ex.Message, mainWindow);
 			ea.Run();
@@ -422,36 +428,36 @@ public class FileService
 	///</summary>
 	void SaveFileAsyncCallback(IAsyncResult ar)
 	{
-		SaveAsOperation bbs = (SaveAsOperation)ar.AsyncState;
+		ISaveState ss = (ISaveState)ar.AsyncState;
 
-		if (bbs.Result == SaveAsOperation.OperationResult.Finished) { // save went ok
+		if (ss.Result == ThreadedAsyncOperation.OperationResult.Finished) { // save went ok
 			string msg;
-			if (bbs.SavePath != bbs.Buffer.Filename)
-				msg = string.Format(Catalog.GetString("The file has been saved as '{0}'"), bbs.SavePath);
+			if (ss.SavePath != ss.Buffer.Filename)
+				msg = string.Format(Catalog.GetString("The file has been saved as '{0}'"), ss.SavePath);
 			else
-				msg = string.Format(Catalog.GetString("The file '{0}' has been saved"), bbs.SavePath);
+				msg = string.Format(Catalog.GetString("The file '{0}' has been saved"), ss.SavePath);
 
 			Services.UI.Info.DisplayMessage(msg);
 			// add to history
-			History.Instance.Add(bbs.SavePath);
+			History.Instance.Add(ss.SavePath);
 
 			return;
 		}
-		else if (bbs.Result == SaveAsOperation.OperationResult.Cancelled) { // save cancelled
+		else if (ss.Result == ThreadedAsyncOperation.OperationResult.Cancelled) { // save cancelled
 
 		}
-		else if (bbs.Result == SaveAsOperation.OperationResult.CaughtException) {
+		else if (ss.Result == ThreadedAsyncOperation.OperationResult.CaughtException) {
 			// * UnauthorizedAccessException
 			// * System.ArgumentException
 			// * System.IO.IOException
-			string msg = string.Format(Catalog.GetString("Error saving file '{0}'"), bbs.SavePath);
-			ErrorAlert ea = new ErrorAlert(msg, bbs.ThreadException.Message, mainWindow);
+			string msg = string.Format(Catalog.GetString("Error saving file '{0}'"), ss.SavePath);
+			ErrorAlert ea = new ErrorAlert(msg, ss.ThreadException.Message, mainWindow);
 			ea.Run();
 			ea.Destroy();
 		}
 
 		{
-			string msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), bbs.SavePath);
+			string msg = string.Format(Catalog.GetString("The file '{0}' has NOT been saved"), ss.SavePath);
 			Services.UI.Info.DisplayMessage(msg);
 		}
 	}

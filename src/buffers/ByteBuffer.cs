@@ -127,8 +127,6 @@ public class ByteBuffer : IBuffer {
 	
 	// related to asynchronous save model
 	AsyncCallback userSaveAsyncCallback;
-	AsyncCallback userSaveAsAsyncCallback;
-	AutoResetEvent saveAsFinishedEvent;
 	AutoResetEvent saveFinishedEvent;
 	bool useGLibIdle;
 	
@@ -150,7 +148,6 @@ public class ByteBuffer : IBuffer {
 		modifyAllowed = true;
 		
 		saveFinishedEvent = new AutoResetEvent(false);
-		saveAsFinishedEvent = new AutoResetEvent(false);
 		useGLibIdle = false;
 		emitEvents = true;
 		
@@ -380,8 +377,8 @@ public class ByteBuffer : IBuffer {
 		lock (LockObj) {
 			if (!fileOperationsAllowed) return null;
 			
-			saveAsFinishedEvent.Reset();
-			userSaveAsAsyncCallback = ac;
+			saveFinishedEvent.Reset();
+			userSaveAsyncCallback = ac;
 			
 			SaveAsOperation so = new SaveAsOperation(this, filename, progressCallback, SaveAsAsyncCallback, useGLibIdle);
 			
@@ -400,7 +397,7 @@ public class ByteBuffer : IBuffer {
 			saveThread.IsBackground = true;
 			saveThread.Start();
 			
-			return new ThreadedAsyncResult(so, saveAsFinishedEvent, false);
+			return new ThreadedAsyncResult(so, saveFinishedEvent, false);
 		}
 		
 	}
@@ -459,11 +456,11 @@ public class ByteBuffer : IBuffer {
 			EmitChanged();
 				
 			// if user provided a callback, call it now
-			if (userSaveAsAsyncCallback != null)
-				userSaveAsAsyncCallback(ar);
+			if (userSaveAsyncCallback != null)
+				userSaveAsyncCallback(ar);
 			
 			// notify that Save As has finished
-			saveAsFinishedEvent.Set();
+			saveFinishedEvent.Set();
 		}
 	}
 	
@@ -478,7 +475,6 @@ public class ByteBuffer : IBuffer {
 			saveFinishedEvent.Reset();
 			userSaveAsyncCallback = ac;
 			
-			SaveOperation so = new SaveOperation(this, TempFile.CreateName(tempDir), progressCallback, SaveAsyncCallback, useGLibIdle);
 			
 			// don't allow messing up with the buffer
 			// while we are saving
@@ -490,12 +486,26 @@ public class ByteBuffer : IBuffer {
 			this.EmitEvents = false;
 			fsw.EnableRaisingEvents = false;
 			
-			// start save thread
-			Thread saveThread = new Thread(so.OperationThread);
+			Thread saveThread = null;
+			ThreadedAsyncResult tar = null;
+			
+			// decide whether to save in place or normally
+			if (!fileBuf.IsResizable || this.Size == fileBuf.Size) {
+				SaveInPlaceOperation sipo = new SaveInPlaceOperation(this, progressCallback, SaveInPlaceAsyncCallback, useGLibIdle);
+				saveThread = new Thread(sipo.OperationThread);
+				tar = new ThreadedAsyncResult(sipo, saveFinishedEvent, false);
+			}
+			else {
+				SaveOperation so = new SaveOperation(this, TempFile.CreateName(tempDir), progressCallback, SaveAsyncCallback, useGLibIdle);
+				saveThread = new Thread(so.OperationThread);
+				tar = new ThreadedAsyncResult(so, saveFinishedEvent, false);
+			}
+			
+			// start save thread			
 			saveThread.IsBackground = true;
 			saveThread.Start();
 			
-			return new ThreadedAsyncResult(so, saveFinishedEvent, false);
+			return tar;
 		}
 	}
 	
@@ -553,6 +563,52 @@ public class ByteBuffer : IBuffer {
 					// TO-DO: better handling?
 					fileBuf.Load(so.SavePath);
 				}
+			}
+			
+			// re-allow buffer usage
+			this.ReadAllowed = true;
+			this.ModifyAllowed = true;
+			this.FileOperationsAllowed = true;
+			
+			this.EmitEvents = true;
+			fsw.EnableRaisingEvents = true;
+			
+			// notify the world about the changes			
+			EmitPermissionsChanged();
+			EmitChanged();			
+			
+			// if user provided a callback, call it now
+			if (userSaveAsyncCallback != null)
+				userSaveAsyncCallback(ar);
+			
+			// notify that Save has finished	
+			saveFinishedEvent.Set();
+		}
+	}
+	
+	///<summary>
+	/// Called when an asynchronous in-place save operation finishes
+	///</summary>
+	void SaveInPlaceAsyncCallback(IAsyncResult ar)
+	{
+		lock (LockObj) {
+			SaveInPlaceOperation sipo = (SaveInPlaceOperation)ar.AsyncState;
+			
+			if (sipo.Result == ThreadedAsyncOperation.OperationResult.Finished) { // save went ok
+				LoadWithFile(sipo.SavePath);
+				
+				if (undoDeque.Count > 0)
+					SaveCheckpoint = undoDeque.PeekFront();
+				else
+					SaveCheckpoint = null;
+				
+				changedBeyondUndo = false;
+			}
+			else if (sipo.Result == ThreadedAsyncOperation.OperationResult.Cancelled) { // save cancelled
+				
+			}
+			else if (sipo.Result == ThreadedAsyncOperation.OperationResult.CaughtException) {
+				
 			}
 			
 			// re-allow buffer usage

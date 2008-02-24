@@ -136,6 +136,8 @@
     <File name="./src/plugins/AreaPlugin.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/gui/areas/Area.cs" subtype="Code" buildaction="Compile" />
     <File name="./src/util/ConfigureDefines.cs.tmpl.in" subtype="Code" buildaction="Nothing" />
+    <File name="./src/buffers/SaveInPlaceOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="./src/buffers/ISaveState.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

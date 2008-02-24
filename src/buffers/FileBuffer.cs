@@ -20,6 +20,8 @@
  */
 using System.IO;
 using System;
+using Mono.Unix;
+using System.Runtime.InteropServices;
 
 namespace Bless.Buffers {
 
@@ -28,6 +30,10 @@ namespace Bless.Buffers {
 ///</summary>
 public class FileBuffer: IBuffer
 {
+	[DllImport ("libc", SetLastError=true)]
+	static extern int ioctl (int fd, uint request, ref long size);
+	const uint BLKGETSIZE64 = 0x80041272;
+	
 	///<summary>The offset in the file of the start of the buffer window</summary>
 	long winOffset;
 	
@@ -36,6 +42,9 @@ public class FileBuffer: IBuffer
 	
 	///<summary>The data window</summary>
 	byte[] window;
+	
+	///<summary>Whether the file object is resizable</summary>
+	bool isResizable;
 	
 	BinaryReader reader;
 	
@@ -119,10 +128,30 @@ public class FileBuffer: IBuffer
 		if (reader != null)
 			reader.Close();
 		
-		FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-		FileLength = fs.Length;
+		UnixFileInfo fsInfo = new UnixFileInfo(filename);
+		if (!fsInfo.Exists)
+			throw new FileNotFoundException(fsInfo.FullName);
 		
-		reader = new BinaryReader(fs);
+		// get the size of the file or device
+		if (fsInfo.IsRegularFile) {
+			FileLength = fsInfo.Length;
+			isResizable = true;
+		}
+		else if (fsInfo.IsBlockDevice) {
+			UnixStream unixStream = fsInfo.OpenRead();
+			ioctl(unixStream.Handle, BLKGETSIZE64, ref FileLength);
+			unixStream.Close();
+			isResizable = false;
+		}
+		else
+			throw new NotSupportedException("File object isn't a regular or block device.");
+		
+		Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+		
+		if (stream.CanSeek == false)
+			throw new NotSupportedException("File object doesn't support seeking.");
+		
+		reader = new BinaryReader(stream);
 		
 		winOccupied = reader.Read(window, 0, window.Length);
 		winOffset = 0;
@@ -135,6 +164,10 @@ public class FileBuffer: IBuffer
 			else
 				return null;
 		}
+	}
+	
+	public bool IsResizable {
+		get { return isResizable; }
 	}
 	
 	public void Close()

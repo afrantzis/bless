@@ -1,6 +1,6 @@
-// created on 3/28/2005 at 3:19 PM
+// created on 2/24/2008 at 4:04 PM
 /*
- *   Copyright (c) 2005, Alexandros Frantzis (alf82 [at] freemail [dot] gr)
+ *   Copyright (c) 2008, Alexandros Frantzis (alf82 [at] freemail [dot] gr)
  *
  *   This file is part of Bless.
  *
@@ -28,9 +28,11 @@ using Mono.Unix;
 namespace Bless.Buffers {
 
 ///<summary>
-/// Saves the contents of a ByteBuffer using an asynchronous threaded model
+/// Saves the contents of a ByteBuffer using an asynchronous threaded model.
+/// This class saves the file in place and can only be used if the file size
+/// has not been changed. It works by just saving the changed parts.
 ///</summary>
-public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
+public class SaveInPlaceOperation : ThreadedAsyncOperation, ISaveState
 {
 	protected ByteBuffer byteBuffer;
 	protected long bytesSaved;
@@ -38,7 +40,7 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 	protected string savePath;
 	FileStream fs;
 	
-	SaveAsStage stageReached;
+	SaveInPlaceStage stageReached;
 	
 	public ByteBuffer Buffer {
 		get {return byteBuffer;}
@@ -46,55 +48,42 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 	
 	public string SavePath {
 		get { return savePath; }
-		set { savePath=value; }
+		set { savePath = value; }
 	}
 	
 	public long BytesSaved {
 		get {return bytesSaved;}
 	}
 	
-	public enum SaveAsStage { BeforeCreate, BeforeWrite }
+	public enum SaveInPlaceStage { BeforeClose, BeforeWrite }
 	
-	public SaveAsStage StageReached {
+	public SaveInPlaceStage StageReached {
 		get { return stageReached; }
 	}
 	
-	public SaveAsOperation(ByteBuffer bb, string fn, ProgressCallback pc,
+	public SaveInPlaceOperation(ByteBuffer bb, ProgressCallback pc,
 							AsyncCallback ac, bool glibIdle): base(pc, ac, glibIdle)
 	{
-#if ENABLE_UNIX_SPECIFIC
-		// get info about the device the file will be saved on
-		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
-		Mono.Unix.Native.Syscall.statvfs(Path.GetDirectoryName(fn), out stat);
-			
-		long freeSpace = (long)(stat.f_bavail * stat.f_bsize);
-			
-		// make sure there is enough disk space in the device
-		if (freeSpace < bb.Size) {
-			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), fn);
-			throw new IOException(msg);
-		}
-#endif		
-		byteBuffer=bb;
-		savePath=fn;
-		fs=null;
-		bytesSaved=0;
+		byteBuffer = bb;
+		savePath = byteBuffer.Filename;
+		fs = null;
+		bytesSaved = 0;
 	}
 	
 	protected override bool StartProgress()
 	{
 		progressCallback(string.Format(Catalog.GetString("Saving '{0}'"), SavePath), ProgressAction.Message);
-		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
+		return progressCallback(((double)bytesSaved) / byteBuffer.Size, ProgressAction.Show);
 	}
 	
 	protected override bool UpdateProgress()
 	{
-		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Update);
+		return progressCallback(((double)bytesSaved) / byteBuffer.Size, ProgressAction.Update);
 	}
 	
 	protected override bool EndProgress()
 	{
-		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Destroy);
+		return progressCallback(((double)bytesSaved) / byteBuffer.Size, ProgressAction.Destroy);
 	}
 	
 	protected override void IdleHandlerEnd()
@@ -104,39 +93,71 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 	
 	protected override void DoOperation()
 	{
-		stageReached = SaveAsStage.BeforeCreate;
+		stageReached = SaveInPlaceStage.BeforeClose;
 		
-		// try to open in append mode first, so that a sharing violation
-		// doesn't end up with the file truncated (as opposed
-		// to using FileMode.Create)
-		fs = new FileStream(savePath, FileMode.Append, FileAccess.Write);
-		fs.Close();
+		// hold a reference to the bytebuffer's segment collection
+		// because it is lost when the file is closed
+		SegmentCollection segCol = byteBuffer.segCol;
 		
-		// do the actual create
-		fs = new FileStream(savePath, FileMode.Create, FileAccess.Write);
+		// close file
+		if (!cancelled) {
+			// close the file, make sure that File Operations
+			// are temporarily allowed
+			lock(byteBuffer.LockObj) {
+				// CloseFile invalidates the file buffer,
+				// so make sure undo/redo data stays valid
+				byteBuffer.MakePrivateCopyOfUndoRedo();
+				byteBuffer.FileOperationsAllowed = true;
+				byteBuffer.CloseFile();
+				byteBuffer.FileOperationsAllowed = false;
+			}
+		}
 		
-		stageReached = SaveAsStage.BeforeWrite;
+		// Open the file for editing
+		fs = new FileStream(savePath, FileMode.Open, FileAccess.Write);
+		
+		stageReached = SaveInPlaceStage.BeforeWrite;
 		
 		const int blockSize = 0xffff;
 		
 		byte[] baTemp = new byte[blockSize];
 		
-		// for every node
-		Util.List<Segment>.Node node = byteBuffer.segCol.List.First;
+		//
+		// Just save the changed parts...
+		//
+		
+		Util.List<Segment>.Node node = segCol.List.First;
+		
+		// hold the mapping of the start of the current segment
+		// (at which offset in the file it is mapped)
+		long mapping = 0;
 		
 		while (node != null && !cancelled)
 		{
 			// Save the data in the node 
 			// in blocks of blockSize each
 			Segment s = node.data;
+			
+			// if the segment belongs to the original buffer, skip it
+			if (s.Buffer.GetType() == typeof(FileBuffer)) {
+				mapping += s.Size;
+				node = node.next;
+				continue;
+			}
+				
 			long len = s.Size;
 			long nBlocks = len/blockSize;
 			int last = (int)(len % blockSize); // bytes in last block
 			long i;
-		
+			
+			// move the file cursor to the current mapping
+			fs.Seek(mapping, SeekOrigin.Begin);
+			
+			bytesSaved = mapping;
+			
 			// for every full block
 			for (i = 0; i < nBlocks; i++) {
-				s.Buffer.Read(baTemp, s.Start + i * blockSize, blockSize);
+				s.Buffer.Read(baTemp, s.Start + i * blockSize, blockSize);	
 				fs.Write(baTemp, 0, blockSize);
 				bytesSaved = (i + 1) * blockSize;
 				
@@ -149,7 +170,8 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 				s.Buffer.Read(baTemp, s.Start + i * blockSize, last);
 				fs.Write(baTemp, 0, last);
 			}
-					
+			
+			mapping += s.Size;
 			node = node.next;
 		}	
 		
