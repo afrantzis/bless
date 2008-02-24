@@ -90,7 +90,7 @@ public class DataView {
 				OverwriteChanged(this);
 		}
 
-	get { return overwrite; }
+		get { return overwrite; }
 	}
 
 	public Area FocusedArea {
@@ -330,7 +330,12 @@ public class DataView {
 		// if we can't modify the buffer...
 		if (!byteBuffer.ModifyAllowed)
 			return;
-
+		
+		// if the buffer isn't resizable...
+		if (!byteBuffer.IsResizable) {
+			return;
+		}
+		
 		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
 		area0.Selection.Sort();
 
@@ -371,7 +376,12 @@ public class DataView {
 		// if we can't modify the buffer...
 		if (!byteBuffer.ModifyAllowed)
 			return;
-
+			
+		// if the buffer isn't resizable, ignore non-overwriting paste
+		if (!byteBuffer.IsResizable && !overwrite) {
+			return;
+		}
+		
 		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
 
 		// get data from clipboard

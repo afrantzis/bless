@@ -699,7 +699,13 @@ public class DataViewControl
 			specialKey = true;
 			return;
 		}
-
+		
+		// if the buffer isn't resizable, ignore non-overwriting keypresses
+		if (!dataView.Buffer.IsResizable && !dataView.Overwrite) {
+			specialKey = true;
+			return;
+		}
+		
 		if (dataView.Selection.IsEmpty()) {
 			if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, dataView.Overwrite) == true) {
 				OnKeyRight(ref cur, ref next);

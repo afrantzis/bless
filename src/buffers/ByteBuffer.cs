@@ -238,6 +238,7 @@ public class ByteBuffer : IBuffer {
 	{	
 		lock (LockObj) {
 			if (!modifyAllowed) return;
+			if (!IsResizable) return;
 		
 			AppendAction aa = new AppendAction(data, index, length, this);	
 			aa.Do();
@@ -263,6 +264,7 @@ public class ByteBuffer : IBuffer {
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
+			if (!IsResizable) return;
 			
 			if (pos == size) {
 				Append(data);
@@ -293,6 +295,7 @@ public class ByteBuffer : IBuffer {
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
+			if (!IsResizable) return;
 		
 			DeleteAction da = new DeleteAction(pos1, pos2, this);
 			da.Do();
@@ -313,6 +316,11 @@ public class ByteBuffer : IBuffer {
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
+			
+			// if the file isn't resizable allow replaces 
+			// only if they don't change the file length
+			bool equalLength = (pos2 - pos1 + 1 == length);
+			if (!IsResizable && !equalLength) return;
 			
 			ReplaceAction ra = new ReplaceAction(pos1, pos2, data, index, length, this);
 			ra.Do();
@@ -887,6 +895,15 @@ public class ByteBuffer : IBuffer {
 		}
 	}
 	
+	// Whether buffer can be resized (read-only property)
+	public bool IsResizable {
+		get {
+			if (fileBuf != null)
+				return fileBuf.IsResizable;
+			else
+				return true;
+		}
+	}
 	// Use the GLib Idle handler for progress reporting.
 	// Mandatory if progress reporting involves Gtk+ widgets.
 	public bool UseGLibIdle {
