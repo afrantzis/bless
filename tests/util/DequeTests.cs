@@ -32,7 +32,7 @@ public class DequeTests {
 	[Test]
 	public void CountTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 		d.AddFront(4);
 		d.AddFront(5);
 		d.AddFront(6);
@@ -44,7 +44,7 @@ public class DequeTests {
 	[Test]
 	public void RemoveEndTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 		d.AddFront(4);
 		d.AddFront(5);
 		d.AddFront(6);
@@ -59,7 +59,7 @@ public class DequeTests {
 	[Test]
 	public void RemoveFrontTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 		d.AddFront(4);
 		d.AddFront(5);
 		d.AddFront(6);
@@ -77,7 +77,7 @@ public class DequeTests {
 	[Test]
 	public void MixedTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 		d.AddFront(5);
 		d.AddEnd(6);
 		d.AddFront(4);
@@ -92,7 +92,7 @@ public class DequeTests {
 	[Test]
 	public void PeekTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 
 		d.AddEnd(4);
 		d.AddEnd(5);
@@ -112,7 +112,7 @@ public class DequeTests {
 	[Test]
 	public void ClearTest()
 	{
-		Deque d = new Deque();
+		Deque<int> d = new Deque<int>();
 
 		d.AddEnd(4);
 		d.AddEnd(5);
@@ -129,17 +129,18 @@ public class DequeTests {
 	[Test]
 	public void NullTest()
 	{
-		Deque d = new Deque();
+		Deque<object> d = new Deque<object>();
 
-		Assert.IsNull(d.RemoveFront());
+		Assert.IsNull(d.RemoveFront(), "#1");
+		
+		object o = new object();
+		d.AddEnd(o);
+		Assert.AreEqual(o, d.RemoveEnd(), "#2");
+		Assert.IsNull(d.RemoveEnd(), "#3");
 
-		d.AddEnd(1);
-		Assert.AreEqual(1, (int)d.RemoveEnd());
-		Assert.IsNull(d.RemoveEnd());
-
-		d.AddFront(2);
-		Assert.AreEqual(2, (int)d.RemoveFront());
-		Assert.IsNull(d.RemoveFront());
+		d.AddFront(o);
+		Assert.AreEqual(o, d.RemoveFront(), "#4");
+		Assert.IsNull(d.RemoveFront(), "#5");
 
 	}
 

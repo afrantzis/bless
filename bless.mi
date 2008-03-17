@@ -1,31 +1,31 @@
 <moduleinfo>
 
-<option name="outputdir">../bin</option>
+<option name="outputdir">bin</option>
 
 <module name="Bless.Buffers">
 	<depends>Bless.Util</depends>
 	<depends>Bless.Tools</depends>
-	<dir>buffers</dir>
+	<dir>src/buffers</dir>
 </module>
 
 <module name="Bless.Util">
-	<dir>util</dir>
+	<dir>src/util</dir>
 </module>
 
 <module name="Bless.Tools">
-	<dir>tools</dir>
+	<dir>src/tools</dir>
 </module>
 
 <module name="Bless.Tools.Find">
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
-	<dir>tools/find</dir>
+	<dir>src/tools/find</dir>
 </module>
 
 <module name="Bless.Tools.Export">
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
-	<dir>tools/export</dir>
+	<dir>src/tools/export</dir>
 </module>
 
 
@@ -38,7 +38,7 @@
 	<depends>Bless.Tools.Find</depends>
 	<depends>Bless.Plugins</depends>
 	<depends>Bless.Tools.Export</depends>
-	<dir>gui</dir>
+	<dir>src/gui</dir>
 </module>
 
 <module name="Bless.Gui.Areas">
@@ -46,7 +46,7 @@
 	<depends>Bless.Util</depends>
 	<depends>Bless.Gui.Drawers</depends>
 	<depends>Bless.Tools.Find</depends>
-	<dir>gui/areas</dir>
+	<dir>src/gui/areas</dir>
 </module>
 
 <module name="Bless.Gui.Areas.Plugins">
@@ -55,19 +55,19 @@
 	<depends>Bless.Util</depends>
 	<depends>Bless.Gui.Drawers</depends>
 	<depends>Bless.Plugins</depends>
-	<dir>gui/areas</dir>
+	<dir>src/gui/areas</dir>
 </module>
 
 
 <module name="Bless.Gui.Drawers">
-	<dir>gui/drawers</dir>
+	<dir>src/gui/drawers</dir>
 </module>
 
 <module name="Bless.Plugins">
 	<depends>Bless.Util</depends>
 	<depends>Bless.Tools.Export</depends>
 	<depends>Bless.Gui.Areas</depends>
-	<dir>plugins</dir>
+	<dir>src/plugins</dir>
 </module>
 
 <module name="Bless.Gui.Plugins">
@@ -78,7 +78,7 @@
 	<depends>Bless.Util</depends>
 	<depends>Bless.Gui</depends>
 	<depends>Bless.Plugins</depends>
-	<dir>gui/plugins</dir>
+	<dir>src/gui/plugins</dir>
 </module>
 
 <module name="Bless.Tools.Export.Plugins">
@@ -86,7 +86,7 @@
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
 	<depends>Bless.Plugins</depends>
-	<dir>tools/export/plugins</dir>
+	<dir>src/tools/export/plugins</dir>
 </module>
 
 <module name="Bless">
@@ -102,9 +102,35 @@
 	<depends>Bless.Gui.Plugins</depends>
 	<depends>Bless.Tools.Export.Plugins</depends>
 	<depends>Bless.Gui.Areas.Plugins</depends>
-	<dir>gui</dir>
+	<dir>src/gui</dir>
 </module>
 
+<!-- Tests --> 
+
+<module name="BlessTests.Buffers">
+	<depends>Bless.Buffers</depends>
+	<depends>Bless.Util</depends>
+	<dir>tests/buffers</dir>
+</module>
+
+<module name="BlessTests.Util">
+	<depends>Bless.Util</depends>
+	<dir>tests/util</dir>
+</module>
+
+<module name="BlessTests.Tools.Export">
+	<depends>Bless.Tools.Export</depends>
+	<depends>Bless.Tools.Export.Plugins</depends>
+	<depends>Bless.Buffers</depends>
+	<dir>tests/tools/export</dir>
+</module>
+
+
+<module name="BlessTests">
+	<depends>BlessTests.Buffers</depends>
+	<depends>BlessTests.Util</depends>
+	<depends>BlessTests.Tools.Export</depends>
+</module>
 
 
 </moduleinfo>

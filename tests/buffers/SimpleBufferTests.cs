@@ -26,49 +26,29 @@ using Bless.Buffers;
 namespace BlessTests.Buffers {
 
 [TestFixture]
-public class ChangeBufferTests {
+public class SimpleBufferTests {
 
 	[Test]
 	public void AppendTest() {
-		ChangeBuffer cb = new ChangeBuffer();
-		byte[] ba = {2, 3};
-		cb.Append(1);
-		cb.Append(ba);
-		Assert.AreEqual(1, cb[0]);
-		Assert.AreEqual(2, cb[1]);
-		Assert.AreEqual(3, cb[2]);
-		Assert.AreEqual(0, cb[3]);
+		SimpleBuffer sb = new SimpleBuffer();
+		byte[] ba = {1, 2, 3};
+		sb.Append(ba, 0, ba.Length);
+		Assert.AreEqual(1, sb[0]);
+		Assert.AreEqual(2, sb[1]);
+		Assert.AreEqual(3, sb[2]);
+		Assert.AreEqual(0, sb[3]);
 	}
 
 
 	[Test]
-	public void PutTest() {
-		ChangeBuffer cb = new ChangeBuffer();
-		byte[] ba = {1, 2, 3, 4, 5};
-		byte[] ba2 = {11, 22, 33};
-		cb.Append(ba);
-		try {
-			cb.Put(1, ba2);
-			cb.Put(3, ba2);
-		}
-		catch (Exception e) {
-		}
-		Assert.AreEqual(1, cb[0]);
-		Assert.AreEqual(11, cb[1]);
-		Assert.AreEqual(22, cb[2]);
-		Assert.AreEqual(33, cb[3]);
-		Assert.AreEqual(5, cb[4]);
-	}
-
-	[Test]
-	public void GetTest() {
-		ChangeBuffer cb = new ChangeBuffer();
+	public void ReadTest() {
+		SimpleBuffer sb = new SimpleBuffer();
 		byte[] ba = {1, 2, 3, 4, 5};
 
-		cb.Append(ba);
+		sb.Append(ba, 0, ba.Length);
 
 		byte[] ba1 = new byte[3];
-		cb.Get(ba1, 1, 3);
+		sb.Read(ba1, 1, 3);
 		Assert.AreEqual(3, ba1.Length);
 		Assert.AreEqual(2, ba1[0]);
 		Assert.AreEqual(3, ba1[1]);

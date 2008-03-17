@@ -194,7 +194,7 @@ public class ByteBufferTests {
 	}
 
 	[Test]
-	[Ignore("It fails, perhaps because of io-layer problems in mono >= 1.1.7")]
+	[Ignore("It fails, perhaps because it is run from nunit")]
 	public void FileSaveTest1() {
 		ByteBuffer bb = ByteBuffer.FromFile("test1.bin");
 		byte[] ba = {0x41, 0x61};

@@ -29,20 +29,20 @@ namespace BlessTests.Buffers {
 [TestFixture]
 public class SegmentCollectionTests {
 
-	Bless.Buffers.Buffer buf1;
-	Bless.Buffers.Buffer buf2;
+	Bless.Buffers.IBuffer buf1;
+	Bless.Buffers.IBuffer buf2;
 
-class MockBuffer: Bless.Buffers.Buffer {
-
-		public override void Put(long pos, byte[] data) { }
-		public override int Get(byte[] buf, long pos, int len)  { return 0;}
-		public override void Append(byte[] data) { }
-		public override void Append(byte data) { }
-		public override byte this[long index] {
+class MockBuffer: Bless.Buffers.IBuffer {
+		public void Append(byte[] data, long index, long length) { } 
+		public void Append(byte data) { }
+		public void Insert(long pos, byte[] data, long index, long length) { }
+		public int Read(byte[] data, long pos, int len) { return 0; }
+		
+		public byte this[long index] {
 			set { }
 			get { return 0;}
 		}
-		public override long Size {
+		public long Size {
 			get { return 0; }
 		}
 
@@ -94,7 +94,7 @@ class MockBuffer: Bless.Buffers.Buffer {
 		segs1.Append(s4);
 
 		long map;
-		List.Node n;
+		List<Segment>.Node n;
 
 		Assert.AreSame(s1, segs1.FindSegment(4, out map, out n));
 		Assert.AreEqual(0, map);
@@ -198,7 +198,7 @@ class MockBuffer: Bless.Buffers.Buffer {
 		segs1.Insert(segs2, 4);
 
 		long map;
-		List.Node n;
+		List<Segment>.Node n;
 		//segs1.List.Display();
 		Assert.AreSame(s1, segs1.FindSegment(3, out map, out n), "s1");
 		Assert.AreEqual(0, map);
@@ -322,7 +322,7 @@ class MockBuffer: Bless.Buffers.Buffer {
 		segs1.DeleteRange(2, 4);
 
 		long map;
-		List.Node n;
+		List<Segment>.Node n;
 		Segment s = segs1.FindSegment(0, out map, out n);
 		Assert.IsNotNull(s, "#1");
 		Assert.AreEqual(0, map, "#2");

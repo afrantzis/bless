@@ -1,20 +1,10 @@
-SRC= BaseConverterTests.cs ByteArrayTests.cs DequeTests.cs ListTests.cs RangeTests.cs
+SRC= $(wildcard *.cs) 
 
-EXTRA_DIST=$(SRC)
+EXTRA_DIST=$(SRC) BlessTests.Util.bi
 
 DLL= BlessTests.Util.dll
 
-CLEANFILES=$(DLL) Bless.Util.dll TestResult.xml
+CLEANFILES=$(DLL) TestResult.xml
 
-BLESS_UTIL_PATH=../../src/util
-
-REFS= -r:Bless.Util.dll \
-      -r:nunit.framework.dll
-
-check: Bless.Util.dll $(SRC)
-	$(MCS) -target:library $(REFS) -out:$(DLL) $(SRC)
-	nunit-console $(DLL)
-
-Bless.Util.dll: 
-	cd $(BLESS_UTIL_PATH) && make dll
-	mv $(BLESS_UTIL_PATH)/Bless.Util.dll .
+check:
+	MONO_PATH=$$MONO_PATH:$(top_srcdir)/bin nunit-console /nologo $(DLL)

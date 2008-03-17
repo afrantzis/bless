@@ -39,7 +39,7 @@ public class BaseConverterTests
 		Assert.AreEqual("11110001101000", s2, "#base2");
 		Assert.AreEqual("36150", s8, "#base8");
 		Assert.AreEqual("15464", s10, "#base10");
-		Assert.AreEqual("3c68", s16, "#base16");
+		Assert.AreEqual("3C68", s16, "#base16");
 
 	}
 
@@ -49,7 +49,7 @@ public class BaseConverterTests
 		long l2 = BaseConverter.ConvertToNum("11110001101000", 2);
 		long l8 = BaseConverter.ConvertToNum("36150", 8);
 		long l10 = BaseConverter.ConvertToNum("15464", 10);
-		long l16 = BaseConverter.ConvertToNum("3c68", 16);
+		long l16 = BaseConverter.ConvertToNum("3C68", 16);
 
 		Assert.AreEqual(15464, l2, "#base2");
 		Assert.AreEqual(15464, l8, "#base8");

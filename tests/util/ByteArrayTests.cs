@@ -82,7 +82,7 @@ public class ByteArrayTests
 		string s = ByteArray.ToString(new byte[]{0x63, 0xff, 0x12, 0x00, 0xca}, 16);
 
 		Assert.AreEqual(14, s.Length, "#Length");
-		Assert.AreEqual(s, "63 ff 12 00 ca", "#0");
+		Assert.AreEqual(s, "63 FF 12 00 CA", "#0");
 	}
 
 }

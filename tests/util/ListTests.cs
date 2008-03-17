@@ -30,18 +30,18 @@ public class ListTests {
 
 	[Test]
 	public void AppendTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.Append(4);
 		list.Append(7);
-		List.Node n = list.First;
-		Assert.AreEqual(4, (int)n.data);
-		Assert.AreEqual(7, (int)n.next.data);
+		List<int>.Node n = list.First;
+		Assert.AreEqual(4, n.data);
+		Assert.AreEqual(7, n.next.data);
 	}
 
 
 	[Test]
 	public void CountTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.Append(1);
 		list.Append(2);
 		list.Append(3);
@@ -52,36 +52,36 @@ public class ListTests {
 
 	[Test]
 	public void InsertBeforeTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.InsertBefore(list.First, 3);
 		list.InsertBefore(list.First, 1);
 		list.InsertBefore(list.Last, 2);
 
 
-		List.Node n = list.First;
-		Assert.AreEqual(1, (int)n.data);
-		Assert.AreEqual(2, (int)n.next.data);
-		Assert.AreEqual(3, (int)n.next.next.data);
+		List<int>.Node n = list.First;
+		Assert.AreEqual(1, n.data);
+		Assert.AreEqual(2, n.next.data);
+		Assert.AreEqual(3, n.next.next.data);
 	}
 
 	[Test]
 	public void InsertAfterTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.InsertAfter(list.First, 1);
 		list.InsertAfter(list.Last, 3);
 		list.InsertAfter(list.First, 2);
 
 
-		List.Node n = list.First;
-		Assert.AreEqual(1, (int)n.data);
-		Assert.AreEqual(2, (int)n.next.data);
-		Assert.AreEqual(3, (int)n.next.next.data);
+		List<int>.Node n = list.First;
+		Assert.AreEqual(1, n.data);
+		Assert.AreEqual(2, n.next.data);
+		Assert.AreEqual(3, n.next.next.data);
 	}
 
 
 	[Test]
 	public void IndexerTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.Append(1);
 		list.Append(2);
 		list.Append(3);
@@ -95,11 +95,11 @@ public class ListTests {
 
 	[Test]
 	public void RemoveTest() {
-		List list = new List();
-		List.Node n1 = list.Append(1);
+		List<int> list = new List<int>();
+		List<int>.Node n1 = list.Append(1);
 		list.Append(2);
-		List.Node n3 = list.Append(3);
-		List.Node n4 = list.Append(4);
+		List<int>.Node n3 = list.Append(3);
+		List<int>.Node n4 = list.Append(4);
 
 		list.Remove(n1);
 		Assert.AreEqual(3, list.Count, "#1");
@@ -122,9 +122,9 @@ public class ListTests {
 
 	[Test]
 	public void RemoveLastTest() {
-		List list = new List();
+		List<int> list = new List<int>();
 		list.Append(1);
-		List.Node n2 = list.Append(2);
+		List<int>.Node n2 = list.Append(2);
 
 		list.Remove(n2);
 		list.Append(3);
