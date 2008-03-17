@@ -32,6 +32,30 @@ public class ModuleBuilder
 	{
 		extraOptions.Add(option);
 	}
+	
+	private BuildStatus BuildDeps(Module mod, StringBuilder cmdRefs)
+	{
+		BuildStatus status = BuildStatus.UpToDate;
+		modulesVisited.Add(mod.Name);
+		
+		foreach(Module dep in mod.Dependencies) {
+			BuildStatus depStatus = Build(dep);
+
+			if (depStatus == BuildStatus.Failed) {
+				modulesVisited.Remove(mod.Name);
+				return BuildStatus.Failed;
+			}
+			else if (depStatus == BuildStatus.UpToDate) { }
+			else if (depStatus == BuildStatus.Rebuilt) {
+				status = BuildStatus.Rebuilt;
+			}
+			string depOutput = moduleTree.GetOutputFile(dep);
+			cmdRefs.Append("-r:" + depOutput + " ");
+		}
+		
+		modulesVisited.Remove(mod.Name);
+		return status;
+	}
 
 	public BuildStatus Build(string name)
 	{
@@ -49,36 +73,24 @@ public class ModuleBuilder
 			modulesVisited.Add(module.Name);
 			string sa = "Cyclic dependency detected: ";
 			foreach (string s in modulesVisited)
-			sa += "->" + s;
+				sa += "->" + s;
 			throw new ModuleDependencyException(sa);
 		}
+		
+		StringBuilder sb = new StringBuilder();
 
-		modulesVisited.Add(module.Name);
-
-		BuildStatus status = BuildStatus.UpToDate;
-
+		BuildStatus depStatus = BuildDeps(module, sb);
+		
+		// if this an empty (dummy) module
+		if (module.Dir == null)
+			return depStatus;
+		
 		string output = moduleTree.GetOutputFile(module);
 
-		StringBuilder sb = new StringBuilder("-out:" + output);
+		sb.Append("-out:" + output);
 		sb.Append(" -target:" + module.Type + " " );
 
-		// make sure dependencies are built
-		foreach(Module dep in module.Dependencies) {
-			BuildStatus depStatus = Build(dep);
-
-			if (depStatus == BuildStatus.Failed)
-				return BuildStatus.Failed;
-		else if (depStatus == BuildStatus.UpToDate) { }
-			else if (depStatus == BuildStatus.Rebuilt) {
-				status = BuildStatus.Rebuilt;
-			}
-			string depOutput = moduleTree.GetOutputFile(dep);
-			sb.Append("-r:" + depOutput + " ");
-		}
-
-		modulesVisited.Remove(module.Name);
-
-		if (module.UpToDate && status == BuildStatus.UpToDate) {
+		if (module.UpToDate && (depStatus == BuildStatus.UpToDate)) {
 			//System.Console.WriteLine("{0} Already Built", module.Name);
 			return BuildStatus.UpToDate;
 		}

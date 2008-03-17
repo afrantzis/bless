@@ -12,6 +12,7 @@ public class Module
 	private string type;
 	private string dir;
 	private string outputFile;
+	private string outputDir;
 	private string extra;
 	private ArrayList inputFiles;
 	private ArrayList packages;
@@ -58,6 +59,11 @@ public class Module
 		set { outputFile = value; }
 	}
 
+	public string OutputDir {
+		get { return outputDir; }
+		set { outputDir = value; }
+	}
+	
 	public string Extra {
 		get { return extra; }
 		set { extra = value; }

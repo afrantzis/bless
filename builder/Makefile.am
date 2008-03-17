@@ -5,7 +5,7 @@ EXE= bless-builder.exe
 
 CLEANFILES=$(EXE)
 
-all: $(EXE)
+builder: $(EXE)
 
 $(EXE): $(SRC)
 	$(MCS) -target:exe -out:$(EXE) $(SRC)

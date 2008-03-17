@@ -64,12 +64,14 @@ public class ModuleTree
 				module.Dir = GetNewPath(baseDir, childNode.InnerText);
 			}
 		}
-
-		ParseBuildInfo(module);
+		
+		// if it is not a dummy module
+		if (module.Dir != null)
+			ParseBuildInfo(module);
 	}
 
 	private void ParseBuildInfo(Module module)
-	{
+	{		
 		string biPath = Path.Combine(module.Dir, module.Name) + ".bi";
 		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.Load(biPath);
@@ -108,13 +110,20 @@ public class ModuleTree
 			module.Type = typeNode.InnerText;
 		}
 
-		// get output
+		// get outputfile
 		XmlNodeList outList = xmlDoc.GetElementsByTagName("output");
 
 		foreach(XmlNode outNode in outList) {
 			module.OutputFile = outNode.InnerText;
 		}
 
+		// get outputdir
+		XmlNodeList outdirList = xmlDoc.GetElementsByTagName("outputdir");
+
+		foreach(XmlNode outNode in outdirList) {
+			module.OutputDir = outNode.InnerText;
+		}
+		
 		FileInfo output = new FileInfo(GetOutputFile(module));
 
 		FileInfo bi = new FileInfo(biPath);
@@ -178,10 +187,12 @@ public class ModuleTree
 
 	public string GetOutputFile(Module module)
 	{
-		if (outputDir == null)
-			return Path.Combine(module.Dir, module.OutputFile);
-		else
+		if (module.OutputDir != null)
+			return Path.Combine(module.Dir, Path.Combine(module.OutputDir, module.OutputFile));
+		else if (outputDir != null)
 			return Path.Combine(this.outputDir, module.OutputFile);
+		else
+			return Path.Combine(module.Dir, module.OutputFile);
 	}
 
 	public string GetNewPath(string currentDir, string newPath)
