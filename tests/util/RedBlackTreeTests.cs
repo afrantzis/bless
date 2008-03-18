@@ -29,7 +29,7 @@ namespace BlessTests.Util
 	
 	
 [TestFixture()]
-public class Test
+public class RedBlackTreeTests
 {
 	
 	[Test()]

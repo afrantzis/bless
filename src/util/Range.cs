@@ -19,10 +19,19 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+using System;
+
 namespace Bless.Util {
 
+public interface IRange
+{
+	long Start { get; set; }
+	long End { get; set; }
+}
+
 ///<summary>Represents a range of values</summary>
-public class Range {
+public class Range : IRange, IEquatable<Range>
+{
 	long start;
 	long end;
 
@@ -65,13 +74,8 @@ public class Range {
 	}
 
 	///<summary>value equality test</summary>
-	public override bool Equals(object obj)
+	public bool Equals(Range r)
 	{
-		//Check for null and compare run-time types.
-		if (obj == null || GetType() != obj.GetType())
-			return false;
-		Range r = (Range)obj;
-
 		return ((start == r.Start) && (end == r.End) || (end == r.Start) && (start == r.End));
 	}
 
@@ -142,6 +146,18 @@ public class Range {
 	public bool IsEmpty()
 	{
 		return ((start == -1) && (end == -1));
+	}
+	
+	public bool Overlaps(IRange r)
+	{
+		if (r.Start >= Start && r.Start <= End)
+			return true;
+		if (r.End >= Start && r.End <= End)
+			return true;
+		if (r.Start <= Start && r.End >= End)
+			return true;
+		
+		return false;
 	}
 
 	///<summary>Make sure range start is less or equal to end</summary>
