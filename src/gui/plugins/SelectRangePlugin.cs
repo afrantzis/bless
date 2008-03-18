@@ -160,10 +160,8 @@ public class SelectRangeWidget : Gtk.HBox
 	{
 		// load selection only if it isn't very large
 		if (dv.Selection.Size > 0) {
-			// make sure selection is sorted
-			Bless.Util.Range sel = new Bless.Util.Range(dv.Selection);
-			sel.Sort();
-
+			Bless.Util.Range sel = dv.Selection;
+			
 			FromEntry.Text = sel.Start.ToString();
 			ToEntry.Text = sel.End.ToString();
 		}

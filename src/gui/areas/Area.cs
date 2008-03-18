@@ -362,18 +362,15 @@ public abstract class Area {
 
 		// find what parts of the selection have changed
 		Range added = new Range(newHi);
-		added.Sort();
 
 		// find unchanged range
 		Range common = new Range(prevHi);
-		common.Sort();
 		common.Intersect(added);
 		common.Intersect(clip);
 
 		// find lost (now unselected) ranges
 		Range lost1 = new Range(prevHi);
 		Range lost2 = new Range();
-		lost1.Sort();
 		lost1.Difference(added, lost2);
 		lost1.Intersect(clip);
 		lost2.Intersect(clip);
@@ -381,7 +378,6 @@ public abstract class Area {
 		// find added ranges
 		Range old = new Range(prevHi);
 		Range added1 = new Range();
-		old.Sort();
 		added.Difference(old, added1);
 		added.Intersect(clip);
 
@@ -753,8 +749,7 @@ public abstract class Area {
 		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
 
 		Range rSel = new Range(highlights[(int)Drawer.HighlightType.Selection].LastAdded);
-		rSel.Sort();
-
+		
 		Range rClip;
 		// make sure we get an empty clipping Range when bleft==0
 		if (bleft > 0)

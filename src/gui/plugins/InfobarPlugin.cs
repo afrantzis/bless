@@ -427,7 +427,7 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 			return;
 
 		Bless.Util.Range sel = dv.Selection;
-		sel.Sort();
+		
 		SelectionStatusbar.Pop(0);
 		string str;
 

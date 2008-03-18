@@ -387,9 +387,7 @@ public class FindReplaceWidget : Gtk.HBox
 
 		// load selection only if it isn't very large
 		if (this.Sensitive == true && dv.Selection.Size <= 1024 && dv.Selection.Size > 0) {
-			// make sure selection is sorted
-			Bless.Util.Range sel = new Bless.Util.Range(dv.Selection);
-			sel.Sort();
+			Bless.Util.Range sel = dv.Selection;
 
 			byte[] ba = new byte[sel.Size];
 			for (int i = 0;i < sel.Size;i++) {

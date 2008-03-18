@@ -176,7 +176,6 @@ public class DataView {
 
 	private void DeleteSelectionInternal(Area area)
 	{
-		area.Selection.Sort();
 		byteBuffer.Delete(area.Selection.Start, area.Selection.End);
 		AddUndoCursorState(new CursorState(area.CursorOffset, 0, area.Selection.Start, 0));
 		cursorRedoDeque.Clear();
@@ -305,7 +304,6 @@ public class DataView {
 			return;
 
 		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-		area0.Selection.Sort();
 
 		byte[] ba = byteBuffer.RangeToByteArray(area0.Selection);
 
@@ -337,7 +335,6 @@ public class DataView {
 		}
 		
 		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-		area0.Selection.Sort();
 
 		byte[] ba = byteBuffer.RangeToByteArray(area0.Selection);
 
@@ -595,7 +592,10 @@ public class DataView {
 		Preferences.Proxy.Unsubscribe("Highlight.PatternMatch", prefID);
 		Preferences.Proxy.Unsubscribe("ByteBuffer.TempDir", prefID);
 	}
-
+	
+	/// <summary>
+	/// Sets the current selection. It makes sure that the selection is sorted.
+	/// </summary>
 	public void SetSelection(long start, long end)
 	{
 		// check whether the selection has really
