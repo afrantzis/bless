@@ -78,6 +78,60 @@ public class RangeTests
 		Assert.AreEqual(true, r3.IsEmpty(), "#7");
 
 	}
+	
+	[Test]
+	public void SplitAtomicTest()
+	{
+		Range r = new Range(0, 10);
+		Range s = new Range(4, 6);
+		Range[] ra = new Range[]{new Range(), new Range(), new Range()};
+		
+		Assert.IsTrue(r.Equals(new Range(0, 10)), "#0");
+		
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(0, 3), ra[0], "#1.0");
+		Assert.AreEqual(new Range(4, 6), ra[1], "#1.1");
+		Assert.AreEqual(new Range(7, 10), ra[2], "#1.2");
+		
+		s = new Range(0, 4);
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(), ra[0], "#2.0");
+		Assert.AreEqual(new Range(0, 4), ra[1], "#2.1");
+		Assert.AreEqual(new Range(5, 10), ra[2], "#2.2");
+		
+		s = new Range(6, 10);
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(0, 5), ra[0], "#3.0");
+		Assert.AreEqual(new Range(6, 10), ra[1], "#3.1");
+		Assert.AreEqual(new Range(), ra[2], "#3.2");
+		
+		s = new Range(0, 10);
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(), ra[0], "#4.0");
+		Assert.AreEqual(new Range(0, 10), ra[1], "#4.1");
+		Assert.AreEqual(new Range(), ra[2], "#4.2");
+	}
+	
+	[Test]
+	public void SplitAtomic1Test()
+	{
+		Range r = new Range(10, 20);
+		Range s = new Range(8, 13);
+		
+		Range[] ra = new Range[]{new Range(), new Range(), new Range()};
+		
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(), ra[0], "#1.0");
+		Assert.AreEqual(new Range(8, 13), ra[1], "#1.1");
+		Assert.AreEqual(new Range(14, 20), ra[2], "#1.2");
+		
+		s = new Range(16, 26);
+		Range.SplitAtomic(ra, r, s);
+		Assert.AreEqual(new Range(10, 15), ra[0], "#2.0");
+		Assert.AreEqual(new Range(16, 26), ra[1], "#2.1");
+		Assert.AreEqual(new Range(), ra[2], "#2.2");
+	}
+	
 }
 
 } // end namespace

@@ -54,11 +54,11 @@ public class Deque<T>: IEnumerable<T>
 	///</summary>
 	public T RemoveFront()
 	{
-	T o = default(T);
+		T o = default(T);
 
 		if (list.First != null) {
 			o = list.First.data;
-		list.First.data = default(T);
+			list.First.data = default(T);
 			list.Remove(list.First);
 		}
 
@@ -70,11 +70,11 @@ public class Deque<T>: IEnumerable<T>
 	///</summary>
 	public T RemoveEnd()
 	{
-	T o = default(T);
+		T o = default(T);
 
 		if (list.Last != null) {
 			o = list.Last.data;
-		list.Last.data = default(T);
+			list.Last.data = default(T);
 			list.Remove(list.Last);
 		}
 
@@ -86,7 +86,7 @@ public class Deque<T>: IEnumerable<T>
 	///</summary>
 	public T PeekFront()
 	{
-	T o = default(T);
+		T o = default(T);
 
 		if (list.First != null)
 			o = list.First.data;
@@ -99,7 +99,7 @@ public class Deque<T>: IEnumerable<T>
 	///</summary>
 	public T PeekEnd()
 	{
-	T o = default(T);
+		T o = default(T);
 
 		if (list.Last != null)
 			o = list.Last.data;
@@ -114,7 +114,7 @@ public class Deque<T>: IEnumerable<T>
 	}
 
 	public int Count {
-	get { return list.Count; }
+		get { return list.Count; }
 	}
 
 	public IEnumerator<T> GetEnumerator()

@@ -675,7 +675,7 @@ public class ByteBuffer : IBuffer {
 	/// Returns in a byte array the data contained in 
 	/// the specified range in the buffer.  
 	///</summary>
-	public byte[] RangeToByteArray(Range range)
+	public byte[] RangeToByteArray(IRange range)
 	{
 		if (range.Size==0)
 			return null;

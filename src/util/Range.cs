@@ -27,13 +27,16 @@ public interface IRange
 {
 	long Start { get; set; }
 	long End { get; set; }
+	long Size { get; }
+	bool IsEmpty();
+	void Clear();
 }
 
 ///<summary>Represents a range of values</summary>
 public class Range : IRange, IEquatable<Range>
 {
-	long start;
-	long end;
+	protected long start;
+	protected long end;
 
 	public long Start {
 		get { return start; }
@@ -68,7 +71,7 @@ public class Range : IRange, IEquatable<Range>
 	}
 
 	///<summary>copy constructor</summary>
-	public Range(Range r): this(r.Start, r.End)
+	public Range(IRange r): this(r.Start, r.End)
 	{
 
 	}
@@ -77,6 +80,16 @@ public class Range : IRange, IEquatable<Range>
 	public bool Equals(Range r)
 	{
 		return ((start == r.Start) && (end == r.End) || (end == r.Start) && (start == r.End));
+	}
+	
+	///<summary>value equality test (for general objects)</summary>
+	public override bool Equals(object obj)
+	{
+		Range r = obj as Range;
+		if (r != null)
+			return Equals(r);
+		else
+			return false;
 	}
 
 	// we should override GetHashCode() because we
@@ -148,6 +161,66 @@ public class Range : IRange, IEquatable<Range>
 		return ((start == -1) && (end == -1));
 	}
 	
+	static public void SplitAtomic(Range[] results, Range r, Range s)
+	{
+		
+		if (r.Contains(s.Start)) {
+			results[0].Start = r.Start;
+			results[0].End = s.Start - 1;
+			
+			results[1].Start = s.Start;
+			results[1].End = s.End;
+			
+			if (r.Contains(s.End)) {
+				results[2].Start = s.End + 1;
+				results[2].End = r.End;
+			}
+			else {
+				results[2].Clear();
+			}
+		}
+		else if (r.Contains(s.End)) {
+			results[0].Clear();
+			
+			results[1].Start = s.Start;
+			results[1].End = s.End;
+			
+			results[2].Start = s.End + 1;
+			results[2].End = r.End;
+		}
+		else if (s.Start < r.Start && s.End > r.End) {
+			results[0].Clear();
+			
+			results[1].Start = s.Start;
+			results[1].End = s.End;
+			
+			results[2].Clear();	
+		}
+		else {
+			if (r.Start < s.Start) {
+				results[0].Start = r.Start;
+				results[0].End = r.End;
+				
+				results[2].Clear();
+			}
+			else {
+				results[2].Start = r.Start;
+				results[2].End = r.End;
+				
+				results[1].Clear();
+			}
+			
+			results[1].Start = s.Start;
+			results[1].End = s.End;
+		}
+		
+		foreach(Range result in results) {
+			if (result.Start > result.End)
+				result.Clear();
+		}	
+		
+	}
+	
 	public bool Overlaps(IRange r)
 	{
 		if (r.Start >= Start && r.Start <= End)
@@ -168,6 +241,11 @@ public class Range : IRange, IEquatable<Range>
 			start = end;
 			end = t;
 		}
+	}
+	
+	public override string ToString()
+	{
+		return string.Format("{0} -> {1}", start, end);
 	}
 }
 

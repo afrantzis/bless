@@ -35,36 +35,34 @@ public class SeparatorAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new SeparatorArea();
+		return new SeparatorArea(ag);
 	}
 }
 
 ///<summary>An area that contains a vertical separator line</summary>
-public class SeparatorArea : Area {
-
+public class SeparatorArea : Area
+{
 	Gdk.GC lineGC;
 
-	public SeparatorArea()
-			: base()
+	public SeparatorArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "separator";
 	}
 
-	public override void Realize(Gtk.DrawingArea da)
+	public override void Realize()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
+		
 		drawer = new DummyDrawer(da, drawerInformation);
 
 		lineGC = new Gdk.GC(da.GdkWindow);
 
 		lineGC.RgbFgColor = drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even];
 
-		base.Realize(da);
-	}
-
-	protected override void RenderRange(Bless.Util.Range range, Drawer.HighlightType ht)
-	{
+		base.Realize();
 	}
 
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
@@ -75,39 +73,6 @@ public class SeparatorArea : Area {
 	{
 	}
 
-	public override void Scroll(long offset)
-	{
-		if (isAreaRealized == false)
-			return;
-
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-		int rfull = 0;
-		int blast = 0;
-
-		if (bpr > 0) {
-			if (bleft + offset > byteBuffer.Size)
-				bleft = byteBuffer.Size - offset + 1;
-
-			// calculate number of full rows
-			// and number of bytes in last (non-full)
-			rfull = (int)(bleft / bpr);
-			blast = (int)(bleft % bpr);
-
-			if (blast != 0)
-				rfull++;
-		}
-
-		if (rfull == 0)
-			return;
-
-		this.offset = offset;
-
-		// draw seperator
-		backPixmap.DrawLine(lineGC, x + drawer.Width / 2, 0, x + drawer.Width / 2, drawer.Height*rfull);
-
-	}
-
 	public override int CalcWidth(int n, bool force)
 	{
 		return drawer.Width;
@@ -115,8 +80,8 @@ public class SeparatorArea : Area {
 
 	public override void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy)
 	{
-		orow = (int)((off - offset) / bpr);
-		obyte = (int)((off - offset) % bpr);
+		orow = (int)((off - areaGroup.Offset) / bpr);
+		obyte = (int)((off - areaGroup.Offset) % bpr);
 
 		oy = orow * drawer.Height;
 
@@ -127,23 +92,13 @@ public class SeparatorArea : Area {
 	{
 		flags = 0;
 		int row = y / drawer.Height;
-		long off = row * bpr + offset;
-		if (off >= byteBuffer.Size)
+		long off = row * bpr + areaGroup.Offset;
+		if (off >= areaGroup.Buffer.Size)
 			flags |= GetOffsetFlags.Eof;
 
 		digit = 0;
 
 		return off;
-	}
-
-	public override void SetSelection(long start, long end)
-	{
-		SetSelectionNoRender(start, end);
-	}
-
-	public override void MoveCursor(long offset, int digit)
-	{
-		MoveCursorNoRender(offset, digit);
 	}
 }
 

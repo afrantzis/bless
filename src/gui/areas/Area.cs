@@ -28,13 +28,11 @@ using System.Xml;
 
 namespace Bless.Gui.Areas {
 
-public abstract class Area {
-
-	protected Gtk.DrawingArea drawingArea;
+public abstract class Area
+{
+	protected AreaGroup areaGroup;
 	protected Drawer drawer;
 	protected Drawer.Information drawerInformation;
-	protected ByteBuffer byteBuffer;
-	protected IFindStrategy findStrategy;
 	protected string type;
 
 	// display
@@ -42,7 +40,6 @@ public abstract class Area {
 	protected int y;
 	protected int width;
 	protected int height;
-	protected long offset;
 	protected int bpr;
 	protected int dpb; // digits per byte
 	protected int fixedBpr;
@@ -55,21 +52,10 @@ public abstract class Area {
 	protected Gdk.GC activeCursorGC;
 	protected Gdk.GC inactiveCursorGC;
 
-	protected Range selection;
-	protected RangeCollection[] highlights;
-	protected bool[] enableHighlights;
-
-	// cursor
-	protected long cursorOffset;
-	protected int  cursorDigit;
+	
 	protected bool cursorFocus;
 	protected bool canFocus;
-
-	// track changes
-	protected long prevOffset;
-	protected long prevCursorOffset;
-	protected int  prevCursorDigit;
-
+	
 	// Abstract methods
 	//
 	abstract protected void RenderRowNormal(int i, int p, int n, bool blank);
@@ -93,7 +79,7 @@ public abstract class Area {
 	///</summary>
 	abstract public int CalcWidth(int n, bool force);
 
-	public delegate Area AreaCreatorFunc();
+	public delegate Area AreaCreatorFunc(AreaGroup ag);
 
 	static private Dictionary<string, AreaCreatorFunc> pluginTable;
 
@@ -106,12 +92,11 @@ public abstract class Area {
 		pluginTable.Add(name, createArea);
 	}
 
-	static public Area Factory(string name)
+	static public Area Factory(string name, AreaGroup ag)
 	{
-
 		try {
 			AreaCreatorFunc acf = pluginTable[name];
-			return acf();
+			return acf(ag);
 		}
 		catch (KeyNotFoundException e) {
 			System.Console.WriteLine(e.Message);
@@ -123,18 +108,10 @@ public abstract class Area {
 	///<summary>
 	/// Create an area.
 	///</summary>
-	public Area()
+	public Area(AreaGroup areaGroup)
 	{
-		highlights = new RangeCollection[(int)Drawer.HighlightType.Sentinel];
-		for (int i = 0; i < (int)Drawer.HighlightType.Sentinel; i++)
-			highlights[i] = new RangeCollection();
-
-		enableHighlights = new bool[(int)Drawer.HighlightType.Sentinel];
-		for (int i = 0; i < (int)Drawer.HighlightType.Sentinel; i++)
-			enableHighlights[i] = true;
-
-		findStrategy = new BMFindStrategy();
-
+		this.areaGroup = areaGroup;
+		
 		drawerInformation = new Drawer.Information();
 
 		canFocus = false;
@@ -219,9 +196,9 @@ public abstract class Area {
 	///<summary>
 	/// Realize the area.
 	///</summary>
-	public virtual void Realize(Gtk.DrawingArea da)
+	public virtual void Realize()
 	{
-		drawingArea = da;
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 
 		backPixmap = da.GdkWindow;
 
@@ -276,25 +253,6 @@ public abstract class Area {
 		get	{ return dpb; }
 	}
 
-	public long Offset {
-		set { prevOffset = offset; offset = value; }
-		get { return offset;}
-	}
-
-	public long CursorOffset {
-		set { prevCursorOffset = cursorOffset; cursorOffset = value;}
-		get { return cursorOffset;}
-	}
-
-	public long PrevCursorOffset {
-		get { return prevCursorOffset;}
-	}
-
-	public int CursorDigit {
-		set { prevCursorDigit = cursorDigit; if (value >= dpb) cursorDigit = dpb - 1; else cursorDigit = value;}
-	get { return cursorDigit;}
-	}
-
 	public bool HasCursorFocus {
 		set { cursorFocus = value; }
 		get { return cursorFocus;}
@@ -318,20 +276,6 @@ public abstract class Area {
 		get { return type; }
 	}
 
-	public Gtk.DrawingArea DrawingArea {
-		get { return drawingArea; }
-	}
-
-	public ByteBuffer Buffer {
-		get { return byteBuffer; }
-		set { byteBuffer = value; }
-	}
-
-	public Range Selection {
-		get { return highlights[(int)Drawer.HighlightType.Selection].LastAdded; }
-		set { Selection.Start = value.Start; Selection.End = value.End; }
-	}
-
 	public bool IsActive {
 		set {
 			if (value == true)
@@ -341,16 +285,13 @@ public abstract class Area {
 
 			// doesn't actually change cursor position
 			// just redraws it with correct color
-			MoveCursor(cursorOffset, cursorDigit);
+			//MoveCursor(cursorOffset, cursorDigit);
 		}
 
-	get { return cursorGC == activeCursorGC; }
+		get { return cursorGC == activeCursorGC; }
 	}
 
-	public bool[] EnableHighlights {
-		get { return enableHighlights; }
-	}
-
+	/*
 	///<summary>
 	/// Render the 'newHi' taking
 	/// into account differences from the 'prevHi'
@@ -400,7 +341,7 @@ public abstract class Area {
 			for (int j = rLost1Start; j < rLost1End; j++)
 				RenderRowNormal(j, 0, bpr, true);
 			// make sure we are ot out of range at the last line
-			long len = byteBuffer.Size - (lost1.End / bpr) * bpr;
+			long len = areaGroup.Buffer.Size - (lost1.End / bpr) * bpr;
 			if (len > bpr) len = bpr;
 			RenderRowNormal(rLost1End, 0, (int)len, true);
 		}
@@ -412,7 +353,7 @@ public abstract class Area {
 			for (int j = rLost2Start; j < rLost2End; j++)
 				RenderRowNormal(j, 0, bpr, true);
 			// make sure we are ot out of range at the last line
-			long len = byteBuffer.Size - (lost2.End / bpr) * bpr;
+			long len = areaGroup.Buffer.Size - (lost2.End / bpr) * bpr;
 			if (len > bpr) len = bpr;
 			RenderRowNormal(rLost2End, 0, (int)len, true);
 		}
@@ -425,17 +366,17 @@ public abstract class Area {
 			int rCommonEnd = ((int)(common.End - offset) / bpr);
 			if (rCommonStart == rLost1End && rCommonEnd == rLost1End
 					&& rLost1End == rLost1Start) {
-				RenderHighlight(common, ht);
+				RenderRange(common, ht);
 			}
 			else if (rCommonStart == rLost2End && rCommonEnd == rLost2End
 					 && rLost2End == rLost2Start) {
-				RenderHighlight(common, ht);
+				RenderRange(common, ht);
 			}
 			else if (rCommonStart == rLost1End || rCommonStart == rLost2End) {
 				int nbyte = (int)((common.Start - offset) % bpr);
 				long overLeft = common.End - common.Start < bpr - nbyte ? common.End - common.Start : bpr - nbyte;
 				Range rOverlap = new Range(common.Start, common.Start + overLeft);
-				RenderHighlight(rOverlap, ht);
+				RenderRange(rOverlap, ht);
 			}
 			else if (rCommonEnd == rLost1Start || rCommonEnd == rLost2Start) {
 				int nbyte = (int)((common.End - offset) % bpr);
@@ -443,7 +384,7 @@ public abstract class Area {
 				long overStart = rCommonEndOffset > common.Start ? rCommonEndOffset : common.Start;
 				// part of common that is on row rCommonEnd
 				Range rOverlap = new Range(overStart, rCommonEndOffset + nbyte);
-				RenderHighlight(rOverlap, ht);
+				RenderRange(rOverlap, ht);
 			}
 		}
 
@@ -454,7 +395,7 @@ public abstract class Area {
 				--added.Start;
 			if (added.End == common.Start - 1)
 				++added.End;
-			RenderHighlight(added, ht);
+			RenderRange(added, ht);
 		}
 
 		if (!added1.IsEmpty()) {
@@ -462,11 +403,12 @@ public abstract class Area {
 				--added1.Start;
 			if (added1.End == common.Start - 1)
 				++added1.End;
-			RenderHighlight(added1, ht);
+			RenderRange(added1, ht);
 		}
 
 	}
-
+	*/
+	
 	void RenderRangeHelper(Drawer.HighlightType ht, int rstart, int bstart, int len)
 	{
 		if (ht != Drawer.HighlightType.Normal)
@@ -479,7 +421,7 @@ public abstract class Area {
 	/// Render the bytes in 'range'
 	/// using the specified HighlightType
 	///</summary>
-	protected virtual void RenderRange(Range range, Drawer.HighlightType ht)
+	internal protected virtual void RenderRange(Range range, Drawer.HighlightType ht)
 	{
 		if (isAreaRealized == false)
 			return;
@@ -579,19 +521,7 @@ public abstract class Area {
 			EndPaint();
 
 	}
-
-	///<summary>Render a range of bytes as selected</summary>
-	protected void RenderHighlight(Range sel, Drawer.HighlightType ht)
-	{
-		RenderRange(sel, ht);
-	}
-
-	///<summary>Render a range of bytes normally</summary>
-	protected void RenderNormally(Range r)
-	{
-		RenderRange(r, Drawer.HighlightType.Normal);
-	}
-
+	/*
 	///<summary>Render the cursor</summary>
 	protected void RenderCursor()
 	{
@@ -612,7 +542,8 @@ public abstract class Area {
 			backPixmap.DrawRectangle(cursorGC, true, x + cX + cursorDigit*drawer.Width, y + cY, 1, drawer.Height - 2);
 		}
 	}
-
+	*/
+	
 	public void DisposePixmaps()
 	{
 		if (isAreaRealized == false)
@@ -622,9 +553,10 @@ public abstract class Area {
 		drawer.DisposePixmaps();
 	}
 
+	
 	void BeginPaintRegion(Gdk.Region r)
 	{
-		Gdk.Window win = drawingArea.GdkWindow;
+		Gdk.Window win = areaGroup.DrawingArea.GdkWindow;
 
 		win.BeginPaintRegion(r);
 	}
@@ -636,63 +568,22 @@ public abstract class Area {
 
 	void BeginPaint(int x, int y, int w, int h)
 	{
-		Gdk.Window win = drawingArea.GdkWindow;
+		Gdk.Window win = areaGroup.DrawingArea.GdkWindow;
 
 		win.BeginPaintRect(new Gdk.Rectangle(x, y, w, h));
 	}
 
 	void EndPaint()
 	{
-		drawingArea.GdkWindow.EndPaint();
-	}
-
-	///<summary>
-	/// Find the type of highlight an offset has.
-	///</summary>
-	Drawer.HighlightType GetOffsetHighlight(long offs)
-	{
-		for (int i = 1; i < (int)Drawer.HighlightType.Sentinel; i++) {
-			foreach(Range range in highlights[i]) {
-				if (range.Contains(offs))
-					return (Drawer.HighlightType)i;
-			}
-		}
-
-		return Drawer.HighlightType.Normal;
+		areaGroup.DrawingArea.GdkWindow.EndPaint();
 	}
 
 	///
 	/// Public Interface
 	///
-
-	///<summary>Draws the area</summary>
-	public virtual void Render()
-	{
-		// if we don't have enough space to draw return
-		if (bpr <= 0)
-			return;
-
-		Scroll(offset);
-	}
-
-	///<summary>Moves and draws the cursor</summary>
-	public virtual void MoveCursor(long offset, int digit)
-	{
-		RenderOffset(cursorOffset);
-		this.CursorOffset = offset;
-		this.CursorDigit = digit;
-		RenderCursor();
-	}
-
-	///<summary>Moves but does not draw the cursor</summary>
-	public virtual void MoveCursorNoRender(long offset, int digit)
-	{
-		this.CursorOffset = offset;
-		this.CursorDigit = digit;
-	}
-
+	/*
 	///<summary>Renders a single offset</summary>
-	public virtual void RenderOffset(long offs)
+	protected virtual void RenderOffset(long offs)
 	{
 		if (isAreaRealized == false)
 			return;
@@ -700,8 +591,8 @@ public abstract class Area {
 		int nrows = height / drawer.Height;
 		long bleft = nrows * bpr;
 
-		if (bleft + offset >= byteBuffer.Size)
-			bleft = byteBuffer.Size - offset;
+		if (bleft + offset >= areaGroup.Buffer.Size)
+			bleft = areaGroup.Buffer.Size - offset;
 
 		if (offs >= offset && offs < offset + bleft) {
 			int pcRow, pcByte, pcX, pcY;
@@ -712,7 +603,7 @@ public abstract class Area {
 			else
 				RenderRowNormal(pcRow, pcByte, 1, false);
 		}
-		else if (offs == byteBuffer.Size && offs == offset + bleft) {
+		else if (offs == areaGroup.Buffer.Size && offs == offset + bleft) {
 			int pcRow, pcByte, pcX, pcY;
 			GetDisplayInfoByOffset(offs, out pcRow, out pcByte, out pcX, out pcY);
 			Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
@@ -720,209 +611,14 @@ public abstract class Area {
 		}
 
 	}
+	*/
 
-
-	public virtual void RenderBackground(Drawer.RowType rtype, Drawer.ColumnType ctype, int x, int y, int w, int h)
+	internal virtual void BlankBackground()
 	{
-
-
-	}
-
-	///<summary>Scrolls the view so that 'offset' is the first visible offset</summary>
-	public virtual void Scroll(long offset)
-	{
-		this.prevOffset = this.offset;
-		this.offset = offset;
-
-		if (isAreaRealized == false)
-			return;
-
-		// find out number of rows, bytes etc
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-
-		if (bleft + offset >= byteBuffer.Size)
-			bleft = byteBuffer.Size - offset;
-
-		// blank the background
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
-
-		Range rSel = new Range(highlights[(int)Drawer.HighlightType.Selection].LastAdded);
-		
-		Range rClip;
-		// make sure we get an empty clipping Range when bleft==0
-		if (bleft > 0)
-			rClip = new Range(offset, offset + bleft - 1);
-		else
-			rClip = new Range();
-
-		// calculate the ranges to render normally (not selected)
-		Range rNormal1 = new Range(rClip);
-		Range rNormal2 = new Range();
-		rNormal1.Difference(rSel, rNormal2);
-
-		if (!rNormal1.IsEmpty())
-			RenderNormally(rNormal1);
-		if (!rNormal2.IsEmpty())
-			RenderNormally(rNormal2);
-
-		// render selection
-		rSel.Intersect(rClip);
-
-		if (!rSel.IsEmpty())
-			if (enableHighlights[(int)Drawer.HighlightType.Selection])
-				RenderHighlight(rSel, Drawer.HighlightType.Selection);
-			else
-				RenderNormally(rSel);
-
-		// render secondary highlights, if they are enabled
-		// and if selection isof reasonable size (<= 1024 bytes)
-		ClearHighlightsNoRender(Drawer.HighlightType.PatternMatch);
-		if (Selection.Size <= 1024) {
-			byte[] ba = byteBuffer.RangeToByteArray(Selection);
-			if (ba != null && enableHighlights[(int)Drawer.HighlightType.PatternMatch])
-				AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
-		}
-
-		// render the cursor
-		if ((cursorOffset >= offset && cursorOffset < offset + bleft)
-				|| (cursorOffset == byteBuffer.Size && cursorOffset == offset + bleft))
-			RenderCursor();
-
 	}
-
-	///<summary>Set and draw the selection</summary>
-	public virtual void SetSelection(long start, long end)
-	{
-		UpdateHighlight(start, end, Drawer.HighlightType.Selection);
-	}
-
-	///<summary>Set but don't draw the selection</summary>
-	public virtual void SetSelectionNoRender(long start, long end)
-	{
-		UpdateHighlightNoRender(start, end, Drawer.HighlightType.Selection);
-	}
-
-	///<summary>Add and display a highlighted range of a certain type</summary>
-	public virtual void AddHighlight(long start, long end, Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-
-		manualDoubleBuffer = true;
-
-		rc.Add(new Range(start, end));
-
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-
-		if (bleft + offset >= byteBuffer.Size)
-			bleft = byteBuffer.Size - offset;
-
-		Range clip;
-
-		if (bleft > 0)
-			clip = new Range(offset, offset + bleft - 1);
-		else
-			clip = new Range();
-
-		Range newHighlight = new Range(rc.LastAdded);
-		newHighlight.Intersect(clip);
-
-		// if highlights are enabled, render them
-		if (enableHighlights[(int)ht])
-			RenderHighlight(newHighlight, ht);
-
-		manualDoubleBuffer = false;
-	}
-
-	///<summary>Add but don't display a highlighted range of a certain type</summary>
-	public virtual void AddHighlightNoRender(long start, long end, Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-
-		rc.Add(new Range(start, end));
-	}
-
-	///<summary>Update and display the last added highlighted range of a certain type</summary>
-	public virtual void UpdateHighlight(long start, long end, Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-
-		if (start == rc.LastAdded.Start && end == rc.LastAdded.End)
-			return;
-
-		manualDoubleBuffer = true;
-
-		Range prevHighlight = new Range(rc.LastAdded);
-
-		rc.LastAdded.Start = start;
-		rc.LastAdded.End = end;
-
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-
-		if (bleft + offset >= byteBuffer.Size)
-			bleft = byteBuffer.Size - offset;
-
-		Range clip;
-
-		if (bleft > 0)
-			clip = new Range(offset, offset + bleft - 1);
-		else
-			clip = new Range();
-
-		// if highlights are enabled, render them
-		if (enableHighlights[(int)ht])
-			RenderHighlightDiffs(rc.LastAdded, prevHighlight, clip, ht);
-
-		manualDoubleBuffer = false;
-	}
-
-	///<summary>Update but don't display the last added highlighted range of a certain type</summary>
-	public virtual void UpdateHighlightNoRender(long start, long end, Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-
-		rc.LastAdded.Start = start;
-		rc.LastAdded.End = end;
-	}
-
-	///<summary>Clear and display all highlighted ranges of a certain type</summary>
-	public virtual void ClearHighlights(Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-		manualDoubleBuffer = true;
-
-		// clipping range is whole buffer
-		Range rClip = new Range();
-
-		if (byteBuffer.Size > 0) {
-			rClip.Start = 0;
-			rClip.End = byteBuffer.Size - 1;
-		}
-
-		foreach(Range range in rc) {
-			// make sure range is still valid...
-			range.Intersect(rClip);
-			if (!range.IsEmpty()) {
-				//System.Console.WriteLine("Clearing Range: {0}-{1}", range.Start, range.End);
-				RenderNormally(range);
-			}
-		}
-
-		manualDoubleBuffer = false;
-
-		rc.Clear();
-	}
-
-	///<summary>Clear but don't display all the highlighted ranges of a certain type</summary>
-	public virtual void ClearHighlightsNoRender(Drawer.HighlightType ht)
-	{
-		RangeCollection rc = highlights[(int)ht];
-		rc.Clear();
-	}
-
+/*
 	///<summary>
 	/// Highlight all the ranges that match the specified pattern and are visible in the DataView.
 	///</summary>
@@ -940,8 +636,8 @@ public abstract class Area {
 		long bleft = nrows * bpr;
 		long highLimit;
 
-		if (bleft + offset >= byteBuffer.Size)
-			bleft = byteBuffer.Size - offset;
+		if (bleft + offset >= areaGroup.Buffer.Size)
+			bleft = areaGroup.Buffer.Size - offset;
 
 		if (bleft > 0)
 			highLimit = offset + bleft - 1;
@@ -950,12 +646,12 @@ public abstract class Area {
 
 		Range rClip = new Range(offset, highLimit);
 
-		if (highLimit + patLen - 1 < byteBuffer.Size)
+		if (highLimit + patLen - 1 < areaGroup.Buffer.Size)
 			highLimit += patLen - 1;
 		else
-			highLimit = byteBuffer.Size - 1;
+			highLimit = areaGroup.Buffer.Size - 1;
 
-		findStrategy.Buffer = byteBuffer;
+		findStrategy.Buffer = areaGroup.Buffer;
 		findStrategy.Position = lowLimit;
 		findStrategy.Pattern = pattern;
 
@@ -985,7 +681,7 @@ public abstract class Area {
 		}
 
 	}
-
+*/
 	public virtual void ShowPopup(Gtk.UIManager uim)
 	{
 		Gtk.Widget popup = uim.GetWidget("/DefaultAreaPopup");

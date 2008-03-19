@@ -11,6 +11,6 @@
     <Execute type="None" entry="bless" />
   </StartMode>
   <Entries>
-    <Entry filename="./bless.mdp" />
+    <Entry filename="bless.mdp" />
   </Entries>
 </Combine>

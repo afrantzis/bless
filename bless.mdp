@@ -138,6 +138,12 @@
     <File name="src/buffers/SaveInPlaceOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="src/buffers/ISaveState.cs" subtype="Code" buildaction="Compile" />
     <File name="tests/buffers/SimpleBufferTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/util/RedBlackTree.cs" subtype="Code" buildaction="Compile" />
+    <File name="tests/util/RedBlackTreeTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/util/IntervalTree.cs" subtype="Code" buildaction="Compile" />
+    <File name="tests/util/IntervalTreeTests.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/gui/areas/AreaGroup.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/gui/areas/Highlight.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

@@ -32,17 +32,17 @@ public class OctalAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new OctalArea();
+		return new OctalArea(ag);
 	}
 }
 
 ///<summary>An area that displays octal</summary>
 public class OctalArea : GroupedArea {
 
-	public OctalArea()
-			: base()
+	public OctalArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "octal";
 		dpb = 3;
@@ -63,20 +63,20 @@ public class OctalArea : GroupedArea {
 
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size || (overwrite == false && areaGroup.CursorDigit == 0))
 				orig = 0;
 			else
-				orig = byteBuffer[cursorOffset];
+				orig = areaGroup.Buffer[areaGroup.CursorOffset];
 
 			byte orig1 = (byte)(orig % 8);
 			byte orig8 = (byte)((orig / 8) % 8);
 			byte orig64 = (byte)((orig / 64) % 8);
 
-			if (cursorDigit == 0)
+			if (areaGroup.CursorDigit == 0)
 				orig64 = b;
-			else if (cursorDigit == 1)
+			else if (areaGroup.CursorDigit == 1)
 				orig8 = b;
-			else if (cursorDigit == 2)
+			else if (areaGroup.CursorDigit == 2)
 				orig1 = b;
 
 			int repl = orig64 * 64 + orig8 * 8 + orig1;
@@ -86,12 +86,12 @@ public class OctalArea : GroupedArea {
 
 			byte[] ba = new byte[]{(byte)repl};
 
-			if (cursorOffset == byteBuffer.Size)
-				byteBuffer.Append(ba);
-			else if (overwrite == false && cursorDigit == 0)
-				byteBuffer.Insert(cursorOffset, ba);
-			else /*(if (overwrite==true || cursorDigit > 0)*/
-				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
+				areaGroup.Buffer.Append(ba);
+			else if (overwrite == false && areaGroup.CursorDigit == 0)
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
+			else /*(if (overwrite==true || areaGroup.CursorDigit > 0)*/
+				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 
 
 			return true;
@@ -100,10 +100,11 @@ public class OctalArea : GroupedArea {
 			return false;
 	}
 
-	public override void Realize (DrawingArea da)
+	public override void Realize ()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 		drawer = new OctalDrawer(da, drawerInformation);
-		base.Realize(da);
+		base.Realize();
 	}
 }
 

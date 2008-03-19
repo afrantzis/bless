@@ -70,7 +70,7 @@ public class DataViewControl
 	{
 		Area clickArea = null;
 
-		foreach(Area a in dvDisplay.Layout.Areas) {
+		foreach(Area a in dvDisplay.Layout.AreaGroup.Areas) {
 			if ((x >= a.X) && (x <= a.X + a.Width)) {
 				clickArea = a;
 				break;
@@ -113,13 +113,13 @@ public class DataViewControl
 	{
 		if (area.CanFocus && !area.HasCursorFocus) {
 
-			foreach(Area a in dvDisplay.Layout.Areas)
-			a.HasCursorFocus = false;
-
+			foreach(Area a in dvDisplay.Layout.AreaGroup.Areas)
+				a.HasCursorFocus = false;
+			
+			area.HasCursorFocus = true;
+			
 			dataView.MoveCursor(dataView.CursorOffset, dataView.CursorDigit);
 
-			area.HasCursorFocus = true;
-			area.MoveCursor(area.CursorOffset, area.CursorDigit);
 			return true;
 		}
 
@@ -337,9 +337,9 @@ public class DataViewControl
 		int faIndex = 0;
 		focusArea = null;
 
-		for (; faIndex < dvDisplay.Layout.Areas.Count; faIndex++) {
-			if ((dvDisplay.Layout.Areas[faIndex] as Area).HasCursorFocus == true) {
-				focusArea = (dvDisplay.Layout.Areas[faIndex] as Area);
+		for (; faIndex < dvDisplay.Layout.AreaGroup.Areas.Count; faIndex++) {
+			if ((dvDisplay.Layout.AreaGroup.Areas[faIndex] as Area).HasCursorFocus == true) {
+				focusArea = (dvDisplay.Layout.AreaGroup.Areas[faIndex] as Area);
 				break;
 			}
 		}
@@ -356,10 +356,10 @@ public class DataViewControl
 		int faIndex = FindFocusedArea(out focusArea);
 
 		int start = faIndex;
-		int areaCount = dvDisplay.Layout.Areas.Count;
+		int areaCount = dvDisplay.Layout.AreaGroup.Areas.Count;
 
 		for (faIndex++; (faIndex % areaCount) != start; faIndex++) {
-			Area a = (dvDisplay.Layout.Areas[faIndex%areaCount] as Area);
+			Area a = (dvDisplay.Layout.AreaGroup.Areas[faIndex%areaCount] as Area);
 			if (a.CanFocus == true) {
 				a.HasCursorFocus = true;
 				if (focusArea != null)
@@ -408,7 +408,7 @@ public class DataViewControl
 		UpdateSelection(true);
 
 		Position cur = new Position();
-		if (shiftPressed || !okp_focusArea.Selection.IsEmpty()) {
+		if (shiftPressed || !dvDisplay.Layout.AreaGroup.Selection.IsEmpty()) {
 			cur = selEndPos;
 			cur.Digit = 0;
 		}
@@ -515,7 +515,7 @@ public class DataViewControl
 	///</summary>
 	internal void OnFocusInEvent (object o, FocusInEventArgs args)
 	{
-		foreach(Area a in dvDisplay.Layout.Areas)
+		foreach(Area a in dvDisplay.Layout.AreaGroup.Areas)
 		a.IsActive = true;
 
 		dataView.FireFocusChangedEvent();
@@ -526,7 +526,7 @@ public class DataViewControl
 	///</summary>
 	internal void OnFocusOutEvent (object o, FocusOutEventArgs args)
 	{
-		foreach(Area a in dvDisplay.Layout.Areas)
+		foreach(Area a in dvDisplay.Layout.AreaGroup.Areas)
 		a.IsActive = false;
 
 		dataView.FireFocusChangedEvent();

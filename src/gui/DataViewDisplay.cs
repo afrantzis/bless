@@ -72,10 +72,8 @@ public class DataViewDisplay : Gtk.VBox {
 			layout = value;
 
 			// set buffer
-			foreach(Area a in layout.Areas) {
-				a.Buffer = dataView.Buffer;
-			}
-
+			layout.AreaGroup.Buffer = dataView.Buffer;
+			
 			if (widgetRealized) {
 				layout.Realize(drawingArea);
 				Gdk.Rectangle alloc = drawingArea.Allocation;
@@ -84,17 +82,14 @@ public class DataViewDisplay : Gtk.VBox {
 				long prevOffset = 0;
 
 				// Setup new areas according to the old ones
-				if (prevLayout != null && prevLayout.Areas.Count > 0) {
-					Area prevArea0 = prevLayout.Areas[0] as Area;
-					prevOffset = prevArea0.CursorOffset;
-					foreach(Area a in layout.Areas) {
-						a.SetSelection(prevArea0.Selection.Start, prevArea0.Selection.End);
-						a.MoveCursor(prevOffset, 0);
-					}
+				if (prevLayout != null && prevLayout.AreaGroup.Areas.Count > 0) {
+					layout.AreaGroup.CursorOffset = prevLayout.AreaGroup.CursorOffset;
+					layout.AreaGroup.CursorDigit = 0;
+					layout.AreaGroup.Selection = prevLayout.AreaGroup.Selection;
 				}
 				else {
-					foreach(Area a in layout.Areas)
-					a.MoveCursor(0, 0);
+					layout.AreaGroup.CursorOffset = 0;
+					layout.AreaGroup.CursorDigit = 0;
 				}
 
 				// make sure cursor is visible
@@ -184,7 +179,7 @@ public class DataViewDisplay : Gtk.VBox {
 			bool breaksGrouping = false;
 			bool breaksFixed = false;
 
-			foreach(Area a in layout.Areas) {
+			foreach(Area a in layout.AreaGroup.Areas) {
 				int w = a.CalcWidth(n, false);
 
 				// if this number of bpr is not acceptable
@@ -252,8 +247,7 @@ public class DataViewDisplay : Gtk.VBox {
 
 			win.BeginPaintRect(rect1);
 
-			foreach(Area a in layout.Areas)
-			a.Scroll(0);
+			layout.AreaGroup.Render();
 
 			win.EndPaint();
 
@@ -270,10 +264,10 @@ public class DataViewDisplay : Gtk.VBox {
 
 	private void SetupScrollbarRange()
 	{
-		if (layout.Areas.Count <= 0)
+		if (layout.AreaGroup.Areas.Count <= 0)
 			return;
 
-		long bpr = ((Area)layout.Areas[0]).BytesPerRow;
+		long bpr = ((Area)layout.AreaGroup.Areas[0]).BytesPerRow;
 		long nrows = ((dataView.Buffer.Size + 1) / bpr); // +1 because of append cursor position
 
 		if (nrows < vscroll.Adjustment.PageSize) {
@@ -304,7 +298,7 @@ public class DataViewDisplay : Gtk.VBox {
 		// configure areas
 		int s = 0;
 		int fontHeight = winHeight;
-		foreach(Area a in layout.Areas) {
+		foreach(Area a in layout.AreaGroup.Areas) {
 			a.Height = winHeight;
 			a.Width = a.CalcWidth(bpr, true);
 			a.X = s;
@@ -350,10 +344,7 @@ public class DataViewDisplay : Gtk.VBox {
 	///<summary>Handle the Expose Event</summary>
 	void OnExposed (object o, ExposeEventArgs args)
 	{
-
-		foreach(Area a in layout.Areas) {
-			a.Render();
-		}
+		layout.AreaGroup.Render(true);
 	}
 
 	///<summary>Handle the Realized Event</summary>
@@ -372,8 +363,8 @@ public class DataViewDisplay : Gtk.VBox {
 	void OnScrolled (object o, EventArgs args)
 	{
 		int bpr = 0;
-		if (layout.Areas.Count > 0)
-			bpr = ((Area)layout.Areas[0]).BytesPerRow;
+		if (layout.AreaGroup.Areas.Count > 0)
+			bpr = ((Area)layout.AreaGroup.Areas[0]).BytesPerRow;
 
 		long offset = (long)vscroll.Adjustment.Value * bpr;
 
@@ -383,9 +374,9 @@ public class DataViewDisplay : Gtk.VBox {
 		Gdk.Rectangle rect = new Gdk.Rectangle(0, 0, alloc.Width, alloc.Height);
 		win.BeginPaintRect(rect);
 
-		foreach(Area a in layout.Areas) {
-			a.Scroll(offset);
-		}
+		
+		layout.AreaGroup.Offset = offset;
+		layout.AreaGroup.Render();
 
 		win.EndPaint();
 
@@ -395,16 +386,16 @@ public class DataViewDisplay : Gtk.VBox {
 	///<summary>Scroll the view so that offset is visible</summary>
 	public void MakeOffsetVisible(long offset, ShowType type)
 	{
-		if (layout.Areas.Count <= 0)
+		if (layout.AreaGroup.Areas.Count <= 0)
 			return;
 
-		int	bpr = ((Area)layout.Areas[0]).BytesPerRow;
+		int	bpr = ((Area)layout.AreaGroup.Areas[0]).BytesPerRow;
 		if (bpr == 0)
 			return ;
 
-		long curOffset = ((Area)layout.Areas[0]).Offset;
-		int h = ((Area)layout.Areas[0]).Height;
-		Drawer font = ((Area)layout.Areas[0]).Drawer;
+		long curOffset = layout.AreaGroup.Offset;
+		int h = ((Area)layout.AreaGroup.Areas[0]).Height;
+		Drawer font = ((Area)layout.AreaGroup.Areas[0]).Drawer;
 		int nrows = h / font.Height;
 
 		long curOffsetRow = curOffset / bpr;
@@ -434,7 +425,7 @@ public class DataViewDisplay : Gtk.VBox {
 		SetupScrollbarRange();
 
 		if (type == ShowType.Cursor) {
-			long cursorRow = (layout.Areas[0] as Area).CursorOffset / bpr;
+			long cursorRow = layout.AreaGroup.CursorOffset / bpr;
 			int diff = (int)(cursorRow - curOffsetRow);
 
 			if (diff <= nrows && diff >= 0)

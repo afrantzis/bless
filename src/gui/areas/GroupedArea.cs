@@ -31,8 +31,8 @@ abstract public class GroupedArea : Area {
 
 	int grouping;
 
-	public GroupedArea()
-			: base()
+	public GroupedArea(AreaGroup ag)
+			: base(ag)
 	{
 		grouping = 1;
 		canFocus = true;
@@ -49,7 +49,7 @@ abstract public class GroupedArea : Area {
 	{
 		int rx = 0 + x;
 		int ry = i * drawer.Height + y;
-		long roffset = offset + i * bpr + p;
+		long roffset = areaGroup.Offset + i * bpr + p;
 		bool odd;
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		Gdk.GC backOddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
@@ -82,7 +82,7 @@ abstract public class GroupedArea : Area {
 				else
 					colType = Drawer.ColumnType.Odd;
 
-				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, byteBuffer[roffset++], rowType, colType);
+				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, colType);
 				if (--n <= 0)
 					break;
 			}
@@ -101,7 +101,7 @@ abstract public class GroupedArea : Area {
 	{
 		int rx = 0 + x;
 		int ry = i * drawer.Height + y;
-		long roffset = offset + i * bpr + p;
+		long roffset = areaGroup.Offset + i * bpr + p;
 		bool odd;
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		Gdk.GC backOddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
@@ -128,7 +128,7 @@ abstract public class GroupedArea : Area {
 		while (true) {
 
 			if (pos >= p) { //don't draw until we reach p
-				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, byteBuffer[roffset++], rowType, ht);
+				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, ht);
 				if (--n <= 0)
 					break;
 			}
@@ -160,8 +160,8 @@ abstract public class GroupedArea : Area {
 
 	public override void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy)
 	{
-		orow = (int)((off - offset) / bpr);
-		obyte = (int)((off - offset) % bpr);
+		orow = (int)((off - areaGroup.Offset) / bpr);
+		obyte = (int)((off - areaGroup.Offset) % bpr);
 
 		oy = orow * drawer.Height;
 
@@ -186,8 +186,8 @@ abstract public class GroupedArea : Area {
 			flags |= GetOffsetFlags.Abyss;
 		}
 
-		long off = row * bpr + (group * grouping + groupByte) + offset;
-		if (off >= byteBuffer.Size)
+		long off = row * bpr + (group * grouping + groupByte) + areaGroup.Offset;
+		if (off >= areaGroup.Buffer.Size)
 			flags |= GetOffsetFlags.Eof;
 
 		return off;

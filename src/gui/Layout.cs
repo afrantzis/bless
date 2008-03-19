@@ -35,14 +35,14 @@ namespace Bless.Gui {
 ///</summary>
 public class Layout {
 
-	List<Area> areas;
+	AreaGroup areaGroup;
 	XmlDocument layoutDoc;
 	Drawer font;
 	string filePath;
 	DateTime timeStamp;
 
-	public List<Area> Areas {
-		get {return areas;}
+	public AreaGroup AreaGroup {
+		get {return areaGroup;}
 	}
 
 	public string FilePath {
@@ -55,7 +55,7 @@ public class Layout {
 
 	public Layout()
 	{
-		areas = new List<Area>();
+		areaGroup = new AreaGroup();
 		layoutDoc = new XmlDocument();
 		filePath = null;
 	}
@@ -91,16 +91,16 @@ public class Layout {
 			XmlAttributeCollection attrColl =  areaNode.Attributes;
 			string type = attrColl["type"].Value;
 
-			Area area = Area.Factory(type);
+			Area area = Area.Factory(type, areaGroup);
 			if (area == null)
 				continue;
 
-			areas.Add(area);
+			areaGroup.Areas.Add(area);
 			area.Configure(areaNode);
 		}
 
 		// give the focus to the first applicable area
-		foreach(Area a in areas) {
+		foreach(Area a in areaGroup.Areas) {
 			if (a.Type != "offset" && a.Type != "separator") {
 				a.HasCursorFocus = true;
 				break;
@@ -108,10 +108,9 @@ public class Layout {
 		}
 
 		// reset cursor
-		foreach(Area a in areas) {
-			a.CursorOffset = 0;
-			a.CursorDigit = 0;
-		}
+		areaGroup.CursorOffset = 0;
+		areaGroup.CursorDigit = 0;
+		
 
 	}
 
@@ -120,14 +119,15 @@ public class Layout {
 	///</summary>
 	public void Realize(Gtk.DrawingArea da)
 	{
-		foreach(Area a in areas)
-		a.Realize(da);
+		areaGroup.DrawingArea = da;
+		foreach(Area a in areaGroup.Areas)
+			a.Realize();
 	}
 
 	///<summary>Dispose the pixmap resources used by the layout</summary>
 	public void DisposePixmaps()
 	{
-		foreach(Area a in areas) {
+		foreach(Area a in areaGroup.Areas) {
 			a.DisposePixmaps();
 		}
 	}

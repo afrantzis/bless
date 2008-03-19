@@ -37,9 +37,9 @@ public class OffsetAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new OffsetArea();
+		return new OffsetArea(ag);
 	}
 }
 
@@ -53,56 +53,18 @@ public class OffsetArea : Area {
 		set { bytes = value; }
 	}
 
-	public OffsetArea()
-			: base()
+	public OffsetArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "offset";
 		bytes = 4;
-	}
-
-	protected override void RenderRange(Bless.Util.Range range, Drawer.HighlightType ht)
-	{
-	}
-
-	public override void Scroll(long offset)
-	{
-		if (bpr <= 0)
-			return;
-
-		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
-		// draw the area background
-		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
-
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-		int rfull = 0;
-		int blast = 0;
-
-		if (bleft + offset > byteBuffer.Size)
-			bleft = byteBuffer.Size - offset + 1;
-
-		// calculate number of full rows
-		// and number of bytes in last (non-full)
-		rfull = (int)(bleft / bpr);
-		blast = (int)(bleft % bpr);
-
-		if (blast > 0)
-			rfull++;
-
-		this.offset = offset;
-
-		for (int i = 0; i < rfull; i++)
-			RenderRowNormal(i, 0, bpr, true);
-
-		//Gdk.Window win=drawingArea.GdkWindow;
-		//win.DrawDrawable(backEvenGC, backPixmap, 0, 0, x, y, width, height);
 	}
 
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
 	{
 		int rx = (bytes - 1) * 2 * drawer.Width + x;
 		int ry = i * drawer.Height + y;
-		long roffset = offset + i * bpr;
+		long roffset = areaGroup.Offset + i * bpr;
 		bool odd;
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		Gdk.GC backOddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, Drawer.HighlightType.Normal);
@@ -148,8 +110,8 @@ public class OffsetArea : Area {
 
 	public override void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy)
 	{
-		orow = (int)((off - offset) / bpr);
-		obyte = (int)((off - offset) % bpr);
+		orow = (int)((off - areaGroup.Offset) / bpr);
+		obyte = (int)((off - areaGroup.Offset) % bpr);
 
 		oy = orow * drawer.Height;
 
@@ -160,23 +122,13 @@ public class OffsetArea : Area {
 	{
 		flags = 0;
 		int row = y / drawer.Height;
-		long off = row * bpr + offset;
-		if (off >= byteBuffer.Size)
+		long off = row * bpr + areaGroup.Offset;
+		if (off >= areaGroup.Buffer.Size)
 			flags |= GetOffsetFlags.Eof;
 
 		digit = 0;
 
 		return off;
-	}
-
-	public override void SetSelection(long start, long end)
-	{
-		SetSelectionNoRender(start, end);
-	}
-
-	public override void MoveCursor(long offset, int digit)
-	{
-		MoveCursorNoRender(offset, digit);
 	}
 
 	public override void Configure(XmlNode parentNode)
@@ -192,10 +144,11 @@ public class OffsetArea : Area {
 		}
 	}
 
-	public override void Realize (DrawingArea da)
+	public override void Realize ()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 		drawer = new HexDrawer(da, drawerInformation);
-		base.Realize(da);
+		base.Realize();
 	}
 }
 

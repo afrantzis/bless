@@ -65,8 +65,8 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 #if ENABLE_UNIX_SPECIFIC
 		// get info about the device the file will be saved on
 		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
-		Mono.Unix.Native.Syscall.statvfs(Path.GetDirectoryName(fn), out stat);
-			
+		Mono.Unix.Native.Syscall.statvfs(Path.GetFullPath(fn), out stat);
+		
 		long freeSpace = (long)(stat.f_bavail * stat.f_bsize);
 			
 		// make sure there is enough disk space in the device

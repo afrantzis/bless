@@ -32,17 +32,17 @@ public class DecimalAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new DecimalArea();
+		return new DecimalArea(ag);
 	}
 }
 
 ///<summary>An area that displays decimal</summary>
 public class DecimalArea : GroupedArea {
 
-	public DecimalArea()
-			: base()
+	public DecimalArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "decimal";
 		dpb = 3;
@@ -63,20 +63,20 @@ public class DecimalArea : GroupedArea {
 
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size || (overwrite == false && areaGroup.CursorDigit == 0))
 				orig = 0;
 			else
-				orig = byteBuffer[cursorOffset];
+				orig = areaGroup.Buffer[areaGroup.CursorOffset];
 
 			byte orig1 = (byte)(orig % 10);
 			byte orig10 = (byte)((orig / 10) % 10);
 			byte orig100 = (byte)((orig / 100) % 10);
 
-			if (cursorDigit == 0)
+			if (areaGroup.CursorDigit == 0)
 				orig100 = b;
-			else if (cursorDigit == 1)
+			else if (areaGroup.CursorDigit == 1)
 				orig10 = b;
-			else if (cursorDigit == 2)
+			else if (areaGroup.CursorDigit == 2)
 				orig1 = b;
 
 			int repl = orig100 * 100 + orig10 * 10 + orig1;
@@ -85,12 +85,12 @@ public class DecimalArea : GroupedArea {
 
 			byte[] ba = new byte[]{(byte)repl};
 
-			if (cursorOffset == byteBuffer.Size)
-				byteBuffer.Append(ba);
-			else if (overwrite == false && cursorDigit == 0)
-				byteBuffer.Insert(cursorOffset, ba);
-			else /*(if (overwrite==true || cursorDigit > 0)*/
-				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
+				areaGroup.Buffer.Append(ba);
+			else if (overwrite == false && areaGroup.CursorDigit == 0)
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
+			else /*(if (overwrite==true || areaGroup.CursorDigit > 0)*/
+				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 
 
 			return true;
@@ -99,10 +99,11 @@ public class DecimalArea : GroupedArea {
 			return false;
 	}
 
-	public override void Realize (DrawingArea da)
+	public override void Realize ()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 		drawer = new DecimalDrawer(da, drawerInformation);
-		base.Realize(da);
+		base.Realize();
 	}
 }
 

@@ -32,17 +32,17 @@ public class BinaryAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new BinaryArea();
+		return new BinaryArea(ag);
 	}
 }
 
 ///<summary>An area that displays binary</summary>
 public class BinaryArea : GroupedArea {
 
-	public BinaryArea()
-			: base()
+	public BinaryArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "binary";
 		dpb = 8;
@@ -57,26 +57,26 @@ public class BinaryArea : GroupedArea {
 
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size || (overwrite == false && areaGroup.CursorDigit == 0))
 				orig = 0;
 			else
-				orig = byteBuffer[cursorOffset];
+				orig = areaGroup.Buffer[areaGroup.CursorOffset];
 
 			byte repl;
 
 			if (key == Gdk.Key.Key_1 || key == Gdk.Key.KP_1 )
-				repl = (byte)((1 << (dpb - cursorDigit - 1)) | orig);
+				repl = (byte)((1 << (dpb - areaGroup.CursorDigit - 1)) | orig);
 			else
-				repl = (byte)((~(1 << (dpb - cursorDigit - 1))) & orig);
+				repl = (byte)((~(1 << (dpb - areaGroup.CursorDigit - 1))) & orig);
 
 			byte[] ba = new byte[]{repl};
 
-			if (cursorOffset == byteBuffer.Size)
-				byteBuffer.Append(ba);
-			else if (overwrite == false && cursorDigit == 0)
-				byteBuffer.Insert(cursorOffset, ba);
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
+				areaGroup.Buffer.Append(ba);
+			else if (overwrite == false && areaGroup.CursorDigit == 0)
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
 			else /*(if (overwrite==true || cursorDigit > 0)*/
-				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
+				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 
 
 			return true;
@@ -86,10 +86,11 @@ public class BinaryArea : GroupedArea {
 			return false;
 	}
 
-	public override void Realize (DrawingArea da)
+	public override void Realize ()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 		drawer = new BinaryDrawer(da, drawerInformation);
-		base.Realize(da);
+		base.Realize();
 	}
 }
 

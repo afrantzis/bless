@@ -36,6 +36,7 @@ public class RedBlackTree<K, V> where K:IComparable<K>
 	private INodeFactory nodeFactory;
 	protected INode root;
 	protected object lockObj = new object();
+	private IList<V> tmpValues;
 	
 	protected interface INode
 	{
@@ -399,6 +400,32 @@ public class RedBlackTree<K, V> where K:IComparable<K>
 			sw.Write(sb.ToString());
 			sw.Close();
 		}
+	}
+	
+	public IList<V> GetValues()
+	{
+		lock (lockObj){
+			tmpValues = new System.Collections.Generic.List<V>();
+			GetValues(root);
+			
+			// clear private var
+			IList<V> tv = tmpValues;
+			tmpValues = null;
+			return tv;
+		}
+	}
+	
+	private void GetValues(INode x)
+	{
+		if (x == null)
+			return;
+		
+		GetValues(x.Left);
+		
+		foreach(V v in x.Values)
+			tmpValues.Add(v);
+		
+		GetValues(x.Right);
 	}
 	
 	private void DumpToDotInternal(INode h, StringBuilder sb)

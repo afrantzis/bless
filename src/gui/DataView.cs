@@ -33,7 +33,6 @@ namespace Bless.Gui {
 public class DataView {
 	Layout layout;
 	ByteBuffer byteBuffer;
-	Gtk.DrawingArea drawingArea;
 	Gtk.VScrollbar vscroll;
 	bool widgetRealized;
 	string prefID;
@@ -147,6 +146,7 @@ public class DataView {
 		// temp dir
 		byteBuffer.TempDir = prefs["ByteBuffer.TempDir"];
 
+		/*
 		// pattern match highlighting
 		if (dvDisplay.Layout.Areas.Count > 0) {
 			bool highlightPref = false;
@@ -155,13 +155,14 @@ public class DataView {
 			if (prefs["Highlight.PatternMatch"] == "True")
 				highlightPref = true;
 
-			if (highlightPref != area0.EnableHighlights[(int)Drawer.HighlightType.PatternMatch]) {
+			if (highlightPref != AreaGroup.EnableHighlights[(int)Drawer.HighlightType.PatternMatch]) {
 				foreach(Area a in dvDisplay.Layout.Areas) {
 					a.EnableHighlights[(int)Drawer.HighlightType.PatternMatch] = highlightPref;
 					a.Render();
 				}
 			}
 		}
+		*/
 
 	}
 
@@ -174,16 +175,15 @@ public class DataView {
 		cursorUndoDeque.AddFront(state);
 	}
 
-	private void DeleteSelectionInternal(Area area)
+	private void DeleteSelectionInternal()
 	{
-		byteBuffer.Delete(area.Selection.Start, area.Selection.End);
-		AddUndoCursorState(new CursorState(area.CursorOffset, 0, area.Selection.Start, 0));
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		byteBuffer.Delete(areaGroup.Selection.Start, areaGroup.Selection.End);
+		AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.Selection.Start, 0));
 		cursorRedoDeque.Clear();
 
-		//long bbSize=byteBuffer.Size;
-		long cOffset = area.Selection.Start;
-
-		this.MoveCursor(cOffset, 0);
+		this.MoveCursor(areaGroup.Selection.Start, 0);
 		this.SetSelection(-1, -1);
 	}
 
@@ -297,15 +297,15 @@ public class DataView {
 
 	public void Copy()
 	{
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		if (areaGroup.Areas.Count <= 0)
 			return;
 
 		if (!byteBuffer.ReadAllowed)
 			return;
 
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-		byte[] ba = byteBuffer.RangeToByteArray(area0.Selection);
+		byte[] ba = byteBuffer.RangeToByteArray(areaGroup.Selection);
 
 		// if no selection, do nothing (keep old clipboard data)
 		if (ba == null)
@@ -317,14 +317,16 @@ public class DataView {
 		clipboard.SetWithData(clipboardTargets, new ClipboardGetFunc(OnClipboardGet),
 							  new ClipboardClearFunc(OnClipboardClear));
 
-		dvDisplay.MakeOffsetVisible(area0.CursorOffset, DataViewDisplay.ShowType.Closest);
+		dvDisplay.MakeOffsetVisible(areaGroup.CursorOffset, DataViewDisplay.ShowType.Closest);
 	}
 
 	public void Cut()
 	{
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		if (areaGroup.Areas.Count <= 0)
 			return;
-
+		
 		// if we can't modify the buffer...
 		if (!byteBuffer.ModifyAllowed)
 			return;
@@ -333,10 +335,8 @@ public class DataView {
 		if (!byteBuffer.IsResizable) {
 			return;
 		}
-		
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
 
-		byte[] ba = byteBuffer.RangeToByteArray(area0.Selection);
+		byte[] ba = byteBuffer.RangeToByteArray(areaGroup.Selection);
 
 		// if no selection, do nothing (keep old clipboard data)
 		if (ba == null)
@@ -348,12 +348,12 @@ public class DataView {
 		clipboard.SetWithData(clipboardTargets, new ClipboardGetFunc(OnClipboardGet),
 							  new ClipboardClearFunc(OnClipboardClear));
 
-		byteBuffer.Delete(area0.Selection.Start, area0.Selection.End);
-		AddUndoCursorState(new CursorState(area0.CursorOffset, 0, area0.Selection.Start, 0));
+		byteBuffer.Delete(areaGroup.Selection.Start, areaGroup.Selection.End);
+		AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.Selection.Start, 0));
 		cursorRedoDeque.Clear();
 
 		//set cursor
-		this.MoveCursor(area0.Selection.Start, 0);
+		this.MoveCursor(areaGroup.Selection.Start, 0);
 
 		//clear selections
 		this.SetSelection(-1, -1);
@@ -362,12 +362,14 @@ public class DataView {
 		// so that the Scrollbar has the correct range
 		// when calling dataView.Goto().
 		// dataView.Redraw();
-		dvDisplay.MakeOffsetVisible(area0.CursorOffset, DataViewDisplay.ShowType.Closest);
+		dvDisplay.MakeOffsetVisible(areaGroup.CursorOffset, DataViewDisplay.ShowType.Closest);
 	}
 
 	public void Paste()
 	{
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		if (areaGroup.Areas.Count <= 0)
 			return;
 
 		// if we can't modify the buffer...
@@ -378,8 +380,6 @@ public class DataView {
 		if (!byteBuffer.IsResizable && !overwrite) {
 			return;
 		}
-		
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
 
 		// get data from clipboard
 		byte[] pasteData = GetPasteData();
@@ -390,33 +390,33 @@ public class DataView {
 
 		// if no range is selected insert/overtwrite the data and move
 		// cursor to the end of inserted data
-		if (area0.Selection.IsEmpty()){
+		if (areaGroup.Selection.IsEmpty()){
 			// if user wants to overwrite and there is something to overwrite...
 			// There is something to overwrite if we are not pasting at the end
 			// of the file.
-			if (overwrite == true && area0.CursorOffset < byteBuffer.Size) {
-				long endPos = area0.CursorOffset + pasteData.Length - 1;
+			if (overwrite == true && areaGroup.CursorOffset < byteBuffer.Size) {
+				long endPos = areaGroup.CursorOffset + pasteData.Length - 1;
 				if (endPos >= byteBuffer.Size)
 					endPos = byteBuffer.Size - 1;
-				byteBuffer.Replace(area0.CursorOffset, endPos, pasteData);
+				byteBuffer.Replace(areaGroup.CursorOffset, endPos, pasteData);
 			}
 			else // if user doesn't want to overwrite or there is nothing to overwrite
-				byteBuffer.Insert(area0.CursorOffset, pasteData);
+				byteBuffer.Insert(areaGroup.CursorOffset, pasteData);
 
-			AddUndoCursorState(new CursorState(area0.CursorOffset, 0, area0.CursorOffset + pasteData.Length, 0));
+			AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.CursorOffset + pasteData.Length, 0));
 			cursorRedoDeque.Clear();
 
-			this.MoveCursor(area0.CursorOffset + pasteData.Length, 0);
+			this.MoveCursor(areaGroup.CursorOffset + pasteData.Length, 0);
 		}
 		else {
 			// if a range is selected, replace the range with
 			// the data and move the cursor to the end of
 			// the new data
-			byteBuffer.Replace(area0.Selection.Start, area0.Selection.End, pasteData);
-			AddUndoCursorState(new CursorState(area0.Selection.Start, 0, area0.Selection.Start + pasteData.Length, 0));
+			byteBuffer.Replace(areaGroup.Selection.Start, areaGroup.Selection.End, pasteData);
+			AddUndoCursorState(new CursorState(areaGroup.Selection.Start, 0, areaGroup.Selection.Start + pasteData.Length, 0));
 			cursorRedoDeque.Clear();
 
-			this.MoveCursor(area0.Selection.Start + pasteData.Length, 0);
+			this.MoveCursor(areaGroup.Selection.Start + pasteData.Length, 0);
 			this.SetSelection(-1, -1);
 		}
 
@@ -424,61 +424,61 @@ public class DataView {
 		// so that the Scrollbar has the correct range
 		// when calling dvDisplay.MakeOffsetVisible().
 		// dataView.Redraw();
-		dvDisplay.MakeOffsetVisible(area0.CursorOffset, DataViewDisplay.ShowType.Closest);
+		dvDisplay.MakeOffsetVisible(areaGroup.CursorOffset, DataViewDisplay.ShowType.Closest);
 	}
 
 	public void Delete()
 	{
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		if (areaGroup.Areas.Count <= 0)
 			return;
 
 		// if we can't modify the buffer...
 		if (!byteBuffer.ModifyAllowed)
 			return;
 
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
 		// if nothing is selected, delete the byte at the current offset
-		if (area0.Selection.IsEmpty() == true) {
-			if (area0.CursorOffset < byteBuffer.Size) {
-				byteBuffer.Delete(area0.CursorOffset, area0.CursorOffset);
-				AddUndoCursorState(new CursorState(area0.CursorOffset, area0.CursorDigit, area0.CursorOffset, area0.CursorDigit));
+		if (areaGroup.Selection.IsEmpty() == true) {
+			if (areaGroup.CursorOffset < byteBuffer.Size) {
+				byteBuffer.Delete(areaGroup.CursorOffset, areaGroup.CursorOffset);
+				AddUndoCursorState(new CursorState(areaGroup.CursorOffset, areaGroup.CursorDigit, areaGroup.CursorOffset, areaGroup.CursorDigit));
 				cursorRedoDeque.Clear();
 			}
 		}
 		else { // delete the selection
-			DeleteSelectionInternal(area0);
+			DeleteSelectionInternal();
 		}
 
-		dvDisplay.MakeOffsetVisible(area0.CursorOffset, DataViewDisplay.ShowType.Closest);
+		dvDisplay.MakeOffsetVisible(areaGroup.CursorOffset, DataViewDisplay.ShowType.Closest);
 	}
 
 	public void DeleteBackspace()
 	{
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		if (areaGroup.Areas.Count <= 0)
 			return;
 
 		if (!byteBuffer.ModifyAllowed)
 			return;
 
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
 		// if nothing is selected, delete the byte at the previous offset
-		if (area0.Selection.IsEmpty() == true) {
-			long cOffset = area0.CursorOffset;
+		if (areaGroup.Selection.IsEmpty() == true) {
+			long cOffset = areaGroup.CursorOffset;
 
 			if (cOffset > 0) {
 				byteBuffer.Delete(cOffset - 1, cOffset - 1);
-				AddUndoCursorState(new CursorState(cOffset, area0.CursorDigit, cOffset - 1, area0.CursorDigit));
+				AddUndoCursorState(new CursorState(cOffset, areaGroup.CursorDigit, cOffset - 1, areaGroup.CursorDigit));
 				cursorRedoDeque.Clear();
-				this.MoveCursor(cOffset - 1, area0.CursorDigit);
+				this.MoveCursor(cOffset - 1, areaGroup.CursorDigit);
 			}
 		}
 		else { // delete the selection
-			DeleteSelectionInternal(area0);
+			DeleteSelectionInternal();
 		}
 
-		dvDisplay.MakeOffsetVisible(area0.CursorOffset, DataViewDisplay.ShowType.Closest);
+		dvDisplay.MakeOffsetVisible(areaGroup.CursorOffset, DataViewDisplay.ShowType.Closest);
 	}
 
 	public void Undo()
@@ -545,13 +545,14 @@ public class DataView {
 		byteBuffer.Changed += OnByteBufferChanged;
 		byteBuffer.FileChanged += OnByteBufferFileChanged;
 
-		foreach(Area a in dvDisplay.Layout.Areas) {
-			a.Buffer = byteBuffer;
-			a.CursorOffset = 0;
-			a.CursorDigit = 0;
-			a.Selection.Clear();
-		}
-
+		
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		areaGroup.Buffer = byteBuffer;
+		areaGroup.CursorOffset = 0;
+		areaGroup.CursorDigit = 0;
+		areaGroup.Selection = new Util.Range();
+		
 		dvDisplay.Redraw();
 		dvDisplay.VScroll.Adjustment.Value = 0;
 
@@ -566,13 +567,13 @@ public class DataView {
 			byteBuffer.Changed -= OnByteBufferChanged;
 			byteBuffer.FileChanged -= OnByteBufferFileChanged;
 		}
-
-		foreach(Area a in dvDisplay.Layout.Areas) {
-			a.Buffer = null;
-			a.CursorOffset = 0;
-			a.CursorDigit = 0;
-			a.Selection.Clear();
-		}
+		
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		areaGroup.Buffer = null;
+		areaGroup.CursorOffset = 0;
+		areaGroup.CursorDigit = 0;
+		areaGroup.Selection.Clear();
 
 		byteBuffer = null;
 	}
@@ -598,14 +599,14 @@ public class DataView {
 	/// </summary>
 	public void SetSelection(long start, long end)
 	{
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
 		// check whether the selection has really
 		// changed...
-		if (dvDisplay.Layout.Areas.Count <= 0)
+		if (areaGroup.Areas.Count <= 0)
 			return;
 
-		Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-		Bless.Util.Range sel = area0.Selection;
+		Bless.Util.IRange sel = areaGroup.Selection;
 
 		// if there is no change, don't do anything
 		if (sel.Start == start && sel.End == end)
@@ -613,7 +614,9 @@ public class DataView {
 
 		Bless.Util.Range newSel = new Bless.Util.Range(start, end);
 		newSel.Sort();
-
+		
+		areaGroup.Selection = newSel;
+		/*
 		// clear the previous selection pattern highlights
 		// and check the selection
 		foreach (Area a in dvDisplay.Layout.Areas) {
@@ -627,10 +630,10 @@ public class DataView {
 			byte[] ba = byteBuffer.RangeToByteArray(newSel);
 			// if the selection contains data and highlights are enabled
 			// add the highlights
-			if (ba != null && area0.EnableHighlights[(int)Drawer.HighlightType.PatternMatch])
+			if (ba != null && AreaGroup.EnableHighlights[(int)Drawer.HighlightType.PatternMatch])
 				foreach (Area a in dvDisplay.Layout.Areas)
 				a.AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
-		}
+		}*/
 
 		if (SelectionChanged != null)
 			SelectionChanged(this);
@@ -639,12 +642,13 @@ public class DataView {
 	public Bless.Util.Range Selection
 	{
 		get {
-			if (dvDisplay.Layout.Areas.Count <= 0)
+			AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+			
+			if (areaGroup.Areas.Count <= 0)
 				return new Bless.Util.Range();
 
-			Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
 
-			Bless.Util.Range r = area0.Selection;
+			Bless.Util.Range r = areaGroup.Selection;
 			return new Bless.Util.Range(r);
 		}
 		set {
@@ -655,9 +659,10 @@ public class DataView {
 
 	public void MoveCursor(long offset, int digit)
 	{
-		foreach (Area a in dvDisplay.Layout.Areas) {
-			a.MoveCursor(offset, digit);
-		}
+		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+		
+		areaGroup.CursorOffset = offset;
+		areaGroup.CursorDigit = digit;
 
 		if (CursorChanged != null)
 			CursorChanged(this);
@@ -667,42 +672,33 @@ public class DataView {
 	public long CursorOffset
 	{
 		get {
-			if (dvDisplay.Layout.Areas.Count <= 0)
-				return -1;
-
-			Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-			return area0.CursorOffset;
+			AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+			
+			return areaGroup.CursorOffset;
 		}
 	}
 
 	public int CursorDigit
 	{
 		get {
-			if (dvDisplay.Layout.Areas.Count <= 0)
-				return -1;
-
-			Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-			return area0.CursorDigit;
+			AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+			
+			return areaGroup.CursorDigit;
 		}
 	}
 
 	public long Offset
 	{
 		get {
-			if (dvDisplay.Layout.Areas.Count <= 0)
-				return -1;
-
-			Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-			return area0.Offset;
+			AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+			
+			return areaGroup.Offset;
 		}
 
 		set {
-			foreach (Area a in dvDisplay.Layout.Areas) {
-				a.Offset = value;
-			}
+			AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
+			
+			areaGroup.Offset = value;
 		}
 	}
 

@@ -33,17 +33,17 @@ public class HexAreaPlugin : AreaPlugin
 		author = "Alexandros Frantzis";
 	}
 
-	public override Area CreateArea()
+	public override Area CreateArea(AreaGroup ag)
 	{
-		return new HexArea();
+		return new HexArea(ag);
 	}
 }
 ///<summary>An area that displays hexadecimal</summary>
 public class HexArea : GroupedArea {
 
 
-	public HexArea()
-			: base()
+	public HexArea(AreaGroup ag)
+			: base(ag)
 	{
 		type = "hexadecimal";
 		dpb = 2;
@@ -73,30 +73,30 @@ public class HexArea : GroupedArea {
 
 			// if we are after the end of the buffer, assume
 			// a 0 byte
-			if (cursorOffset == byteBuffer.Size || (overwrite == false && cursorDigit == 0))
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size || (overwrite == false && areaGroup.CursorDigit == 0))
 				orig = 0;
 			else
-				orig = byteBuffer[cursorOffset];
+				orig = areaGroup.Buffer[areaGroup.CursorOffset];
 
 			byte orig1 = (byte)(orig % 16);
 			byte orig16 = (byte)((orig / 16) % 16);
 
 
-			if (cursorDigit == 0)
+			if (areaGroup.CursorDigit == 0)
 				orig16 = b;
-			else if (cursorDigit == 1)
+			else if (areaGroup.CursorDigit == 1)
 				orig1 = b;
 
 			byte repl = (byte)(orig16 * 16 + orig1);
 
 			byte[] ba = new byte[]{repl};
 
-			if (cursorOffset == byteBuffer.Size)
-				byteBuffer.Append(ba);
-			else if (overwrite == false && cursorDigit == 0)
-				byteBuffer.Insert(cursorOffset, ba);
-			else /*(if (overwrite==true || cursorDigit > 0)*/
-				byteBuffer.Replace(cursorOffset, cursorOffset, ba);
+			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
+				areaGroup.Buffer.Append(ba);
+			else if (overwrite == false && areaGroup.CursorDigit == 0)
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
+			else /*(if (overwrite==true || areaGroup.CursorDigit > 0)*/
+				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 
 
 			return true;
@@ -116,10 +116,11 @@ public class HexArea : GroupedArea {
 		}
 	}
 
-	public override void Realize (DrawingArea da)
+	public override void Realize ()
 	{
+		Gtk.DrawingArea da = areaGroup.DrawingArea;
 		drawer = new HexDrawer(da, drawerInformation);
-		base.Realize(da);
+		base.Realize();
 	}
 }
 

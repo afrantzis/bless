@@ -31,7 +31,7 @@ public class AreaPlugin : Plugin
 
 	}
 
-	public virtual Area CreateArea()
+	public virtual Area CreateArea(AreaGroup ag)
 	{
 		return null;
 	}

@@ -45,7 +45,8 @@ public class HelpOperationsPlugin : GuiPlugin
 
 	public HelpOperationsPlugin(Window mw, UIManager uim)
 	{
-		//mainWindow=mw;
+		mainWindow=mw;
+		dataBook = (DataBook)GetDataBook(mw);
 		uiManager = uim;
 
 		name = "HelpOperations";
@@ -91,9 +92,13 @@ public class HelpOperationsPlugin : GuiPlugin
 	///<summary>Handle edit->redo command from menu</summary>
 	public void OnAboutActivated(object o, EventArgs args)
 	{
-		Gtk.Dialog aboutDialog = new Bless.Gui.Dialogs.AboutDialog();
+		if (dataBook.NPages > 0) {
+			DataView dv = ((DataViewDisplay)dataBook.CurrentPageWidget).View;
+			dv.Display.Benchmark();
+		}
+		/*Gtk.Dialog aboutDialog = new Bless.Gui.Dialogs.AboutDialog();
 		aboutDialog.Run();
-		aboutDialog.Destroy();
+		aboutDialog.Destroy();*/
 	}
 
 }

@@ -133,7 +133,7 @@ public class IntervalTree<T> : RedBlackTree<long, T> where T : IRange
 		Insert(r.Start, r);
 	}
 	
-	public IList<T> SearchOverlap(T r)
+	public IList<T> SearchOverlap(IRange r)
 	{
 		lock(lockObj) {
 			searchResults = new System.Collections.Generic.List<T>();
@@ -142,21 +142,23 @@ public class IntervalTree<T> : RedBlackTree<long, T> where T : IRange
 		}
 	}
 	
-	private void SearchOverlap(ITNode n, T r)
+	private void SearchOverlap(ITNode n, IRange r)
 	{
-		
+		// search in left subtree first, so that results are sorted
 		if (n != null) {
-			if (n.Key <= r.End && n.Right != null)
-				SearchOverlap(n.Right as ITNode, r);
-			
 			if (n.Max >= r.Start) {
+				if(n.Left != null)
+					SearchOverlap(n.Left as ITNode, r);
+					
 				foreach(T q in n.Values) {
 					if (RangesOverlap(q, r))
 						searchResults.Add(q);
 				}
-				if(n.Left != null)
-					SearchOverlap(n.Left as ITNode, r);
+				
 			}
+			
+			if (n.Key <= r.End && n.Right != null)
+				SearchOverlap(n.Right as ITNode, r);
 		}
 	}
 	
