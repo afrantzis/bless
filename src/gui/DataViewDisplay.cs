@@ -247,7 +247,7 @@ public class DataViewDisplay : Gtk.VBox {
 
 			win.BeginPaintRect(rect1);
 
-			layout.AreaGroup.Render();
+			layout.AreaGroup.Render(true);
 
 			win.EndPaint();
 

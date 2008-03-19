@@ -51,6 +51,8 @@ public class AreaGroup
 	long prevOffset;
 	long prevCursorOffset;
 	int  prevCursorDigit;
+	IntervalTree<Highlight> prevAtomicHighlights;
+	
 	
 	Highlight selection;
 	
@@ -59,7 +61,7 @@ public class AreaGroup
 	}
 	
 	public long Offset {
-		set { prevOffset = offset; offset = value; SetChangedAll();}
+		set { prevOffset = offset; offset = value; SetChanged(Changes.Offset);}
 		get { return offset;}
 	}
 
@@ -102,6 +104,7 @@ public class AreaGroup
 		areas = new System.Collections.Generic.List<Area>();
 		highlights = new IntervalTree<Highlight>();
 		selection = new Highlight(Drawer.HighlightType.Selection);
+		prevAtomicHighlights = new IntervalTree<Highlight>();
 	}
 	
 	/// <summary>
@@ -150,13 +153,6 @@ public class AreaGroup
 			drawingArea.QueueDraw();
 	}
 	
-	private void SetChangedAll()
-	{
-		SetChanged(Changes.Offset);
-		SetChanged(Changes.Cursor);
-		SetChanged(Changes.Highlights);
-	}
-	
 	public void AddHighlight(long start, long end, Drawer.HighlightType ht)
 	{
 		highlights.Insert(new Highlight(start, end, ht));
@@ -181,7 +177,10 @@ public class AreaGroup
 		}
 	}
 	
-	private IList<Highlight> BreakDownHighlights(Highlight s, IList<Highlight> lst)
+	/// <summary>
+	/// 
+	/// </summary>
+	private IntervalTree<Highlight> BreakDownHighlights(Highlight s, IList<Highlight> lst)
 	{
 		IntervalTree<Highlight> it = new IntervalTree<Highlight>();
 		
@@ -194,20 +193,25 @@ public class AreaGroup
 				Highlight[] ha = new Highlight[3]{new Highlight(q.Type), new Highlight(r.Type), new Highlight(q.Type)};
 				Range.SplitAtomic(ha, q, r);
 				foreach(Highlight h in ha) {
+					// Keep only common parts to avoid duplications.
+					// This also has the useful side effect that everything
+					// is clipped inside s
+					h.Intersect(q); 
 					if (!h.IsEmpty())
 						it.Insert(h);
 				}	
 			}
 		}
 		
-		return it.GetValues();
+		return it;
 	}
 	
-	private void RenderAll()
+	/// <summary>
+	/// Gets the atomic highlight ranges of the current view.
+	/// (Non-overlapping ranges that describe the highlighting of the whole view)
+	/// </summary>
+	private IntervalTree<Highlight> GetAtomicHighlights()
 	{
-		// blank the background
-		BlankBackground();
-	
 		int nrows;
 		Range clip = GetViewRange(out nrows);
 		Highlight view = new Highlight(clip, Drawer.HighlightType.Normal);
@@ -215,12 +219,40 @@ public class AreaGroup
 		// get all highlights in current view
 		IList<Highlight> viewableHighlights = highlights.SearchOverlap(view);
 		
-		IList<Highlight> hl = BreakDownHighlights(view, viewableHighlights);
-				
+		return BreakDownHighlights(view, viewableHighlights);
+	}
+	
+	private void RenderAll(IntervalTree<Highlight> atomicHighlights)
+	{
+		// blank the background
+		BlankBackground();
+	
+		IList<Highlight> hl = atomicHighlights.GetValues(); 
+			
 		foreach(Highlight h in hl) {
 			RenderRange(h, h.Type);
 		}
-				
+		
+	}
+	
+	/// <summary>
+	/// Render the new highlights taking into consideration the old highlights
+	/// (this means that only the differences are actually rendered)
+	/// </summary>
+	private void RenderHighlightDiffs(IntervalTree<Highlight> atomicHighlights)
+	{
+		IList<Highlight> hl = atomicHighlights.GetValues();
+		
+		foreach(Highlight h in hl) {
+			IList<Highlight> overlaps = prevAtomicHighlights.SearchOverlap(h);
+			foreach(Highlight overlap in overlaps) {
+				if (overlap.Type != h.Type) {
+					Highlight h1 = new Highlight(h);
+					h1.Intersect(overlap);
+					RenderRange(h1, h1.Type);
+				}
+			}
+		}
 	}
 	
 	public void Render()
@@ -228,28 +260,24 @@ public class AreaGroup
 		Render(false);
 	}
 	
+	/// <summary>
+	/// Render this area group.
+	/// </summary>
+	/// <param name="force">
+	/// Whether to force a complete redraw of the group.
+	/// </param>
 	public void Render(bool force)
 	{
-		RenderAll();
+		IntervalTree<Highlight> atomicHighlights = GetAtomicHighlights();
 		
-		if (HasChanged(Changes.Highlights) && !HasChanged(Changes.Offset))
-			System.Console.WriteLine("Could optimize");
-		/*
-		// if offset has changed redraw completely
 		if (force || HasChanged(Changes.Offset)) {
-			RenderAll();
+			RenderAll(atomicHighlights);
+		}
+		else if (HasChanged(Changes.Highlights)) {
+			RenderHighlightDiffs(atomicHighlights);
 		}
 		
-		// if just highlights have changed...
-		if (HasChanged(Changes.Highlights) && !HasChanged(Changes.Offset)) {
-			//RenderHighlights();
-		}
-		
-		if (force || HasChanged(Changes.Cursor)) {
-			//RenderCursor();
-		}*/
-		
-		
+		prevAtomicHighlights = atomicHighlights;
 		ClearChanges();
 	}
 

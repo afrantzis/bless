@@ -54,6 +54,11 @@ internal class Highlight : Util.Range, IEquatable<Highlight>
 		type = ht;
 	}
 	
+	public Highlight(Highlight h) : this(h, h.Type)
+	{
+	
+	}
+	
 	public bool Equals(Highlight h)
 	{
 		return this.Start == h.Start && this.End == h.End && this.Type == h.Type; 
