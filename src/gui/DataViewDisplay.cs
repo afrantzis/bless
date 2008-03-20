@@ -83,13 +83,11 @@ public class DataViewDisplay : Gtk.VBox {
 
 				// Setup new areas according to the old ones
 				if (prevLayout != null && prevLayout.AreaGroup.Areas.Count > 0) {
-					layout.AreaGroup.CursorOffset = prevLayout.AreaGroup.CursorOffset;
-					layout.AreaGroup.CursorDigit = 0;
+					layout.AreaGroup.SetCursor(prevLayout.AreaGroup.CursorOffset, 0);
 					layout.AreaGroup.Selection = prevLayout.AreaGroup.Selection;
 				}
 				else {
-					layout.AreaGroup.CursorOffset = 0;
-					layout.AreaGroup.CursorDigit = 0;
+					layout.AreaGroup.SetCursor(0, 0);
 				}
 
 				// make sure cursor is visible
@@ -325,7 +323,8 @@ public class DataViewDisplay : Gtk.VBox {
 		}
 		else
 			SetupScrollbarRange();
-
+			
+		layout.AreaGroup.Invalidate();
 	}
 
 	///<summary>Handle the Configure Event</summary>

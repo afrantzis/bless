@@ -115,9 +115,9 @@ public class AreaGroup
 	public long Offset {
 		get { return offset;}
 		set {
+			prevOffset = offset; 
 			if (offset == value)
 				return;
-			prevOffset = offset; 
 			offset = value; 
 			SetChanged(Changes.Offset);
 		}
@@ -126,26 +126,10 @@ public class AreaGroup
 
 	public long CursorOffset {
 		get { return cursorOffset;}
-		set {
-			if (cursorOffset == value)
-				return;
-			prevCursorOffset = cursorOffset;
-			cursorOffset = value;
-			SetChanged(Changes.Cursor);
-		}
-		
 	}
 	
 	public int CursorDigit {
 		get { return cursorDigit;}
-		set {
-			if (cursorDigit == value)
-				return;
-			prevCursorDigit = cursorDigit;
-			cursorDigit = value; 
-			SetChanged(Changes.Cursor);
-		}
-		
 	}
 	
 	public long PrevCursorOffset {
@@ -176,6 +160,20 @@ public class AreaGroup
 	
 	internal bool ManualDoubleBuffer {
 		get { return manualDoubleBuffer; }
+	}
+	
+	public void SetCursor(long coffset, int cdigit)
+	{
+		prevCursorOffset = cursorOffset;
+		prevCursorDigit = cursorDigit;
+		
+		if (cursorOffset == coffset && cursorDigit == cdigit)
+			return;
+		
+		cursorOffset = coffset;
+		cursorDigit = cdigit;
+		
+		SetChanged(Changes.Cursor);
 	}
 	
 	public AreaGroup()
@@ -394,6 +392,7 @@ public class AreaGroup
 		
 		RenderAtomicHighlights(atomicHighlights);
 		
+		RenderCursor(atomicHighlights);
 	}
 	
 	/// <summary>
@@ -415,7 +414,38 @@ public class AreaGroup
 			}
 		}
 	}
+	
+	private void RenderCursor(IntervalTree<AtomicHighlight> atomicHighlights)
+	{
+		// find the kind of highlight the cursor was previously on
+		// if we don't find an overlap this means that either
+		// 1. the prev cursor position is not visible on the screen
+		// 2. the prev cursor position is at the end of the file
+		IList<AtomicHighlight> overlaps = atomicHighlights.SearchOverlap(new Range(prevCursorOffset, prevCursorOffset));
 		
+		AtomicHighlight h = null;
+		
+		// if we find an overlap create a highlight
+		// to use to restore the prev position
+		if (overlaps.Count > 0) {
+			h = new AtomicHighlight(overlaps[0]);
+			h.Start = prevCursorOffset;
+			h.End = prevCursorOffset;
+		}
+		
+		bool prevCursorAtEof =  prevCursorOffset == byteBuffer.Size;
+		
+		foreach(Area a in areas) {
+			if (h != null)
+				a.RenderHighlight(h, h.GetMergeFlags());
+			else if (prevCursorAtEof) // case 2
+				a.BlankEof();
+				
+			if (selection.IsEmpty())
+				a.RenderCursor();
+		}
+	}
+	
 	/// <summary>
 	/// Render this area group.
 	/// </summary>
@@ -429,7 +459,6 @@ public class AreaGroup
 	/// </remarks>
 	public void Render(bool force)
 	{
-		
 		/* This breaks the RenderExtra() optimizations in OffsetArea and SeparatorArea
 		
 		// if we are forced to redraw but nothing
@@ -441,7 +470,13 @@ public class AreaGroup
 		}*/
 		
 		// get the current atomic highlights
-		IntervalTree<AtomicHighlight> atomicHighlights = GetAtomicHighlights();
+		IntervalTree<AtomicHighlight> atomicHighlights;
+		
+		// if atomic highlights have not changed, reuse them
+		if (!force && !HasChanged(Changes.Highlights) && !HasChanged(Changes.Offset))
+			atomicHighlights = prevAtomicHighlights; 
+		else
+			atomicHighlights = GetAtomicHighlights();
 		
 		// if we are forced to redraw or the view has scrolled (the offset has changed)
 		// redraw everything
@@ -449,11 +484,13 @@ public class AreaGroup
 			//System.Console.WriteLine("Changed");
 			RenderAll(atomicHighlights);
 		} // otherwise redraw only what is needed
-		
 		else if (HasChanged(Changes.Highlights)) {
 			//System.Console.WriteLine("Diffs");
 			RenderHighlightDiffs(atomicHighlights);
 		}
+		
+		if (HasChanged(Changes.Cursor))
+			RenderCursor(atomicHighlights);
 		
 		// update prevAtomicHighlights
 		prevAtomicHighlights = atomicHighlights;

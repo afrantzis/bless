@@ -108,10 +108,7 @@ public class Layout {
 		}
 
 		// reset cursor
-		areaGroup.CursorOffset = 0;
-		areaGroup.CursorDigit = 0;
-		
-
+		areaGroup.SetCursor(0, 0);
 	}
 
 	///<summary>

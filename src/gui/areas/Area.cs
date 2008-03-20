@@ -572,28 +572,21 @@ public abstract class Area
 		}
 
 	}
-	/*
+	
 	///<summary>Render the cursor</summary>
-	protected void RenderCursor()
+	internal protected void RenderCursor()
 	{
 		if (isAreaRealized == false)
 			return;
 
-		Range sel = highlights[(int)Drawer.HighlightType.Selection].LastAdded;
-
-		// don't draw the cursor when there is a selection
-		if (!sel.IsEmpty())
-			return;
-
 		int cRow, cByte, cX, cY;
-		GetDisplayInfoByOffset(cursorOffset, out cRow, out cByte, out cX, out cY);
+		GetDisplayInfoByOffset(areaGroup.CursorOffset, out cRow, out cByte, out cX, out cY);
 
 		backPixmap.DrawRectangle(cursorGC, true, x + cX, y + cY + drawer.Height - 2, drawer.Width*dpb, 2);
 		if (cursorFocus) {
-			backPixmap.DrawRectangle(cursorGC, true, x + cX + cursorDigit*drawer.Width, y + cY, 1, drawer.Height - 2);
+			backPixmap.DrawRectangle(cursorGC, true, x + cX + areaGroup.CursorDigit*drawer.Width, y + cY, 1, drawer.Height - 2);
 		}
 	}
-	*/
 	
 	/// <summary>
 	/// Dispose the (server side) pixmaps used by this area.
@@ -671,6 +664,14 @@ public abstract class Area
 	{
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
+	}
+	
+	internal virtual void BlankEof()
+	{
+		int pcRow, pcByte, pcX, pcY;
+		GetDisplayInfoByOffset(areaGroup.Buffer.Size, out pcRow, out pcByte, out pcX, out pcY);
+		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
+		backPixmap.DrawRectangle(backEvenGC, true, x + pcX, y + pcY, drawer.Width*dpb, drawer.Height);
 	}
 /*
 	///<summary>

@@ -549,8 +549,7 @@ public class DataView {
 		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
 		
 		areaGroup.Buffer = byteBuffer;
-		areaGroup.CursorOffset = 0;
-		areaGroup.CursorDigit = 0;
+		areaGroup.SetCursor(0, 0);
 		areaGroup.Selection = new Util.Range();
 		
 		dvDisplay.Redraw();
@@ -571,8 +570,7 @@ public class DataView {
 		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
 		
 		areaGroup.Buffer = null;
-		areaGroup.CursorOffset = 0;
-		areaGroup.CursorDigit = 0;
+		areaGroup.SetCursor(0, 0);
 		areaGroup.Selection.Clear();
 
 		byteBuffer = null;
@@ -661,8 +659,7 @@ public class DataView {
 	{
 		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
 		
-		areaGroup.CursorOffset = offset;
-		areaGroup.CursorDigit = digit;
+		areaGroup.SetCursor(offset, digit);
 
 		if (CursorChanged != null)
 			CursorChanged(this);
