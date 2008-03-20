@@ -28,6 +28,10 @@ using Bless.Gui.Drawers;
 namespace Bless.Gui.Areas
 {
 
+/// <summary>
+/// A group of areas that display data from the same source
+/// and are synchronized.
+/// </summary>
 public class AreaGroup
 {
 	IList<Area> areas;
@@ -51,6 +55,13 @@ public class AreaGroup
 	long prevOffset;
 	long prevCursorOffset;
 	int  prevCursorDigit;
+	
+	/// <value>
+	/// The previous atomic highlight ranges of the view.
+	/// These are non-overlapping ranges that describe the highlighting of the whole view
+	/// and can be used to render it quickly. They are also used to minimize
+	/// redrawing when possible (<see cref="AreaGroup.RenderHighlightDiffs"/>)
+	/// </value>
 	IntervalTree<Highlight> prevAtomicHighlights;
 	
 	
@@ -136,16 +147,36 @@ public class AreaGroup
 			return new Range();
 	}
 	
+	/// <summary>
+	/// Whether a <see cref="Changes"/> has changed.
+	/// </summary>
 	private bool HasChanged(Changes c)
 	{
 		return ((changes & c) != 0);
 	}
 	
+	/// <summary>
+	/// Whether anything has changed.
+	/// </summary>
+	private bool HasAnythingChanged()
+	{
+		return changes != 0;
+	}
+	
+	/// <summary>
+	/// Clear all changes
+	/// </summary>
 	private void ClearChanges()
 	{
 		changes = 0;
 	}
 	
+	/// <summary>
+	/// Set a  <see cref="Changes"/> as changed.
+	/// </summary>
+	/// <param name="c">
+	/// A <see cref="Changes"/>
+	/// </param>
 	private void SetChanged(Changes c)
 	{
 		changes |= c;
@@ -153,6 +184,18 @@ public class AreaGroup
 			drawingArea.QueueDraw();
 	}
 	
+	/// <summary>
+	/// Adds a highlight on a range of data.
+	/// </summary>
+	/// <param name="start">
+	/// A <see cref="System.Int64"/>
+	/// </param>
+	/// <param name="end">
+	/// A <see cref="System.Int64"/>
+	/// </param>
+	/// <param name="ht">
+	///  <see cref="Drawer.HighlightType"/>
+	/// </param>
 	public void AddHighlight(long start, long end, Drawer.HighlightType ht)
 	{
 		highlights.Insert(new Highlight(start, end, ht));
@@ -163,6 +206,9 @@ public class AreaGroup
 		//highlights.Clear();
 	}
 
+	/// <summary>
+	/// Renders a <see cref="Range"/> of data using a specified <see cref="Drawer.HighlightType"/>
+	/// </summary>
 	private void RenderRange(Range range, Drawer.HighlightType ht)
 	{
 		foreach(Area a in areas) {
@@ -170,6 +216,9 @@ public class AreaGroup
 		}
 	}
 	
+	/// <summary>
+	/// Blanks the view background
+	/// </summary>
 	private void BlankBackground()
 	{
 		foreach(Area a in areas) {
@@ -178,7 +227,7 @@ public class AreaGroup
 	}
 	
 	/// <summary>
-	/// 
+	/// Breaks down a base highlight and produces atomic highlights 
 	/// </summary>
 	private IntervalTree<Highlight> BreakDownHighlights(Highlight s, IList<Highlight> lst)
 	{
@@ -222,16 +271,27 @@ public class AreaGroup
 		return BreakDownHighlights(view, viewableHighlights);
 	}
 	
-	private void RenderAll(IntervalTree<Highlight> atomicHighlights)
+	private void RenderAtomicHighlights(IntervalTree<Highlight> atomicHighlights)
 	{
-		// blank the background
-		BlankBackground();
-	
 		IList<Highlight> hl = atomicHighlights.GetValues(); 
 			
 		foreach(Highlight h in hl) {
 			RenderRange(h, h.Type);
 		}
+	}
+	
+	/// <summary>
+	/// Render the whole view.
+	/// </summary>
+	/// <param name="atomicHighlights">
+	/// The current atomic highlight ranges
+	/// </param>
+	private void RenderAll(IntervalTree<Highlight> atomicHighlights)
+	{
+		// blank the background
+		BlankBackground();
+	
+		RenderAtomicHighlights(atomicHighlights);
 		
 	}
 	
@@ -255,6 +315,9 @@ public class AreaGroup
 		}
 	}
 	
+	/// <summary>
+	/// Wrapper around Render(false) <see cref="Render(bool)"/>
+	/// </summary>
 	public void Render()
 	{
 		Render(false);
@@ -266,18 +329,36 @@ public class AreaGroup
 	/// <param name="force">
 	/// Whether to force a complete redraw of the group.
 	/// </param>
+	/// <remarks>
+	/// If force is false this method tries to redraw as little
+	/// as possible by drawing only the parts of the screen that
+	/// have changed (eg when changing the selection)
+	/// </remarks>
 	public void Render(bool force)
 	{
+		
+		// if we are forced to redraw but nothing
+		// has changed, just redraw the previous atomic highlights
+		if (force && !HasAnythingChanged()) {
+			RenderAtomicHighlights(prevAtomicHighlights);
+			return;
+		}
+		
+		// get the current atomic highlights
 		IntervalTree<Highlight> atomicHighlights = GetAtomicHighlights();
 		
+		// if we are forced to redraw or the view has scrolled (the offset has changed)
+		// redraw everything
 		if (force || HasChanged(Changes.Offset)) {
 			RenderAll(atomicHighlights);
-		}
+		} // otherwise redraw only what is needed
 		else if (HasChanged(Changes.Highlights)) {
 			RenderHighlightDiffs(atomicHighlights);
 		}
 		
+		// update prevAtomicHighlights
 		prevAtomicHighlights = atomicHighlights;
+		
 		ClearChanges();
 	}
 

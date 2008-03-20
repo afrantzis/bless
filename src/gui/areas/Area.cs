@@ -28,6 +28,9 @@ using System.Xml;
 
 namespace Bless.Gui.Areas {
 
+/// <summary>
+/// An area on the screen that displays data in a specific way.
+/// </summary>
 public abstract class Area
 {
 	protected AreaGroup areaGroup;
@@ -57,21 +60,107 @@ public abstract class Area
 	protected bool canFocus;
 	
 	// Abstract methods
-	//
+	
+	/// <summary>
+	/// Render (a part of) a row normally (without highlighting)
+	/// </summary>
+	/// <param name="i">
+	/// The row to render.
+	/// </param>
+	/// <param name="p">
+	/// The offset of the byte in the row to start rendering.
+	/// </param>
+	/// <param name="n">
+	/// The number of bytes to render.
+	/// </param>
+	/// <param name="blank">
+	/// Whether to blank the background before rendering.
+	/// </param>
 	abstract protected void RenderRowNormal(int i, int p, int n, bool blank);
+	
+	/// <summary>
+	/// Render (a part of) a row with highlighting.
+	/// </summary>
+	/// <param name="i">
+	/// The row to render.
+	/// </param>
+	/// <param name="p">
+	/// The offset of the byte in the row to start rendering.
+	/// </param>
+	/// <param name="n">
+	/// The number of bytes to render.
+	/// </param>
+	/// <param name="blank">
+	/// Whether to blank the background before rendering.
+	/// </param>
 	abstract protected void RenderRowHighlight(int i, int p, int n, bool blank, Drawer.HighlightType ht);
 
+	/// <summary>
+	/// Get info about where a specified buffer offset is currently displayed.
+	/// </summary>
+	/// <param name="off">
+	/// The offset to query.
+	/// </param>
+	/// <param name="orow">
+	/// The row the offset is displayed in.
+	/// </param>
+	/// <param name="obyte">
+	/// The byte in the row the offset is displayed on.
+	/// </param>
+	/// <param name="ox">
+	/// The X coordinate of the displayed position.
+	/// </param>
+	/// <param name="oy">
+	/// The Y coordinate of the displayed position.
+	/// </param>
 	abstract public void GetDisplayInfoByOffset(long off, out int orow, out int obyte, out int ox, out int oy);
 
-	public enum GetOffsetFlags { Eof = 1, Abyss = 2}
-
+	/// <summary>
+	/// Flags containing extra info about positions in the view. 
+	/// </summary>
+	public enum GetOffsetFlags {
+		/// <summary>Position is beyond the end of file</summary>
+		Eof = 1,
+		/// <summary>Position is between bytes (in the so-called abyss)</summary>
+		Abyss = 2
+	}
+	
+	/// <summary>
+	/// Gets the offset in the buffer that is displayed at specified location in the area
+	/// </summary>
+	/// <param name="x">
+	/// The X coordinate of the queried location.
+	/// </param>
+	/// <param name="y">
+	/// The Y coordinate of the queried location.
+	/// </param>
+	/// <param name="digit">
+	/// The digit of the byte at the specified location.
+	/// </param>
+	/// <param name="rflags">
+	/// Some flags with additional info about the location (<see cref="GetOffsetFlags"/>).
+	/// </param>
+	/// <returns>
+	/// The offset of the byte at the specified location.
+	/// </returns>
 	abstract public long GetOffsetByDisplayInfo(int x, int y, out int digit, out GetOffsetFlags rflags);
 
+	/// <summary>
+	/// Special key handler for the area. 
+	/// </summary>
+	/// <param name="key">
+	/// The key that was pressed.
+	/// </param>
+	/// <param name="overwrite">
+	/// Whether we are in overwrite mode.
+	/// </param>
+	/// <returns>
+	/// Whether the key was actually handled.
+	/// </returns>
 	virtual public bool HandleKey(Gdk.Key key, bool overwrite)
 	{
 		return false;
 	}
-
 
 	///<summary>
 	/// Calculates the width in pixels the
@@ -79,10 +168,26 @@ public abstract class Area
 	///</summary>
 	abstract public int CalcWidth(int n, bool force);
 
+	/// <summary>
+	/// A delegate that creates instances of area types.
+	/// </summary>
 	public delegate Area AreaCreatorFunc(AreaGroup ag);
-
+	
+	/// <summary>
+	/// A dictionary to hold area type names and creation functions
+	/// </summary>
 	static private Dictionary<string, AreaCreatorFunc> pluginTable;
-
+	
+	/// <summary>
+	/// Adds a new area type to the factory.
+	/// </summary>
+	/// <param name="name">
+	/// The name of the area type
+	/// </param>
+	/// <param name="createArea">
+	/// The delegate to call to create an instance of this area type.
+	/// </param>
+	/// <remarks>This is used by plugins to register new area types.</remarks>
 	static public void AddFactoryItem(string name, AreaCreatorFunc createArea)
 	{
 		if (pluginTable == null) {
@@ -92,6 +197,18 @@ public abstract class Area
 		pluginTable.Add(name, createArea);
 	}
 
+	/// <summary>
+	/// Factory method to create instances of area types by name.
+	/// </summary>
+	/// <param name="name">
+	/// The name of the type of the area to create.
+	/// </param>
+	/// <param name="ag">
+	/// The <see cref="AreaGroup"/> this area will belong in.
+	/// </param>
+	/// <returns>
+	/// The created area.
+	/// </returns>
 	static public Area Factory(string name, AreaGroup ag)
 	{
 		try {
@@ -105,9 +222,13 @@ public abstract class Area
 		return null;
 	}
 
-	///<summary>
+	
+	/// <summary>
 	/// Create an area.
-	///</summary>
+	/// </summary>
+	/// <param name="areaGroup">
+	/// The <see cref="AreaGroup"/> this area will belong in.
+	/// </param>
 	public Area(AreaGroup areaGroup)
 	{
 		this.areaGroup = areaGroup;
@@ -120,6 +241,13 @@ public abstract class Area
 		isAreaRealized = false;
 	}
 
+	/// <summary>
+	/// Configure an area using an xml configuration.
+	/// </summary>
+	/// <param name="parentNode">
+	/// The <see cref="XmlNode"/> that holds the configuration for this area.
+	/// </param>
+	/// <remarks>This is overriden by inherited classes to accept extra options</remarks>
 	public virtual void Configure(XmlNode parentNode)
 	{
 		XmlNodeList childNodes = parentNode.ChildNodes;
@@ -300,8 +428,7 @@ public abstract class Area
 	}
 
 	///<summary>
-	/// Render the bytes in 'range'
-	/// using the specified HighlightType
+	/// Render the bytes in 'range' using the specified <see cref="Drawer.HighlightType"/>.
 	///</summary>
 	internal protected virtual void RenderRange(Range range, Drawer.HighlightType ht)
 	{
@@ -426,6 +553,9 @@ public abstract class Area
 	}
 	*/
 	
+	/// <summary>
+	/// Dispose the (server side) pixmaps used by this area.
+	/// </summary>
 	public void DisposePixmaps()
 	{
 		if (isAreaRealized == false)
