@@ -26,7 +26,7 @@ using Bless.Gui.Drawers;
 namespace Bless.Gui.Areas
 {
 
-internal class Highlight : Util.Range, IEquatable<Highlight>
+public class Highlight : Util.Range, IEquatable<Highlight>
 {
 	Drawer.HighlightType type;
 	

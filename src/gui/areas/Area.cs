@@ -59,6 +59,7 @@ public abstract class Area
 	protected bool cursorFocus;
 	protected bool canFocus;
 	
+	public enum RenderMergeFlags {None = 0, Left = 1, Right = 2}
 	// Abstract methods
 	
 	/// <summary>
@@ -236,7 +237,7 @@ public abstract class Area
 		drawerInformation = new Drawer.Information();
 
 		canFocus = false;
-		dpb = 1024; // arbitrary large int
+		dpb = 0;
 		fixedBpr = -1;
 		isAreaRealized = false;
 	}
@@ -419,6 +420,16 @@ public abstract class Area
 		get { return cursorGC == activeCursorGC; }
 	}
 
+	/// <summary>
+	/// This method is only called to draw extra stuff when doing a complete
+	/// redraw of the area
+	/// </summary>
+	internal protected virtual void RenderExtra()
+	{
+	
+	}
+	
+	
 	void RenderRangeHelper(Drawer.HighlightType ht, int rstart, int bstart, int len)
 	{
 		if (ht != Drawer.HighlightType.Normal)
@@ -427,14 +438,26 @@ public abstract class Area
 			RenderRowNormal(rstart, bstart, len, false);
 	}
 
-	///<summary>
-	/// Render the bytes in 'range' using the specified <see cref="Drawer.HighlightType"/>.
-	///</summary>
-	internal protected virtual void RenderRange(Range range, Drawer.HighlightType ht)
+
+	/// <summary>
+	/// Render the bytes in the highlight range.
+	/// </summary>
+	/// <param name="h">
+	/// A <see cref="Highlight"/>
+	/// </param>
+	/// <param name="merge">
+	/// Whether to visually merge the highlight with adjacent ones left and/or right.
+	/// </param>
+	/// <remarks>
+	/// This method doesn't check whether the merge flags are correct (eg there is indeed
+	/// a similar adjacent highlight). It just draws the highlight in such a way as 
+	/// to appear merged to any similar highlights if they exist.
+	///</remarks>
+	internal protected virtual void RenderHighlight(Highlight h, RenderMergeFlags merge)
 	{
 		if (isAreaRealized == false)
 			return;
-
+		
 		int rstart, bstart, xstart, ystart;
 		int rend, bend, xend, yend;
 		bool odd;
@@ -443,35 +466,53 @@ public abstract class Area
 		Gdk.GC evenGC;
 
 
-		oddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, ht);
-		evenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, ht);
+		oddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, h.Type);
+		evenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, h.Type);
 
-		GetDisplayInfoByOffset(range.Start, out rstart, out bstart, out xstart, out ystart);
-		GetDisplayInfoByOffset(range.End, out rend, out bend, out xend, out yend);
-
-		//System.Console.WriteLine("Start {0:x} {1} {2} x:{3} y:{4}", range.Start, rstart, bstart, xstart, ystart);
-		//System.Console.WriteLine("End {0:x} {1} {2} x:{3} y:{4}", range.End, rend, bend, xend, yend);
-
+		GetDisplayInfoByOffset(h.Start, out rstart, out bstart, out xstart, out ystart);
+		GetDisplayInfoByOffset(h.End, out rend, out bend, out xend, out yend);
+		
+		//System.Console.WriteLine("Start {0:x} {1} {2} x:{3} y:{4}", h.Start, rstart, bstart, xstart, ystart);
+		//System.Console.WriteLine("End {0:x} {1} {2} x:{3} y:{4}", h.End, rend, bend, xend, yend);
+		
+		if ((merge & RenderMergeFlags.Left) != 0 && bstart > 0) {
+			int digit;
+			GetOffsetFlags gof;
+			GetOffsetByDisplayInfo(xstart - 1, ystart, out digit, out gof);
+			if ((gof & GetOffsetFlags.Abyss) != 0) {
+				xstart -= drawer.Width; 
+			}
+		}
+		
+		if ((merge & RenderMergeFlags.Right) != 0 && bend < bpr - 1) {
+			int digit;
+			GetOffsetFlags gof;
+			GetOffsetByDisplayInfo(xend + dpb*drawer.Width, yend, out digit, out gof);
+			if ((gof & GetOffsetFlags.Abyss) != 0) {
+				xend += drawer.Width;
+			}
+		}
+		
 		// if the whole range is on one row
 		if (rstart == rend) {
-			if (manualDoubleBuffer)
+			if (areaGroup.ManualDoubleBuffer) {
 				BeginPaint(x + xstart, y + ystart, xend - xstart + dpb*drawer.Width, drawer.Height);
-
+			}
 			// odd row?
-			odd = (((range.Start / bpr) % 2) == 1);
+			odd = (((h.Start / bpr) % 2) == 1);
 			if (odd)
 				gc = oddGC;
 			else
 				gc = evenGC;
 
 			//render
-			backPixmap.DrawRectangle(gc, true, x + xstart, y + ystart, xend - xstart, drawer.Height);
+			backPixmap.DrawRectangle(gc, true, x + xstart, y + ystart, xend - xstart + dpb*drawer.Width, drawer.Height);
 
-			RenderRangeHelper(ht, rstart, bstart, bend - bstart + 1);
+			RenderRangeHelper(h.Type, rstart, bstart, bend - bstart + 1);
 		}
 		else { // multi-row range
 
-			if (manualDoubleBuffer) {
+			if (areaGroup.ManualDoubleBuffer) {
 				// handle double-buffering
 				Gdk.Region paintRegion = new Gdk.Region();
 
@@ -493,16 +534,16 @@ public abstract class Area
 			}
 
 			// render first row
-			odd = (((range.Start / bpr) % 2) == 1);
+			odd = (((h.Start / bpr) % 2) == 1);
 			if (odd)
 				gc = oddGC;
 			else
 				gc = evenGC;
 			backPixmap.DrawRectangle(gc, true, x + xstart, y + ystart, width - xstart, drawer.Height);
 
-			RenderRangeHelper(ht, rstart, bstart, bpr - bstart);
+			RenderRangeHelper(h.Type, rstart, bstart, bpr - bstart);
 
-			long curOffset = range.Start + bpr - bstart;
+			long curOffset = h.Start + bpr - bstart;
 
 			// render middle rows
 			for (int i = rstart + 1;i < rend;i++) {
@@ -512,22 +553,23 @@ public abstract class Area
 				else
 					gc = evenGC;
 				backPixmap.DrawRectangle(gc, true, x, y + i*drawer.Height, width, drawer.Height);
-				RenderRangeHelper(ht, i, 0, bpr);
+				RenderRangeHelper(h.Type, i, 0, bpr);
 				curOffset += bpr;
 			}
 
 			// render last row
-			odd = (((range.End / bpr) % 2) == 1);
+			odd = (((h.End / bpr) % 2) == 1);
 			if (odd)
 				gc = oddGC;
 			else
 				gc = evenGC;
-			backPixmap.DrawRectangle(gc, true, x, y + yend, xend, drawer.Height);
-			RenderRangeHelper(ht, rend, 0, bend + 1);
+			backPixmap.DrawRectangle(gc, true, x, y + yend, xend + dpb*drawer.Width, drawer.Height);
+			RenderRangeHelper(h.Type, rend, 0, bend + 1);
 		}
 
-		if (manualDoubleBuffer)
+		if (areaGroup.ManualDoubleBuffer) {
 			EndPaint();
+		}
 
 	}
 	/*

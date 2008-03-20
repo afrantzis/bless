@@ -156,6 +156,7 @@ public class DataViewDisplay : Gtk.VBox {
 
 		Gdk.Rectangle alloc = drawingArea.Allocation;
 		Resize(alloc.Width, alloc.Height);
+		layout.AreaGroup.Invalidate();
 		drawingArea.QueueDraw();
 	}
 
@@ -332,7 +333,7 @@ public class DataViewDisplay : Gtk.VBox {
 	{
 		if (widgetRealized == false)
 			return;
-
+		
 		Gdk.EventConfigure conf = args.Event;
 
 		Resize(conf.Width, conf.Height);
@@ -367,20 +368,7 @@ public class DataViewDisplay : Gtk.VBox {
 			bpr = ((Area)layout.AreaGroup.Areas[0]).BytesPerRow;
 
 		long offset = (long)vscroll.Adjustment.Value * bpr;
-
-		//System.Console.WriteLine("On Scrolled: {0}", offset);
-		Gdk.Window win = drawingArea.GdkWindow;
-		Gdk.Rectangle alloc = drawingArea.Allocation;
-		Gdk.Rectangle rect = new Gdk.Rectangle(0, 0, alloc.Width, alloc.Height);
-		win.BeginPaintRect(rect);
-
-		
 		layout.AreaGroup.Offset = offset;
-		layout.AreaGroup.Render();
-
-		win.EndPaint();
-
-		//System.Threading.Thread.Sleep(20);
 	}
 
 	///<summary>Scroll the view so that offset is visible</summary>

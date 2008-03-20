@@ -64,13 +64,47 @@ public class SeparatorArea : Area
 
 		base.Realize();
 	}
-
+	
+	protected override void RenderHighlight(Highlight h, RenderMergeFlags merge)
+	{
+	}
+	
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
 	{
 	}
 
 	protected override void RenderRowHighlight(int i, int p, int n, bool blank, Drawer.HighlightType ht)
 	{
+	}
+
+	protected override void RenderExtra() 
+	{
+		if (isAreaRealized == false)
+			return; 
+
+		int nrows = height / drawer.Height;
+		long bleft = nrows * bpr;
+		int rfull = 0; 
+		int blast = 0; 
+
+		if (bpr > 0) {
+			if (bleft + areaGroup.Offset > areaGroup.Buffer.Size)
+				bleft = areaGroup.Buffer.Size - areaGroup.Offset + 1; 
+ 			
+			// calculate number of full rows
+			// and number of bytes in last (non-full) 
+			rfull = (int)(bleft / bpr); 
+			blast = (int)(bleft % bpr);
+
+			if (blast != 0) 
+				rfull++; 
+		}
+
+		if (rfull == 0) 
+			return; 
+
+		// draw seperator 
+		backPixmap.DrawLine(lineGC, x + drawer.Width / 2, 0, x + drawer.Width / 2, drawer.Height*rfull);
 	}
 
 	public override int CalcWidth(int n, bool force)

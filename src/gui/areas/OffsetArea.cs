@@ -60,6 +60,39 @@ public class OffsetArea : Area {
 		bytes = 4;
 	}
 
+	protected override void RenderExtra()
+	{
+		if (bpr <= 0)
+			return;
+
+		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
+		// draw the area background
+		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
+
+		int nrows = height / drawer.Height;
+		long bleft = nrows * bpr;
+		int rfull = 0;
+		int blast = 0;
+
+		if (bleft + areaGroup.Offset > areaGroup.Buffer.Size)
+			bleft = areaGroup.Buffer.Size - areaGroup.Offset + 1; 
+
+		// calculate number of full rows
+		// and number of bytes in last (non-full)
+		rfull = (int)(bleft / bpr);
+		blast = (int)(bleft % bpr);
+
+		if (blast > 0)
+			rfull++;
+
+		for (int i = 0; i < rfull; i++)
+			RenderRowNormal(i, 0, bpr, true);
+	}
+	
+	protected override void RenderHighlight(Highlight h, RenderMergeFlags merge)
+	{
+	}
+	
 	protected override void RenderRowNormal(int i, int p, int n, bool blank)
 	{
 		int rx = (bytes - 1) * 2 * drawer.Width + x;
