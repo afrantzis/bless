@@ -134,6 +134,8 @@ public class AreaGroup
 	long prevCursorOffset;
 	int  prevCursorDigit;
 	
+	byte[] bufferCache;
+	
 	/// <value>
 	/// The previous atomic highlight ranges of the view.
 	/// These are non-overlapping ranges that describe the highlighting of the whole view
@@ -213,12 +215,18 @@ public class AreaGroup
 		SetChanged(Changes.Cursor);
 	}
 	
+	public byte GetCachedByte(long pos)
+	{
+		return bufferCache[pos - offset];
+	}
+	
 	public AreaGroup()
 	{
 		areas = new System.Collections.Generic.List<Area>();
 		highlights = new IntervalTree<Highlight>();
 		selection = new Highlight(Drawer.HighlightType.Selection);
 		prevAtomicHighlights = new IntervalTree<AtomicHighlight>();
+		bufferCache = new byte[0];
 	}
 	
 	
@@ -291,9 +299,8 @@ public class AreaGroup
 			
 		if (HasChanged(Changes.Offset))
 			drawingArea.QueueDraw();
-		else
+		else 
 			ExposeManually();
-		
 	}
 	
 	/// <summary>
@@ -335,7 +342,18 @@ public class AreaGroup
 	{
 		highlights.Clear();
 	}
-
+	
+	private void SetupBufferCache()
+	{
+		int nrows;
+		Range view = GetViewRange(out nrows);
+		if (view.Size != bufferCache.Length)
+			bufferCache = new byte[view.Size];
+		
+		for(int i = 0; i < view.Size; i++)
+			bufferCache[i] = byteBuffer[view.Start + i];
+	}
+	
 	/// <summary>
 	/// Renders the extra (data independent) portions of the view 
 	/// </summary>
@@ -468,6 +486,8 @@ public class AreaGroup
 	/// </param>
 	private void RenderAll(IntervalTree<AtomicHighlight> atomicHighlights)
 	{
+		SetupBufferCache();
+		
 		// blank the background
 		BlankBackground();
 		
@@ -591,9 +611,10 @@ public class AreaGroup
 			RenderHighlightDiffs(atomicHighlights);
 		}
 		
-		if (HasChanged(Changes.Cursor))
+		if (HasChanged(Changes.Cursor)) {
+			//System.Console.WriteLine("Cursor");
 			RenderCursor(atomicHighlights);
-		
+		}
 		// update prevAtomicHighlights
 		prevAtomicHighlights = atomicHighlights;
 		

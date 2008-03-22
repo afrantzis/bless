@@ -82,7 +82,7 @@ abstract public class GroupedArea : Area {
 				else
 					colType = Drawer.ColumnType.Odd;
 
-				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, colType);
+				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, areaGroup.GetCachedByte(roffset++), rowType, colType);
 				if (--n <= 0)
 					break;
 			}
@@ -128,7 +128,7 @@ abstract public class GroupedArea : Area {
 		while (true) {
 
 			if (pos >= p) { //don't draw until we reach p
-				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, ht);
+				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, areaGroup.GetCachedByte(roffset++), rowType, ht);
 				if (--n <= 0)
 					break;
 			}

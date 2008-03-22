@@ -65,7 +65,7 @@ public class SeparatorArea : Area
 		base.Realize();
 	}
 	
-	protected override void RenderHighlight(Highlight h, RenderMergeFlags merge)
+	protected override void RenderHighlight(Highlight h, Drawer.HighlightType left, Drawer.HighlightType right)
 	{
 	}
 	

@@ -89,7 +89,7 @@ public class OffsetArea : Area {
 			RenderRowNormal(i, 0, bpr, true);
 	}
 	
-	protected override void RenderHighlight(Highlight h, RenderMergeFlags merge)
+	protected override void RenderHighlight(Highlight h, Drawer.HighlightType left, Drawer.HighlightType right)
 	{
 	}
 	

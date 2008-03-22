@@ -84,7 +84,7 @@ public class AsciiArea : Area {
 		while (true) {
 
 			if (pos >= p) { //don't draw until we reach p
-				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, Drawer.ColumnType.Even);
+				drawer.DrawNormal(backEvenGC, backPixmap, rx, ry, areaGroup.GetCachedByte(roffset++), rowType, Drawer.ColumnType.Even);
 				if (--n <= 0)
 					break;
 			}
@@ -126,7 +126,7 @@ public class AsciiArea : Area {
 		while (true) {
 
 			if (pos >= p) { //don't draw until we reach p
-				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, areaGroup.Buffer[roffset++], rowType, ht);
+				drawer.DrawHighlight(backEvenGC, backPixmap, rx, ry, areaGroup.GetCachedByte(roffset++), rowType, ht);
 				if (--n <= 0)
 					break;
 			}
