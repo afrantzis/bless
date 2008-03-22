@@ -146,8 +146,12 @@ public abstract class Drawer {
 			return dark;
 		}
 	}
-
-	public enum HighlightType { Normal, Selection, PatternMatch, Bookmark, Sentinel }
+	
+	// the order of this enumeration denotes the drawing priority of each highlight type
+	// For example if a Bookmark and PatternMatch highlight are to be drawn on the same offset
+	// the PatternMatch type will be drawn. In the same manner the Selection highlight
+	// is always drawn, whereas the Normal highlight is always drawn over.
+	public enum HighlightType { Normal, Bookmark, PatternMatch, Selection, Sentinel }
 	public enum RowType { Even, Odd }
 	public enum ColumnType { Even, Odd }
 

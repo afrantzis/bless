@@ -28,7 +28,7 @@ namespace Bless.Gui.Areas
 
 public class Highlight : Util.Range, IEquatable<Highlight>
 {
-	Drawer.HighlightType type;
+	protected Drawer.HighlightType type;
 	
 	public Drawer.HighlightType Type {
 		get { return type; }

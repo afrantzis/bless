@@ -453,7 +453,7 @@ public abstract class Area
 	/// a similar adjacent highlight). It just draws the highlight in such a way as 
 	/// to appear merged to any similar highlights if they exist.
 	///</remarks>
-	internal protected virtual void RenderHighlight(Highlight h, RenderMergeFlags merge)
+	internal protected virtual void RenderHighlight(Highlight h, Drawer.HighlightType left, Drawer.HighlightType right)
 	{
 		if (isAreaRealized == false)
 			return;
@@ -464,48 +464,68 @@ public abstract class Area
 		Gdk.GC gc;
 		Gdk.GC oddGC;
 		Gdk.GC evenGC;
-
-
+		Gdk.GC leftGC;
+		Gdk.GC rightGC;
+		
 		oddGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, h.Type);
 		evenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, h.Type);
+		
 
 		GetDisplayInfoByOffset(h.Start, out rstart, out bstart, out xstart, out ystart);
 		GetDisplayInfoByOffset(h.End, out rend, out bend, out xend, out yend);
 		
 		//System.Console.WriteLine("Start {0:x} {1} {2} x:{3} y:{4}", h.Start, rstart, bstart, xstart, ystart);
 		//System.Console.WriteLine("End {0:x} {1} {2} x:{3} y:{4}", h.End, rend, bend, xend, yend);
+		bool drawLeft = false;
+		int dxstart = xstart;
 		
-		if ((merge & RenderMergeFlags.Left) != 0 && bstart > 0) {
+		if (bstart > 0) {
 			int digit;
 			GetOffsetFlags gof;
 			GetOffsetByDisplayInfo(xstart - 1, ystart, out digit, out gof);
 			if ((gof & GetOffsetFlags.Abyss) != 0) {
-				xstart -= drawer.Width; 
+				dxstart -= drawer.Width;
+				drawLeft = true;
 			}
 		}
 		
-		if ((merge & RenderMergeFlags.Right) != 0 && bend < bpr - 1) {
+		bool drawRight = false;
+		int dxend = xend;
+		
+		if (bend < bpr - 1) {
 			int digit;
 			GetOffsetFlags gof;
 			GetOffsetByDisplayInfo(xend + dpb*drawer.Width, yend, out digit, out gof);
 			if ((gof & GetOffsetFlags.Abyss) != 0) {
-				xend += drawer.Width;
+				dxend += drawer.Width;
+				drawRight = true;
 			}
 		}
 		
 		// if the whole range is on one row
 		if (rstart == rend) {
 			if (areaGroup.ManualDoubleBuffer) {
-				BeginPaint(x + xstart, y + ystart, xend - xstart + dpb*drawer.Width, drawer.Height);
+				BeginPaint(x + dxstart, y + ystart, dxend - dxstart + dpb*drawer.Width, drawer.Height);
 			}
 			// odd row?
 			odd = (((h.Start / bpr) % 2) == 1);
-			if (odd)
+			if (odd) {
 				gc = oddGC;
-			else
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, right);
+			}
+			else {
 				gc = evenGC;
-
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Even, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Even, right);
+			}
+			
 			//render
+			if (drawLeft)
+				backPixmap.DrawRectangle(leftGC, true, x + dxstart, y + ystart, drawer.Width, drawer.Height);
+			if (drawRight)
+				backPixmap.DrawRectangle(rightGC, true, x + xend + dpb*drawer.Width, y + yend, drawer.Width, drawer.Height);
+			
 			backPixmap.DrawRectangle(gc, true, x + xstart, y + ystart, xend - xstart + dpb*drawer.Width, drawer.Height);
 
 			RenderRangeHelper(h.Type, rstart, bstart, bend - bstart + 1);
@@ -516,7 +536,7 @@ public abstract class Area
 				// handle double-buffering
 				Gdk.Region paintRegion = new Gdk.Region();
 
-				Gdk.Rectangle rectStart = new Gdk.Rectangle(x + xstart, y + ystart, width - xstart, drawer.Height);
+				Gdk.Rectangle rectStart = new Gdk.Rectangle(x + dxstart, y + ystart, width - dxstart, drawer.Height);
 
 				Gdk.Rectangle rectMiddle;
 				if (rend > rstart + 1)
@@ -524,7 +544,7 @@ public abstract class Area
 				else
 					rectMiddle = Gdk.Rectangle.Zero;
 
-				Gdk.Rectangle rectEnd = new Gdk.Rectangle(x, y + yend, xend + dpb*drawer.Width, drawer.Height);
+				Gdk.Rectangle rectEnd = new Gdk.Rectangle(x, y + yend, dxend + dpb*drawer.Width, drawer.Height);
 
 				paintRegion.UnionWithRect(rectStart);
 				paintRegion.UnionWithRect(rectMiddle);
@@ -535,10 +555,19 @@ public abstract class Area
 
 			// render first row
 			odd = (((h.Start / bpr) % 2) == 1);
-			if (odd)
+			if (odd) {
 				gc = oddGC;
-			else
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, right);
+			}
+			else {
 				gc = evenGC;
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Even, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Even, right);
+			}
+			
+			if (drawLeft)
+				backPixmap.DrawRectangle(leftGC, true, x + dxstart, y + ystart, drawer.Width, drawer.Height);
 			backPixmap.DrawRectangle(gc, true, x + xstart, y + ystart, width - xstart, drawer.Height);
 
 			RenderRangeHelper(h.Type, rstart, bstart, bpr - bstart);
@@ -559,10 +588,19 @@ public abstract class Area
 
 			// render last row
 			odd = (((h.End / bpr) % 2) == 1);
-			if (odd)
+			if (odd) {
 				gc = oddGC;
-			else
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Odd, right);
+			}
+			else {
 				gc = evenGC;
+				leftGC = drawer.GetBackgroundGC(Drawer.RowType.Even, left);
+				rightGC = drawer.GetBackgroundGC(Drawer.RowType.Even, right);
+			}
+			
+			if (drawRight)
+				backPixmap.DrawRectangle(rightGC, true, x + xend + dpb*drawer.Width, y + yend, drawer.Width, drawer.Height);
 			backPixmap.DrawRectangle(gc, true, x, y + yend, xend + dpb*drawer.Width, drawer.Height);
 			RenderRangeHelper(h.Type, rend, 0, bend + 1);
 		}

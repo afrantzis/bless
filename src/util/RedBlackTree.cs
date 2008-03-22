@@ -402,6 +402,13 @@ public class RedBlackTree<K, V> where K:IComparable<K>
 		}
 	}
 	
+	public void Clear()
+	{
+		lock (lockObj) {
+			root = null;
+		}
+	}
+	
 	public IList<V> GetValues()
 	{
 		lock (lockObj){

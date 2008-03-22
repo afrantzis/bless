@@ -33,38 +33,75 @@ namespace Bless.Gui.Areas
 /// </summary>
 class AtomicHighlight : Highlight
 {
-	Highlight parent;
+	IList<Highlight> containers;
 	
-	public Highlight Parent {
-		get { return parent; }
+	public IList<Highlight> Containers {
+		get { return containers; }
+	}
+	
+	/// <summary>
+	/// Adds a highlight as a container of this atomic highlight
+	/// </summary>
+	/// <remarks>The highlight is added only if it has lower or equal priority than this highlight</remarks>
+	public void AddContainer(Highlight h)
+	{
+		if (h.Type > type)
+			return;
+		
+		// insertion sort (higher priority first)
+		for (int i = 0; i < containers.Count; i++) {
+			if (h.Type >= containers[i].Type) {
+				containers.Insert(i, h);
+				return;
+			}
+		}
+		
+		containers.Add(h);
 	}
 	
 	/// <summary>
 	/// 
 	/// </summary>
-	public Area.RenderMergeFlags GetMergeFlags()
-	{
-		Area.RenderMergeFlags f = Area.RenderMergeFlags.None;
+	public void GetAbyssHighlights(out Drawer.HighlightType left, out Drawer.HighlightType right)
+	{		
+		left = Drawer.HighlightType.Sentinel;
+		right = Drawer.HighlightType.Sentinel;
+
+		foreach(Highlight h in containers) {
+			if (left == Drawer.HighlightType.Sentinel && h.Contains(start - 1))
+				left = h.Type;
+			
+			if (right == Drawer.HighlightType.Sentinel && h.Contains(end + 1))
+				right = h.Type;
+		}
 		
-		if (this.Start > parent.Start)
-			f |= Area.RenderMergeFlags.Left;
+		if (left == Drawer.HighlightType.Sentinel)
+			left = Drawer.HighlightType.Normal;
 		
-		if (this.End < parent.End)
-			f |= Area.RenderMergeFlags.Right;
-		
-		return f;
-		
+		if (right == Drawer.HighlightType.Sentinel)
+			right = Drawer.HighlightType.Normal;
 	}
 	
 	public AtomicHighlight(Highlight parent) : base(parent)
 	{
-		this.parent = parent;
-		
+		this.containers = new System.Collections.Generic.List<Highlight>(1);
+		this.containers.Add(parent);	
 	}
 	
 	public AtomicHighlight(AtomicHighlight h) : base(h)
 	{
-		this.parent = h.parent;	
+		this.containers = new System.Collections.Generic.List<Highlight>(h.containers);
+	}
+	
+	public override string ToString()
+	{
+		string str =  base.ToString() + " Containers: ";
+		
+		foreach(Highlight h in containers) {
+			str += h.ToString() + " ";
+		}
+		
+		return str;
 	}
 }
 
@@ -189,7 +226,7 @@ public class AreaGroup
 	/// Get the range of bytes and the number of rows that 
 	/// are displayed in the current view.
 	/// </summary>
-	private Range GetViewRange(out int nrows)
+	public Range GetViewRange(out int nrows)
 	{
 		// find out number of rows, bytes in current view
 		
@@ -278,17 +315,25 @@ public class AreaGroup
 		changes |= Changes.Offset;
 	}
 	
+	private void InitializeHighlights()
+	{
+		ClearHighlights();
+		if (!selection.IsEmpty())
+			highlights.Insert(selection);
+	}
+	
 	/// <summary>
 	/// Adds a highlight on a range of data.
 	/// </summary>
 	public void AddHighlight(long start, long end, Drawer.HighlightType ht)
 	{
 		highlights.Insert(new Highlight(start, end, ht));
+		changes |= Changes.Highlights;
 	}
 	
-	public void ClearHighlights()
+	private void ClearHighlights()
 	{
-		//highlights.Clear();
+		highlights.Clear();
 	}
 
 	/// <summary>
@@ -303,10 +348,15 @@ public class AreaGroup
 	/// <summary>
 	/// Renders a <see cref="Range"/> of data using a specified <see cref="Drawer.HighlightType"/>
 	/// </summary>
-	private void RenderHighlight(Highlight h, Area.RenderMergeFlags f)
+	private void RenderHighlight(AtomicHighlight h)
 	{
+		Drawer.HighlightType left;
+		Drawer.HighlightType right;
+		h.GetAbyssHighlights(out left, out right);
+		
+		//System.Console.WriteLine("  Rendering {0}  ({1} {2})", h, left, right);
 		foreach(Area a in areas) {
-			a.RenderHighlight(h, f);
+			a.RenderHighlight(h, left, right);
 		}
 	}
 	
@@ -320,34 +370,63 @@ public class AreaGroup
 		}
 	}
 	
+	private AtomicHighlight[] SplitAtomicPrioritized(AtomicHighlight q, Highlight r)
+	{
+		AtomicHighlight[] ha;
+		
+		if (q.Type > r.Type) {
+			ha = new AtomicHighlight[3]{new AtomicHighlight(r), new AtomicHighlight(q), new AtomicHighlight(r)};
+			Range.SplitAtomic(ha, r, q);
+			ha[1].AddContainer(r);
+		}
+		else {
+			ha = new AtomicHighlight[3]{new AtomicHighlight(q), new AtomicHighlight(r), new AtomicHighlight(q)};
+			Range.SplitAtomic(ha, q, r);
+			foreach (Highlight h in q.Containers)
+				ha[1].AddContainer(h);
+		}
+		
+		return ha;
+	}
+	
 	/// <summary>
 	/// Breaks down a base highlight and produces atomic highlights 
 	/// </summary>
 	private IntervalTree<AtomicHighlight> BreakDownHighlights(Highlight s, IList<Highlight> lst)
 	{
+		//System.Console.WriteLine("breaking down {0}", s);
 		IntervalTree<AtomicHighlight> it = new IntervalTree<AtomicHighlight>();
 		
-		it.Insert(new AtomicHighlight(s));
+		if (!s.IsEmpty())
+			it.Insert(new AtomicHighlight(s));
 		
 		foreach(Highlight r in lst) {
+			//System.Console.WriteLine("  Processing {0}", r);
 			IList<AtomicHighlight> overlaps = it.SearchOverlap(r);
 			foreach(AtomicHighlight q in overlaps) {
 				it.Delete(q);
-				AtomicHighlight[] ha = new AtomicHighlight[3]{new AtomicHighlight(q), new AtomicHighlight(r), new AtomicHighlight(q)};
-				Range.SplitAtomic(ha, q, r);
+				//System.Console.WriteLine("    Overlap {0}", q);
+				AtomicHighlight[] ha = SplitAtomicPrioritized(q, r);			
 				foreach(AtomicHighlight h in ha) {
 					// Keep only common parts to avoid duplications.
 					// This also has the useful side effect that everything
 					// is clipped inside s
 					h.Intersect(q);
-					if (!h.IsEmpty())
+					//System.Console.WriteLine("      Atomic {0}", h);
+					if (!h.IsEmpty()) {
 						it.Insert(h);
+					}
 				}	
 			}
 		}
 		
+		//foreach(AtomicHighlight ah in it.GetValues()) {
+		//	System.Console.WriteLine("  " + ah);
+		///}
+		
 		return it;
 	}
+		
 	
 	/// <summary>
 	/// Gets the atomic highlight ranges of the current view.
@@ -362,6 +441,10 @@ public class AreaGroup
 		// get all highlights in current view
 		IList<Highlight> viewableHighlights = highlights.SearchOverlap(view);
 		
+		foreach(Highlight h in viewableHighlights) {
+			h.Intersect(view);
+		}
+		
 		return BreakDownHighlights(view, viewableHighlights);
 	}
 	
@@ -373,7 +456,7 @@ public class AreaGroup
 		IList<AtomicHighlight> hl = atomicHighlights.GetValues();
 		
 		foreach(AtomicHighlight h in hl) {
-			RenderHighlight(h, h.GetMergeFlags());
+			RenderHighlight(h);
 		}
 	}
 	
@@ -406,10 +489,20 @@ public class AreaGroup
 		foreach(AtomicHighlight h in hl) {
 			IList<AtomicHighlight> overlaps = prevAtomicHighlights.SearchOverlap(h);
 			foreach(AtomicHighlight overlap in overlaps) {
-				if (overlap.Type != h.Type) {
+				bool diffType = overlap.Type != h.Type;
+				
+				Drawer.HighlightType left, right, oleft, oright;
+								
+				h.GetAbyssHighlights(out left, out right);
+				overlap.GetAbyssHighlights(out oleft, out oright);
+				
+				bool diffAbyss = (left != oleft) || (right != oright);
+				
+				if (diffType || diffAbyss) {
 					AtomicHighlight h1 = new AtomicHighlight(h);
 					h1.Intersect(overlap);
-					RenderHighlight(h1, h1.GetMergeFlags());
+					//System.Console.Write(diffType?"DiffType> ":"DiffFlags> ");
+					RenderHighlight(h1);
 				}
 			}
 		}
@@ -435,15 +528,17 @@ public class AreaGroup
 		
 		bool prevCursorAtEof =  prevCursorOffset == byteBuffer.Size;
 		
-		foreach(Area a in areas) {
-			if (h != null)
-				a.RenderHighlight(h, h.GetMergeFlags());
-			else if (prevCursorAtEof) // case 2
-				a.BlankEof();
-				
-			if (selection.IsEmpty())
-				a.RenderCursor();
+		if (h != null) {
+			RenderHighlight(h);
 		}
+		else if (prevCursorAtEof) { // case 2
+			foreach(Area a in areas)
+				a.BlankEof();
+		}
+		
+		if (selection.IsEmpty())
+			foreach(Area a in areas)
+				a.RenderCursor();
 	}
 	
 	/// <summary>
@@ -459,6 +554,11 @@ public class AreaGroup
 	/// </remarks>
 	public void Render(bool force)
 	{
+		InitializeHighlights();
+		
+		if (PreRenderEvent != null)
+			PreRenderEvent(this);
+		
 		/* This breaks the RenderExtra() optimizations in OffsetArea and SeparatorArea
 		
 		// if we are forced to redraw but nothing
@@ -475,13 +575,15 @@ public class AreaGroup
 		// if atomic highlights have not changed, reuse them
 		if (!force && !HasChanged(Changes.Highlights) && !HasChanged(Changes.Offset))
 			atomicHighlights = prevAtomicHighlights; 
-		else
+		else {
+			//System.Console.WriteLine("Re-eval atomic highs");
 			atomicHighlights = GetAtomicHighlights();
+		}
 		
 		// if we are forced to redraw or the view has scrolled (the offset has changed)
 		// redraw everything
 		if (force || HasChanged(Changes.Offset)) {
-			//System.Console.WriteLine("Changed");
+			//System.Console.WriteLine("Scroll");
 			RenderAll(atomicHighlights);
 		} // otherwise redraw only what is needed
 		else if (HasChanged(Changes.Highlights)) {
@@ -497,7 +599,10 @@ public class AreaGroup
 		
 		ClearChanges();
 	}
+	
+	public delegate void PreRenderHandler(AreaGroup ag);
 
+	public event PreRenderHandler PreRenderEvent;
 }
 
 } // end namespace

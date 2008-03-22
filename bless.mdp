@@ -144,6 +144,7 @@
     <File name="tests/util/IntervalTreeTests.cs" subtype="Code" buildaction="Compile" />
     <File name="src/gui/areas/AreaGroup.cs" subtype="Code" buildaction="Compile" />
     <File name="src/gui/areas/Highlight.cs" subtype="Code" buildaction="Compile" />
+    <File name="src/gui/plugins/PatternMatchHighlightPlugin.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <DeploymentInformation strategy="File">
     <excludeFiles />

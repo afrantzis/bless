@@ -74,6 +74,7 @@
 	<depends>Bless.Tools.Find</depends>
 	<depends>Bless.Tools</depends>
 	<depends>Bless.Gui.Areas</depends>
+	<depends>Bless.Gui.Drawers</depends>
 	<depends>Bless.Buffers</depends>
 	<depends>Bless.Util</depends>
 	<depends>Bless.Gui</depends>
