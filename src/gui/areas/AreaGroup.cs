@@ -302,11 +302,17 @@ public class AreaGroup
 	{
 		changes |= c;
 		
-		if (drawingArea == null)
+		if (drawingArea == null || drawingArea.GdkWindow == null)
 			return;
 			
-		if (HasChanged(Changes.Offset))
-			drawingArea.QueueDraw();
+		if (HasChanged(Changes.Offset)) {
+			Gdk.Rectangle view = drawingArea.Allocation;
+			view.X = 0;
+			view.Y = 0;
+			drawingArea.GdkWindow.BeginPaintRect(view);
+			Render(false);
+			drawingArea.GdkWindow.EndPaint();
+		}
 		else 
 			ExposeManually();
 	}
@@ -328,6 +334,16 @@ public class AreaGroup
 	public void Invalidate()
 	{
 		changes |= Changes.Offset;
+	}
+	
+	/// <summary>
+	/// Invalidate this group (visually). This forces a complete redraw
+	/// on the next Render().
+	/// </summary>
+	public void RedrawNow()
+	{
+		System.Console.WriteLine("Redraw Now");
+		SetChanged(Changes.Offset);
 	}
 	
 	private void InitializeHighlights()

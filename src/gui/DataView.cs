@@ -112,7 +112,7 @@ public class DataView {
 	private void OnByteBufferChanged(ByteBuffer bb)
 	{
 		if (byteBuffer.ReadAllowed)
-			dvDisplay.Redraw();
+			dvDisplay.Layout.AreaGroup.RedrawNow();
 	}
 
 	private void OnByteBufferFileChanged(ByteBuffer bb)
