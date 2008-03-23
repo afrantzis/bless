@@ -199,8 +199,11 @@ public class AreaGroup
 				return;
 			highlights.Delete(selection);
 			selection.Start = value.Start; selection.End = value.End;
-			highlights.Insert(selection);
-			SetChanged(Changes.Highlights);
+			
+			// make sure the cursor is also updated (because it may 
+			// not have changed position so SetCursor() won't render it 
+			// but it may have to become visible again eg when a selection is cleared)
+			SetChanged(Changes.Highlights | Changes.Cursor);
 		}
 	}
 	
