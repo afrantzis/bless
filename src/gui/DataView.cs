@@ -141,25 +141,6 @@ public class DataView {
 
 		// temp dir
 		byteBuffer.TempDir = prefs["ByteBuffer.TempDir"];
-
-		/*
-		// pattern match highlighting
-		if (dvDisplay.Layout.Areas.Count > 0) {
-			bool highlightPref = false;
-			Area area0 = ((Area)dvDisplay.Layout.Areas[0]);
-
-			if (prefs["Highlight.PatternMatch"] == "True")
-				highlightPref = true;
-
-			if (highlightPref != AreaGroup.EnableHighlights[(int)Drawer.HighlightType.PatternMatch]) {
-				foreach(Area a in dvDisplay.Layout.Areas) {
-					a.EnableHighlights[(int)Drawer.HighlightType.PatternMatch] = highlightPref;
-					a.Render();
-				}
-			}
-		}
-		*/
-
 	}
 
 	void AddUndoCursorState(CursorState state)
@@ -610,25 +591,7 @@ public class DataView {
 		newSel.Sort();
 		
 		areaGroup.Selection = newSel;
-		/*
-		// clear the previous selection pattern highlights
-		// and check the selection
-		foreach (Area a in dvDisplay.Layout.Areas) {
-			a.ClearHighlights(Drawer.HighlightType.PatternMatch);
-			a.SetSelection(newSel.Start, newSel.End);
-		}
-
-		// add pattern highlights only if the selection
-		// has a reasonable size (eg <= 104 bytes)
-		if (newSel.Size <= 1024) {
-			byte[] ba = byteBuffer.RangeToByteArray(newSel);
-			// if the selection contains data and highlights are enabled
-			// add the highlights
-			if (ba != null && AreaGroup.EnableHighlights[(int)Drawer.HighlightType.PatternMatch])
-				foreach (Area a in dvDisplay.Layout.Areas)
-				a.AddHighlightPattern(ba, Drawer.HighlightType.PatternMatch);
-		}*/
-
+		
 		if (SelectionChanged != null)
 			SelectionChanged(this);
 	}

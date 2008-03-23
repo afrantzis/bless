@@ -36,13 +36,10 @@ public class PatternMatchHighlightPlugin : GuiPlugin
 	DataBook dataBook;
 	PatternHighlighter patternHighlighter;
 	Window mainWindow;
-	ToggleAction conversionTableAction;
-	UIManager uiManager;
 
 	public PatternMatchHighlightPlugin(Window mw, UIManager uim)
 	{
 		mainWindow = mw;
-		uiManager = uim;
 
 		name = "PatternMatchHighlight";
 		author = "Alexandros Frantzis";
@@ -111,6 +108,9 @@ class PatternHighlighter
 		dvd.Layout.AreaGroup.PreRenderEvent -=  new AreaGroup.PreRenderHandler(BeforeRender);
 	}
 
+	/// <summary>
+	/// Adds pattern match highlights to an area group before it is rendered
+	/// </summary>
 	void BeforeRender(AreaGroup ag)
 	{
 		if (!active)
@@ -120,8 +120,6 @@ class PatternHighlighter
 		
 		if (sel.IsEmpty())
 			return;
-		
-		int patLen = (int)sel.Size;
 
 		int nrows;
 		Util.Range view = ag.GetViewRange(out nrows);

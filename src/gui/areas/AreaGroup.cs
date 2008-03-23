@@ -130,7 +130,6 @@ public class AreaGroup
 	long cursorOffset;
 	
 	// track changes
-	long prevOffset;
 	long prevCursorOffset;
 	
 	byte[] bufferCache;
@@ -158,7 +157,6 @@ public class AreaGroup
 	public long Offset {
 		get { return offset;}
 		set {
-			prevOffset = offset; 
 			if (offset == value)
 				return;
 			offset = value; 
@@ -670,6 +668,7 @@ public class AreaGroup
 			//System.Console.WriteLine("Cursor");
 			RenderCursor(atomicHighlights);
 		}
+		
 		// update prevAtomicHighlights
 		prevAtomicHighlights = atomicHighlights;
 		

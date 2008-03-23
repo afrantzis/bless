@@ -45,8 +45,8 @@ public class HelpOperationsPlugin : GuiPlugin
 
 	public HelpOperationsPlugin(Window mw, UIManager uim)
 	{
-		mainWindow=mw;
-		dataBook = (DataBook)GetDataBook(mw);
+		mainWindow = mw;
+		dataBook = (DataBook)GetDataBook(mainWindow);
 		uiManager = uim;
 
 		name = "HelpOperations";
