@@ -112,14 +112,7 @@ public class DataViewControl
 	private bool UpdateFocus(Area area)
 	{
 		if (area.CanFocus && !area.HasCursorFocus) {
-
-			foreach(Area a in dvDisplay.Layout.AreaGroup.Areas)
-				a.HasCursorFocus = false;
-			
-			area.HasCursorFocus = true;
-			
-			dataView.MoveCursor(dataView.CursorOffset, dataView.CursorDigit);
-
+			dvDisplay.Layout.AreaGroup.FocusedArea = area;
 			return true;
 		}
 
@@ -243,11 +236,12 @@ public class DataViewControl
 				selEndPos = pos;
 			}
 		}
-
-		EvaluateSelection(DataViewDisplay.ShowType.Closest);
-
+		
 		// give the focus to the appropriate area
+		// do this before setting the new cursor/selection
 		UpdateFocus(clickArea);
+		
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
 	}
 
 	///<summary>Handle mouse motion</summary>
@@ -287,10 +281,11 @@ public class DataViewControl
 		// for better visual result
 		selEndPos = pos;
 
-		EvaluateSelection(DataViewDisplay.ShowType.Closest);
-
 		// give the focus to the appropriate area
+		// do this before setting the new cursor/selection
 		UpdateFocus(clickArea);
+		
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
 	}
 
 	///<summary>Handle mouse button release</summary>
@@ -325,53 +320,14 @@ public class DataViewControl
 		// for better visual result
 		selEndPos = pos;
 		//System.Console.WriteLine("Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
-		EvaluateSelection(DataViewDisplay.ShowType.Closest);
-
+		
 		// give the focus to the appropriate area
+		// do this before setting the new cursor/selection
 		UpdateFocus(clickArea);
+		
+		EvaluateSelection(DataViewDisplay.ShowType.Closest);
 	}
-
-	///<summary>Find the area that has the focus and its index</summary>
-	internal int FindFocusedArea(out Area focusArea)
-	{
-		int faIndex = 0;
-		focusArea = null;
-
-		for (; faIndex < dvDisplay.Layout.AreaGroup.Areas.Count; faIndex++) {
-			if ((dvDisplay.Layout.AreaGroup.Areas[faIndex] as Area).HasCursorFocus == true) {
-				focusArea = (dvDisplay.Layout.AreaGroup.Areas[faIndex] as Area);
-				break;
-			}
-		}
-		if (focusArea != null)
-			return faIndex;
-		else
-			return -1;
-	}
-
-	///<summary>Give the focus to the next applicable area</summary>
-	Area CycleFocus()
-	{
-		Area focusArea = null;
-		int faIndex = FindFocusedArea(out focusArea);
-
-		int start = faIndex;
-		int areaCount = dvDisplay.Layout.AreaGroup.Areas.Count;
-
-		for (faIndex++; (faIndex % areaCount) != start; faIndex++) {
-			Area a = (dvDisplay.Layout.AreaGroup.Areas[faIndex%areaCount] as Area);
-			if (a.CanFocus == true) {
-				a.HasCursorFocus = true;
-				if (focusArea != null)
-					focusArea.HasCursorFocus = false;
-				dataView.MoveCursor(dataView.CursorOffset, dataView.CursorDigit);
-				return a;
-			}
-		}
-
-		return null;
-	}
-
+	
 	// variables that are shared by OnKeyPress and OnKey* handler methods
 	Area okp_focusArea;
 	int okp_bpr;
@@ -387,17 +343,19 @@ public class DataViewControl
 		bool shiftPressed = false;
 
 		// find focused area
-		FindFocusedArea(out okp_focusArea);
+		okp_focusArea = dvDisplay.Layout.AreaGroup.FocusedArea;
 
 		// if no area has the focus, give it to the first one applicable
-		if (okp_focusArea == null)
-			okp_focusArea = CycleFocus();
+		if (okp_focusArea == null) {
+			dvDisplay.Layout.AreaGroup.CycleFocus();
+			okp_focusArea = dvDisplay.Layout.AreaGroup.FocusedArea;
+		}
 
 
 		// if still no area got the focus give up
 		if (okp_focusArea == null)
 			return;
-
+		
 		okp_bpr = okp_focusArea.BytesPerRow;
 		okp_dpb = okp_focusArea.DigitsPerByte;
 		okp_showType = DataViewDisplay.ShowType.Closest;
@@ -455,6 +413,11 @@ public class DataViewControl
 				break;
 			case Gdk.Key.Tab:
 				OnKeyTab();
+				// cycling through the areas may change the current cursor digit
+				// (note however that we don't want to call EvaluateSelection()->SetCursor()
+				//  because that will reset the digit of all areas. So we just update
+				//  selStartPos.Digit here and set specialKey = true to avoid calling SetCursor()...)
+				selStartPos.Digit = dvDisplay.Layout.AreaGroup.CursorDigit;
 				specialKey = true;
 				break;
 			case Gdk.Key.BackSpace:
@@ -684,7 +647,7 @@ public class DataViewControl
 
 	void OnKeyTab()
 	{
-		CycleFocus();
+		dvDisplay.Layout.AreaGroup.CycleFocus();
 	}
 
 	void OnKeyBackspace()

@@ -93,11 +93,7 @@ public class DataView {
 	}
 
 	public Area FocusedArea {
-		get {
-			Area a;
-			dvControl.FindFocusedArea(out a);
-			return a;
-		}
+		get { return dvDisplay.Layout.AreaGroup.FocusedArea; }
 	}
 
 	///<summary>

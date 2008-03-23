@@ -56,6 +56,7 @@ public abstract class Area
 	protected Gdk.GC inactiveCursorGC;
 
 	
+	protected int cursorDigit;
 	protected bool cursorFocus;
 	protected bool canFocus;
 	
@@ -382,6 +383,11 @@ public abstract class Area
 		get	{ return dpb; }
 	}
 
+	public int CursorDigit {
+		get { return cursorDigit; }
+		set { if (value >= dpb) cursorDigit = dpb - 1; else cursorDigit = value; }
+	}
+	
 	public bool HasCursorFocus {
 		set { cursorFocus = value; }
 		get { return cursorFocus;}
@@ -622,7 +628,7 @@ public abstract class Area
 
 		backPixmap.DrawRectangle(cursorGC, true, x + cX, y + cY + drawer.Height - 2, drawer.Width*dpb, 2);
 		if (cursorFocus) {
-			backPixmap.DrawRectangle(cursorGC, true, x + cX + areaGroup.CursorDigit*drawer.Width, y + cY, 1, drawer.Height - 2);
+			backPixmap.DrawRectangle(cursorGC, true, x + cX + cursorDigit*drawer.Width, y + cY, 1, drawer.Height - 2);
 		}
 	}
 	
@@ -663,41 +669,6 @@ public abstract class Area
 		areaGroup.DrawingArea.GdkWindow.EndPaint();
 	}
 
-	///
-	/// Public Interface
-	///
-	/*
-	///<summary>Renders a single offset</summary>
-	protected virtual void RenderOffset(long offs)
-	{
-		if (isAreaRealized == false)
-			return;
-
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-
-		if (bleft + offset >= areaGroup.Buffer.Size)
-			bleft = areaGroup.Buffer.Size - offset;
-
-		if (offs >= offset && offs < offset + bleft) {
-			int pcRow, pcByte, pcX, pcY;
-			GetDisplayInfoByOffset(offs, out pcRow, out pcByte, out pcX, out pcY);
-			Drawer.HighlightType ht = GetOffsetHighlight(offs);
-			if (ht != Drawer.HighlightType.Normal && enableHighlights[(int)ht])
-				RenderRowHighlight(pcRow, pcByte, 1, false, ht);
-			else
-				RenderRowNormal(pcRow, pcByte, 1, false);
-		}
-		else if (offs == areaGroup.Buffer.Size && offs == offset + bleft) {
-			int pcRow, pcByte, pcX, pcY;
-			GetDisplayInfoByOffset(offs, out pcRow, out pcByte, out pcX, out pcY);
-			Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
-			backPixmap.DrawRectangle(backEvenGC, true, x + pcX, y + pcY, drawer.Width*dpb, drawer.Height);
-		}
-
-	}
-	*/
-
 	internal virtual void BlankBackground()
 	{
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
@@ -711,70 +682,7 @@ public abstract class Area
 		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
 		backPixmap.DrawRectangle(backEvenGC, true, x + pcX, y + pcY, drawer.Width*dpb, drawer.Height);
 	}
-/*
-	///<summary>
-	/// Highlight all the ranges that match the specified pattern and are visible in the DataView.
-	///</summary>
-	public virtual void AddHighlightPattern(byte[] pattern, Drawer.HighlightType ht)
-	{
-		int patLen = pattern.Length;
-
-		// set low limit
-		long lowLimit = offset - patLen + 1;
-		if (lowLimit < 0)
-			lowLimit = offset;
-
-		// set high limit
-		int nrows = height / drawer.Height;
-		long bleft = nrows * bpr;
-		long highLimit;
-
-		if (bleft + offset >= areaGroup.Buffer.Size)
-			bleft = areaGroup.Buffer.Size - offset;
-
-		if (bleft > 0)
-			highLimit = offset + bleft - 1;
-		else
-			highLimit = -1;
-
-		Range rClip = new Range(offset, highLimit);
-
-		if (highLimit + patLen - 1 < areaGroup.Buffer.Size)
-			highLimit += patLen - 1;
-		else
-			highLimit = areaGroup.Buffer.Size - 1;
-
-		findStrategy.Buffer = areaGroup.Buffer;
-		findStrategy.Position = lowLimit;
-		findStrategy.Pattern = pattern;
-
-		Range match;
-		Range inter1 = new Range();
-
-
-		while ((match = findStrategy.FindNext(highLimit)) != null) {
-			// highlight areas that don't overlap with the selection
-			match.Difference(Selection, inter1);
-			match.Intersect(rClip);
-			Range prevHighlight = new Range(highlights[(int)ht].LastAdded);
-			prevHighlight.Intersect(rClip);
-			if (!match.IsEmpty()) {
-				// if new highlight is a continuation of the previous one
-				// don't add the highlight, just update the old one
-				// NOTE: not entirely correct, because the individual continuous
-				// matches are not saved, only the final one, but things
-				// get a lot faster
-				if (prevHighlight.Contains(match.Start)) {
-					UpdateHighlight(prevHighlight.Start, match.End, ht);
-				}
-				else
-					AddHighlight(match.Start, match.End, ht);
-				//System.Console.WriteLine("Adding Highlight range: {0}-{1}, Selection {2}-{3}", match.Start, match.End, Selection.Start, Selection.End);
-			}
-		}
-
-	}
-*/
+	
 	public virtual void ShowPopup(Gtk.UIManager uim)
 	{
 		Gtk.Widget popup = uim.GetWidget("/DefaultAreaPopup");

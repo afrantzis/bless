@@ -114,6 +114,7 @@ public class AreaGroup
 	IList<Area> areas;
 	ByteBuffer byteBuffer;
 	Gtk.DrawingArea drawingArea;
+	Area focusedArea;
 	
 	IntervalTree<Highlight> highlights;
 	
@@ -127,12 +128,10 @@ public class AreaGroup
 	
 	// current cursor
 	long cursorOffset;
-	int cursorDigit;
 	
 	// track changes
 	long prevOffset;
 	long prevCursorOffset;
-	int  prevCursorDigit;
 	
 	byte[] bufferCache;
 	
@@ -149,6 +148,11 @@ public class AreaGroup
 	
 	public IList<Area> Areas {
 		get { return areas; }
+	}
+	
+	public Area FocusedArea {
+		get { return focusedArea; }
+		set { UpdateFocusedArea(value); }
 	}
 	
 	public long Offset {
@@ -168,7 +172,12 @@ public class AreaGroup
 	}
 	
 	public int CursorDigit {
-		get { return cursorDigit;}
+		get {
+			if (focusedArea != null)
+				return focusedArea.CursorDigit;
+			else
+				return 0;
+		}
 	}
 	
 	public long PrevCursorOffset {
@@ -204,13 +213,14 @@ public class AreaGroup
 	public void SetCursor(long coffset, int cdigit)
 	{
 		prevCursorOffset = cursorOffset;
-		prevCursorDigit = cursorDigit;
 		
-		if (cursorOffset == coffset && cursorDigit == cdigit)
+		// if there is no change ignore...
+		if (cursorOffset == coffset && this.CursorDigit == cdigit)
 			return;
 		
 		cursorOffset = coffset;
-		cursorDigit = cdigit;
+		foreach(Area a in areas)
+			a.CursorDigit = cdigit;
 		
 		SetChanged(Changes.Cursor);
 	}
@@ -352,6 +362,51 @@ public class AreaGroup
 		
 		for(int i = 0; i < view.Size; i++)
 			bufferCache[i] = byteBuffer[view.Start + i];
+	}
+	
+	public void CycleFocus()
+	{
+		int faIndex; 
+		for (faIndex = 0; faIndex < areas.Count; faIndex++)
+			if (focusedArea == areas[faIndex])
+				break;
+		
+		if (faIndex >= areas.Count)
+			faIndex = -1;
+		
+		int end = faIndex + areas.Count;
+		
+		// use < instead of != so this will work correctly
+		// even when faIndex = -1 in which case we should check
+		// all areas (instead of only the rest areas.Count - 1 
+		// areas when there is already a focused area)
+		for (faIndex++; faIndex < end; faIndex++) {
+			Area a = (areas[faIndex%areas.Count] as Area);
+			if (a.CanFocus == true) {
+				UpdateFocusedArea(a);
+				return;
+			}
+		}
+		
+		focusedArea = null;
+	}
+	
+	private void UpdateFocusedArea(Area fa)
+	{
+		focusedArea = fa;
+		
+		foreach(Area a in areas)
+			a.HasCursorFocus = false;
+		
+		focusedArea.HasCursorFocus = true;
+		
+		// set the previous cursor so that when
+		// the screen is rendered the byte under the
+		// cursor is properly cleared (before being drawn
+		// again)
+		prevCursorOffset = cursorOffset;
+		
+		SetChanged(Changes.Cursor);
 	}
 	
 	/// <summary>

@@ -103,6 +103,7 @@ public class Layout {
 		foreach(Area a in areaGroup.Areas) {
 			if (a.Type != "offset" && a.Type != "separator") {
 				a.HasCursorFocus = true;
+				areaGroup.FocusedArea = a;
 				break;
 			}
 		}
