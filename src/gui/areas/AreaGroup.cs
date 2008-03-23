@@ -345,7 +345,6 @@ public class AreaGroup
 	/// </summary>
 	public void RedrawNow()
 	{
-		System.Console.WriteLine("Redraw Now");
 		SetChanged(Changes.Offset);
 	}
 	

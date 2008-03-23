@@ -123,7 +123,7 @@ public class ByteBuffer : IBuffer {
 
 	public void EmitFileChanged()
 	{
-		if (emitEvents && FileChanged!=null)
+		if (emitEvents && FileChanged!=null) {
 #if USING_GTK
 			Gdk.Threads.Enter();
 			try {
@@ -134,11 +134,12 @@ public class ByteBuffer : IBuffer {
 #else
 			FileChanged(this);
 #endif
+		}
 	}
 	
 	public void EmitPermissionsChanged()
 	{
-		if (emitEvents && PermissionsChanged!=null)
+		if (emitEvents && PermissionsChanged != null) {
 #if USING_GTK
 			Gdk.Threads.Enter();
 			try {
@@ -149,6 +150,7 @@ public class ByteBuffer : IBuffer {
 #else
 			PermissionsChanged(this);
 #endif
+		}
 	}
 	
 	// related to asynchronous save model
