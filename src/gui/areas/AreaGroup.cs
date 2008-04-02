@@ -604,7 +604,7 @@ public class AreaGroup
 		// find the kind of highlight the cursor was previously on
 		// if we don't find an overlap this means that either
 		// 1. the prev cursor position is not visible on the screen
-		// 2. the prev cursor position is at the end of the file
+		// 2. the prev cursor position is at or beyond the end of the file
 		IList<AtomicHighlight> overlaps = atomicHighlights.SearchOverlap(new Range(prevCursorOffset, prevCursorOffset));
 		
 		AtomicHighlight h = null;
@@ -617,14 +617,14 @@ public class AreaGroup
 			h.End = prevCursorOffset;
 		}
 		
-		bool prevCursorAtEof =  prevCursorOffset == byteBuffer.Size;
+		bool prevCursorBeyondEof =  prevCursorOffset >= byteBuffer.Size;
 		
 		if (h != null) {
 			RenderHighlight(h);
 		}
-		else if (prevCursorAtEof) { // case 2
+		else if (prevCursorBeyondEof) { // case 2
 			foreach(Area a in areas)
-				a.BlankEof();
+				a.BlankOffset(prevCursorOffset);
 		}
 		
 		if (selection.IsEmpty())

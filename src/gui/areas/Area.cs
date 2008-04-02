@@ -617,6 +617,29 @@ public abstract class Area
 
 	}
 	
+	/// <summary>
+	/// Blanks the selected offset
+	/// </summary>
+	/// <param name="offs">
+	/// A <see cref="System.Int64"/>
+	/// </param>
+	internal protected void BlankOffset(long offs)
+	{
+		if (isAreaRealized == false) 
+			return; 
+
+		int nrows = height / drawer.Height; 
+		long bytesInView = nrows * bpr; 
+
+		if (offs >= areaGroup.Offset && offs < areaGroup.Offset + bytesInView) {
+			int pcRow, pcByte, pcX, pcY; 
+			GetDisplayInfoByOffset(offs, out pcRow, out pcByte, out pcX, out pcY); 
+			Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal); 
+			backPixmap.DrawRectangle(backEvenGC, true, x + pcX, y + pcY, drawer.Width*dpb, drawer.Height); 
+		} 
+	
+	}
+	
 	///<summary>Render the cursor</summary>
 	internal protected void RenderCursor()
 	{
