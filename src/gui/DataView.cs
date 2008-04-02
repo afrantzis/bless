@@ -156,12 +156,18 @@ public class DataView {
 	{
 		AreaGroup areaGroup = dvDisplay.Layout.AreaGroup;
 		
-		byteBuffer.Delete(areaGroup.Selection.Start, areaGroup.Selection.End);
+		//
+		// set cursor and selection before deleting so that the view remains in a consistent state
+		// (eg the selection isn't beyond the EOF)
+		//
+		Util.Range prevSelection = this.Selection;
 		AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.Selection.Start, 0));
 		cursorRedoDeque.Clear();
 
 		this.MoveCursor(areaGroup.Selection.Start, 0);
 		this.SetSelection(-1, -1);
+		
+		byteBuffer.Delete(prevSelection.Start, prevSelection.End);		
 	}
 
 	//<summary>Called when an application wants to get our clipboard data</summary>
@@ -325,16 +331,8 @@ public class DataView {
 		clipboard.SetWithData(clipboardTargets, new ClipboardGetFunc(OnClipboardGet),
 							  new ClipboardClearFunc(OnClipboardClear));
 
-		byteBuffer.Delete(areaGroup.Selection.Start, areaGroup.Selection.End);
-		AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.Selection.Start, 0));
-		cursorRedoDeque.Clear();
-
-		//set cursor
-		this.MoveCursor(areaGroup.Selection.Start, 0);
-
-		//clear selections
-		this.SetSelection(-1, -1);
-
+		this.DeleteSelectionInternal();
+				
 		// Make sure dataView.Redraw() is called before dvDisplay.MakeOffsetVisible()
 		// so that the Scrollbar has the correct range
 		// when calling dataView.Goto().
@@ -445,10 +443,10 @@ public class DataView {
 			long cOffset = areaGroup.CursorOffset;
 
 			if (cOffset > 0) {
+				this.MoveCursor(cOffset - 1, areaGroup.CursorDigit);
 				byteBuffer.Delete(cOffset - 1, cOffset - 1);
 				AddUndoCursorState(new CursorState(cOffset, areaGroup.CursorDigit, cOffset - 1, areaGroup.CursorDigit));
 				cursorRedoDeque.Clear();
-				this.MoveCursor(cOffset - 1, areaGroup.CursorDigit);
 			}
 		}
 		else { // delete the selection
