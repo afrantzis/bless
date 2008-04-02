@@ -98,8 +98,14 @@ class AtomicHighlight : Highlight
 		string str =  base.ToString() + " Containers: ";
 		
 		foreach(Highlight h in containers) {
-			str += h.ToString() + " ";
+			str += h.ToString() + ", ";
 		}
+		
+		Drawer.HighlightType left, right;
+		
+		this.GetAbyssHighlights(out left, out right);
+		
+		str += string.Format("Left: {0} Right: {0}", left, right);
 		
 		return str;
 	}
@@ -511,7 +517,7 @@ public class AreaGroup
 		
 		//foreach(AtomicHighlight ah in it.GetValues()) {
 		//	System.Console.WriteLine("  " + ah);
-		///}
+		//}
 		
 		return it;
 	}
@@ -575,25 +581,33 @@ public class AreaGroup
 	/// </summary>
 	private void RenderHighlightDiffs(IntervalTree<AtomicHighlight> atomicHighlights)
 	{
+		//System.Console.WriteLine("Rendering highlight diffs");
 		IList<AtomicHighlight> hl = atomicHighlights.GetValues();
 		
 		foreach(AtomicHighlight h in hl) {
+			//System.Console.WriteLine("  Checking {0}", h);
 			IList<AtomicHighlight> overlaps = prevAtomicHighlights.SearchOverlap(h);
 			foreach(AtomicHighlight overlap in overlaps) {
-				bool diffType = overlap.Type != h.Type;
+				
+				AtomicHighlight hTmp = new AtomicHighlight(h);
+				hTmp.Intersect(overlap);
+				AtomicHighlight oTmp = new AtomicHighlight(overlap);
+				oTmp.Intersect(h);
+				//System.Console.WriteLine("    Overlaps with {0}", oTmp);
+				
+				bool diffType = oTmp.Type != hTmp.Type;
 				
 				Drawer.HighlightType left, right, oleft, oright;
 								
-				h.GetAbyssHighlights(out left, out right);
-				overlap.GetAbyssHighlights(out oleft, out oright);
+				hTmp.GetAbyssHighlights(out left, out right);
+				oTmp.GetAbyssHighlights(out oleft, out oright);
 				
 				bool diffAbyss = (left != oleft) || (right != oright);
 				
 				if (diffType || diffAbyss) {
-					AtomicHighlight h1 = new AtomicHighlight(h);
-					h1.Intersect(overlap);
-					//System.Console.Write(diffType?"DiffType> ":"DiffFlags> ");
-					RenderHighlight(h1);
+					//System.Console.Write(diffType?"      DiffType> ":"      DiffFlags> ");
+					//System.Console.WriteLine(hTmp);
+					RenderHighlight(hTmp);
 				}
 			}
 		}
