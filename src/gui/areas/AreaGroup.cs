@@ -659,6 +659,10 @@ public class AreaGroup
 	/// </remarks>
 	public void Render(bool force)
 	{
+		// sanity check
+		if (byteBuffer == null)
+			return;
+		
 		InitializeHighlights();
 		
 		if (PreRenderEvent != null)
