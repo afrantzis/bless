@@ -102,7 +102,7 @@ public class BitwiseOperationsPlugin : GuiPlugin
 		uim.InsertActionGroup(group, 0);
 		uim.AddUiFromString(uiXml);
 
-		performAction = (Action)uim.GetAction("/DefaultAreaPopup/ExtraAreaPopupItems/PerformBitwiseOperation");
+		performAction = (Gtk.Action)uim.GetAction("/DefaultAreaPopup/ExtraAreaPopupItems/PerformBitwiseOperation");
 
 		uim.EnsureUpdate();
 
