@@ -154,15 +154,13 @@ public class InterpretedPatternExporter : IPatternExporter
 				bbi.Prefix = cmds['p'] as string;
 			if (cmds.Contains('s'))
 				bbi.Suffix = cmds['s'] as string;
-			if (cmds.Contains('t'))
-				bbi.Type = (cmds['t'] as string)[0];
 			if (cmds.Contains('x'))
 				bbi.Separator = cmds['x'] as string;
 			if (cmds.Contains('e'))
 				bbi.Empty = cmds['e'] as string;
 
 			if (cmds.Contains('t'))
-				bbi.Type = Convert.ToChar(cmds['e'] as string);
+				bbi.Type = Convert.ToChar(cmds['t'] as string);
 			else
 				bbi.Type = 'H';
 
