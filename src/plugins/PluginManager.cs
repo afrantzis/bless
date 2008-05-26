@@ -43,7 +43,7 @@ public class PluginManager
 	object[] ctorArgs;
 	Type pluginType;
 
-	public PluginManager(Type pluginType, object[] args)
+	private PluginManager(Type pluginType, object[] args)
 	{
 		plugins = new Dictionary<string, Plugin>();
 		this.pluginType = pluginType;
@@ -150,16 +150,30 @@ public class PluginManager
 			Plugin[] pa = new Plugin[plugins.Count];
 			int i = 0;
 			foreach (Plugin p in plugins.Values)
-			pa[i++] = p;
+				pa[i++] = p;
 
 			return pa;
 		}
 
 	}
 
-	public Plugin GetPlugin()
+	static Dictionary<Type, PluginManager> pluginManagers = new Dictionary<Type, PluginManager>(); 
+	
+	public static void AddForType(Type pluginType, object[] args)
 	{
-		return null;
+		PluginManager pm = new PluginManager(pluginType, args);
+		pluginManagers[pluginType] = pm;
+	}
+	
+	public static PluginManager GetForType(Type pluginType)
+	{
+		PluginManager ret = null;
+		
+		if (pluginManagers.ContainsKey(pluginType)) {
+			ret = pluginManagers[pluginType];
+		}
+		
+		return ret;
 	}
 }
 

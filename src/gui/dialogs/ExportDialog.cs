@@ -65,7 +65,14 @@ public class ExportDialog : Dialog
 
 		dataBook = db;
 		mainWindow = mw;
-		pluginManager = new PluginManager(typeof(ExportPlugin), new object[0]);
+		pluginManager = PluginManager.GetForType(typeof(ExportPlugin));
+		
+		// initialize plugins if we have to
+		if (pluginManager == null) {
+			PluginManager.AddForType(typeof(ExportPlugin), new object[0]);
+			pluginManager = PluginManager.GetForType(typeof(ExportPlugin));
+		}
+		
 		exportFinishedEvent = new AutoResetEvent(false);
 
 		SetupExportPlugins();

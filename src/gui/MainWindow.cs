@@ -190,13 +190,16 @@ public class BlessMain
 		//Services.Info=new InfoService(infobar);
 
 		// Add area plugins
-		PluginManager areaPlugins = new PluginManager(typeof(AreaPlugin), new object[0]);
+		PluginManager.AddForType(typeof(AreaPlugin), new object[0]);
+		PluginManager areaPlugins = PluginManager.GetForType(typeof(AreaPlugin));
 		foreach (AreaPlugin p in areaPlugins.Plugins) {
 			Area.AddFactoryItem(p.Name, p.CreateArea);
 		}
 
 		// Load GUI plugins
-		PluginManager guiPlugins = new PluginManager(typeof(GuiPlugin), new object[]{MainWindow, uiManager});
+		PluginManager.AddForType(typeof(GuiPlugin), new object[]{MainWindow, uiManager});
+		PluginManager guiPlugins = PluginManager.GetForType(typeof(GuiPlugin));
+		
 		foreach (Plugin p in guiPlugins.Plugins) {
 			guiPlugins.LoadPlugin(p);
 		}

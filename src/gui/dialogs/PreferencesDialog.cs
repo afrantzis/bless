@@ -25,6 +25,7 @@ using Glade;
 using Bless.Tools;
 using Bless.Util;
 using Mono.Unix;
+using Bless.Plugins;
 
 namespace Bless.Gui.Dialogs {
 
@@ -33,10 +34,91 @@ namespace Bless.Gui.Dialogs {
 ///</summary>
 public class PreferencesDialog : Dialog
 {
-	Preferences prefs;
 	Window mainWindow;
+	GeneralPreferences generalPreferences;
+	SessionPreferences sessionPreferences;
 
-	[Glade.Widget] Notebook PreferencesNotebook;
+	[Glade.Widget] Paned PreferencesPaned;
+	[Glade.Widget] TreeView PreferencesTreeView;
+	
+
+	public PreferencesDialog(Window parent)
+			: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
+	{
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "PreferencesPaned", "bless");
+		gxml.Autoconnect (this);
+		
+		mainWindow = parent;
+		
+		generalPreferences = new GeneralPreferences(mainWindow);
+		sessionPreferences = new SessionPreferences(mainWindow);
+		LoadPreferencesTreeView();
+
+		this.Modal = false;
+		this.TransientFor = parent;
+		this.BorderWidth = 6;
+		this.AddButton("Close", ResponseType.Close);
+		this.Response += new ResponseHandler(OnDialogResponse);
+		this.VBox.Add(PreferencesPaned);
+		this.VBox.ShowAll();
+	}
+	
+	void LoadPreferencesTreeView()
+	{
+		
+		TreeStore store = new TreeStore(typeof(string), typeof(IPluginPreferences));
+		
+		store.AppendValues(Catalog.GetString("General"), generalPreferences);
+		store.AppendValues(Catalog.GetString("Session"), sessionPreferences);
+		
+		/* TreeIter ti = store.AppendValues(Catalog.GetString("Plugins"), null);
+		
+		TreeIter ti1 = store.AppendValues(ti, Catalog.GetString("GUI"), null);
+		
+		PluginManager pm = PluginManager.GetForType(typeof(GuiPlugin));
+		
+		foreach(Plugin p in pm.Plugins) {
+			if (p.PreferencesWidget != null)
+				store.AppendValues(ti1, p.Name, p.PreferencesWidget);
+		} */
+		
+		PreferencesTreeView.Model = store;
+		PreferencesTreeView.AppendColumn("", new CellRendererText (), "text", 0);
+		PreferencesTreeView.HeadersVisible = false;
+		PreferencesTreeView.Selection.Changed += OnPreferencesTreeViewSelectionChanged;
+		PreferencesTreeView.Selection.SelectPath(new TreePath("0"));
+	}
+	
+	void OnPreferencesTreeViewSelectionChanged (object o, EventArgs args)
+	{
+		TreeSelection sel = (TreeSelection)o;
+		TreeModel tm;
+		TreeIter ti;
+
+		if (sel.GetSelected(out tm, out ti)) {
+			IPluginPreferences ipp = (IPluginPreferences) tm.GetValue (ti, 1);
+			if (PreferencesPaned.Child2 != null)
+				PreferencesPaned.Remove(PreferencesPaned.Child2);
+			PreferencesPaned.Pack2(ipp.Widget, true, false);
+			ipp.LoadPreferences();	
+			PreferencesPaned.ShowAll();
+		}
+	}
+	
+	void OnDialogResponse(object o, Gtk.ResponseArgs args)
+	{
+		// update and save the preferences
+		//UpdatePreferences();
+
+		this.Destroy();
+	}
+
+}
+
+class GeneralPreferences : IPluginPreferences
+{
+	[Glade.Widget] Gtk.VBox GeneralPreferencesVBox;
+
 	[Glade.Widget] Entry LayoutFileEntry;
 	[Glade.Widget] CheckButton UseCurrentLayoutCheckButton;
 	[Glade.Widget] RadioButton UndoLimitedRadioButton;
@@ -46,55 +128,36 @@ public class PreferencesDialog : Dialog
 	[Glade.Widget] ComboBox DefaultNumberBaseComboBox;
 	[Glade.Widget] Entry TempDirEntry;
 	[Glade.Widget] Button SelectTempDirButton;
-	[Glade.Widget] CheckButton HighlightPatternMatchCheckButton;
-
-	[Glade.Widget] CheckButton LoadPreviousSessionCheckButton;
-	[Glade.Widget] CheckButton AskBeforeLoadingSessionCheckButton;
-	[Glade.Widget] CheckButton RememberCursorPositionCheckButton;
-	[Glade.Widget] CheckButton RememberWindowGeometryCheckButton;
-
+	[Glade.Widget] Button SelectLayoutButton;
+		
 	enum EditModeEnum { Insert, Overwrite }
 	enum NumberBaseEnum { Hexadecimal, Decimal, Octal }
 
-	public PreferencesDialog(Preferences p, Window parent)
-			: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
+	Window mainWindow;
+	Preferences prefs;
+
+	public GeneralPreferences(Window mw)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "PreferencesNotebook", "bless");
-		gxml.Autoconnect (this);
-
-		prefs = p;
-		mainWindow = parent;
-		LoadPreferences();
-
-		// connect handlers
-		LayoutFileEntry.Changed += OnPreferencesChanged;
-		UseCurrentLayoutCheckButton.Toggled += OnPreferencesChanged;
-		UndoLimitedRadioButton.Toggled += OnPreferencesChanged;
-		UndoUnlimitedRadioButton.Toggled += OnPreferencesChanged;
-		UndoActionsSpinButton.ValueChanged += OnPreferencesChanged;
-		DefaultEditModeComboBox.Changed += OnPreferencesChanged;
-		DefaultNumberBaseComboBox.Changed += OnPreferencesChanged;
-		HighlightPatternMatchCheckButton.Toggled += OnPreferencesChanged;
-
-		LoadPreviousSessionCheckButton.Toggled += OnPreferencesChanged;
-		AskBeforeLoadingSessionCheckButton.Toggled += OnPreferencesChanged;
-		RememberCursorPositionCheckButton.Toggled += OnPreferencesChanged;
-		RememberWindowGeometryCheckButton.Toggled += OnPreferencesChanged;
-
-		this.Modal = false;
-		this.TransientFor = parent;
-		this.BorderWidth = 6;
-		this.AddButton("Close", ResponseType.Close);
-		this.Response += new ResponseHandler(OnDialogResponse);
-		this.VBox.Add(PreferencesNotebook);
+		mainWindow = mw;
+		prefs = Preferences.Instance;
+	} 
+	
+	public Widget Widget {
+		get {
+			if (GeneralPreferencesVBox == null)
+				InitWidget();
+			
+			return GeneralPreferencesVBox;
+		}
 	}
 
-	///<summary>
-	/// Load the preferences to the gui
-	///</summary>
-	void LoadPreferences()
+	public void LoadPreferences()
 	{
+		if (GeneralPreferencesVBox == null)
+			InitWidget();
+
 		string val;
+
 
 		//
 		//
@@ -171,14 +234,135 @@ public class PreferencesDialog : Dialog
 		else
 			TempDirEntry.Text = "";
 
-		LoadCheckButtonPreference(
-			"Highlight.PatternMatch",
-			HighlightPatternMatchCheckButton,
-			true);
+	}
+	
+	public void SavePreferences()
+	{
+		// All preferences are applied instantly...
+		// No need to save them here
+	}
 
-		//
-		// Session
-		//
+	void InitWidget()
+	{
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "GeneralPreferencesVBox", "bless");
+		gxml.Autoconnect (this);
+
+		SelectTempDirButton.Clicked += OnSelectTempDirButtonClicked;
+		SelectLayoutButton.Clicked += OnSelectLayoutClicked;
+
+		LayoutFileEntry.Changed += OnLayoutFileChanged;
+		UseCurrentLayoutCheckButton.Toggled += OnUseCurrentLayoutToggled;
+		UndoLimitedRadioButton.Toggled += OnUndoLimitedToggled;
+		UndoActionsSpinButton.ValueChanged += OnUndoActionsValueChanged;
+		DefaultEditModeComboBox.Changed += OnDefaultEditModeChanged;
+		DefaultNumberBaseComboBox.Changed += OnDefaultNumberBaseChanged;
+	}
+	
+	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
+	{
+		string val = prefs[key];
+
+		try {
+			bool b = Convert.ToBoolean(val);
+			cb.Active = b;
+		}
+		catch (FormatException e) {
+			System.Console.WriteLine(e.Message);
+			cb.Active = defaultValue;
+		}
+
+	}
+
+	void OnSelectLayoutClicked(object o, EventArgs args)
+	{
+		LayoutSelectionDialog lsd = new LayoutSelectionDialog(null);
+		Gtk.ResponseType response = (Gtk.ResponseType)lsd.Run();
+
+		if (response == Gtk.ResponseType.Ok && lsd.SelectedLayout != null) {
+			LayoutFileEntry.Text = lsd.SelectedLayout;
+		}
+
+		lsd.Destroy();
+	}
+
+
+	private void OnSelectTempDirButtonClicked(object o, EventArgs args)
+	{
+		FileChooserDialog fcd = new FileChooserDialog(Catalog.GetString("Select Directory"), mainWindow, FileChooserAction.CreateFolder,  Catalog.GetString("Cancel"), ResponseType.Cancel,
+								Catalog.GetString("Select"), ResponseType.Accept);
+		if ((ResponseType)fcd.Run() == ResponseType.Accept)
+			TempDirEntry.Text = fcd.Filename;
+		fcd.Destroy();
+	}
+
+	private void OnLayoutFileChanged(object o, EventArgs args)
+	{
+		prefs["Default.Layout.File"] = LayoutFileEntry.Text;
+	}
+
+	private void OnUseCurrentLayoutToggled(object o, EventArgs args)
+	{
+		prefs["Default.Layout.UseCurrent"] = UseCurrentLayoutCheckButton.Active.ToString();
+	}
+
+	private void OnUndoLimitedToggled(object o, EventArgs args)
+	{
+		prefs["Undo.Limited"] = UndoLimitedRadioButton.Active.ToString();
+	}
+
+	private void OnUndoActionsValueChanged(object o, EventArgs args)
+	{
+		prefs["Undo.Actions"] = UndoActionsSpinButton.ValueAsInt.ToString();
+	}
+
+	private void OnDefaultEditModeChanged(object o, EventArgs args)
+	{
+		TreeIter iter;
+
+		if (DefaultEditModeComboBox.GetActiveIter (out iter))
+			prefs["Default.EditMode"] = (string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
+	}
+
+	private void OnDefaultNumberBaseChanged(object o, EventArgs args)
+	{
+		TreeIter iter;
+
+		if (DefaultNumberBaseComboBox.GetActiveIter (out iter))
+			prefs["Default.NumberBase"] = (string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
+	}
+}
+
+class SessionPreferences : IPluginPreferences
+{
+	Preferences prefs;
+
+	[Glade.Widget] Gtk.VBox SessionPreferencesVBox;
+	
+	[Glade.Widget] CheckButton LoadPreviousSessionCheckButton;
+	[Glade.Widget] CheckButton AskBeforeLoadingSessionCheckButton;
+	[Glade.Widget] CheckButton RememberCursorPositionCheckButton;
+	[Glade.Widget] CheckButton RememberWindowGeometryCheckButton;
+	
+	public SessionPreferences(Window mw)
+	{
+		prefs = Preferences.Instance;
+	} 
+	
+	public Widget Widget {
+		get {
+			if (SessionPreferencesVBox == null)
+				InitWidget();
+			
+			return SessionPreferencesVBox;
+		}
+	}
+	
+
+	public void LoadPreferences()
+	{
+		if (SessionPreferencesVBox == null)
+			InitWidget();
+
 		LoadCheckButtonPreference(
 			"Session.LoadPrevious",
 			LoadPreviousSessionCheckButton,
@@ -199,6 +383,12 @@ public class PreferencesDialog : Dialog
 			RememberWindowGeometryCheckButton,
 			true);
 	}
+	
+	public void SavePreferences()
+	{
+		// All preferences are applied instantly...
+		// No need to save them here
+	}
 
 	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
 	{
@@ -215,66 +405,15 @@ public class PreferencesDialog : Dialog
 
 	}
 
-	///<summary>
-	/// Save the preferences from the gui
-	///</summary>
-	void UpdatePreferences()
+	void InitWidget()
 	{
-		// temporarily disable autosave
-		// so that we don't save every time
-		// a preference changes
-		string autoSavePath = prefs.AutoSavePath;
-		prefs.AutoSavePath = null;
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "SessionPreferencesVBox", "bless");
+		gxml.Autoconnect (this);
 
-		prefs["Default.Layout.File"] = LayoutFileEntry.Text;
-		prefs["Default.Layout.UseCurrent"] = UseCurrentLayoutCheckButton.Active.ToString();
-		prefs["Undo.Limited"] = UndoLimitedRadioButton.Active.ToString();
-		prefs["Undo.Actions"] = UndoActionsSpinButton.ValueAsInt.ToString();
-		prefs["Highlight.PatternMatch"] = HighlightPatternMatchCheckButton.Active.ToString();
-
-		TreeIter iter;
-
-		if (DefaultEditModeComboBox.GetActiveIter (out iter))
-			prefs["Default.EditMode"] = (string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
-
-		if (DefaultNumberBaseComboBox.GetActiveIter (out iter))
-			prefs["Default.NumberBase"] = (string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
-
-		if (TempDirEntry.Text != "")
-			prefs["ByteBuffer.TempDir"] = TempDirEntry.Text;
-		else
-			prefs["ByteBuffer.TempDir"] = System.IO.Path.GetTempPath();
-
-		prefs["Session.LoadPrevious"] = LoadPreviousSessionCheckButton.Active.ToString();
-		prefs["Session.AskBeforeLoading"] = AskBeforeLoadingSessionCheckButton.Active.ToString();
-		prefs["Session.RememberCursorPosition"] = RememberCursorPositionCheckButton.Active.ToString();
-
-		// re-enable autosave
-		// to save the preferences when setting the last preference
-		prefs.AutoSavePath = autoSavePath;
-
-		// set the last preference
-		prefs["Session.RememberWindowGeometry"] = RememberWindowGeometryCheckButton.Active.ToString();
-	}
-
-	void OnDialogResponse(object o, Gtk.ResponseArgs args)
-	{
-		// update and save the preferences
-		UpdatePreferences();
-
-		this.Destroy();
-	}
-
-	void OnSelectLayoutClicked(object o, EventArgs args)
-	{
-		LayoutSelectionDialog lsd = new LayoutSelectionDialog(null);
-		Gtk.ResponseType response = (Gtk.ResponseType)lsd.Run();
-
-		if (response == Gtk.ResponseType.Ok && lsd.SelectedLayout != null) {
-			LayoutFileEntry.Text = lsd.SelectedLayout;
-		}
-
-		lsd.Destroy();
+		LoadPreviousSessionCheckButton.Toggled += OnLoadPreviousSessionToggled;
+		AskBeforeLoadingSessionCheckButton.Toggled += AskBeforeLoadingSessionToggled;
+		RememberCursorPositionCheckButton.Toggled += RememberCursorPositionToggled;
+		RememberWindowGeometryCheckButton.Toggled += RememberWindowGeometryToggled;
 	}
 
 	void OnLoadPreviousSessionToggled(object o, EventArgs args)
@@ -289,23 +428,25 @@ public class PreferencesDialog : Dialog
 			RememberCursorPositionCheckButton.Sensitive = false;
 			RememberWindowGeometryCheckButton.Sensitive = false;
 		}
-	}
 
-	private void OnSelectTempDirButtonClicked(object o, EventArgs args)
+
+		prefs["Session.LoadPrevious"] = LoadPreviousSessionCheckButton.Active.ToString();
+	} 
+
+	void AskBeforeLoadingSessionToggled(object o, EventArgs args)
 	{
-		FileChooserDialog fcd = new FileChooserDialog(Catalog.GetString("Select Directory"), mainWindow, FileChooserAction.CreateFolder,  Catalog.GetString("Cancel"), ResponseType.Cancel,
-								Catalog.GetString("Select"), ResponseType.Accept);
-		if ((ResponseType)fcd.Run() == ResponseType.Accept)
-			TempDirEntry.Text = fcd.Filename;
-		fcd.Destroy();
+		prefs["Session.AskBeforeLoading"] = AskBeforeLoadingSessionCheckButton.Active.ToString();
 	}
 
-	void OnPreferencesChanged(object o, EventArgs args)
+	void RememberCursorPositionToggled(object o, EventArgs args)
 	{
-		// update preferences only when closing the dialog...
-		// UpdatePreferences();
+		prefs["Session.RememberCursorPosition"] = RememberCursorPositionCheckButton.Active.ToString();
 	}
 
+	void RememberWindowGeometryToggled(object o, EventArgs args)
+	{
+		prefs["Session.RememberWindowGeometry"] = RememberWindowGeometryCheckButton.Active.ToString();
+	}
 }
 
 } // end namespace

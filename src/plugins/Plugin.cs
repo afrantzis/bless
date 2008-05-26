@@ -74,6 +74,10 @@ public class Plugin
 	public IList<string> LoadAfter {
 		get { return loadAfter; }
 	}
+	
+	public IPluginPreferences PluginPreferences {
+		get { return null; }
+	}
 }
 
 }
