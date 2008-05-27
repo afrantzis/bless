@@ -75,7 +75,7 @@ public class Plugin
 		get { return loadAfter; }
 	}
 	
-	public IPluginPreferences PluginPreferences {
+	public virtual IPluginPreferences PluginPreferences {
 		get { return null; }
 	}
 }

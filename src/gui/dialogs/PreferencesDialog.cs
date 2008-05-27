@@ -20,6 +20,7 @@
  */
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Gtk;
 using Glade;
 using Bless.Tools;
@@ -37,6 +38,7 @@ public class PreferencesDialog : Dialog
 	Window mainWindow;
 	GeneralPreferences generalPreferences;
 	SessionPreferences sessionPreferences;
+	TreeIter selectedIter;
 
 	[Glade.Widget] Paned PreferencesPaned;
 	[Glade.Widget] TreeView PreferencesTreeView;
@@ -65,22 +67,20 @@ public class PreferencesDialog : Dialog
 	
 	void LoadPreferencesTreeView()
 	{
-		
 		TreeStore store = new TreeStore(typeof(string), typeof(IPluginPreferences));
 		
 		store.AppendValues(Catalog.GetString("General"), generalPreferences);
 		store.AppendValues(Catalog.GetString("Session"), sessionPreferences);
 		
-		/* TreeIter ti = store.AppendValues(Catalog.GetString("Plugins"), null);
-		
-		TreeIter ti1 = store.AppendValues(ti, Catalog.GetString("GUI"), null);
+		TreeIter ti = store.AppendValues(Catalog.GetString("Plugins"), null);
 		
 		PluginManager pm = PluginManager.GetForType(typeof(GuiPlugin));
-		
-		foreach(Plugin p in pm.Plugins) {
-			if (p.PreferencesWidget != null)
-				store.AppendValues(ti1, p.Name, p.PreferencesWidget);
-		} */
+
+		// Get all plugins from all managers that have preferences
+		foreach(KeyValuePair<Type, PluginManager> kvp in PluginManager.AllManagers)
+			foreach(Plugin p in kvp.Value.Plugins) 
+				if (p.PluginPreferences != null)
+					store.AppendValues(ti, p.Name, p.PluginPreferences);
 		
 		PreferencesTreeView.Model = store;
 		PreferencesTreeView.AppendColumn("", new CellRendererText (), "text", 0);
@@ -97,18 +97,25 @@ public class PreferencesDialog : Dialog
 
 		if (sel.GetSelected(out tm, out ti)) {
 			IPluginPreferences ipp = (IPluginPreferences) tm.GetValue (ti, 1);
+
+			// If user tried to select a header row, keep the previous selection
+			if (ipp == null) {
+				sel.SelectIter(selectedIter);
+				return;
+			}
+
 			if (PreferencesPaned.Child2 != null)
 				PreferencesPaned.Remove(PreferencesPaned.Child2);
+
 			PreferencesPaned.Pack2(ipp.Widget, true, false);
 			ipp.LoadPreferences();	
+
+			selectedIter = ti;
 		}
 	}
 	
 	void OnDialogResponse(object o, Gtk.ResponseArgs args)
 	{
-		// update and save the preferences
-		//UpdatePreferences();
-
 		this.Destroy();
 	}
 
@@ -155,7 +162,6 @@ class GeneralPreferences : IPluginPreferences
 			InitWidget();
 
 		string val;
-
 
 		//
 		//
