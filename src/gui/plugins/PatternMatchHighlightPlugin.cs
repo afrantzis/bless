@@ -36,10 +36,12 @@ public class PatternMatchHighlightPlugin : GuiPlugin
 	DataBook dataBook;
 	PatternHighlighter patternHighlighter;
 	Window mainWindow;
+	IPluginPreferences pluginPreferences;
 
 	public PatternMatchHighlightPlugin(Window mw, UIManager uim)
 	{
 		mainWindow = mw;
+		pluginPreferences = new PatternMatchPreferences();
 
 		name = "PatternMatchHighlight";
 		author = "Alexandros Frantzis";
@@ -56,6 +58,10 @@ public class PatternMatchHighlightPlugin : GuiPlugin
 
 		loaded = true;
 		return true;
+	}
+
+	public override IPluginPreferences PluginPreferences {
+		get { return pluginPreferences; }
 	}
 
 	void OnPreferencesChanged(Preferences prefs)
@@ -135,6 +141,63 @@ class PatternHighlighter
 		}
 		
 	}	
+}
+
+class PatternMatchPreferences : IPluginPreferences
+{
+	PreferencesWidget preferencesWidget;
+
+	public Widget Widget {
+		get {
+			if (preferencesWidget == null)
+				InitWidget();
+			return preferencesWidget;
+		}
+	}
+
+	public void LoadPreferences()
+	{
+		if (preferencesWidget == null)
+			InitWidget();
+
+		if (Preferences.Instance["Highlight.PatternMatch"] == "True")
+			preferencesWidget.EnableHighlightCheckButton.Active = true;
+		else
+			preferencesWidget.EnableHighlightCheckButton.Active = false;
+	}
+
+
+	public void SavePreferences()
+	{
+
+	}
+
+	void InitWidget()
+	{
+		preferencesWidget = new PreferencesWidget();
+		preferencesWidget.EnableHighlightCheckButton.Toggled += OnEnableHighlightToggled;
+	}
+
+	void OnEnableHighlightToggled(object o, EventArgs args)
+	{
+		Preferences.Instance["Highlight.PatternMatch"] = preferencesWidget.EnableHighlightCheckButton.Active.ToString();
+	}
+}
+
+class PreferencesWidget : Gtk.HBox
+{
+	Gtk.CheckButton enableHighlightCheckButton;
+	
+	public Gtk.CheckButton EnableHighlightCheckButton {
+		get { return enableHighlightCheckButton; }
+	}
+
+	public PreferencesWidget()
+	{
+		enableHighlightCheckButton = new Gtk.CheckButton("Highlight matches of selection pattern");
+		this.PackStart(enableHighlightCheckButton, false, false, 6);
+		this.ShowAll();
+	}
 }
 
 } // end namespace
