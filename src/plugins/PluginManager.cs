@@ -175,6 +175,10 @@ public class PluginManager
 		
 		return ret;
 	}
+
+	public static IEnumerable<KeyValuePair<Type, PluginManager>> AllManagers {
+		get { return pluginManagers; }
+	}
 }
 
 }
