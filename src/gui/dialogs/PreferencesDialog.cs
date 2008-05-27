@@ -101,7 +101,6 @@ public class PreferencesDialog : Dialog
 				PreferencesPaned.Remove(PreferencesPaned.Child2);
 			PreferencesPaned.Pack2(ipp.Widget, true, false);
 			ipp.LoadPreferences();	
-			PreferencesPaned.ShowAll();
 		}
 	}
 	
@@ -125,7 +124,6 @@ class GeneralPreferences : IPluginPreferences
 	[Glade.Widget] RadioButton UndoUnlimitedRadioButton;
 	[Glade.Widget] SpinButton UndoActionsSpinButton;
 	[Glade.Widget] ComboBox DefaultEditModeComboBox;
-	[Glade.Widget] ComboBox DefaultNumberBaseComboBox;
 	[Glade.Widget] Entry TempDirEntry;
 	[Glade.Widget] Button SelectTempDirButton;
 	[Glade.Widget] Button SelectLayoutButton;
@@ -213,22 +211,6 @@ class GeneralPreferences : IPluginPreferences
 
 		//
 		//
-		val = prefs["Default.NumberBase"];
-		if (val != "Octal" && val != "Decimal" && val != "Hexadecimal")
-			val = "Hexadecimal";
-
-		{
-			NumberBaseEnum index;
-			if (val == "Hexadecimal")
-				index = NumberBaseEnum.Hexadecimal;
-			else if (val == "Decimal")
-				index = NumberBaseEnum.Decimal;
-			else
-				index = NumberBaseEnum.Octal;
-
-			DefaultNumberBaseComboBox.Active = (int)index;
-		}
-
 		if (prefs["ByteBuffer.TempDir"] != System.IO.Path.GetTempPath())
 			TempDirEntry.Text = prefs["ByteBuffer.TempDir"];
 		else
@@ -255,7 +237,6 @@ class GeneralPreferences : IPluginPreferences
 		UndoLimitedRadioButton.Toggled += OnUndoLimitedToggled;
 		UndoActionsSpinButton.ValueChanged += OnUndoActionsValueChanged;
 		DefaultEditModeComboBox.Changed += OnDefaultEditModeChanged;
-		DefaultNumberBaseComboBox.Changed += OnDefaultNumberBaseChanged;
 	}
 	
 	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
@@ -323,13 +304,6 @@ class GeneralPreferences : IPluginPreferences
 			prefs["Default.EditMode"] = (string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
 	}
 
-	private void OnDefaultNumberBaseChanged(object o, EventArgs args)
-	{
-		TreeIter iter;
-
-		if (DefaultNumberBaseComboBox.GetActiveIter (out iter))
-			prefs["Default.NumberBase"] = (string) DefaultNumberBaseComboBox.Model.GetValue (iter, 0);
-	}
 }
 
 class SessionPreferences : IPluginPreferences
