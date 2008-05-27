@@ -555,6 +555,10 @@ public class ByteBuffer : IBuffer {
 			
 			
 			if (so.Result == SaveOperation.OperationResult.Finished) { // save went ok
+				// make sure data in undo redo are stored safely
+				// because we are going to close the file
+				MakePrivateCopyOfUndoRedo();
+
 				LoadWithFile(so.SavePath);
 				
 				if (undoDeque.Count > 0)

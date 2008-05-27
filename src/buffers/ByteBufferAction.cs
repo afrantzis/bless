@@ -36,7 +36,8 @@ class AppendAction: ByteBufferAction {
 	Segment seg;
 	ByteBuffer byteBuf;
 	
-	public AppendAction(byte[] d, long index, long length, ByteBuffer bb) {
+	public AppendAction(byte[] d, long index, long length, ByteBuffer bb) 
+	{
 		byteBuf = bb;
 		
 		// if there is no data to append
@@ -51,7 +52,8 @@ class AppendAction: ByteBufferAction {
 		}
 	}
 	
-	public override void Do() {
+	public override void Do() 
+	{
 		if (seg == null)
 			return;
 		// use copy of segment seg to protect it from alterations 
@@ -89,7 +91,8 @@ class InsertAction: ByteBufferAction {
 		}
 	}
 	
-	public override void Do() {
+	public override void Do() 
+	{
 		if (seg == null)
 			return;
 		SegmentCollection tmp = new SegmentCollection();
@@ -99,7 +102,8 @@ class InsertAction: ByteBufferAction {
 		byteBuf.size += seg.Size;
 	}
 	
-	public override void Undo() {
+	public override void Undo() 
+	{
 		if (seg == null)
 			return;
 		byteBuf.segCol.DeleteRange(pos, pos + seg.Size - 1);
@@ -115,18 +119,21 @@ class DeleteAction: ByteBufferAction {
 	long pos1, pos2;
 	ByteBuffer byteBuf;
 	
-	public DeleteAction(long p1, long p2, ByteBuffer bb) {
+	public DeleteAction(long p1, long p2, ByteBuffer bb) 
+	{
 		byteBuf = bb;
 		pos1 = p1;
 		pos2 = p2;
 	}
 	
-	public override void Do() {
+	public override void Do() 
+	{
 		del = byteBuf.segCol.DeleteRange(pos1, pos2);
 		byteBuf.size -= pos2 - pos1 + 1;
 	}
 	
-	public override void Undo() {
+	public override void Undo() 
+	{
 		byteBuf.segCol.Insert(del, pos1);
 		byteBuf.size += pos2 - pos1 + 1;
 	}
@@ -149,19 +156,27 @@ class ReplaceAction: ByteBufferAction {
 	DeleteAction del;
 	InsertAction ins;
 	
-	public ReplaceAction(long p1, long p2, byte[] d, long index, long length, ByteBuffer bb) {
+	public ReplaceAction(long p1, long p2, byte[] d, long index, long length, ByteBuffer bb) 
+	{
 		del = new DeleteAction(p1, p2, bb);
 		ins = new InsertAction(p1, d, index, length, bb);
 	}
 	
-	public override void Do() {
+	public override void Do() 
+	{
 		del.Do();
 		ins.Do();
 	}
 	
-	public override void Undo() {
+	public override void Undo() 
+	{
 		ins.Undo();
 		del.Undo();
+	}
+
+	public override void MakePrivateCopyOfData()
+	{
+		del.MakePrivateCopyOfData();
 	}
 }
 
