@@ -19,15 +19,20 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+using System;
+
 namespace Bless.Buffers {
 
 
 public interface IBuffer {
 
-	void Insert(long pos, byte[] data, long index, long length) ;
+	void Insert(long pos, byte[] data, long index, long length);
 	long Read(byte[] data, long index, long pos, long len);
 	void Append(byte[] data, long index, long length);
 	
+	void InsertBuffer(long pos, IBuffer buf, long index, long length);
+	void AppendBuffer(IBuffer buf, long index, long length);
+
 	byte this[long index] {
 		set;
 		get;
@@ -38,5 +43,42 @@ public interface IBuffer {
 	}
 }
 
+
+public class BaseBuffer : IBuffer
+{
+	public virtual void Insert(long pos, byte[] data, long index, long length)
+	{
+		throw new NotImplementedException();
+	}
+
+	public virtual long Read(byte[] data, long index, long pos, long len)
+	{
+		throw new NotImplementedException();
+	}
+
+	public virtual void Append(byte[] data, long index, long length)
+	{
+		throw new NotImplementedException();
+	}
+
+	public virtual void InsertBuffer(long pos, IBuffer buf, long index, long length)
+	{
+		throw new NotImplementedException();
+	}
+
+	public virtual void AppendBuffer(IBuffer buf, long index, long length)
+	{
+		throw new NotImplementedException();
+	}
+
+	public virtual byte this[long index] {
+		set { throw new NotImplementedException(); }
+		get { throw new NotImplementedException(); }
+	}
+	
+	public virtual long Size {
+		get { throw new NotImplementedException(); }
+	}
+}
 
 }

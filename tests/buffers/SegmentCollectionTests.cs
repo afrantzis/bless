@@ -32,25 +32,11 @@ public class SegmentCollectionTests {
 	Bless.Buffers.IBuffer buf1;
 	Bless.Buffers.IBuffer buf2;
 
-	class MockBuffer: Bless.Buffers.IBuffer {
-		public void Append(byte[] data, long index, long length) { } 
-		public void Insert(long pos, byte[] data, long index, long length) { }
-		public long Read(byte[] data, long index, long pos, long len) { return 0; }
-		
-		public byte this[long index] {
-			set { }
-			get { return 0;}
-		}
-		public long Size {
-			get { return 0; }
-		}
-
-	}
 
 	[SetUp]
 	public void Init() {
-		buf1 = new MockBuffer();
-		buf2 = new MockBuffer();
+		buf1 = new BaseBuffer();
+		buf2 = new BaseBuffer();
 	}
 
 	[Test]

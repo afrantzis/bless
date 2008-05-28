@@ -33,7 +33,7 @@ namespace Bless.Buffers {
 /// It supports undo-redo and can easily handle large files.
 /// Editing is also very cheap.
 ///</summary>
-public class ByteBuffer : IBuffer {
+public class ByteBuffer : BaseBuffer {
 
 	///<summary>The file buffer associated with the ByteBuffer</summary>
 	internal FileBuffer	fileBuf;
@@ -262,7 +262,7 @@ public class ByteBuffer : IBuffer {
 	}
 	
 	///<summary>Append bytes at the end of the buffer</summary>
-	public void Append(byte[] data, long index, long length) 
+	public override void Append(byte[] data, long index, long length) 
 	{	
 		lock (LockObj) {
 			if (!modifyAllowed) return;
@@ -283,7 +283,7 @@ public class ByteBuffer : IBuffer {
 	}
 
 	///<summary>Insert bytes into the buffer</summary>
-	public void Insert(long pos, byte[] data, long index, long length) 
+	public override void Insert(long pos, byte[] data, long index, long length) 
 	{
 		lock (LockObj) {
 			if (!modifyAllowed) return;
@@ -307,12 +307,6 @@ public class ByteBuffer : IBuffer {
 			EmitChanged();
 		}
 	}		
-
-	///<summary>Read bytes from the buffer to an array</summary>
-	public long Read(byte[] data, long index, long pos, long len)
-	{
-		throw new NotImplementedException();
-	}
 
 	///<summary>Delete bytes from the buffer</summary>
 	public void Delete(long pos1, long pos2) 
@@ -791,7 +785,7 @@ public class ByteBuffer : IBuffer {
 	
 	
 	
-	public byte this[long index] {
+	public override byte this[long index] {
 		set { } 
 		get {
 			lock (LockObj) {
@@ -834,7 +828,7 @@ public class ByteBuffer : IBuffer {
 		}
 	}
 	
-	public long Size {
+	public override long Size {
 		get { return size;}
 	}
 

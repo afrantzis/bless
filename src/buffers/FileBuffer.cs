@@ -28,7 +28,7 @@ namespace Bless.Buffers {
 ///<summary>
 /// A buffer that allows access to a file by using a moving window
 ///</summary>
-public class FileBuffer: IBuffer
+public class FileBuffer: BaseBuffer
 {
 	[DllImport ("libc", SetLastError=true)]
 	static extern int ioctl (int fd, uint request, ref long size);
@@ -67,12 +67,10 @@ public class FileBuffer: IBuffer
 		return (pos >= winOffset && pos < winOffset + winOccupied);
 	}
 	
-	public void Insert(long pos, byte[] data, long index, long length) { /*read only buffer*/}
-	
 	///<summary>
 	/// Read data from the buffer 
 	///</summary>
-	public long Read(byte[] ba, long index, long pos, long len) 
+	public override long Read(byte[] ba, long index, long pos, long len) 
 	{
 		// bounds checking
 		if (pos >= FileLength || pos<0)
@@ -90,10 +88,7 @@ public class FileBuffer: IBuffer
 		return len;
 	}
 	
-	public void Append(byte[] data, long index, long length) { /* read only buffer */}
-	
-	
-	public byte this[long index] {
+	public override byte this[long index] {
 		set { /* read only buffer */ }
 		get {
 			// if the offset we are trying to read is not in the
@@ -117,7 +112,7 @@ public class FileBuffer: IBuffer
 	}
 	
 
-	public long Size {
+	public override long Size {
 		get { return FileLength; }
 	}
 	

@@ -61,13 +61,10 @@ public class Segment {
 	public void MakePrivateCopyOfData()
 	{
 		SimpleBuffer sb = new SimpleBuffer();
-		byte[] data = new byte[Size];
-		buffer.Read(data, 0, start, data.Length);
-		sb.Append(data, 0, data.Length);
-		
+		sb.AppendBuffer(buffer, 0, Size);
 		buffer = sb;
 		start = 0;
-		end = data.Length - 1;
+		end = Size - 1;
 	}
 	
 	public override string ToString() 
