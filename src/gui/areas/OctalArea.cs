@@ -87,9 +87,9 @@ public class OctalArea : GroupedArea {
 			byte[] ba = new byte[]{(byte)repl};
 
 			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
-				areaGroup.Buffer.Append(ba);
+				areaGroup.Buffer.Append(ba, 0, ba.LongLength);
 			else if (overwrite == false && areaGroup.CursorDigit == 0)
-				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba, 0, ba.LongLength);
 			else /*(if (overwrite==true || areaGroup.CursorDigit > 0)*/
 				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 

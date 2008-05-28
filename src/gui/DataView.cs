@@ -376,7 +376,7 @@ public class DataView {
 				byteBuffer.Replace(areaGroup.CursorOffset, endPos, pasteData);
 			}
 			else // if user doesn't want to overwrite or there is nothing to overwrite
-				byteBuffer.Insert(areaGroup.CursorOffset, pasteData);
+				byteBuffer.Insert(areaGroup.CursorOffset, pasteData, 0, pasteData.LongLength);
 
 			AddUndoCursorState(new CursorState(areaGroup.CursorOffset, 0, areaGroup.CursorOffset + pasteData.Length, 0));
 			cursorRedoDeque.Clear();

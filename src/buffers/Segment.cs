@@ -62,7 +62,7 @@ public class Segment {
 	{
 		SimpleBuffer sb = new SimpleBuffer();
 		byte[] data = new byte[Size];
-		buffer.Read(data, start, data.Length);
+		buffer.Read(data, 0, start, data.Length);
 		sb.Append(data, 0, data.Length);
 		
 		buffer = sb;

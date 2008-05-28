@@ -282,11 +282,6 @@ public class ByteBuffer : IBuffer {
 		}
 	}
 
-	public void Append(byte[] data) 
-	{
-		Append(data, 0, data.Length);
-	}
-	
 	///<summary>Insert bytes into the buffer</summary>
 	public void Insert(long pos, byte[] data, long index, long length) 
 	{
@@ -295,7 +290,7 @@ public class ByteBuffer : IBuffer {
 			if (!IsResizable) return;
 			
 			if (pos == size) {
-				Append(data);
+				Append(data, index, length);
 				return;
 			}
 			
@@ -313,11 +308,12 @@ public class ByteBuffer : IBuffer {
 		}
 	}		
 
-	public void Insert(long pos, byte[] data)
+	///<summary>Read bytes from the buffer to an array</summary>
+	public long Read(byte[] data, long index, long pos, long len)
 	{
-		Insert(pos, data, 0, data.Length);
+		throw new NotImplementedException();
 	}
-	
+
 	///<summary>Delete bytes from the buffer</summary>
 	public void Delete(long pos1, long pos2) 
 	{
@@ -793,15 +789,7 @@ public class ByteBuffer : IBuffer {
 		EmitFileChanged();
 	}
 	
-	public int Read(byte[] data, long pos, int len)
-	{
-		throw new NotImplementedException();
-	}
 	
-	public void Append(byte b)
-	{
-		throw new NotImplementedException();
-	}
 	
 	public byte this[long index] {
 		set { } 

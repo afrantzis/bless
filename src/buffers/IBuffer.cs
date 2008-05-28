@@ -25,9 +25,8 @@ namespace Bless.Buffers {
 public interface IBuffer {
 
 	void Insert(long pos, byte[] data, long index, long length) ;
-	int Read(byte[] data, long pos, int len);
+	long Read(byte[] data, long index, long pos, long len);
 	void Append(byte[] data, long index, long length);
-	void Append(byte data);
 	
 	byte this[long index] {
 		set;

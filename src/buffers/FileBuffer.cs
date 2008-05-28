@@ -72,16 +72,18 @@ public class FileBuffer: IBuffer
 	///<summary>
 	/// Read data from the buffer 
 	///</summary>
-	public int Read(byte[] ba, long pos, int len) 
+	public long Read(byte[] ba, long index, long pos, long len) 
 	{
 		// bounds checking
 		if (pos >= FileLength || pos<0)
 			return 0;
 		if (pos + len > FileLength)
-			len = (int)(FileLength-pos+1); 
+			len = FileLength-pos+1; 
 
 		reader.BaseStream.Seek(pos, SeekOrigin.Begin);
-		reader.Read(ba, 0, len);
+		// FIXME: The casts are dangerous but .NET doesn't have
+		// an Int64 version of Read()!
+		reader.Read(ba, (int)index, (int)len);
 		
 		// seek back to previous position
 		//reader.BaseStream.Seek(winOffset, SeekOrigin.Begin);
@@ -90,7 +92,6 @@ public class FileBuffer: IBuffer
 	
 	public void Append(byte[] data, long index, long length) { /* read only buffer */}
 	
-	public void Append(byte data){ /* read only buffer */}
 	
 	public byte this[long index] {
 		set { /* read only buffer */ }

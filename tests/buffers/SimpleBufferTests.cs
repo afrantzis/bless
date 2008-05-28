@@ -48,7 +48,7 @@ public class SimpleBufferTests {
 		sb.Append(ba, 0, ba.Length);
 
 		byte[] ba1 = new byte[3];
-		sb.Read(ba1, 1, 3);
+		sb.Read(ba1, 0, 1, 3);
 		Assert.AreEqual(3, ba1.Length);
 		Assert.AreEqual(2, ba1[0]);
 		Assert.AreEqual(3, ba1[1]);

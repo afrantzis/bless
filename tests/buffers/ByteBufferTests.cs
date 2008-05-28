@@ -33,7 +33,7 @@ public class ByteBufferTests {
 	public void AppendDoTest() {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 5, 7, 13, 17};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 
 		Assert.AreEqual(6, bb.Size);
 		Assert.AreEqual(1, bb[0]);
@@ -49,8 +49,8 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 5, 7};
 		byte[] ba1 = {13, 17};
-		bb.Append(ba);
-		bb.Append(ba1);
+		bb.Append(ba, 0, ba.LongLength);
+		bb.Append(ba1, 0, ba1.LongLength);
 
 		Assert.AreEqual(6, bb.Size, "#1");
 		Assert.AreEqual(3, bb[1], "#2");
@@ -70,9 +70,9 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 17};
 		byte[] ba1 = {5, 7, 13};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 		//bb.Display("D1");
-		bb.Insert(2, ba1);
+		bb.Insert(2, ba1, 0, ba1.LongLength);
 		//bb.Display("D2");
 
 		Assert.AreEqual(6, bb.Size, "#1");
@@ -89,9 +89,9 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 17};
 		byte[] ba1 = {5, 7, 13};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 		//bb.Display("D1");
-		bb.Insert(2, ba1);
+		bb.Insert(2, ba1, 0, ba1.LongLength);
 		//bb.Display("D2");
 
 		Assert.AreEqual(6, bb.Size, "#1");
@@ -111,9 +111,9 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 17};
 		byte[] ba1 = {5, 7, 13};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 		//bb.Display("D1");
-		bb.Insert(2, ba1);
+		bb.Insert(2, ba1, 0, ba1.LongLength);
 		//bb.Display("D2");
 		bb.Delete(1, 3);
 
@@ -128,9 +128,9 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {1, 3, 17};
 		byte[] ba1 = {5, 7, 13};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 		//bb.Display("D1");
-		bb.Insert(2, ba1);
+		bb.Insert(2, ba1, 0, ba1.LongLength);
 		//bb.Display("D2");
 		bb.Delete(1, 3);
 
@@ -167,7 +167,7 @@ public class ByteBufferTests {
 	public void FileLoadTest2() {
 		ByteBuffer bb = ByteBuffer.FromFile("test1.bin");
 		byte[] ba = {0x41, 0x61};
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 
 		long size = bb.Size;
 		int sum = 0;
@@ -182,7 +182,7 @@ public class ByteBufferTests {
 	public void FileLoadTest3() {
 		ByteBuffer bb = ByteBuffer.FromFile("test1.bin");
 		byte[] ba = {0x41, 0x61};
-		bb.Insert(768, ba);
+		bb.Insert(768, ba, 0, ba.LongLength);
 
 		long size = bb.Size;
 		int sum = 0;
@@ -200,7 +200,7 @@ public class ByteBufferTests {
 		byte[] ba = {0x41, 0x61};
 		long size1 = bb.Size;
 
-		bb.Insert(768, ba);
+		bb.Insert(768, ba, 0, ba.LongLength);
 		Assert.AreEqual(size1 + 2, bb.Size, "#1");
 
 		IAsyncResult ar = bb.BeginSaveAs("test2.bin", null, null);
@@ -224,7 +224,7 @@ public class ByteBufferTests {
 		ByteBuffer bb = new ByteBuffer();
 		byte[] ba = {0x41, 0x61};
 		Assert.AreEqual(false, bb.HasChanged, "#0");
-		bb.Append(ba);
+		bb.Append(ba, 0, ba.LongLength);
 		Assert.AreEqual(true, bb.HasChanged, "#1");
 		bb.Undo();
 		Assert.AreEqual(false, bb.HasChanged, "#2");
@@ -237,8 +237,8 @@ public class ByteBufferTests {
 		byte[] ba = {0x01, 0x02, 0xfe, 0xff};
 		byte[] baEmpty = new byte[0];
 
-		bb.Append(ba);
-		bb.Insert(2, baEmpty);
+		bb.Append(ba, 0, ba.LongLength);
+		bb.Insert(2, baEmpty, 0, baEmpty.LongLength);
 
 		Assert.AreEqual(4, bb.Size, "#Size before undo");
 		Assert.AreEqual(0x01, bb[0], "#bb[0] before undo");
@@ -261,8 +261,8 @@ public class ByteBufferTests {
 		byte[] ba = {0x01, 0x02, 0xfe, 0xff};
 		byte[] baEmpty = new byte[0];
 
-		bb.Append(ba);
-		bb.Append(baEmpty);
+		bb.Append(ba, 0, ba.LongLength);
+		bb.Append(baEmpty, 0, baEmpty.LongLength);
 
 		Assert.AreEqual(4, bb.Size, "#Size before undo");
 		Assert.AreEqual(0x01, bb[0], "#bb[0] before undo");
@@ -288,8 +288,8 @@ public class ByteBufferTests {
 		byte[] ba4 = {0x07, 0x08};
 
 		bb.BeginActionChaining();
-		bb.Append(ba1);
-		bb.Insert(1, ba2);
+		bb.Append(ba1, 0, ba1.LongLength);
+		bb.Insert(1, ba2, 0, ba2.LongLength);
 		bb.EndActionChaining();
 
 		Assert.AreEqual(4, bb.Size, "#1");
@@ -301,8 +301,8 @@ public class ByteBufferTests {
 		bb.Redo();
 
 		bb.BeginActionChaining();
-		bb.Append(ba4);
-		bb.Insert(4, ba3);
+		bb.Append(ba4, 0, ba4.LongLength);
+		bb.Insert(4, ba3, 0, ba3.LongLength);
 		bb.EndActionChaining();
 
 		Assert.AreEqual(8, bb.Size, "#5");
@@ -326,10 +326,10 @@ public class ByteBufferTests {
 		byte[] ba4 = {0x07, 0x08};
 
 
-		bb.Append(ba1);
-		bb.Insert(1, ba2);
-		bb.Append(ba4);
-		bb.Insert(4, ba3);
+		bb.Append(ba1, 0, ba1.LongLength);
+		bb.Insert(1, ba2, 0, ba2.LongLength);
+		bb.Append(ba4, 0, ba4.LongLength);
+		bb.Insert(4, ba3, 0, ba3.LongLength);
 
 		Assert.AreEqual(true, bb.CanUndo, "#1");
 		bb.Undo();

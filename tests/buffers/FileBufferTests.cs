@@ -33,7 +33,7 @@ public class FileBufferTests {
 		FileBuffer fb = new FileBuffer("test1.bin");
 		byte[] baExpect = {0x3c, 0x13, 0xe3, 0x36, 0xcc, 0x66, 0x21, 0xda};
 		byte[] ba = new byte[baExpect.Length];
-		fb.Read(ba, 0x3f0, baExpect.Length);
+		fb.Read(ba, 0, 0x3f0, baExpect.Length);
 
 		Assert.IsNotNull(ba, "#1");
 		for (int i = 0;i < baExpect.Length;i++)

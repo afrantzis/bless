@@ -157,7 +157,7 @@ public class SaveInPlaceOperation : ThreadedAsyncOperation, ISaveState
 			
 			// for every full block
 			for (i = 0; i < nBlocks; i++) {
-				s.Buffer.Read(baTemp, s.Start + i * blockSize, blockSize);	
+				s.Buffer.Read(baTemp, 0, s.Start + i * blockSize, blockSize);	
 				fs.Write(baTemp, 0, blockSize);
 				bytesSaved = (i + 1) * blockSize;
 				
@@ -167,7 +167,7 @@ public class SaveInPlaceOperation : ThreadedAsyncOperation, ISaveState
 		
 			// if last non-full block is not empty
 			if (last != 0 && !cancelled) {
-				s.Buffer.Read(baTemp, s.Start + i * blockSize, last);
+				s.Buffer.Read(baTemp, 0, s.Start + i * blockSize, last);
 				fs.Write(baTemp, 0, last);
 			}
 			

@@ -40,9 +40,9 @@ public class SimpleBuffer : IBuffer
 		throw new NotImplementedException();
 	}
 	
-	public int Read(byte[] ba, long pos, int len) 
+	public long Read(byte[] ba, long index, long pos, long len) 
 	{
-		Array.Copy(data, pos, ba, 0, len);
+		Array.Copy(data, pos, ba, index, len);
 		return len;
 	}
 	
@@ -63,10 +63,6 @@ public class SimpleBuffer : IBuffer
 		}
 	}
 	
-	public void Append(byte b) 
-	{
-			throw new NotImplementedException();	
-	}
 	
 	public byte this[long index] {
 		set {

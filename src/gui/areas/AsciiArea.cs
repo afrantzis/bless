@@ -182,11 +182,11 @@ public class AsciiArea : Area {
 
 		if (ba != null) {
 			if (areaGroup.CursorOffset == areaGroup.Buffer.Size)
-				areaGroup.Buffer.Append(ba);
+				areaGroup.Buffer.Append(ba, 0, ba.LongLength);
 			else if (overwrite == true)
 				areaGroup.Buffer.Replace(areaGroup.CursorOffset, areaGroup.CursorOffset, ba);
 			else if (overwrite == false)
-				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba);
+				areaGroup.Buffer.Insert(areaGroup.CursorOffset, ba, 0, ba.LongLength);
 
 			return true;
 		}
