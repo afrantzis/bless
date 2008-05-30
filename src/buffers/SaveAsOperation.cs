@@ -62,18 +62,17 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 	public SaveAsOperation(ByteBuffer bb, string fn, ProgressCallback pc,
 							AsyncCallback ac, bool glibIdle): base(pc, ac, glibIdle)
 	{
-#if ENABLE_UNIX_SPECIFIC
-		// get info about the device the file will be saved on
-		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
-		Mono.Unix.Native.Syscall.statvfs(Path.GetDirectoryName(fn), out stat);
-		long freeSpace = (long)(stat.f_bavail * stat.f_bsize);
-			
-		// make sure there is enough disk space in the device
-		if (freeSpace < bb.Size) {
-			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), fn);
-			throw new IOException(msg);
+		try {
+			long freeSpace = Portable.GetAvailableDiskSpace(Path.GetDirectoryName(fn));
+
+			// make sure there is enough disk space in the device
+			if (freeSpace < bb.Size) {
+				string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), fn);
+				throw new IOException(msg);
+			}
 		}
-#endif		
+		catch (NotImplementedException) {}
+
 		byteBuffer=bb;
 		savePath=fn;
 		fs=null;

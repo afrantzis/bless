@@ -51,23 +51,20 @@ public class SaveOperation : SaveAsOperation
 							AsyncCallback ac, bool glibIdle)
 							: base(bb, tempFilename, pc, ac, glibIdle)
 	{
-#if ENABLE_UNIX_SPECIFIC
-		// get info about the device the file will be saved on
-		FileInfo fi = new FileInfo(bb.Filename);
-			
-		Mono.Unix.Native.Statvfs stat = new Mono.Unix.Native.Statvfs();
-		Mono.Unix.Native.Syscall.statvfs(bb.Filename, out stat);
-			
-		long freeSpace = (long)(stat.f_bavail * stat.f_bsize) + fi.Length;
-			
-		// make sure there is enough disk space in the device
-		if (freeSpace < bb.Size) {
-			if (System.IO.File.Exists(savePath))
-				System.IO.File.Delete(savePath);
-			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), bb.Filename);
-			throw new IOException(msg);
+		try {
+			FileInfo fi = new FileInfo(bb.Filename);
+			long freeSpace = Portable.GetAvailableDiskSpace(bb.Filename) + fi.Length;
+
+			// make sure there is enough disk space in the device
+			if (freeSpace < bb.Size) {
+				// delete temporary file
+				if (System.IO.File.Exists(tempFilename))
+					System.IO.File.Delete(tempFilename);
+				string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), bb.Filename);
+				throw new IOException(msg);
+			}
 		}
-#endif
+		catch (NotImplementedException) {}
 	}
 	
 	protected override bool StartProgress()
