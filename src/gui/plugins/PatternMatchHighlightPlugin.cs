@@ -124,7 +124,7 @@ class PatternHighlighter
 			
 		Util.Range sel = ag.Selection;
 		
-		if (sel.IsEmpty())
+		if (sel.IsEmpty() || sel.Size > 512)
 			return;
 
 		int nrows;
@@ -133,13 +133,21 @@ class PatternHighlighter
 		findStrategy.Buffer = ag.Buffer;
 		findStrategy.Position = view.Start;
 		findStrategy.Pattern = ag.Buffer.RangeToByteArray(sel);
-
+		
+		// Merge overlapping matches
 		Util.Range match;
+		Util.Range currentHighlight = new Util.Range();
 		
 		while ((match = findStrategy.FindNext(view.End)) != null) {
-			ag.AddHighlight(match.Start, match.End, Drawer.HighlightType.PatternMatch);
+			if (currentHighlight.End >= match.Start)
+				currentHighlight.End = match.End;
+			else { 
+				ag.AddHighlight(currentHighlight.Start, currentHighlight.End, Drawer.HighlightType.PatternMatch);
+				currentHighlight = match;
+			}
 		}
 		
+		ag.AddHighlight(currentHighlight.Start, currentHighlight.End, Drawer.HighlightType.PatternMatch);
 	}	
 }
 
