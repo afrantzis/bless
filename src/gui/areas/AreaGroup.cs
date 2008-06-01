@@ -536,10 +536,6 @@ public class AreaGroup
 		// get all highlights in current view
 		IList<Highlight> viewableHighlights = highlights.SearchOverlap(view);
 		
-		foreach(Highlight h in viewableHighlights) {
-			h.Intersect(view);
-		}
-		
 		return BreakDownHighlights(view, viewableHighlights);
 	}
 	
