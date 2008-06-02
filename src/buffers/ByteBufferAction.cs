@@ -28,6 +28,7 @@ abstract class ByteBufferAction {
 	abstract public void Do();
 	abstract public void Undo();
 	virtual public void MakePrivateCopyOfData() { }
+	virtual public long GetPrivateCopySize() { return 0; }
 }
 
 ///<summary>Action for appending at the end of a ByteBuffer</summary>
@@ -141,13 +142,24 @@ class DeleteAction: ByteBufferAction {
 	public override void MakePrivateCopyOfData()
 	{
 		foreach(Segment seg in del.List) {
-			
 			if (seg.Buffer.GetType() == typeof(FileBuffer)) {
 				seg.MakePrivateCopyOfData();
 			}
 		}
 	}
 	
+	public override long GetPrivateCopySize() 
+	{ 
+		long size = 0;
+
+		foreach(Segment seg in del.List) {
+			if (seg.Buffer.GetType() == typeof(FileBuffer)) {
+				size += seg.Size;
+			}
+		}
+
+		return size;
+	}
 }
 
 ///<summary>Convenience action for replacing data in ByteBuffer</summary>
@@ -177,6 +189,11 @@ class ReplaceAction: ByteBufferAction {
 	public override void MakePrivateCopyOfData()
 	{
 		del.MakePrivateCopyOfData();
+	}
+
+	public override long GetPrivateCopySize() 
+	{ 
+		return del.GetPrivateCopySize();
 	}
 }
 
@@ -214,6 +231,17 @@ class MultiAction: ByteBufferAction {
 		foreach(ByteBufferAction a in list) {
 			a.MakePrivateCopyOfData();
 		}
+	}
+
+	public override long GetPrivateCopySize() 
+	{
+		long size = 0;
+
+		foreach(ByteBufferAction a in list) {
+			size +=	a.GetPrivateCopySize();
+		}
+
+		return size;
 	}
 }
 

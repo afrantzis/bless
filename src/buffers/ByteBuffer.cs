@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Bless.Util;
+using Bless.Tools;
 
 namespace Bless.Buffers {
 
@@ -545,9 +546,8 @@ public class ByteBuffer : BaseBuffer {
 			
 			
 			if (so.Result == SaveOperation.OperationResult.Finished) { // save went ok
-				// make sure data in undo redo are stored safely
-				// because we are going to close the file
-				MakePrivateCopyOfUndoRedo();
+				// No need to call CloseFile() MakePrivateCopyOfUndoRedo()
+				// because it has already been called in SaveOperation
 
 				LoadWithFile(so.SavePath);
 				
@@ -753,11 +753,64 @@ public class ByteBuffer : BaseBuffer {
 		// can become invalid (eg after saving a file)
 		// Copy the data to private in-memory buffers to avoid data corruption
 		// and crashes...
-		foreach(ByteBufferAction action in undoDeque)
+		//
+
+		if (Preferences.Instance["Undo.KeepAfterSave"] == "Never") {
+			undoDeque.Clear();
+			redoDeque.Clear();
+			return;
+		}
+
+		if (Preferences.Instance["Undo.KeepAfterSave"] == "Always") {
+			foreach(ByteBufferAction action in undoDeque)
+				action.MakePrivateCopyOfData();
+
+			foreach(ByteBufferAction action in redoDeque)
+				action.MakePrivateCopyOfData();
+
+			return;
+		}
+
+		// if Preferences.Instance["Undo.KeepAfterSave"] == "Memory"
+		// drop the undo and redo actions that don't fit into memory (and all actions
+		// after them in the Deques).
+		Deque<ByteBufferAction> newUndoDeque = new Deque<ByteBufferAction>();
+		Deque<ByteBufferAction> newRedoDeque = new Deque<ByteBufferAction>();
+
+		foreach(ByteBufferAction action in undoDeque) {
+			long freeMem = long.MaxValue;
+			try {	
+				freeMem = Portable.GetAvailableMemory();
+			}
+			catch(NotImplementedException) {}
+
+			if (freeMem < action.GetPrivateCopySize())
+				break;
+
 			action.MakePrivateCopyOfData();
+			newUndoDeque.AddEnd(action);
+		}
 		
-		foreach(ByteBufferAction action in redoDeque)
+		
+		foreach(ByteBufferAction action in redoDeque) {
+			long freeMem = long.MaxValue;
+			try {	
+				freeMem = Portable.GetAvailableMemory();
+			}
+			catch(NotImplementedException) {}
+
+			if (freeMem < action.GetPrivateCopySize())
+				break;
+
 			action.MakePrivateCopyOfData();
+			newRedoDeque.AddEnd(action);
+		}
+
+		undoDeque.Clear();
+		redoDeque.Clear();
+
+		undoDeque = newUndoDeque;
+		redoDeque = newRedoDeque;
 	}
 	
 	private void SetupFSW()

@@ -6,6 +6,7 @@
 	<pref name="Tools.Statistics.Show">False</pref>
 	<pref name="Session.RememberWindowGeometry">True</pref>
 	<pref name="Highlight.PatternMatch">True</pref>	
+	<pref name="Undo.KeepAfterSave">Memory</pref>
 	<pref name="View.Toolbar.Show">True</pref>
 	<pref name="Default.NumberBase">Hexadecimal</pref>
 	<pref name="View.Statusbar.Offset">True</pref>
