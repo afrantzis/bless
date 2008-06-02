@@ -38,6 +38,7 @@ public class PreferencesDialog : Dialog
 	Window mainWindow;
 	GeneralPreferences generalPreferences;
 	SessionPreferences sessionPreferences;
+	UndoPreferences undoPreferences;
 	TreeIter selectedIter;
 
 	[Glade.Widget] Paned PreferencesPaned;
@@ -54,6 +55,7 @@ public class PreferencesDialog : Dialog
 		
 		generalPreferences = new GeneralPreferences(mainWindow);
 		sessionPreferences = new SessionPreferences(mainWindow);
+		undoPreferences = new UndoPreferences(mainWindow);
 		LoadPreferencesTreeView();
 
 		this.Modal = false;
@@ -70,6 +72,7 @@ public class PreferencesDialog : Dialog
 		TreeStore store = new TreeStore(typeof(string), typeof(IPluginPreferences));
 		
 		store.AppendValues(Catalog.GetString("General"), generalPreferences);
+		store.AppendValues(Catalog.GetString("Undo"), undoPreferences);
 		store.AppendValues(Catalog.GetString("Session"), sessionPreferences);
 		
 		TreeIter ti = store.AppendValues(Catalog.GetString("Plugins"), null);
@@ -127,9 +130,6 @@ class GeneralPreferences : IPluginPreferences
 
 	[Glade.Widget] Entry LayoutFileEntry;
 	[Glade.Widget] CheckButton UseCurrentLayoutCheckButton;
-	[Glade.Widget] RadioButton UndoLimitedRadioButton;
-	[Glade.Widget] RadioButton UndoUnlimitedRadioButton;
-	[Glade.Widget] SpinButton UndoActionsSpinButton;
 	[Glade.Widget] ComboBox DefaultEditModeComboBox;
 	[Glade.Widget] Entry TempDirEntry;
 	[Glade.Widget] Button SelectTempDirButton;
@@ -175,31 +175,6 @@ class GeneralPreferences : IPluginPreferences
 
 		//
 		//
-		val = prefs["Undo.Limited"];
-
-		try {
-			bool limited = Convert.ToBoolean(val);
-			UndoLimitedRadioButton.Active = limited;
-			UndoUnlimitedRadioButton.Active = !limited;
-		}
-		catch (FormatException e) {
-			System.Console.WriteLine(e.Message);
-			UndoLimitedRadioButton.Active = true;
-		}
-
-		//
-		val = prefs["Undo.Actions"];
-
-		try {
-			int actions = Convert.ToInt32(val);
-			UndoActionsSpinButton.Value = actions;
-		}
-		catch (FormatException e) {
-			System.Console.WriteLine(e.Message);
-			UndoActionsSpinButton.Value = 100;
-		}
-
-		//
 		//
 		val = prefs["Default.EditMode"];
 		if (val != "Insert" && val != "Overwrite")
@@ -240,8 +215,6 @@ class GeneralPreferences : IPluginPreferences
 
 		LayoutFileEntry.Changed += OnLayoutFileChanged;
 		UseCurrentLayoutCheckButton.Toggled += OnUseCurrentLayoutToggled;
-		UndoLimitedRadioButton.Toggled += OnUndoLimitedToggled;
-		UndoActionsSpinButton.ValueChanged += OnUndoActionsValueChanged;
 		DefaultEditModeComboBox.Changed += OnDefaultEditModeChanged;
 	}
 	
@@ -292,15 +265,6 @@ class GeneralPreferences : IPluginPreferences
 		prefs["Default.Layout.UseCurrent"] = UseCurrentLayoutCheckButton.Active.ToString();
 	}
 
-	private void OnUndoLimitedToggled(object o, EventArgs args)
-	{
-		prefs["Undo.Limited"] = UndoLimitedRadioButton.Active.ToString();
-	}
-
-	private void OnUndoActionsValueChanged(object o, EventArgs args)
-	{
-		prefs["Undo.Actions"] = UndoActionsSpinButton.ValueAsInt.ToString();
-	}
 
 	private void OnDefaultEditModeChanged(object o, EventArgs args)
 	{
@@ -426,6 +390,150 @@ class SessionPreferences : IPluginPreferences
 	void RememberWindowGeometryToggled(object o, EventArgs args)
 	{
 		prefs["Session.RememberWindowGeometry"] = RememberWindowGeometryCheckButton.Active.ToString();
+	}
+}
+
+class UndoPreferences : IPluginPreferences
+{
+	Preferences prefs;
+
+	[Glade.Widget] Gtk.VBox UndoPreferencesVBox;
+	
+	[Glade.Widget] RadioButton UndoLimitedRadioButton;
+	[Glade.Widget] RadioButton UndoUnlimitedRadioButton;
+	[Glade.Widget] SpinButton UndoActionsSpinButton;
+	
+	[Glade.Widget] RadioButton KeepUndoAlwaysRadioButton;
+	[Glade.Widget] RadioButton KeepUndoMemoryRadioButton;
+	[Glade.Widget] RadioButton KeepUndoNeverRadioButton;
+	
+	public UndoPreferences(Window mw)
+	{
+		prefs = Preferences.Instance;
+	} 
+	
+	public Widget Widget {
+		get {
+			if (UndoPreferencesVBox == null)
+				InitWidget();
+			
+			return UndoPreferencesVBox;
+		}
+	}
+	
+
+	public void LoadPreferences()
+	{
+		string val;
+
+		//
+		val = prefs["Undo.Limited"];
+
+		try {
+			bool limited = Convert.ToBoolean(val);
+			UndoLimitedRadioButton.Active = limited;
+			UndoUnlimitedRadioButton.Active = !limited;
+		}
+		catch (FormatException e) {
+			System.Console.WriteLine(e.Message);
+			UndoLimitedRadioButton.Active = true;
+		}
+
+		//
+		val = prefs["Undo.Actions"];
+
+		try {
+			int actions = Convert.ToInt32(val);
+			UndoActionsSpinButton.Value = actions;
+		}
+		catch (FormatException e) {
+			System.Console.WriteLine(e.Message);
+			UndoActionsSpinButton.Value = 100;
+		}
+
+		//
+		val = prefs["Undo.KeepAfterSave"];
+
+		KeepUndoAlwaysRadioButton.Active = false;
+		KeepUndoMemoryRadioButton.Active = false;
+		KeepUndoNeverRadioButton.Active = false;
+
+		switch(val.ToLower()) {
+			case "always":
+				KeepUndoAlwaysRadioButton.Active = true;
+				break;
+
+			case "never":
+				KeepUndoNeverRadioButton.Active = true;
+				break;	
+			
+			case "memory":
+			default:
+				KeepUndoMemoryRadioButton.Active = true;
+				break;
+		}
+	}
+	
+	public void SavePreferences()
+	{
+		// All preferences are applied instantly...
+		// No need to save them here
+	}
+
+	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
+	{
+		string val = prefs[key];
+
+		try {
+			bool b = Convert.ToBoolean(val);
+			cb.Active = b;
+		}
+		catch (FormatException e) {
+			System.Console.WriteLine(e.Message);
+			cb.Active = defaultValue;
+		}
+
+	}
+
+	void InitWidget()
+	{
+		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "UndoPreferencesVBox", "bless");
+		gxml.Autoconnect (this);
+
+		UndoLimitedRadioButton.Toggled += OnUndoLimitedToggled;
+		UndoActionsSpinButton.ValueChanged += OnUndoActionsValueChanged;
+
+		KeepUndoAlwaysRadioButton.Toggled += OnKeepUndoAlwaysToggled;
+		KeepUndoMemoryRadioButton.Toggled += OnKeepUndoMemoryToggled;
+		KeepUndoNeverRadioButton.Toggled += OnKeepUndoNeverToggled;
+	}
+
+	private void OnUndoLimitedToggled(object o, EventArgs args)
+	{
+		prefs["Undo.Limited"] = UndoLimitedRadioButton.Active.ToString();
+	}
+
+	private void OnUndoActionsValueChanged(object o, EventArgs args)
+	{
+		prefs["Undo.Actions"] = UndoActionsSpinButton.ValueAsInt.ToString();
+	}
+	
+	private void OnKeepUndoAlwaysToggled(object o, EventArgs args) 
+	{
+		if (KeepUndoAlwaysRadioButton.Active)
+			prefs["Undo.KeepAfterSave"] = "Always";
+	}
+
+	private void OnKeepUndoMemoryToggled(object o, EventArgs args) 
+	{
+		if (KeepUndoMemoryRadioButton.Active)
+			prefs["Undo.KeepAfterSave"] = "Memory";
+	}
+
+	private void OnKeepUndoNeverToggled(object o, EventArgs args) 
+	{
+		if (KeepUndoNeverRadioButton.Active)
+			prefs["Undo.KeepAfterSave"] = "Never";
 	}
 }
 
