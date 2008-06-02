@@ -1,6 +1,6 @@
-Bless - Gtk# Hex Editor v0.5.2
+Bless - Gtk# Hex Editor v0.5.9
 ==============================
-Copyright (c) 2004-2007, Alexandros Frantzis
+Copyright (c) 2004-2008, Alexandros Frantzis
 
 Thank you for using ( or at least trying out :) ) Bless!
 
@@ -29,6 +29,7 @@ See the file COPYING for more information.
 Main Features
 -------------
   * Efficient editing of large data files. 
+  * Raw disk editing.
   * Multilevel undo - redo operations.
   * Customizable data views.
   * Fast data rendering on screen.
@@ -139,3 +140,6 @@ Note: The developer documentation is almost non-existant.
   the original file is deleted, in this case freeing 20MB.
       Although this can be a problem (when there is not enough disk space), it 
   can also be seen as a safety measure in case something goes wrong when saving.
+
+  A notable exception to the above is when the size of the file to be saved has 
+  not been changed. In that case the file is saved in-place.

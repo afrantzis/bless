@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 	<!ENTITY legal SYSTEM "legal.xml">
-	<!ENTITY appversion "0.5.2">
+	<!ENTITY appversion "0.5.9">
 	<!ENTITY manrevision "1.0">
-	<!ENTITY date "Aug 2007">
+	<!ENTITY date "Jun 2008">
 	<!ENTITY app "<application>Bless</application>">
 	<!-- Information about the entities
 		The legal.xml file contains legal information, there is no need to edit the file. 
@@ -29,7 +29,7 @@
 
 		<copyright> 
 			<year>2004</year> 
-			<year>2007</year> 
+			<year>2008</year> 
 			<holder>Alexandros Frantzis</holder> 
 		</copyright> 
 <!-- translators: uncomment this:
@@ -402,7 +402,7 @@
 		</para>
 		<note>
 			<para>
-				&app; can currently handle only regular files, not block or character device files (eg /dev/hda).
+				&app; can currently handle regular files and block device files (eg /dev/hda).
 			</para>
 		</note>
 		
@@ -1613,34 +1613,7 @@
 			</varlistentry>
 		</variablelist>
 		<variablelist>
-		<title>Undo</title>
-			<varlistentry>
-				<term>Limit to X actions</term>
-				<listitem>
-					<para>
-						Limit the number of actions that can be undone to X actions.
-					</para>
-				</listitem>
-			</varlistentry>
-			<varlistentry>
-				<term>Unlimited Undo</term>
-				<listitem>
-					<para>
-						Don't limit the number of actions that can be undone.
-					</para>
-				</listitem>
-			</varlistentry>
-		</variablelist>
-		<variablelist>
 		<title>Misc</title>
-			<varlistentry>
-				<term>Highlight matches of selection pattern</term>
-				<listitem>
-					<para>
-						Whether patterns matching the selected range of data will be highlighted in the Data View.
-					</para>
-				</listitem>
-			</varlistentry>
 			<varlistentry>
 				<term>Default edit mode</term>
 				<listitem>
@@ -1663,6 +1636,71 @@
 		
 		</section>
 		
+		<section id="bless-customizing-preferences-undo">
+		<title>Undo Preferences</title>
+		<figure>
+			<title>Undo Preferences</title>
+			<screenshot><mediaobject>
+				<imageobject>
+					<imagedata fileref="figures/bless_preferences_undo.png" format="PNG"/>
+				</imageobject>
+				<textobject>
+					<phrase>Undo Preferences</phrase>
+				</textobject>
+			</mediaobject></screenshot>
+		</figure>
+		<variablelist>
+		<title>Undo Limit</title>
+			<varlistentry>
+				<term>Limit to X actions</term>
+				<listitem>
+					<para>
+						Limit the number of actions that can be undone to X actions.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Unlimited Undo</term>
+				<listitem>
+					<para>
+						Don't limit the number of actions that can be undone.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		<variablelist>
+		<title>Keep Undo History After Save</title>
+			<varlistentry>
+				<term>Always</term>
+				<listitem>
+					<para>
+						Always keep undo history after a file is saved.
+					</para>
+					<warning>
+						When dealing with large amounts of undo data this option may
+						fill up all memory and cause a severe degradation of system performance.
+					</warning>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>What fits in main memory</term>
+				<listitem>
+					<para>
+						Only keep the part of the history that fits in main memory (RAM).
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Never</term>
+				<listitem>
+					<para>
+						Never keep undo history after a file is saved.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		
+		</section>
 		
 		<section id="bless-customizing-preferences-session">
 		<title>Session Preferences</title>
@@ -2032,6 +2070,7 @@
 		</para>
 		<simplelist>
 			<member>The GUI</member>
+			<member>The areas displayed inside the Data Views</member>
 			<member>Export builders</member>
 		</simplelist>
 		<para>
@@ -2111,7 +2150,11 @@
 	be saved in the same storage device as /tmp, you need to have 20+21=41MB free
 	space in that storage device to be able to save it. After a successful save,
 	the original file is deleted, in this case freeing 20MB.Although this can be a problem (when there is not enough disk space), it
-	can also be seen as a safety measure in case something goes wrong when saving.</simpara></answer>
+	can also be seen as a safety measure in case something goes wrong when saving.</simpara>
+	<simpara>
+		A notable exception to the above is when the size of the file to be saved has not been changed. In that case the file is saved in-place.
+	</simpara>
+	</answer>
 	        </qandaentry>
 
 	<qandaentry><question><simpara>The data in the data areas isn't displayed correctly! What is wrong?</simpara></question>

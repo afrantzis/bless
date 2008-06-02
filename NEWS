@@ -1,3 +1,12 @@
+Bless v0.6.0
+---------------------
+
+* Read/Write support for block devices.
+* Saving speed improvements.
+* Rendering speed improvements.
+* Various bug fixes (gna.org #9660, #10378, #11397, #10601)
+* A lot of internal changes that pave the way for exciting features...
+
 Bless v0.5.2 20070831
 ---------------------
 
