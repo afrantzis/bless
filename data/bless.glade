@@ -1152,7 +1152,7 @@ Text</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkButton" id="CloseButton1">
+          <widget class="GtkButton" id="CloseButton">
             <property name="visible">True</property>
             <property name="relief">GTK_RELIEF_NONE</property>
             <property name="response_id">0</property>
@@ -1260,7 +1260,7 @@ Text</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkButton" id="CloseButton2">
+          <widget class="GtkButton" id="CloseButton">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="relief">GTK_RELIEF_NONE</property>
@@ -1386,7 +1386,7 @@ Text</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkButton" id="CloseButton3">
+          <widget class="GtkButton" id="CloseButton">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="relief">GTK_RELIEF_NONE</property>
@@ -1706,7 +1706,7 @@ Text</property>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="CancelButton1">
+                  <widget class="GtkButton" id="CancelButton">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">gtk-cancel</property>
                     <property name="use_stock">True</property>
@@ -1736,7 +1736,7 @@ Text</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <widget class="GtkButton" id="CloseButton4">
+              <widget class="GtkButton" id="CloseButton">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">gtk-close</property>
                 <property name="use_stock">True</property>
@@ -1796,7 +1796,7 @@ Text</property>
           </widget>
         </child>
         <child>
-          <widget class="GtkButton" id="CancelButton2">
+          <widget class="GtkButton" id="CancelButton">
             <property name="visible">True</property>
             <property name="label" translatable="yes">gtk-cancel</property>
             <property name="use_stock">True</property>
@@ -1899,7 +1899,7 @@ Text</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkButton" id="CloseButton5">
+          <widget class="GtkButton" id="CloseButton">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="relief">GTK_RELIEF_NONE</property>
