@@ -29,21 +29,13 @@ namespace Bless.Util {
 ///</summary>
 public abstract class ThreadedAsyncOperation
 {
-	AutoResetEvent showProgressEvent;
-	AutoResetEvent opFinishedEvent;
-	AutoResetEvent opExceptionEvent;
-
-	WaitHandle[] threadEvents;
-
 	protected bool cancelled;
 	protected ProgressCallback progressCallback;
 	protected AsyncCallback opFinishedCallback;
 
 	Exception threadException;
 	OperationResult opResult;
-	Thread opThread;
 
-	readonly object idleLockObj = new object();
 	bool useGLibIdle;
 
 	// the kind of event that the save thread can emit to
@@ -66,20 +58,13 @@ public abstract class ThreadedAsyncOperation
 	public ThreadedAsyncOperation(ProgressCallback pc,
 								  AsyncCallback ac, bool glibIdle)
 	{
-
 		progressCallback = pc;
 		opFinishedCallback = ac;
 		useGLibIdle = glibIdle;
 
-		showProgressEvent = new AutoResetEvent(false);
-		opFinishedEvent = new AutoResetEvent(false);
-		opExceptionEvent = new AutoResetEvent(false);
-		threadEvents = new WaitHandle[]{showProgressEvent, opFinishedEvent, opExceptionEvent};
-
 		cancelled = false;
 	}
 
-	protected abstract void IdleHandlerEnd();
 	protected abstract bool StartProgress();
 	protected abstract bool UpdateProgress();
 	protected abstract bool EndProgress();
@@ -87,76 +72,18 @@ public abstract class ThreadedAsyncOperation
 	protected abstract void EndOperation();
 
 	///<summary>
-	/// A method that is called periodically (optionally as a GLib idle handler)
-	/// to handle syncronization of main and operation threads
-	//</summary>
-	bool OpIdleHandler()
+	/// Called when the operation has finished
+	///</summary>
+	void OperationFinished()
 	{
-		lock (idleLockObj) {
+		// destroy progress report
+		if (progressCallback != null)
+			EndProgress();
 
-			// if we have already cancelled, return
-			if (cancelled)
-				return false;
+		// call callback
+		if (opFinishedCallback != null)
+			opFinishedCallback(new ThreadedAsyncResult(this, null, true));
 
-			// update progress report and check for cancellation
-			if (progressCallback != null)
-				cancelled = UpdateProgress();
-
-			bool exceptionOccured = false;
-
-			// if user has not just cancelled
-			if (!cancelled) {
-				// check for any event from operation thread
-				ThreadedAsyncOperation.Event n = (ThreadedAsyncOperation.Event)WaitHandle.WaitAny(threadEvents, 0, true);
-				if (n == ThreadedAsyncOperation.Event.ShowProgress) { // show progress event
-					if (progressCallback != null)
-						StartProgress();
-					return false;
-				}
-				else if (n == ThreadedAsyncOperation.Event.Finished) { // save finished Event
-				}
-				else if (n == ThreadedAsyncOperation.Event.Exception) { // save thread caught exception
-					exceptionOccured = true;
-				}
-				else { //no event, continue normally
-					return false;
-				}
-			}
-
-			// if we reached this point it means that either:
-			// * user cancelled or
-			// * thread finished normally or
-			// * thread caught an exception
-
-			// wait for operation thread to finish
-			// opThread==current thread when
-			// not using GLib main loop for calling
-			// the idle handler
-			if (opThread != Thread.CurrentThread)
-				opThread.Join();
-
-			IdleHandlerEnd();
-
-			// set the operation result
-			if (exceptionOccured) {
-				opResult = OperationResult.CaughtException;
-			}
-			else if (cancelled)
-				opResult = OperationResult.Cancelled;
-			else
-				opResult = OperationResult.Finished;
-
-			// destroy progress report
-			if (progressCallback != null)
-				EndProgress();
-
-			// call callback
-			if (opFinishedCallback != null)
-				opFinishedCallback(new ThreadedAsyncResult(this, null, true));
-
-			// remove handler from glib idle
-			return false;
-		}
 	}
 
 	///<summary>
@@ -164,7 +91,12 @@ public abstract class ThreadedAsyncOperation
 	///</summary>
 	void ShowProgressTimerExpired(object o)
 	{
-		showProgressEvent.Set();
+		if (progressCallback != null) {
+			if (useGLibIdle)
+				GLib.Idle.Add(StartProgress);
+			else
+				StartProgress();
+		}
 	}
 
 	///<summary>
@@ -172,18 +104,16 @@ public abstract class ThreadedAsyncOperation
 	///</summary>
 	void ProgressTimerExpired(object o)
 	{
-		lock (idleLockObj) {
+		if (progressCallback != null) {
 			if (useGLibIdle)
-				GLib.Idle.Add(OpIdleHandler);
+				GLib.Idle.Add(delegate { cancelled = UpdateProgress(); return false; });
 			else
-				OpIdleHandler();
+				cancelled = UpdateProgress();
 		}
 	}
 
 	public void OperationThread()
 	{
-		opThread = Thread.CurrentThread;
-
 		// showProgressTimer fires once and makes progress reporting visible
 		Timer showProgressTimer = new Timer(new TimerCallback(ShowProgressTimerExpired), null, 500, 0);
 
@@ -192,23 +122,25 @@ public abstract class ThreadedAsyncOperation
 
 		try {
 			DoOperation();
-			opFinishedEvent.Set();
+
+			if (cancelled) 
+				opResult = OperationResult.Cancelled;
+			else
+				opResult = OperationResult.Finished;	
 		}
 		catch (Exception e) {
 			threadException = e;
-			opExceptionEvent.Set();
+			opResult = OperationResult.CaughtException;	
 		}
 		finally {
 			progressTimer.Dispose();
 			showProgressTimer.Dispose();
 			EndOperation();
-			// one last invocation needed,
-			// so that the saveFinished or SaveException
-			// events are caught and handled
+
 			if (useGLibIdle)
-				GLib.Idle.Add(OpIdleHandler);
+				GLib.Idle.Add(delegate { OperationFinished(); return false; });
 			else
-				OpIdleHandler();
+				OperationFinished();
 		}
 
 	}

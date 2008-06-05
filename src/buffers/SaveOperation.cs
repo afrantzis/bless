@@ -31,11 +31,29 @@ namespace Bless.Buffers {
 ///<summary>
 /// Saves the contents of a ByteBuffer using an asynchronous threaded model
 ///</summary>
-public class SaveOperation : SaveAsOperation
+public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 {
 
+	protected ByteBuffer byteBuffer;
+	protected long bytesSaved;
+	
+	protected string savePath;
+	
 	string tempPath;
 	SaveStage stageReached;
+
+	public ByteBuffer Buffer {
+		get {return byteBuffer;}
+	}
+	
+	public string SavePath {
+		get { return savePath; }
+		set { savePath = value; }
+	}
+	
+	public long BytesSaved {
+		get {return bytesSaved;}
+	}
 	
 	public string TempPath {
 		get { return tempPath;}
@@ -49,40 +67,64 @@ public class SaveOperation : SaveAsOperation
 	
 	public SaveOperation(ByteBuffer bb, string tempFilename, ProgressCallback pc,
 							AsyncCallback ac, bool glibIdle)
-							: base(bb, tempFilename, pc, ac, glibIdle)
+							: base(pc, ac, glibIdle)
 	{
-		try {
-			FileInfo fi = new FileInfo(bb.Filename);
-			long freeSpace = Portable.GetAvailableDiskSpace(bb.Filename) + fi.Length;
-
-			// make sure there is enough disk space in the device
-			if (freeSpace < bb.Size) {
-				// delete temporary file
-				if (System.IO.File.Exists(tempFilename))
-					System.IO.File.Delete(tempFilename);
-				string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), bb.Filename);
-				throw new IOException(msg);
-			}
-		}
-		catch (NotImplementedException) {}
+		byteBuffer = bb;
+		savePath = byteBuffer.Filename;
+		tempPath = tempFilename;
+		bytesSaved = 0;
 	}
 	
+	protected bool CheckFreeSpace(string path, long extraSpace)
+	{
+		try {
+			long freeSpace = Portable.GetAvailableDiskSpace(path);
+			//System.Console.WriteLine("CFS {0}: {1}+{2} {3}", path, freeSpace, extraSpace, byteBuffer.Size);
+
+			return (freeSpace + extraSpace >= byteBuffer.Size);
+		}
+		catch (NotImplementedException) {
+			return true;	
+		}
+
+	}
+
 	protected override bool StartProgress()
 	{
-		progressCallback(string.Format(Catalog.GetString("Saving '{0}'"), byteBuffer.Filename), ProgressAction.Message);
+		progressCallback(string.Format(Catalog.GetString("Moving '{0}' to '{1}'"), tempPath, savePath), ProgressAction.Message);
 		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Show);
+	}
+	
+	protected override bool UpdateProgress()
+	{
+		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Update);
+	}
+	
+	protected override bool EndProgress()
+	{
+		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Destroy);
 	}
 	
 	protected override void DoOperation()
 	{
+		SaveAsOperation sao = new SaveAsOperation(byteBuffer, tempPath, this.progressCallback, null, false);
 		stageReached = SaveStage.BeforeSaveAs;
-		tempPath = savePath;
-		
+
+		// Check for free space for final file
+		// free space for temporary file is checked in sao.DoOperation()
+		if (!CheckFreeSpace(Path.GetDirectoryName(byteBuffer.Filename), byteBuffer.fileBuf.Size)) {
+			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), byteBuffer.Filename);
+			throw new IOException(msg);
+		}
+
 		// Save ByteBuffer as a temp file
-		base.DoOperation();
-		
-		savePath = byteBuffer.Filename;
-		
+		sao.OperationThread();
+
+		if (sao.Result == ThreadedAsyncOperation.OperationResult.CaughtException)
+			throw sao.ThreadException;
+		else if (sao.Result == ThreadedAsyncOperation.OperationResult.Cancelled)	
+			cancelled = true;
+
 		// if user hasn't cancelled, move temp file to 
 		// its final location	
 		if (!cancelled) {
@@ -107,6 +149,9 @@ public class SaveOperation : SaveAsOperation
 		}	
 	}
 	
+	protected override void EndOperation()
+	{
+	}
 }
 
 } // end namespace

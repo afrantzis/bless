@@ -86,11 +86,6 @@ public class SaveInPlaceOperation : ThreadedAsyncOperation, ISaveState
 		return progressCallback(((double)bytesSaved) / byteBuffer.Size, ProgressAction.Destroy);
 	}
 	
-	protected override void IdleHandlerEnd()
-	{
-	
-	}
-	
 	protected override void DoOperation()
 	{
 		stageReached = SaveInPlaceStage.BeforeClose;

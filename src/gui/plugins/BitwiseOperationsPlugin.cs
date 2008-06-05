@@ -519,12 +519,6 @@ public class BitwiseOperation : ThreadedAsyncOperation
 		return progressCallback(((double)currentOffset - range.Start) / range.Size, ProgressAction.Destroy);
 	}
 
-	protected override void IdleHandlerEnd()
-	{
-		byteBuffer.EndActionChaining();
-	}
-
-
 	protected override void DoOperation()
 	{
 		byteBuffer.BeginActionChaining();
@@ -583,7 +577,7 @@ public class BitwiseOperation : ThreadedAsyncOperation
 
 	protected override void EndOperation()
 	{
-
+		byteBuffer.EndActionChaining();
 	}
 
 	///<summary>

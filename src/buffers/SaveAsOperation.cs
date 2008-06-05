@@ -62,23 +62,26 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 	public SaveAsOperation(ByteBuffer bb, string fn, ProgressCallback pc,
 							AsyncCallback ac, bool glibIdle): base(pc, ac, glibIdle)
 	{
-		try {
-			long freeSpace = Portable.GetAvailableDiskSpace(Path.GetDirectoryName(fn));
-
-			// make sure there is enough disk space in the device
-			if (freeSpace < bb.Size) {
-				string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), fn);
-				throw new IOException(msg);
-			}
-		}
-		catch (NotImplementedException) {}
-
 		byteBuffer=bb;
 		savePath=fn;
 		fs=null;
 		bytesSaved=0;
 	}
 	
+	protected bool CheckFreeSpace(string path, long extraSpace)
+	{
+		try {
+			long freeSpace = Portable.GetAvailableDiskSpace(path);
+			//System.Console.WriteLine("CFS {0}: {1}+{2} {3}", path, freeSpace, extraSpace, byteBuffer.Size);
+
+			return (freeSpace + extraSpace >= byteBuffer.Size);
+		}
+		catch (NotImplementedException) {
+			return true;	
+		}
+
+	}
+
 	protected override bool StartProgress()
 	{
 		progressCallback(string.Format(Catalog.GetString("Saving '{0}'"), SavePath), ProgressAction.Message);
@@ -95,15 +98,15 @@ public class SaveAsOperation : ThreadedAsyncOperation, ISaveState
 		return progressCallback(((double)bytesSaved)/byteBuffer.Size, ProgressAction.Destroy);
 	}
 	
-	protected override void IdleHandlerEnd()
-	{
-	
-	}
-	
 	protected override void DoOperation()
 	{
 		stageReached = SaveAsStage.BeforeCreate;
-		
+
+		if (!CheckFreeSpace(Path.GetDirectoryName(savePath), 0)) {
+			string msg = string.Format(Catalog.GetString("There is not enough free space on the device to save file '{0}'."), savePath);
+			throw new IOException(msg);
+		}
+
 		// try to open in append mode first, so that a sharing violation
 		// doesn't end up with the file truncated (as opposed
 		// to using FileMode.Create)

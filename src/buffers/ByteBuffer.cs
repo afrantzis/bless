@@ -502,20 +502,9 @@ public class ByteBuffer : BaseBuffer {
 			saveFinishedEvent.Reset();
 			userSaveAsyncCallback = ac;
 			
-			
-			// don't allow messing up with the buffer
-			// while we are saving
-			// ...ReadAllowed is set in SaveOperation
-			//this.ReadAllowed=false;
-			this.ModifyAllowed = false;
-			this.FileOperationsAllowed = false;
-			
-			this.EmitEvents = false;
-			fsw.EnableRaisingEvents = false;
-			
 			Thread saveThread = null;
 			ThreadedAsyncResult tar = null;
-			
+
 			// decide whether to save in place or normally
 			if (!fileBuf.IsResizable || this.Size == fileBuf.Size) {
 				SaveInPlaceOperation sipo = new SaveInPlaceOperation(this, progressCallback, SaveInPlaceAsyncCallback, useGLibIdle);
@@ -527,6 +516,16 @@ public class ByteBuffer : BaseBuffer {
 				saveThread = new Thread(so.OperationThread);
 				tar = new ThreadedAsyncResult(so, saveFinishedEvent, false);
 			}
+			
+			// don't allow messing up with the buffer
+			// while we are saving
+			// ...ReadAllowed is set in SaveOperation
+			//this.ReadAllowed=false;
+			this.ModifyAllowed = false;
+			this.FileOperationsAllowed = false;
+			
+			this.EmitEvents = false;
+			fsw.EnableRaisingEvents = false;
 			
 			// start save thread			
 			saveThread.IsBackground = true;
@@ -543,7 +542,6 @@ public class ByteBuffer : BaseBuffer {
 	{
 		lock (LockObj) {
 			SaveOperation so = (SaveOperation)ar.AsyncState;
-			
 			
 			if (so.Result == SaveOperation.OperationResult.Finished) { // save went ok
 				// No need to call CloseFile() MakePrivateCopyOfUndoRedo()

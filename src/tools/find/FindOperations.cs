@@ -69,14 +69,6 @@ public abstract class GenericFindOperation: ThreadedAsyncOperation
 		return progressCallback(((double)strategy.Position) / strategy.Buffer.Size, ProgressAction.Hide);
 	}
 
-	protected override void IdleHandlerEnd()
-	{
-		// re-allow buffer usage
-		strategy.Buffer.ReadAllowed = true;
-		strategy.Buffer.ModifyAllowed = true;
-		strategy.Buffer.FileOperationsAllowed = true;
-	}
-
 	protected override void DoOperation()
 	{
 		match = strategy.FindNext();
@@ -84,7 +76,10 @@ public abstract class GenericFindOperation: ThreadedAsyncOperation
 
 	protected override void EndOperation()
 	{
-
+		// re-allow buffer usage
+		strategy.Buffer.ReadAllowed = true;
+		strategy.Buffer.ModifyAllowed = true;
+		strategy.Buffer.FileOperationsAllowed = true;
 	}
 
 }
@@ -149,21 +144,6 @@ public class ReplaceAllOperation: GenericFindOperation
 		replacePattern = repPat;
 	}
 
-	protected override void IdleHandlerEnd()
-	{
-		// re-allow buffer usage
-		strategy.Buffer.ReadAllowed = true;
-		strategy.Buffer.ModifyAllowed = true;
-		strategy.Buffer.FileOperationsAllowed = true;
-		strategy.Buffer.EmitEvents = true;
-
-		strategy.Buffer.EmitPermissionsChanged();
-		strategy.Buffer.EmitChanged();
-
-
-		strategy.Buffer.EndActionChaining();
-	}
-
 	protected override void DoOperation()
 	{
 		Range m;
@@ -197,6 +177,20 @@ public class ReplaceAllOperation: GenericFindOperation
 			numReplaced++;
 		}
 
+	}
+
+	protected override void EndOperation()
+	{
+		// re-allow buffer usage
+		strategy.Buffer.ReadAllowed = true;
+		strategy.Buffer.ModifyAllowed = true;
+		strategy.Buffer.FileOperationsAllowed = true;
+		strategy.Buffer.EmitEvents = true;
+
+		strategy.Buffer.EmitPermissionsChanged();
+		strategy.Buffer.EmitChanged();
+
+		strategy.Buffer.EndActionChaining();
 	}
 
 }

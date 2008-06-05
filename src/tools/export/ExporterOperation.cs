@@ -67,11 +67,6 @@ public class ExportOperation : ThreadedAsyncOperation
 		return progressCallback(CalculatePercentDone(), ProgressAction.Hide);
 	}
 
-	protected override void IdleHandlerEnd()
-	{
-
-	}
-
 	protected override void DoOperation()
 	{
 		System.Console.WriteLine("Starting export");
