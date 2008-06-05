@@ -32,12 +32,15 @@ public abstract class ThreadedAsyncOperation
 	protected bool cancelled;
 	protected ProgressCallback progressCallback;
 	protected AsyncCallback opFinishedCallback;
+	protected bool activateProgress;
 
 	Exception threadException;
 	OperationResult opResult;
 
 	bool useGLibIdle;
-
+	Timer showProgressTimer;
+	Timer progressTimer;
+	
 	// the kind of event that the save thread can emit to
 	// the main thread
 	private enum Event { ShowProgress, Finished, Exception}
@@ -63,6 +66,13 @@ public abstract class ThreadedAsyncOperation
 		useGLibIdle = glibIdle;
 
 		cancelled = false;
+		activateProgress = true;
+
+		// showProgressTimer fires once and makes progress reporting visible
+		showProgressTimer = new Timer(new TimerCallback(ShowProgressTimerExpired), null, Timeout.Infinite, Timeout.Infinite);
+
+		// progressTimer fires periodically and updates progress reporting
+		progressTimer = new Timer(new TimerCallback(ProgressTimerExpired), null, Timeout.Infinite, Timeout.Infinite);
 	}
 
 	protected abstract bool StartProgress();
@@ -112,13 +122,24 @@ public abstract class ThreadedAsyncOperation
 		}
 	}
 
+	protected void ActivateProgressReport(bool activate)
+	{
+		try {
+			if (activate) {
+				progressTimer.Change(0, 50);
+				showProgressTimer.Change(500, 0);
+			}
+			else {
+				progressTimer.Change(Timeout.Infinite, Timeout.Infinite);
+				showProgressTimer.Change(Timeout.Infinite, Timeout.Infinite);
+			}
+		}
+		catch(ObjectDisposedException) {}
+	}
+
 	public void OperationThread()
 	{
-		// showProgressTimer fires once and makes progress reporting visible
-		Timer showProgressTimer = new Timer(new TimerCallback(ShowProgressTimerExpired), null, 500, 0);
-
-		// progressTimer fires periodically and updates progress reporting
-		Timer progressTimer = new Timer(new TimerCallback(ProgressTimerExpired), null, 0, 50);
+		ActivateProgressReport(activateProgress);
 
 		try {
 			DoOperation();

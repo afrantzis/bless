@@ -73,6 +73,7 @@ public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 		savePath = byteBuffer.Filename;
 		tempPath = tempFilename;
 		bytesSaved = 0;
+		activateProgress = false;
 	}
 	
 	protected bool CheckFreeSpace(string path, long extraSpace)
@@ -128,6 +129,7 @@ public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 		// if user hasn't cancelled, move temp file to 
 		// its final location	
 		if (!cancelled) {
+			this.ActivateProgressReport(true);
 			stageReached = SaveStage.BeforeDelete;
 			
 			// close the file, make sure that File Operations
