@@ -216,6 +216,7 @@ class GeneralPreferences : IPluginPreferences
 		LayoutFileEntry.Changed += OnLayoutFileChanged;
 		UseCurrentLayoutCheckButton.Toggled += OnUseCurrentLayoutToggled;
 		DefaultEditModeComboBox.Changed += OnDefaultEditModeChanged;
+		TempDirEntry.FocusOutEvent += OnTempDirFocusOutEvent;
 	}
 	
 	void LoadCheckButtonPreference(string key, CheckButton cb, bool defaultValue)
@@ -274,6 +275,10 @@ class GeneralPreferences : IPluginPreferences
 			prefs["Default.EditMode"] = (string) DefaultEditModeComboBox.Model.GetValue (iter, 0);
 	}
 
+	private void OnTempDirFocusOutEvent(object o, Gtk.FocusOutEventArgs a)
+	{
+		prefs["ByteBuffer.TempDir"] = TempDirEntry.Text;
+	}
 }
 
 class SessionPreferences : IPluginPreferences
