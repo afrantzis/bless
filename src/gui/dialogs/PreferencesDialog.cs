@@ -77,8 +77,6 @@ public class PreferencesDialog : Dialog
 		
 		TreeIter ti = store.AppendValues(Catalog.GetString("Plugins"), null);
 		
-		PluginManager pm = PluginManager.GetForType(typeof(GuiPlugin));
-
 		// Get all plugins from all managers that have preferences
 		foreach(KeyValuePair<Type, PluginManager> kvp in PluginManager.AllManagers)
 			foreach(Plugin p in kvp.Value.Plugins) 
@@ -112,6 +110,7 @@ public class PreferencesDialog : Dialog
 
 			PreferencesPaned.Pack2(ipp.Widget, true, false);
 			ipp.LoadPreferences();	
+			ipp.Widget.ShowAll();
 
 			selectedIter = ti;
 		}
@@ -119,6 +118,11 @@ public class PreferencesDialog : Dialog
 	
 	void OnDialogResponse(object o, Gtk.ResponseArgs args)
 	{
+		// If the widget is not removed we can not show it again
+		// at a later invocation of PreferencesDialog
+		if (PreferencesPaned.Child2 != null)
+			PreferencesPaned.Remove(PreferencesPaned.Child2);
+
 		this.Destroy();
 	}
 
