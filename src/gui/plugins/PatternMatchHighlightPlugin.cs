@@ -84,8 +84,10 @@ class PatternHighlighter
 		get { return active; }
 		set { 
 			active = value;
-			DataViewDisplay dvd = (DataViewDisplay)dataBook.CurrentPageWidget;
-			dvd.Redraw();
+			if (dataBook.NPages > 0) {
+				DataViewDisplay dvd = (DataViewDisplay)dataBook.CurrentPageWidget;
+				dvd.Redraw();
+			}
 		}
 	}
 	
