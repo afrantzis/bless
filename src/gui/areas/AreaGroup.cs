@@ -314,16 +314,18 @@ public class AreaGroup
 		if (drawingArea == null || drawingArea.GdkWindow == null)
 			return;
 			
-		if (HasChanged(Changes.Offset)) {
-			Gdk.Rectangle view = drawingArea.Allocation;
-			view.X = 0;
-			view.Y = 0;
-			drawingArea.GdkWindow.BeginPaintRect(view);
-			Render(false);
-			drawingArea.GdkWindow.EndPaint();
-		}
-		else 
-			ExposeManually();
+		Gtk.Application.Invoke(delegate {
+			if (HasChanged(Changes.Offset)) {
+				Gdk.Rectangle view = drawingArea.Allocation;
+				view.X = 0;
+				view.Y = 0;
+				drawingArea.GdkWindow.BeginPaintRect(view);
+				Render(false);
+				drawingArea.GdkWindow.EndPaint();
+			}
+			else 
+				ExposeManually();
+		});
 	}
 	
 	/// <summary>
