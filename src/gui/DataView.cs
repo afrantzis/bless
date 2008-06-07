@@ -111,15 +111,19 @@ public class DataView {
 
 	private void OnByteBufferChanged(ByteBuffer bb)
 	{
-		if (byteBuffer.ReadAllowed)
-			dvDisplay.Layout.AreaGroup.RedrawNow();
+		Gtk.Application.Invoke(delegate {
+			if (byteBuffer.ReadAllowed)
+				dvDisplay.Layout.AreaGroup.RedrawNow();
+		});
 	}
 
 	private void OnByteBufferFileChanged(ByteBuffer bb)
 	{
-		dvDisplay.ShowFileChangedBar();
-		Notification = true;
-		byteBuffer.FileOperationsAllowed = false;
+		Gtk.Application.Invoke(delegate {
+			dvDisplay.ShowFileChangedBar();
+			Notification = true;
+			byteBuffer.FileOperationsAllowed = false;
+		});
 	}
 
 

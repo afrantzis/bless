@@ -197,17 +197,19 @@ public class DataBook : Gtk.Notebook
 	///<summary>Handle ByteBuffer changes</summary>
 	void OnBufferContentsChanged(ByteBuffer bb)
 	{
-		DataView dv = null;
+		Gtk.Application.Invoke(delegate {
+			DataView dv = null;
 
-		// find DataView that owns bb
-		foreach (DataViewDisplay dvtemp in this.Children) {
-			if (dvtemp.View.Buffer == bb) {
-				dv = dvtemp.View;
-				break;
+			// find DataView that owns bb
+			foreach (DataViewDisplay dvtemp in this.Children) {
+				if (dvtemp.View.Buffer == bb) {
+					dv = dvtemp.View;
+					break;
+				}
 			}
-		}
 
-		UpdateTabLabel(dv);
+			UpdateTabLabel(dv);
+		});
 	}
 
 

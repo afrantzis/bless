@@ -132,17 +132,19 @@ public class BitwiseOperationsPlugin : GuiPlugin
 
 	void OnBufferContentsChanged(ByteBuffer bb)
 	{
-		DataView dv = null;
+		Gtk.Application.Invoke(delegate {
+			DataView dv = null;
 
-		// find DataView that owns bb
-		foreach (DataViewDisplay dvtemp in dataBook.Children) {
-			if (dvtemp.View.Buffer == bb) {
-				dv = dvtemp.View;
-				break;
+			// find DataView that owns bb
+			foreach (DataViewDisplay dvtemp in dataBook.Children) {
+				if (dvtemp.View.Buffer == bb) {
+					dv = dvtemp.View;
+					break;
+				}
 			}
-		}
 
-		UpdateBitwiseOperationsWidget(dv);
+			UpdateBitwiseOperationsWidget(dv);
+		});
 	}
 
 	void OnSwitchPage(object o, SwitchPageArgs args)
