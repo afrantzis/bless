@@ -190,21 +190,23 @@ public class ConversionTable: Gtk.HBox
 
 	void OnBufferContentsChanged(ByteBuffer bb)
 	{
-		DataView dv = null;
+		Gtk.Application.Invoke(delegate {
+			DataView dv = null;
 
-		// find DataView that owns bb
-		foreach (DataViewDisplay dvtemp in dataBook.Children) {
-			if (dvtemp.View.Buffer == bb) {
-				dv = dvtemp.View;
-				break;
+			// find DataView that owns bb
+			foreach (DataViewDisplay dvtemp in dataBook.Children) {
+				if (dvtemp.View.Buffer == bb) {
+					dv = dvtemp.View;
+					break;
+				}
 			}
-		}
 
-		DataViewDisplay dvd = (DataViewDisplay)dataBook.CurrentPageWidget;
-		if (dvd == null || dvd.View != dv)
-			return;
+			DataViewDisplay dvd = (DataViewDisplay)dataBook.CurrentPageWidget;
+			if (dvd == null || dvd.View != dv)
+				return;
 
-		Update();
+			Update();
+		});
 	}
 
 	void OnSwitchPage(object o, SwitchPageArgs args)

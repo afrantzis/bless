@@ -18,7 +18,6 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#define USING_GTK
 
 using System.Collections;
 using System;
@@ -88,69 +87,24 @@ public class ByteBuffer : BaseBuffer {
 	///<summary>Emitted when buffer permissions change</summary>
 	public event ChangedHandler PermissionsChanged;
 	
-	// Wrappers to emit events
-	// if gtk/glib is available make sure events are called in the main GUI thread
-	// Although using Enter/Leave is discouraged it is the only way to immediately
-	// run our handlers. The alternatives eg Gtk.Application.Invoke() cause a small
-	// delay that leads to some visual annoyances. For example when the buffer is
-	// changed by the user the code flow (in DataViewControl) is:
-	//
-	// OnKeyPress()
-	//   KeyDefault() -> Changes buffer and event is emmited
-	//   EvaluateSelection() -> changes selection/cursor
-	//
-	// If we use Gtk.Application.Invoke(), although the buffer is changed first in
-	// the code, the visual change will take place after the visual change for the
-	// cursor because the cursor code renders immediately, whereas the buffer changed
-	// event handlers which will lead to the update of the data are queued in the 
-	// event queue (due to Gtk.Application.Invoke()). This results to the cursor
-	// being moved before the data has changed on screen, which gives the feeling of lagging.
-	
 	public void EmitChanged()
 	{
-		if (emitEvents && Changed!=null) {
-#if USING_GTK
-			Gdk.Threads.Enter();
-			try {
-				Changed(this);
-			} finally {
-				Gdk.Threads.Leave ();
-			}
-#else
+		if (emitEvents && Changed != null) {
 			Changed(this);
-#endif
 		}
 	}
 
 	public void EmitFileChanged()
 	{
-		if (emitEvents && FileChanged!=null) {
-#if USING_GTK
-			Gdk.Threads.Enter();
-			try {
-				FileChanged(this);
-			} finally {
-				Gdk.Threads.Leave ();
-			}
-#else
+		if (emitEvents && FileChanged != null) {
 			FileChanged(this);
-#endif
 		}
 	}
 	
 	public void EmitPermissionsChanged()
 	{
 		if (emitEvents && PermissionsChanged != null) {
-#if USING_GTK
-			Gdk.Threads.Enter();
-			try {
-				PermissionsChanged(this);
-			} finally {
-				Gdk.Threads.Leave ();
-			}
-#else
 			PermissionsChanged(this);
-#endif
 		}
 	}
 	
