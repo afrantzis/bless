@@ -311,10 +311,11 @@ public class AreaGroup
 	{
 		changes |= c;
 		
-		if (drawingArea == null || drawingArea.GdkWindow == null)
-			return;
 			
 		Gtk.Application.Invoke(delegate {
+			if (drawingArea == null || drawingArea.GdkWindow == null)
+				return;
+
 			if (HasChanged(Changes.Offset)) {
 				Gdk.Rectangle view = drawingArea.Allocation;
 				view.X = 0;
