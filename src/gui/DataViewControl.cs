@@ -683,13 +683,38 @@ public class DataViewControl
 				specialKey = true;
 		}
 		else {
-			if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, dataView.Overwrite) == true) {
-				dataView.Delete();
+			dataView.Buffer.BeginActionChaining();
+
+			// Insert the new data and delete the old
+			if (imContext.FilterKeypress(e) && okp_focusArea.HandleKey(e.Key, false) == true) {
+				Util.Range curSel = dataView.Selection;
+				long curOffset = dataView.CursorOffset;
+				
+				// move cursor to the right
+				OnKeyRight(ref cur, ref next);
+
+				next.First = next.Second = curSel.Start;
+				selEndPos = selStartPos = next;
+
+				// the new data could have been inserted either just after the end
+				// or at the beginning of the selection. Handle each case 
+				// and delete the old data.
+				if (curOffset > curSel.End) { // new data just after end
+					dataView.Delete();
+				}
+				else { // curOffset == curSel.Start, new data at the beginning
+					// shift selection one position to the right
+					dataView.SetSelection(curSel.Start + 1, curSel.End + 1);
+					dataView.Delete();
+				}
+
 				specialKey = false;
 			}
 			else {
 				specialKey = true;
 			}
+
+			dataView.Buffer.EndActionChaining();
 
 		}
 		// any other key pass it to focused area
