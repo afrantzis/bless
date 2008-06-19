@@ -85,9 +85,9 @@ public class DataViewControl
 		//System.Console.WriteLine("* (1) Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
 		Bless.Util.Range r;
 		if (selStartPos.Second <= selEndPos.First)
-			r = new Bless.Util.Range(selStartPos.Second, selEndPos.First);
+			r = new Bless.Util.Range(ValidateOffset(selStartPos.Second), ValidateOffset(selEndPos.First));
 		else
-			r = new Bless.Util.Range(selEndPos.Second, selStartPos.First);
+			r = new Bless.Util.Range(ValidateOffset(selEndPos.Second), ValidateOffset(selStartPos.First));
 
 		//System.Console.WriteLine("Selection is ({0}, {1}) Expected ({2}, {3})", dataView.Selection.Start, dataView.Selection.End, r.Start, r.End);
 		// if nothing is selected and cursor position has changed externally
@@ -158,6 +158,7 @@ public class DataViewControl
 	///</summary>
 	private void EvaluateSelection(DataViewDisplay.ShowType showType)
 	{
+		//System.Console.WriteLine("Evaluate (1) Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
 		long cursorOffset;
 
 		// no selection
@@ -172,6 +173,9 @@ public class DataViewControl
 		// selection with start pos <= end pos
 		else if (selStartPos.Second <= selEndPos.First) {
 			// set end position between bytes
+			// this is done so that selections performed with 
+			// the mouse can be continued with the keyboard
+			// (keyboard selections always set positions between bytes)
 			selEndPos.Second = selEndPos.First + 1;
 
 			// if selEndPos.Second is at or beyond the EOF
@@ -181,20 +185,39 @@ public class DataViewControl
 			cursorOffset = off;
 			dvDisplay.MakeOffsetVisible(cursorOffset, showType);
 
-			dataView.SetSelection(ValidateOffset(selStartPos.Second), ValidateOffset(selEndPos.First));
+			// set the selection only if the start position (which is the start of the selection)
+			// is within the file's limits
+			if (selStartPos.Second < dataView.Buffer.Size)
+				dataView.SetSelection(ValidateOffset(selStartPos.Second), ValidateOffset(selEndPos.First));
+			else
+				dataView.SetSelection(-1, -1);
+
 			dataView.MoveCursor(off, 0);
 		}
 		// selection with start pos > end pos
 		else {
-			long off = ValidateOffset(selEndPos.Second);
+			// set start position between bytes
+			// this is done so that selections performed with 
+			// the mouse can be continued with the keyboard
+			// (keyboard selections always set positions between bytes)
+			selStartPos.Second = selStartPos.First + 1;
+
+			long off = selEndPos.Second;
 			cursorOffset = off;
 			dvDisplay.MakeOffsetVisible(cursorOffset, showType);
 
-			dataView.SetSelection(ValidateOffset(selEndPos.Second), ValidateOffset(selStartPos.First));
+			// set the selection only if the end position (which is the start of the selection)
+			// is within the file's limits
+			if (selEndPos.Second < dataView.Buffer.Size)
+				dataView.SetSelection(ValidateOffset(selEndPos.Second), ValidateOffset(selStartPos.First));
+			else
+				dataView.SetSelection(-1, -1);
+
 			dataView.MoveCursor(off, 0);
 		}
 
 
+		//System.Console.WriteLine("Evaluate (2) Start: {0},{1},{2} End: {3},{4},{5}", selStartPos.First, selStartPos.Second, selStartPos.Digit, selEndPos.First, selEndPos.Second, selEndPos.Digit);
 	}
 
 	///<summary>Handle mouse button presses</summary>
