@@ -200,7 +200,10 @@ public class DataViewControl
 			// this is done so that selections performed with 
 			// the mouse can be continued with the keyboard
 			// (keyboard selections always set positions between bytes)
-			selStartPos.Second = selStartPos.First + 1;
+			// TODO: This is currently disabled because it breaks mouse
+			// selection
+			//
+			//selStartPos.Second = selStartPos.First + 1;
 
 			long off = selEndPos.Second;
 			cursorOffset = off;
