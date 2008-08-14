@@ -1,5 +1,5 @@
 EXTRA_DIST = AUTHORS COPYING NEWS README README.packaging \
-             bless.mdp bless.mds bless.spec autogen.sh
+             bless.mdp bless.mds bless.spec autogen.sh bless.mi
 
 SUBDIRS = po builder src bin data doc . tests
 

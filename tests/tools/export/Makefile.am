@@ -1,6 +1,6 @@
 SRC= $(wildcard *.cs)
 
-EXTRA_DIST=$(SRC) BlessTests.Tools.Export.bi test1.bin
+EXTRA_DIST=$(SRC) BlessTests.Tools.Export.bi
 
 DLL= BlessTests.Tools.Export.dll
 

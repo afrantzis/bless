@@ -2,8 +2,6 @@ SUBDIRS= buffers gui tools util plugins
 
 DIST_SUBDIRS = buffers gui tools util plugins
 
-EXTRA_DIST= bless.mi
-
 CLEANFILES= bless
 
 noinst_SCRIPTS = bless.exe
