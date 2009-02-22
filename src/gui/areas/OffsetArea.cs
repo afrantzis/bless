@@ -65,10 +65,6 @@ public class OffsetArea : Area {
 		if (bpr <= 0)
 			return;
 
-		Gdk.GC backEvenGC = drawer.GetBackgroundGC(Drawer.RowType.Even, Drawer.HighlightType.Normal);
-		// draw the area background
-		backPixmap.DrawRectangle(backEvenGC, true, x, y, width, height);
-
 		int nrows = height / drawer.Height;
 		long bleft = nrows * bpr;
 		int rfull = 0;
@@ -107,9 +103,9 @@ public class OffsetArea : Area {
 
 		if (blank == true) {
 			if (odd)
-				backPixmap.DrawRectangle(backOddGC, true, rx, ry, width, drawer.Height);
+				backPixmap.DrawRectangle(backOddGC, true, x, ry, width, drawer.Height);
 			else
-				backPixmap.DrawRectangle(backEvenGC, true, rx, ry, width, drawer.Height);
+				backPixmap.DrawRectangle(backEvenGC, true, x, ry, width, drawer.Height);
 		}
 
 		Drawer.RowType rowType;

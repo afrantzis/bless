@@ -60,8 +60,8 @@ public class SeparatorArea : Area
 
 		lineGC = new Gdk.GC(da.GdkWindow);
 
-		lineGC.RgbFgColor = drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even];
-
+		lineGC.RgbFgColor = drawer.Info.fgNormal[(int)Drawer.RowType.Even, (int)Drawer.ColumnType.Even].GdkColor;
+		
 		base.Realize();
 	}
 	

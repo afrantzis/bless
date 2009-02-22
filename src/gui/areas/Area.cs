@@ -277,49 +277,55 @@ public abstract class Area
 
 	void ParseDisplayRow(XmlNode parentNode, Drawer.Information info, Drawer.RowType rowType)
 	{
-		Gdk.Color fg, bg;
+		Drawer.Color fg, bg;
 		XmlNodeList childNodes = parentNode.ChildNodes;
 		foreach(XmlNode node in childNodes) {
 			ParseDisplayType(node, out fg, out bg);
-
 			if (node.Name == "evencolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
+				if (bg != null)
 					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Even] = bg;
-				if (!fg.Equal(Gdk.Color.Zero))
+				if (fg != null)
 					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Even] = fg;
 			}
 			else if (node.Name == "oddcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
+				if (bg != null)
 					info.bgNormal[(int)rowType, (int)Drawer.ColumnType.Odd] = bg;
-				if (!fg.Equal(Gdk.Color.Zero))
+				if (fg != null)
 					info.fgNormal[(int)rowType, (int)Drawer.ColumnType.Odd] = fg;
 			}
 			else if (node.Name == "selectedcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
+				if (bg != null)
 					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection] = bg;
-				if (!fg.Equal(Gdk.Color.Zero))
+				if (fg != null)
 					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.Selection] = fg;
 			}
 			else if (node.Name == "patternmatchcolumn") {
-				if (!bg.Equal(Gdk.Color.Zero))
+				if (bg != null)
 					info.bgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch] = bg;
-				if (!fg.Equal(Gdk.Color.Zero))
+				if (fg != null)
 					info.fgHighlight[(int)rowType, (int)Drawer.HighlightType.PatternMatch] = fg;
 			}
 		}
 	}
 
 	///<summary>Parse a font type</summary>
-	void ParseDisplayType(XmlNode parentNode, out Gdk.Color fg, out Gdk.Color bg)
+	void ParseDisplayType(XmlNode parentNode, out Drawer.Color fg, out Drawer.Color bg)
 	{
-		fg = Gdk.Color.Zero;
-		bg = Gdk.Color.Zero;
+		fg = null;
+		bg = null;
 		XmlNodeList childNodes = parentNode.ChildNodes;
 		foreach(XmlNode node in childNodes) {
-			if (node.Name == "foreground")
-				Gdk.Color.Parse(node.InnerText, ref fg);
-			if (node.Name == "background")
-				Gdk.Color.Parse(node.InnerText, ref bg);
+			Gdk.Color col = new Gdk.Color();
+			if (node.Name == "foreground") {
+				Gdk.Color.Parse(node.InnerText, ref col);
+				Gdk.Colormap.System.AllocColor(ref col, false, true);
+				fg = new Drawer.Color(col);
+			}
+			if (node.Name == "background") {
+				Gdk.Color.Parse(node.InnerText, ref col);
+				Gdk.Colormap.System.AllocColor(ref col, false, true);
+				bg = new Drawer.Color(col);
+			}
 		}
 	}
 
