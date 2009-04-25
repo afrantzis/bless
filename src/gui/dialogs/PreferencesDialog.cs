@@ -61,7 +61,7 @@ public class PreferencesDialog : Dialog
 		this.Modal = false;
 		this.TransientFor = parent;
 		this.BorderWidth = 6;
-		this.AddButton("Close", ResponseType.Close);
+		this.AddButton(Gtk.Stock.Close, ResponseType.Close);
 		this.Response += new ResponseHandler(OnDialogResponse);
 		this.VBox.Add(PreferencesPaned);
 		this.VBox.ShowAll();

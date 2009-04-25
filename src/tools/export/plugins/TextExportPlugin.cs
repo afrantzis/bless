@@ -21,6 +21,7 @@
 using System.IO;
 using Bless.Plugins;
 using Bless.Tools.Export;
+using Mono.Unix;
 
 namespace Bless.Tools.Export.Plugins {
 
@@ -31,7 +32,7 @@ public class TextExportPlugin : ExportPlugin
 	{
 		name = "TextExport";
 		author = "Alexandros Frantzis";
-		description = "Export as Text";
+		description = Catalog.GetString("Export as Text");
 	}
 
 	public override IExportBuilder CreateBuilder(Stream s)

@@ -39,8 +39,12 @@ public class SaveConfirmationMultiAlert : Alert
 	SaveFileItem[] fileList;
 
 	public SaveConfirmationMultiAlert(SaveFileItem[] list, Gtk.Window parent)
-			: base(string.Format(Catalog.GetString("There are {0} files with unsaved changes. Save changes before closing?"), list.Length),
-				   Catalog.GetString("If you don't save, all changes made since the last save will be lost."), parent)
+			: base(string.Format(
+						Catalog.GetPluralString("There is {0} file with unsaved changes.", "There are {0} files with unsaved changes.", list.Length) +
+						" " + Catalog.GetString("Save changes before closing?"),
+						list.Length),
+					Catalog.GetString("If you don't save, all changes made since the last save will be lost."),
+					parent)
 	{
 		fileList = list;
 

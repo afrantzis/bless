@@ -140,7 +140,7 @@ public class BlessMain
 		ActionGroup group = new ActionGroup ("MainMenuActions");
 		group.Add (actionEntries);
 		group.Add ( new ToggleActionEntry[] {
-						new ToggleActionEntry ("ToolbarAction", null, "Toolbar", null, null,
+						new ToggleActionEntry ("ToolbarAction", null, Catalog.GetString("Toolbar"), null, null,
 											   new EventHandler(OnViewToolbarToggled), false)
 					});
 

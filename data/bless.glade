@@ -724,7 +724,7 @@
           <widget class="GtkLabel" id="MessageLabel">
             <property name="visible">True</property>
             <property name="yalign">0</property>
-            <property name="label" translatable="yes">label4</property>
+            <property name="label" translatable="no">label4</property>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -1448,7 +1448,7 @@ Text</property>
                     <child>
                       <widget class="GtkButton" id="SavePatternButton">
                         <property name="visible">True</property>
-                        <property name="tooltip">Save Pattern</property>
+                        <property name="tooltip" translatable="yes">Save Pattern</property>
                         <property name="response_id">0</property>
                         <signal name="clicked" handler="OnSavePatternButtonClicked"/>
                         <child>
@@ -1708,7 +1708,7 @@ Text</property>
                 <child>
                   <widget class="GtkButton" id="CancelButton">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">gtk-cancel</property>
+                    <property name="label" translatable="no">gtk-cancel</property>
                     <property name="use_stock">True</property>
                     <property name="response_id">0</property>
                     <signal name="clicked" handler="OnExportCancelClicked"/>
@@ -1738,7 +1738,7 @@ Text</property>
             <child>
               <widget class="GtkButton" id="CloseButton">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label" translatable="no">gtk-close</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>
@@ -1798,7 +1798,7 @@ Text</property>
         <child>
           <widget class="GtkButton" id="CancelButton">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">gtk-cancel</property>
+            <property name="label" translatable="no">gtk-cancel</property>
             <property name="use_stock">True</property>
             <property name="response_id">0</property>
             <signal name="clicked" handler="OnCancelButtonClicked"/>
@@ -1887,7 +1887,7 @@ Text</property>
         <child>
           <widget class="GtkButton" id="DoOperationButton">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">gtk-execute</property>
+            <property name="label" translatable="no">gtk-execute</property>
             <property name="use_stock">True</property>
             <property name="response_id">0</property>
             <signal name="clicked" handler="OnDoOperationClicked"/>

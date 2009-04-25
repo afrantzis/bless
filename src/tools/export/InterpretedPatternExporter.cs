@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections;
 using Bless.Buffers;
 using Bless.Util;
+using Mono.Unix;
 
 namespace Bless.Tools.Export
 {
@@ -105,7 +106,7 @@ public class InterpretedPatternExporter : IPatternExporter
 					// if we reached the end of the pattern and we haven't moved forwards
 					// in the file, this is never going to end!
 					else if (prevLoop >= bufPos && bufPos <= rangeEnd)
-						throw new FormatException(string.Format("Pattern causes infinite loop"));
+						throw new FormatException(Catalog.GetString("Pattern causes infinite loop"));
 					else
 						finished = true;
 					break;
@@ -114,7 +115,7 @@ public class InterpretedPatternExporter : IPatternExporter
 			}
 
 			if (tok == Token.Error)
-				throw new FormatException(string.Format("Error at format position {0}", patternIndex));
+				throw new FormatException(string.Format(Catalog.GetString("Error at format position {0}"), patternIndex));
 		}
 
 		if (!cancelled)

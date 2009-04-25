@@ -25,6 +25,7 @@ using System.IO;
 using System.Threading;
 using Bless.Util;
 using Bless.Tools;
+using Mono.Unix;
 
 namespace Bless.Buffers {
 
@@ -122,7 +123,7 @@ public class ByteBuffer : BaseBuffer {
 		SaveCheckpoint = null;
 		
 		// name the buffer automatically
-		autoFilename = "Untitled " + ByteBuffer.autoNum;
+		autoFilename = Catalog.GetString("Untitled") + " " + ByteBuffer.autoNum;
 		ByteBuffer.autoNum++;
 		
 		// set default permissions 
