@@ -57,11 +57,16 @@ public class HexDrawer : Drawer {
 
 		//System.Console.WriteLine(s);
 
-		pangoLayout.SetText(s);
-
-
 		gc.RgbFgColor = fg;
+
+		// Render the text in two parts (256 characters each).
+		// We do this to work around a bug in some drivers that fail
+		// to render text that ends up wider than 4096 pixels.
+		pangoLayout.SetText(s.Substring(0,256));
 		pix.DrawLayout(gc, 0, 0, pangoLayout);
+		
+		pangoLayout.SetText(s.Substring(256,256));
+		pix.DrawLayout(gc, 128*2*width, 0, pangoLayout);
 
 		return pix;
 	}

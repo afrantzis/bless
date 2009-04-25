@@ -27,5 +27,8 @@ Many thanks to:
     
 * Saleem Abdulrasool <compnerd [at] gentoo [dot] org>
   Support for DESTDIR in Makefiles
-  
+
+* Mike Auty <mike.auty [at] gmail [dot] com>
+  Bug fixes
+
 ... if I have forgotten someone please remind me!
