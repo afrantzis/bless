@@ -70,14 +70,7 @@ public class BlessMain
 		"	<placeholder name=\"SearchItems\" />" +
 		"</toolbar>";
 
-	ActionEntry[] actionEntries = new ActionEntry[] {
-									  new ActionEntry ("File", null, Catalog.GetString("_File"), null, null, null),
-									  new ActionEntry ("Edit", null, Catalog.GetString("_Edit"), null, null, null),
-									  new ActionEntry ("View", null, Catalog.GetString("_View"), null, null, null),
-									  new ActionEntry ("Search", null, Catalog.GetString("_Search"), null, null, null),
-									  new ActionEntry ("Tools", null, Catalog.GetString("_Tools"), null, null, null),
-									  new ActionEntry ("Help", null, Catalog.GetString("_Help"), null, null, null)
-								  };
+	ActionEntry[] actionEntries;
 
 	UIManager uiManager;
 
@@ -136,6 +129,15 @@ public class BlessMain
 		uiManager = new UIManager();
 		MainWindow.AddAccelGroup(uiManager.AccelGroup);
 		uiManager.AddUiFromString(uiXml);
+
+		actionEntries = new ActionEntry[] {
+			new ActionEntry ("File", null, Catalog.GetString("_File"), null, null, null),
+			new ActionEntry ("Edit", null, Catalog.GetString("_Edit"), null, null, null),
+			new ActionEntry ("View", null, Catalog.GetString("_View"), null, null, null),
+			new ActionEntry ("Search", null, Catalog.GetString("_Search"), null, null, null),
+			new ActionEntry ("Tools", null, Catalog.GetString("_Tools"), null, null, null),
+			new ActionEntry ("Help", null, Catalog.GetString("_Help"), null, null, null)
+		};
 
 		ActionGroup group = new ActionGroup ("MainMenuActions");
 		group.Add (actionEntries);
