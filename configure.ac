@@ -24,11 +24,10 @@ if test "x$PKG_CONFIG" = "xno"; then
 fi
 	
 # C# compiler
-AC_PATH_PROG(MCS, gmcs, no)
+AC_PATH_PROG(MCS, mcs, no)
 
-CS="gmcs C#"
-if test "x$MCS" = "xno"  ; then
-	AC_MSG_ERROR([No $CS compiler found])
+if test "x$MCS" = "xno"; then
+	AC_MSG_ERROR([No mono Csharp compiler found])
 fi
 
 # Mono runtime
