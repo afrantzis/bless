@@ -18,7 +18,11 @@ public class ModuleTree
 	{
 		modules = new Hashtable();
 		XmlDocument xmlDoc = new XmlDocument();
-		xmlDoc.Load(filename);
+
+		using (XmlReader xmlReader = XmlReader.Create(filename)) {
+			xmlDoc.Load(filename);
+		}
+
 		baseDir = Path.GetDirectoryName(Path.GetFullPath(filename));
 		ParseXml(xmlDoc);
 	}

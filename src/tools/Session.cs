@@ -72,105 +72,108 @@ public class Session
 
 	public void Save(string path)
 	{
-		XmlTextWriter xml = new XmlTextWriter(path, null);
-		xml.Formatting = Formatting.Indented;
-		xml.Indentation = 1;
-		xml.IndentChar = '\t';
+                using (XmlTextWriter xml = new XmlTextWriter(path, null)) {
+                        xml.Formatting = Formatting.Indented;
+                        xml.Indentation = 1;
+                        xml.IndentChar = '\t';
 
-		xml.WriteStartElement(null, "session", null);
+                        xml.WriteStartDocument();
 
-		xml.WriteStartElement(null, "windowheight", null);
-		xml.WriteString(windowHeight.ToString());
-		xml.WriteEndElement();
+                        xml.WriteStartElement(null, "session", null);
 
-		xml.WriteStartElement(null, "windowwidth", null);
-		xml.WriteString(windowWidth.ToString());
-		xml.WriteEndElement();
+                        xml.WriteStartElement(null, "windowheight", null);
+                        xml.WriteString(windowHeight.ToString());
+                        xml.WriteEndElement();
 
-		xml.WriteStartElement(null, "activefile", null);
-		xml.WriteString(activeFile);
-		xml.WriteEndElement();
+                        xml.WriteStartElement(null, "windowwidth", null);
+                        xml.WriteString(windowWidth.ToString());
+                        xml.WriteEndElement();
 
-		foreach(SessionFileInfo sfi in files) {
-			xml.WriteStartElement(null, "file", null);
-			xml.WriteStartElement(null, "path", null);
-			xml.WriteString(sfi.Path);
-			xml.WriteEndElement();
-			xml.WriteStartElement(null, "offset", null);
-			xml.WriteString(sfi.Offset.ToString());
-			xml.WriteEndElement();
-			xml.WriteStartElement(null, "cursoroffset", null);
-			xml.WriteString(sfi.CursorOffset.ToString());
-			xml.WriteEndElement();
-			xml.WriteStartElement(null, "cursordigit", null);
-			xml.WriteString(sfi.CursorDigit.ToString());
-			xml.WriteEndElement();
-			xml.WriteStartElement(null, "layout", null);
-			xml.WriteString(sfi.Layout);
-			xml.WriteEndElement();
-			xml.WriteStartElement(null, "focusedarea", null);
-			xml.WriteString(sfi.FocusedArea.ToString());
-			xml.WriteEndElement();
-			xml.WriteEndElement();
-		}
+                        xml.WriteStartElement(null, "activefile", null);
+                        xml.WriteString(activeFile);
+                        xml.WriteEndElement();
 
-		xml.WriteEndElement();
-		xml.WriteEndDocument();
-		xml.Close();
+                        foreach(SessionFileInfo sfi in files) {
+                                xml.WriteStartElement(null, "file", null);
+                                xml.WriteStartElement(null, "path", null);
+                                xml.WriteString(sfi.Path);
+                                xml.WriteEndElement();
+                                xml.WriteStartElement(null, "offset", null);
+                                xml.WriteString(sfi.Offset.ToString());
+                                xml.WriteEndElement();
+                                xml.WriteStartElement(null, "cursoroffset", null);
+                                xml.WriteString(sfi.CursorOffset.ToString());
+                                xml.WriteEndElement();
+                                xml.WriteStartElement(null, "cursordigit", null);
+                                xml.WriteString(sfi.CursorDigit.ToString());
+                                xml.WriteEndElement();
+                                xml.WriteStartElement(null, "layout", null);
+                                xml.WriteString(sfi.Layout);
+                                xml.WriteEndElement();
+                                xml.WriteStartElement(null, "focusedarea", null);
+                                xml.WriteString(sfi.FocusedArea.ToString());
+                                xml.WriteEndElement();
+                                xml.WriteEndElement();
+                        }
+
+                        xml.WriteEndElement();
+                        xml.WriteEndDocument();
+                }
 	}
 
 	public void Load(string path)
 	{
-		XmlDocument xmlDoc = new XmlDocument();
-		xmlDoc.Load(path);
+        using (XmlReader xmlReader = XmlReader.Create(path)) {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(xmlReader);
 
-		XmlNodeList fileList = xmlDoc.GetElementsByTagName("file");
+            XmlNodeList fileList = xmlDoc.GetElementsByTagName("file");
 
-		foreach(XmlNode fileNode in fileList) {
-			XmlNodeList childNodes = fileNode.ChildNodes;
-			SessionFileInfo sfi = new SessionFileInfo();
-			foreach(XmlNode node in childNodes) {
-				switch (node.Name) {
-					case "path":
-						sfi.Path = node.InnerText;
-						break;
-					case "offset":
-						sfi.Offset = Convert.ToInt64(node.InnerText);
-						break;
-					case "cursoroffset":
-						sfi.CursorOffset = Convert.ToInt64(node.InnerText);
-						break;
-					case "cursordigit":
-						sfi.CursorDigit = Convert.ToInt32(node.InnerText);
-						break;
-					case "layout":
-						sfi.Layout = node.InnerText;
-						break;
-					case "focusedarea":
-						sfi.FocusedArea = Convert.ToInt32(node.InnerText);
-						break;
-					default:
-						break;
-				}
-			}
-			files.Add(sfi);
+            foreach(XmlNode fileNode in fileList) {
+                XmlNodeList childNodes = fileNode.ChildNodes;
+                SessionFileInfo sfi = new SessionFileInfo();
+                foreach(XmlNode node in childNodes) {
+                    switch (node.Name) {
+                        case "path":
+                            sfi.Path = node.InnerText;
+                            break;
+                        case "offset":
+                            sfi.Offset = Convert.ToInt64(node.InnerText);
+                            break;
+                        case "cursoroffset":
+                            sfi.CursorOffset = Convert.ToInt64(node.InnerText);
+                            break;
+                        case "cursordigit":
+                            sfi.CursorDigit = Convert.ToInt32(node.InnerText);
+                            break;
+                        case "layout":
+                            sfi.Layout = node.InnerText;
+                            break;
+                        case "focusedarea":
+                            sfi.FocusedArea = Convert.ToInt32(node.InnerText);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                files.Add(sfi);
+            }
+
+            XmlNodeList heightList = xmlDoc.GetElementsByTagName("windowheight");
+            foreach(XmlNode heightNode in heightList) {
+                windowHeight = Convert.ToInt32(heightNode.InnerText);
+            }
+
+            XmlNodeList widthList = xmlDoc.GetElementsByTagName("windowwidth");
+            foreach(XmlNode widthNode in widthList) {
+                windowWidth = Convert.ToInt32(widthNode.InnerText);
+            }
+
+            XmlNodeList activeList = xmlDoc.GetElementsByTagName("activefile");
+            foreach(XmlNode activeNode in activeList) {
+                activeFile = activeNode.InnerText;
+            }
 		}
-
-		XmlNodeList heightList = xmlDoc.GetElementsByTagName("windowheight");
-		foreach(XmlNode heightNode in heightList) {
-			windowHeight = Convert.ToInt32(heightNode.InnerText);
-		}
-
-		XmlNodeList widthList = xmlDoc.GetElementsByTagName("windowwidth");
-		foreach(XmlNode widthNode in widthList) {
-			windowWidth = Convert.ToInt32(widthNode.InnerText);
-		}
-
-		XmlNodeList activeList = xmlDoc.GetElementsByTagName("activefile");
-		foreach(XmlNode activeNode in activeList) {
-			activeFile = activeNode.InnerText;
-		}
-
 	}
 }
 
