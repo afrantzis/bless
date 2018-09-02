@@ -132,6 +132,11 @@ public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 			this.ActivateProgressReport(true);
 			stageReached = SaveStage.BeforeDelete;
 			
+			// Delete here to fail early (before invalidating the byteBuffer)
+			// if there are any issues.
+			if (System.IO.File.Exists(savePath))
+				System.IO.File.Delete(savePath);
+
 			// close the file, make sure that File Operations
 			// are temporarily allowed
 			lock(byteBuffer.LockObj) {
@@ -142,9 +147,6 @@ public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 				byteBuffer.CloseFile();
 				byteBuffer.FileOperationsAllowed = false;
 			}
-			
-			if (System.IO.File.Exists(savePath))
-				System.IO.File.Delete(savePath);
 			
 			stageReached = SaveStage.BeforeMove;
 			System.IO.File.Move(tempPath, savePath);
