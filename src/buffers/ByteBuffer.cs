@@ -958,7 +958,7 @@ public class ByteBuffer : BaseBuffer {
 	///</summary>
 	public string TempDir {
 		get { return tempDir; }
-		set { tempDir = value;}
+		set {  tempDir = (value == "") ? Path.GetTempPath() : value; }
 	}
 	
 	///<summary>
