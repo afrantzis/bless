@@ -93,6 +93,7 @@ AM_CONDITIONAL(ENABLE_DEBUG, [test "$DEBUG" = "yes"])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in
 				 builder/Makefile
+				 builder/ConfigureDefines.cs
 				 bin/Makefile
 				 data/Makefile
 				 data/bless.desktop

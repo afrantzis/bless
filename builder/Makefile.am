@@ -1,9 +1,9 @@
-SRC= $(wildcard *.cs)
+SRC= $(wildcard *.cs) ConfigureDefines.cs
 
 EXTRA_DIST= $(SRC)
 EXE= bless-builder.exe
 
-CLEANFILES=$(EXE)
+CLEANFILES=$(EXE) ConfigureDefines.cs
 
 builder: $(EXE)
 
