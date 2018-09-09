@@ -4,7 +4,7 @@
 	<!ENTITY legal SYSTEM "legal.xml">
 	<!ENTITY appversion "0.6.0">
 	<!ENTITY manrevision "1.0">
-	<!ENTITY date "Aug 2008">
+	<!ENTITY date "Sep 2018">
 	<!ENTITY app "<application>Bless</application>">
 	<!-- Information about the entities
 		The legal.xml file contains legal information, there is no need to edit the file. 
@@ -29,7 +29,7 @@
 
 		<copyright> 
 			<year>2004</year> 
-			<year>2008</year> 
+			<year>2018</year>
 			<holder>Alexandros Frantzis</holder> 
 		</copyright> 
 <!-- translators: uncomment this:
@@ -2116,19 +2116,19 @@
 	<qandadiv><title>Technical Questions</title>
 	
 	    <qandaentry><question><simpara>How can I get the latest source of Bless?</simpara></question>
-	        <answer><para>Bless now uses <ulink url="http://bazaar-vcs.org" type="http">Bazaar-NG</ulink> as its version control system. 
-	After you install Bazaar-NG on your system use the following command to get the latest version
-	of Bless into the bless.dev directory (this might take some time):
+	        <answer><para>Bless now uses <ulink url="https://git-scm.com" type="https">Git</ulink> as its version control system.
+	After you install Git on your system use the following command to get the latest version
+	of Bless into the bless directory (this might take some time):
 	</para>
 	<para>
-	<command>bzr branch http://download.gna.org/bless/bless.dev</command>
+	<command>git clone https://github.com/afrantzis/bless</command>
 	</para>
 	<para>
 	If you already downloaded a previous version (using the above command, not source tarballs) and want to update to the latest version 
 	use:
 	</para>
 	<para>
-	<command>bzr pull</command>
+	<command>git pull</command>
 	</para>
 	<para>
 	from within the directory that contains the previous version. 
