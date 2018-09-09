@@ -257,7 +257,6 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 	Statusbar OffsetStatusbar;
 	Statusbar SelectionStatusbar;
 	Statusbar OverwriteStatusbar;
-	Tooltips tips;
 
 	DataBook dataBook;
 

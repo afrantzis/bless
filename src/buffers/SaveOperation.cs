@@ -61,7 +61,7 @@ public class SaveOperation :  ThreadedAsyncOperation, ISaveState
 	
 	public enum SaveStage { BeforeSaveAs, BeforeDelete, BeforeMove }
 	
-	public new SaveStage StageReached {
+	public SaveStage StageReached {
 		get { return stageReached; }
 	}
 	

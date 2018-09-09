@@ -39,14 +39,14 @@ public class HelpOperationsPlugin : GuiPlugin
 		"	</menu>" +
 		"</menubar>";
 
-	DataBook dataBook;
-	Window mainWindow;
+	//DataBook dataBook;
+	//Window mainWindow;
 	UIManager uiManager;
 
 	public HelpOperationsPlugin(Window mw, UIManager uim)
 	{
-		mainWindow = mw;
-		dataBook = (DataBook)GetDataBook(mainWindow);
+		//mainWindow = mw;
+		//dataBook = (DataBook)GetDataBook(mainWindow);
 		uiManager = uim;
 
 		name = "HelpOperations";
