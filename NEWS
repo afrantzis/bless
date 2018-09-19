@@ -1,3 +1,13 @@
+Bless v0.6.1 20180919 - Better late than never
+----------------------------------------------
+
+* Use 'mcs' compiler by default, and allow proper overriding during configure.
+* Fix problem saving when the tempdir config entry hasn't been specified.
+* Fix reading and writing to XML config files.
+* Fix crash when trying to save a file without write permissions.
+* Fix various compilation warnings.
+* Moved to new home: https://github.com/afrantzis/bless
+
 Bless v0.6.0 20080814
 ---------------------
 
