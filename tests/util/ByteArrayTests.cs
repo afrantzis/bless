@@ -85,6 +85,14 @@ public class ByteArrayTests
 		Assert.AreEqual(s, "63 FF 12 00 CA", "#0");
 	}
 
+	[Test]
+	public void ByteArrayStringWithShortNumbers()
+	{
+		byte[] ba = ByteArray.FromString("0 0 2 0 0 0 209 1", 10);
+
+		Assert.AreEqual(new byte[]{0, 0, 2, 0, 0, 0, 209, 1}, ba, "#Contents");
+	}
+
 }
 
 } // end namespace
