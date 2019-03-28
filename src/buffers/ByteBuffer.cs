@@ -777,9 +777,9 @@ public class ByteBuffer : BaseBuffer {
 		fsw = new FileSystemWatcher();
 		fsw.Path = Path.GetDirectoryName(fileBuf.Filename);
 		fsw.Filter = Path.GetFileName(fileBuf.Filename);
-		fsw.NotifyFilter = NotifyFilters.FileName|NotifyFilters.LastAccess|NotifyFilters.LastWrite;
+		// Currently we only properly support file content changes
+		fsw.NotifyFilter = NotifyFilters.LastWrite;
 		fsw.Changed += new FileSystemEventHandler(OnFileChanged);
-		//fsw.Deleted += new FileSystemEventHandler(OnFileChanged);
 		
 		fsw.EnableRaisingEvents = true;
 	}
@@ -788,9 +788,7 @@ public class ByteBuffer : BaseBuffer {
 	{
 		EmitFileChanged();
 	}
-	
-	
-	
+
 	public override byte this[long index] {
 		set { } 
 		get {
