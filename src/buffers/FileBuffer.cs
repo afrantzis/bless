@@ -144,7 +144,8 @@ public class FileBuffer: BaseBuffer
 			throw new NotSupportedException("File object isn't a regular or block device.");
 #endif
 
-		Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+		Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read,
+		                               FileShare.ReadWrite);
 		
 		if (stream.CanSeek == false)
 			throw new NotSupportedException("File object doesn't support seeking.");

@@ -93,7 +93,7 @@ public class SaveInPlaceOperation : ThreadedAsyncOperation, ISaveState
 		// Open the file for editing.
 		// Do this in the beginning to figure out if we have all the
 		// required permissions before invalidating the byteBuffer.
-		fs = new FileStream(savePath, FileMode.Open, FileAccess.Write);
+		fs = new FileStream(savePath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
 		
 		// hold a reference to the bytebuffer's segment collection
 		// because it is lost when the file is closed
