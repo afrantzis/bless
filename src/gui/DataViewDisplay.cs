@@ -443,9 +443,9 @@ public class DataViewDisplay : Gtk.VBox {
 	{
 		if (fileChangedBar == null) {
 			fileChangedBar = new FileChangedBar(this.View);
+			this.PackStart(fileChangedBar, false, false, 0);
 		}
 
-		this.PackStart(fileChangedBar, false, false, 0);
 		this.ReorderChild(fileChangedBar, 0);
 		fileChangedBar.ShowAll();
 	}
