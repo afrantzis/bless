@@ -8,7 +8,8 @@ AM_INIT_AUTOMAKE
 # I18N
 #
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.15)
+# Require at least gettext 0.16 which supports recent autotools versions
+AM_GNU_GETTEXT_REQUIRE_VERSION(0.16)
 
 GETTEXT_PACKAGE=bless
 AC_SUBST(GETTEXT_PACKAGE)
