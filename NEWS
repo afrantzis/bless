@@ -1,3 +1,13 @@
+Bless v0.6.2 20190418
+---------------------
+
+* Fix rendering with monospace fonts with ligatures (gh #1).
+* Fix crash when searching (gh #3).
+* Fix incorrect notifications for file content changes (gh #7).
+* Fix crash when trying to save a file in-place.
+* Fix (harmless) Gtk-CRITICAL errors for file content change notifications.
+* Fix installation with newer autotools (gh #8).
+
 Bless v0.6.1 20180919 - Better late than never
 ----------------------------------------------
 

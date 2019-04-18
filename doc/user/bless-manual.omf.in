@@ -2,13 +2,13 @@
 <omf>
   <resource>
     <creator>
-     alf82@freemail.gr (Alexandros Frantzis)
+     alf82 at freemail dot gr (Alexandros Frantzis)
     </creator>
     <title>
      Bless Hex Editor Manual
     </title>
     <date>
-     2005-05-04
+     2019-04-19
     </date>
     <subject category="GNOME|Applications"/>
     <description>
@@ -21,6 +21,6 @@
     <identifier url=""/>
     <language code="C"/>
     <relation seriesid="8f3f7410-bc1a-11d9-89c2-ccc05bb13308"/>
-    <rights type="GNU FDL" license.version="1.1" license="http://www.gnu.org/licenses/fdl.html" holder="Sun Microsystems, Eazel Inc., and Dan Mueth"/>
+    <rights type="GNU FDL" license.version="1.1" license="http://www.gnu.org/licenses/fdl.html" holder="Alexandros Frantzis and contributors"/>
   </resource>
 </omf>
