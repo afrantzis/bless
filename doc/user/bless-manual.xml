@@ -214,21 +214,25 @@
 			distribution's instructions on how to install packages.
 		</para>
 		<para>
-			If you downloaded Bless as a source .tar.gz or .tar.bz2 package you will need to build
-			it and install it manually. The building and installation procedure is described below:
+			If you downloaded Bless from the git repo, or as a source .tar.gz or .tar.bz2
+			package you will need to build it and install it manually. The building and
+			installation procedure is described below:
 		</para>
 		<para>
-		Overview: untar, ./configure, make, (make install)
+			Overview: git clone https://github.com/afrantzis/bless, ./autogen.sh,
+			./configure, make, (make install)
 	    </para>
 		<variablelist>
 			<varlistentry>
-				<term>Step 1: Untar the source package</term>
+				<term>Step 1: Get the source</term>
 				<listitem>
-					<para>For a tar.gz package use:
-	    				<command>tar -xzvf bless-a.b.c.tar.gz</command>
+					<para> To get the latest source:</para>
+					<para>
+						<command>git clone https://github.com/afrantzis/bless</command>
 					</para>
-					<para>For a tar.bz2 package use:
-	    				<command>tar -xjvf bless-a.b.c.tar.bz2</command>
+					<para>For a compressed tarball use:</para>
+					<para>
+						<command>tar -xf bless-a.b.c.tar.gz</command>
 					</para>
 				</listitem>
 			</varlistentry>
@@ -236,10 +240,14 @@
 				<term>Step 2: Configure the build</term>
 				<listitem>
 					<para>
-						Enter the directory created in the previous step (bless-a.b.c) and type
-						<command>'./configure'</command>. The script will check if your system has all the required
-						libraries. Use the <parameter>--prefix=<replaceable>PREFIX</replaceable></parameter> option to set the installation directory prefix.
-						By default the prefix is '/usr/local'.
+						Enter the directory created in the previous step (bless or bless-a.b.c).
+						If you have checked out the latest source from git, first run
+						<command>./autogen.sh</command>. To configure the build and check that
+						your system has all the required libraries use the
+						<command>./configure</command> script. Use the
+						<parameter>--prefix=<replaceable>PREFIX</replaceable></parameter>
+						option to set the installation directory prefix.  By default the prefix
+						is '/usr/local'.
 					</para>
 					<para>
 						You can also use the <parameter>--enable-debug</parameter> option to build bless with debug
@@ -252,10 +260,12 @@
 				<term>Step 3: Build the program</term>
 				<listitem>
 					<para>
-						Type <command>'make'</command>. This will create <filename>bless.exe</filename> and the necessary 
+						Type <command>make</command>. This will create <filename>bless.exe</filename> and the necessary
 						libraries in the bin/ directory and the <filename>bless</filename> 
-						launcher script in the bless-a.b.c directory. You can also type <command>'make check'</command> to
-						run some tests on various bless components. 
+						launcher script in the top source directory. You can also use
+						<command>make check</command> to run some tests on various bless
+						components. Note that <command>make check</command> requires the
+						<command>nunit-console</command> binary.
 					</para>
 				</listitem>
 			</varlistentry>

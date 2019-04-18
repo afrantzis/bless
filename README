@@ -76,24 +76,26 @@ will not be problems.
 4. Installation
 ---------------
 Quick: 
-    untar, ./configure, make, (make install)
+    git clone https://github.com/afrantzis/bless, ./autogen.sh, ./configure,
+    make, (make install)
 
 Detailed:
 
-Step 1: Untar the source package
+Step 1: Get the source
 ---------------------------------
-For a tar.gz package use:
-    tar -xzvf bless-a.b.c.tar.gz
+To get the latest source:
+    git clone https://github.com/afrantzis/bless
 
-For a tar.bz2 package use:
-    tar -xjvf bless-a.b.c.tar.gz
+For a compressed tarball use:
+    tar -xf bless-a.b.c.tar.gz
 
 Step 2: Configure the build
 -----------------------------
-Enter the directory created in the previous step (bless-a.b.c) and type
-'./configure'. The script will check if your system has all the required
-libraries. Use the "--prefix=*" option to set the installation directory prefix.
-By default the prefix is '/usr/local'.
+Enter the directory created in the previous step (bless or bless-a.b.c). If you
+have checked out the latest source from git, first run './autogen.sh'. To
+configure the build and check that your system has all the required libraries
+use the './configure' script. Use the "--prefix=PREFIX" option to set the
+installation directory prefix.  By default the prefix is '/usr/local'.
 
 You can also use the "--enable-debug" option to build bless with debug
 information.
@@ -101,8 +103,9 @@ information.
 Step 3: Build the program
 -----------------------------
 Type 'make'. This will create 'bless.exe' and the necessary library files in the
-bin/ directory and the 'bless' launcher script in the bless-a.b.c directory. You
-can also type 'make check' to run some tests on various bless components. 
+bin/ directory and the 'bless' launcher script in the top source directory. You
+can also type 'make check' to run some tests on various bless components. Note
+that 'make check' requires the 'nunit-console' binary.
 
 Step 4: Install the program (optional)
 --------------------------------------
@@ -113,7 +116,7 @@ Become root and type 'make install'.
 5. Running
 ----------
 If you chose to install the program, just type 'bless'. In any case you can  
-run the program by typing './bless' in the 'bless-a.b.c' directory.
+run the program by typing './bless' from within the top source directory.
 Enjoy!
 
 ----------------
