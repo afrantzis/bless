@@ -9,11 +9,11 @@ noinst_SCRIPTS=$(OMF)
 
 
 $(OMF): $(OMF).in
-	if [ -x `which scrollkeeper-preinstall` ]; then \
-	    scrollkeeper-preinstall file:$(datadir)/doc/$(PACKAGE_NAME)/user/bless-manual.xml $(OMF).in $(OMF); \
-	else \
-	    cp $(OMF).in $(OMF); \
-	fi
+if WITH_SCROLLKEEPER
+	scrollkeeper-preinstall file:$(datadir)/doc/$(PACKAGE_NAME)/user/bless-manual.xml $(OMF).in $(OMF)
+else
+	cp $(OMF).in $(OMF)
+endif
 
 doc:
 	xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/html/chunk.xsl bless-manual.xml
