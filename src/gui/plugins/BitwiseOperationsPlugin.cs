@@ -66,6 +66,7 @@ public class BitwiseOperationsPlugin : GuiPlugin
 		name = "BitwiseOperations";
 		author = "Alexandros Frantzis";
 		description = "Bitwise operations on data";
+		loadAfter.Add("EditOperations");
 	}
 
 	public override bool Load()
