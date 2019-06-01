@@ -14,6 +14,7 @@ src/gui/dialogs/RevertConfirmationAlert.cs
 src/gui/dialogs/SaveConfirmationAlert.cs
 src/gui/dialogs/SaveConfirmationMultiAlert.cs
 src/gui/plugins/ConversionTablePlugin.cs
+src/gui/plugins/CopyOffsetPlugin.cs
 src/gui/plugins/FileExportPlugin.cs
 src/gui/plugins/FileOperationsPlugin.cs
 src/gui/plugins/FindReplacePlugin.cs

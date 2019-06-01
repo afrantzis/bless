@@ -1090,6 +1090,38 @@
 					</variablelist>
 				</para>
 			</section>
+
+			<section id="bless-usage-edit-clipboard-copy-offsets">
+				<title>Copy offset(s) operations</title>
+				<para>To copy the offset(s) of the current cursor position or the currently selected range use:
+					<menuchoice>
+						<shortcut>
+							<keycombo>
+								<keycap>Ctrl</keycap>
+								<keycap>Shift</keycap>
+								<keycap>C</keycap>
+							</keycombo>
+						</shortcut>
+						<guisubmenu>Edit</guisubmenu>
+						<guimenuitem>Copy Offset(s)</guimenuitem>
+					</menuchoice>.
+					This operation is also available in the pop-menu when right-clicking
+					in the Data View.
+				</para>
+
+				<para>
+					If there is an active selection this operation copies the start and
+					end offsets of the selection to the clipboard, separated by a comma.
+					Otherwise, just the offset of the cursor position is copied to the
+					clipboard.
+				</para>
+
+				<para>
+					The number base used for the offsets is determined by a plugin
+					preference which can be set through the preferences dialog.
+					See <xref linkend="bless-customizing-layouts"/>.
+				</para>
+			</section>
 		</section>
 		
 		<section id="bless-usage-edit-undo">
