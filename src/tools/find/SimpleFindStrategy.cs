@@ -115,6 +115,8 @@ class SimpleFindStrategy : IFindStrategy
 	{
 		return FindPrevious(0);
 	}
+
+    public bool Cancelled { get; set; }
 }
 
 } //end namespace

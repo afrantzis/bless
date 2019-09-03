@@ -31,7 +31,7 @@ public class Portable
 			
 		return freeMem;
 #else
-		throw new NotImplementedException();
+		throw new System.NotImplementedException();
 #endif
 	}
 
@@ -45,7 +45,7 @@ public class Portable
 			
 		return freeSpace;
 #else
-		throw new NotImplementedException();
+		throw new System.NotImplementedException();
 #endif
 	}
 }
