@@ -198,7 +198,7 @@ public class AreaGroup
 		set { drawingArea = value; }
 	}
 	
-	public Range Selection {
+	public Util.Range Selection {
 		get { return selection; }
 		set { 
 			if (selection == value)
@@ -251,7 +251,7 @@ public class AreaGroup
 	/// Get the range of bytes and the number of rows that 
 	/// are displayed in the current view.
 	/// </summary>
-	public Range GetViewRange(out int nrows)
+	public Util.Range GetViewRange(out int nrows)
 	{
 		// find out number of rows, bytes in current view
 		
@@ -271,9 +271,9 @@ public class AreaGroup
 		
 		// make sure we get an empty clipping Range when bleft==0
 		if (bleft > 0)
-			return new Range(offset, offset + bleft - 1);
+			return new Util.Range(offset, offset + bleft - 1);
 		else
-			return new Range();
+			return new Util.Range();
 	}
 	
 	/// <summary>
@@ -381,7 +381,7 @@ public class AreaGroup
 	private void SetupBufferCache()
 	{
 		int nrows;
-		Range view = GetViewRange(out nrows);
+		Util.Range view = GetViewRange(out nrows);
 		if (view.Size != bufferCache.Length)
 			bufferCache = new byte[view.Size];
 		
@@ -444,7 +444,7 @@ public class AreaGroup
 		}
 	}
 	/// <summary>
-	/// Renders a <see cref="Range"/> of data using a specified <see cref="Drawer.HighlightType"/>
+	/// Renders a <see cref="Util.Range"/> of data using a specified <see cref="Drawer.HighlightType"/>
 	/// </summary>
 	private void RenderHighlight(AtomicHighlight h)
 	{
@@ -474,12 +474,12 @@ public class AreaGroup
 		
 		if (q.Type > r.Type) {
 			ha = new AtomicHighlight[3]{new AtomicHighlight(r), new AtomicHighlight(q), new AtomicHighlight(r)};
-			Range.SplitAtomic(ha, r, q);
+			Util.Range.SplitAtomic(ha, r, q);
 			ha[1].AddContainer(r);
 		}
 		else {
 			ha = new AtomicHighlight[3]{new AtomicHighlight(q), new AtomicHighlight(r), new AtomicHighlight(q)};
-			Range.SplitAtomic(ha, q, r);
+			Util.Range.SplitAtomic(ha, q, r);
 			foreach (Highlight h in q.Containers)
 				ha[1].AddContainer(h);
 		}
@@ -533,7 +533,7 @@ public class AreaGroup
 	private IntervalTree<AtomicHighlight> GetAtomicHighlights()
 	{
 		int nrows;
-		Range clip = GetViewRange(out nrows);
+		Util.Range clip = GetViewRange(out nrows);
 		Highlight view = new Highlight(clip, Drawer.HighlightType.Normal);
 		
 		// get all highlights in current view
@@ -618,7 +618,7 @@ public class AreaGroup
 		// if we don't find an overlap this means that either
 		// 1. the prev cursor position is not visible on the screen
 		// 2. the prev cursor position is at or beyond the end of the file
-		IList<AtomicHighlight> overlaps = atomicHighlights.SearchOverlap(new Range(prevCursorOffset, prevCursorOffset));
+		IList<AtomicHighlight> overlaps = atomicHighlights.SearchOverlap(new Util.Range(prevCursorOffset, prevCursorOffset));
 		
 		AtomicHighlight h = null;
 		

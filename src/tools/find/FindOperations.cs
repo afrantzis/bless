@@ -146,8 +146,8 @@ public class ReplaceAllOperation: GenericFindOperation
 
 	protected override void DoOperation()
 	{
-		Range m;
-		match = new Range();
+		Util.Range m;
+		match = new Util.Range();
 		firstMatch = null;
 
 		numReplaced = 0;
@@ -159,7 +159,7 @@ public class ReplaceAllOperation: GenericFindOperation
 
 		while ((m = strategy.FindNext()) != null) {
 			if (firstMatch == null) {
-				firstMatch = new Range(m);
+				firstMatch = new Util.Range(m);
 			}
 
 			match.Start = m.Start;

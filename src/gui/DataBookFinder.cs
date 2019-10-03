@@ -234,7 +234,7 @@ public class DataBookFinder : IFinder
 	{
 		GenericFindOperation state = (GenericFindOperation)ar.AsyncState;
 		ThreadedAsyncOperation.OperationResult result = state.Result;
-		Range match = state.Match;
+		Util.Range match = state.Match;
 
 		DataView dv = null;
 
@@ -381,7 +381,7 @@ public class DataBookFinder : IFinder
 	{
 		ReplaceAllOperation state = (ReplaceAllOperation)ar.AsyncState;
 		ThreadedAsyncOperation.OperationResult result = state.Result;
-		Range firstMatch = state.FirstMatch;
+		Util.Range firstMatch = state.FirstMatch;
 
 		DataView dv = null;
 
