@@ -31,11 +31,11 @@ public interface IFindStrategy
 			ByteBuffer Buffer {	get; set; }
 				long Position { get; set; }
 
-						Range FindNext();
-	Range FindPrevious();
+						Util.Range FindNext();
+	Util.Range FindPrevious();
 
-	Range FindNext(long limit);
-	Range FindPrevious(long limit);
+	Util.Range FindNext(long limit);
+	Util.Range FindPrevious(long limit);
 
 	bool Cancelled { get; set; }
 		}

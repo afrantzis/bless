@@ -671,7 +671,7 @@ public class ByteBuffer : BaseBuffer {
 	/// Returns as a SegmentCollection the data contained in 
 	/// the specified range in the buffer.  
 	///</summary>
-	public SegmentCollection RangeToSegmentCollection(Range range)
+	public SegmentCollection RangeToSegmentCollection(Util.Range range)
 	{
 		if (range.Size == 0)
 			return null;

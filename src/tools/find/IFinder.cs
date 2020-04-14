@@ -30,7 +30,7 @@ public delegate void FirstFindHandler();
 public interface IFinder
 {
 	IFindStrategy Strategy { get; set; }
-			Range LastFound { get; set; }
+			Util.Range LastFound { get; set; }
 
 
 					event FirstFindHandler FirstFind;
