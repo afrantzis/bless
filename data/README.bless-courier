@@ -1,0 +1,15 @@
+bless-courier.ttf is a ttf version of the IBM Courier font as shipped by
+texlive at:
+
+https://www.tug.org/texlive/Contents/live/texmf-dist/fonts/type1/adobe/courier/pcrr8a.pfb
+
+The rendering of the original Type 1 version of the font is problematic on some
+systems. See at https://github.com/afrantzis/bless/issues/25 for more
+information.
+
+We ship a TTF version here to ensure we have a nice looking default Courier
+font even on systems that don't ship one, or on which the Courier font is
+problematic.
+
+The font name of bless-courier.ttf is 'BlessCourier', to allow using the
+'Courier' font name for system-wide Courier font if needed.

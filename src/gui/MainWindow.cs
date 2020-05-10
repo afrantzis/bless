@@ -95,6 +95,13 @@ public class BlessMain
 		//
 		Catalog.Init(ConfigureDefines.GETTEXT_PACKAGE, ConfigureDefines.LOCALE_DIR);
 
+		try {
+			Portable.AddLocalFontFile(FileResourcePath.GetDataPath("bless-courier.ttf"));
+		}
+		catch (Exception) {
+			System.Console.WriteLine("Warning: Could not add built-in Courier font, will fall back to system Courier font as needed.");
+		}
+
 		// load main window from glade XML
 		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "MainWindow", "bless");
 		gxml.Autoconnect (this);
