@@ -22,7 +22,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Gtk;
-using Glade;
 using Bless.Tools;
 using Bless.Util;
 using Mono.Unix;
@@ -41,15 +40,16 @@ public class PreferencesDialog : Dialog
 	UndoPreferences undoPreferences;
 	TreeIter selectedIter;
 
-	[Glade.Widget] Paned PreferencesPaned;
-	[Glade.Widget] TreeView PreferencesTreeView;
+	[Gtk.Builder.Object] Paned PreferencesPaned;
+	[Gtk.Builder.Object] TreeView PreferencesTreeView;
 	
 
 	public PreferencesDialog(Window parent)
 			: base (Catalog.GetString("Bless Preferences"), parent, DialogFlags.DestroyWithParent)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "PreferencesPaned", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "PreferencesDialog.ui"));
+		builder.Autoconnect(this);
 		
 		mainWindow = parent;
 		
@@ -130,14 +130,14 @@ public class PreferencesDialog : Dialog
 
 class GeneralPreferences : IPluginPreferences
 {
-	[Glade.Widget] Gtk.VBox GeneralPreferencesVBox;
+	[Gtk.Builder.Object] Gtk.VBox GeneralPreferencesVBox;
 
-	[Glade.Widget] Entry LayoutFileEntry;
-	[Glade.Widget] CheckButton UseCurrentLayoutCheckButton;
-	[Glade.Widget] ComboBox DefaultEditModeComboBox;
-	[Glade.Widget] Entry TempDirEntry;
-	[Glade.Widget] Button SelectTempDirButton;
-	[Glade.Widget] Button SelectLayoutButton;
+	[Gtk.Builder.Object] Entry LayoutFileEntry;
+	[Gtk.Builder.Object] CheckButton UseCurrentLayoutCheckButton;
+	[Gtk.Builder.Object] ComboBox DefaultEditModeComboBox;
+	[Gtk.Builder.Object] Entry TempDirEntry;
+	[Gtk.Builder.Object] Button SelectTempDirButton;
+	[Gtk.Builder.Object] Button SelectLayoutButton;
 		
 	enum EditModeEnum { Insert, Overwrite }
 	enum NumberBaseEnum { Hexadecimal, Decimal, Octal }
@@ -211,8 +211,9 @@ class GeneralPreferences : IPluginPreferences
 
 	void InitWidget()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "GeneralPreferencesVBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "PreferencesDialog.ui"));
+		builder.Autoconnect(this);
 
 		SelectTempDirButton.Clicked += OnSelectTempDirButtonClicked;
 		SelectLayoutButton.Clicked += OnSelectLayoutClicked;
@@ -289,12 +290,12 @@ class SessionPreferences : IPluginPreferences
 {
 	Preferences prefs;
 
-	[Glade.Widget] Gtk.VBox SessionPreferencesVBox;
+	[Gtk.Builder.Object] Gtk.VBox SessionPreferencesVBox;
 	
-	[Glade.Widget] CheckButton LoadPreviousSessionCheckButton;
-	[Glade.Widget] CheckButton AskBeforeLoadingSessionCheckButton;
-	[Glade.Widget] CheckButton RememberCursorPositionCheckButton;
-	[Glade.Widget] CheckButton RememberWindowGeometryCheckButton;
+	[Gtk.Builder.Object] CheckButton LoadPreviousSessionCheckButton;
+	[Gtk.Builder.Object] CheckButton AskBeforeLoadingSessionCheckButton;
+	[Gtk.Builder.Object] CheckButton RememberCursorPositionCheckButton;
+	[Gtk.Builder.Object] CheckButton RememberWindowGeometryCheckButton;
 	
 	public SessionPreferences(Window mw)
 	{
@@ -360,8 +361,9 @@ class SessionPreferences : IPluginPreferences
 
 	void InitWidget()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "SessionPreferencesVBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "PreferencesDialog.ui"));
+		builder.Autoconnect(this);
 
 		LoadPreviousSessionCheckButton.Toggled += OnLoadPreviousSessionToggled;
 		AskBeforeLoadingSessionCheckButton.Toggled += AskBeforeLoadingSessionToggled;
@@ -406,15 +408,15 @@ class UndoPreferences : IPluginPreferences
 {
 	Preferences prefs;
 
-	[Glade.Widget] Gtk.VBox UndoPreferencesVBox;
+	[Gtk.Builder.Object] Gtk.VBox UndoPreferencesVBox;
 	
-	[Glade.Widget] RadioButton UndoLimitedRadioButton;
-	[Glade.Widget] RadioButton UndoUnlimitedRadioButton;
-	[Glade.Widget] SpinButton UndoActionsSpinButton;
+	[Gtk.Builder.Object] RadioButton UndoLimitedRadioButton;
+	[Gtk.Builder.Object] RadioButton UndoUnlimitedRadioButton;
+	[Gtk.Builder.Object] SpinButton UndoActionsSpinButton;
 	
-	[Glade.Widget] RadioButton KeepUndoAlwaysRadioButton;
-	[Glade.Widget] RadioButton KeepUndoMemoryRadioButton;
-	[Glade.Widget] RadioButton KeepUndoNeverRadioButton;
+	[Gtk.Builder.Object] RadioButton KeepUndoAlwaysRadioButton;
+	[Gtk.Builder.Object] RadioButton KeepUndoMemoryRadioButton;
+	[Gtk.Builder.Object] RadioButton KeepUndoNeverRadioButton;
 	
 	public UndoPreferences(Window mw)
 	{
@@ -506,8 +508,9 @@ class UndoPreferences : IPluginPreferences
 
 	void InitWidget()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "UndoPreferencesVBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "PreferencesDialog.ui"));
+		builder.Autoconnect(this);
 
 		UndoLimitedRadioButton.Toggled += OnUndoLimitedToggled;
 		UndoActionsSpinButton.ValueChanged += OnUndoActionsValueChanged;

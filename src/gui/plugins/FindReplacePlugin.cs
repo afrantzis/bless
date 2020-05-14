@@ -276,23 +276,23 @@ public class FindReplaceWidget : Gtk.HBox
 
 	byte[] replacePattern;
 
-	[Glade.Widget] Gtk.Table FindReplaceTable;
-	[Glade.Widget] Gtk.Button FindNextButton;
-	[Glade.Widget] Gtk.Button FindPreviousButton;
-	[Glade.Widget] Gtk.Button ReplaceButton;
-	[Glade.Widget] Gtk.Button ReplaceAllButton;
+	[Gtk.Builder.Object] Gtk.Table FindReplaceTable;
+	[Gtk.Builder.Object] Gtk.Button FindNextButton;
+	[Gtk.Builder.Object] Gtk.Button FindPreviousButton;
+	[Gtk.Builder.Object] Gtk.Button ReplaceButton;
+	[Gtk.Builder.Object] Gtk.Button ReplaceAllButton;
 
-	[Glade.Widget] Gtk.Label SearchLabel;
-	[Glade.Widget] Gtk.Entry SearchPatternEntry;
-	[Glade.Widget] Gtk.Label SearchAsLabel;
-	[Glade.Widget] Gtk.ComboBox SearchAsComboBox;
+	[Gtk.Builder.Object] Gtk.Label SearchLabel;
+	[Gtk.Builder.Object] Gtk.Entry SearchPatternEntry;
+	[Gtk.Builder.Object] Gtk.Label SearchAsLabel;
+	[Gtk.Builder.Object] Gtk.ComboBox SearchAsComboBox;
 
-	[Glade.Widget] Gtk.Label ReplaceLabel;
-	[Glade.Widget] Gtk.Entry ReplacePatternEntry;
-	[Glade.Widget] Gtk.Label ReplaceAsLabel;
-	[Glade.Widget] Gtk.ComboBox ReplaceAsComboBox;
+	[Gtk.Builder.Object] Gtk.Label ReplaceLabel;
+	[Gtk.Builder.Object] Gtk.Entry ReplacePatternEntry;
+	[Gtk.Builder.Object] Gtk.Label ReplaceAsLabel;
+	[Gtk.Builder.Object] Gtk.ComboBox ReplaceAsComboBox;
 
-	[Glade.Widget] Gtk.Button CloseButton;
+	[Gtk.Builder.Object] Gtk.Button CloseButton;
 
 	Gtk.Widget previouslyFocused;
 
@@ -335,8 +335,9 @@ public class FindReplaceWidget : Gtk.HBox
 		finder = iFinder;
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "FindReplaceTable", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "FindReplacePlugin.ui"));
+		builder.Autoconnect(this);
 
 		this.Shown += OnWidgetShown;
 		SearchPatternEntry.Activated += OnSearchPatternEntryActivated;

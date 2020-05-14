@@ -1,7 +1,7 @@
 dist_noinst_DATA=bless-about.png bless-48x48.png bless.desktop.in \
 		bless-default.layout bless-16-bytes-per-row.layout \
 		bless-all-number-bases.layout help_script.tmpl.in \
-		default-preferences.xml bless.glade bless-courier.ttf \
+		default-preferences.xml ui bless-courier.ttf \
 		README.bless-courier
 
 noinst_SCRIPTS=help_script.sh
@@ -21,9 +21,12 @@ install-data-local:
 			bless-default.layout 		    \
                         bless-16-bytes-per-row.layout	    \
 			bless-all-number-bases.layout 	    \
-	    		default-preferences.xml bless.glade \
+			default-preferences.xml		    \
 			bless-courier.ttf		    \
 	    		$(DESTDIR)$(datadir)/$(PACKAGE_NAME)
+	$(INSTALL) -d $(DESTDIR)$(datadir)/$(PACKAGE_NAME)/ui
+	$(INSTALL_DATA) $(wildcard ui/*.ui) \
+			$(DESTDIR)$(datadir)/$(PACKAGE_NAME)/ui
 	$(INSTALL) -d $(DESTDIR)$(datadir)/applications
 	$(INSTALL_DATA) bless.desktop $(DESTDIR)$(datadir)/applications
 	$(INSTALL) -d $(DESTDIR)$(datadir)/pixmaps

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkVBox" id="ProgressVBox">
+    <property name="visible">True</property>
+    <property name="border_width">7</property>
+    <property name="spacing">12</property>
+    <child>
+      <object class="GtkLabel" id="MessageLabel">
+        <property name="visible">True</property>
+        <property name="yalign">0</property>
+        <property name="label" translatable="no">label4</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="DetailsLabel">
+        <property name="visible">True</property>
+        <property name="wrap">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkProgressBar" id="ProgressBar">
+        <property name="visible">True</property>
+        <property name="pulse_step">0.10000000149011612</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkHButtonBox" id="hbuttonbox9">
+        <property name="visible">True</property>
+        <property name="layout_style">GTK_BUTTONBOX_END</property>
+        <child>
+          <object class="GtkButton" id="button2">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Cancel</property>
+            <property name="use_underline">True</property>
+            <signal handler="OnCancelButtonClicked" name="clicked"/>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+  </object>
+</interface>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkHBox" id="SelectRangeHBox">
+    <property name="visible">True</property>
+    <property name="border_width">6</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkLabel" id="label82">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Select range from:</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="FromEntry">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <signal handler="OnEntryChanged" name="changed"/>
+        <signal handler="OnEntryActivated" name="activate"/>
+      </object>
+      <packing>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label83">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">to/&#xB1;length</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="ToEntry">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="tooltip-text">Use +/- to specify selection length instead of the absolute ending offset</property>
+        <signal handler="OnEntryChanged" name="changed"/>
+        <signal handler="OnEntryActivated" name="activate"/>
+      </object>
+      <packing>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="SelectButton">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnSelectButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkAlignment" id="alignment55">
+            <property name="visible">True</property>
+            <property name="xscale">0</property>
+            <property name="yscale">0</property>
+            <child>
+              <object class="GtkHBox" id="hbox36">
+                <property name="visible">True</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkImage" id="image1642">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-apply</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label84">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Select</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="CloseButton">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnCloseButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkImage" id="image1643">
+            <property name="visible">True</property>
+            <property name="stock">gtk-close</property>
+            <property name="icon_size">1</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">5</property>
+      </packing>
+    </child>
+  </object>
+</interface>

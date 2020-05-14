@@ -65,9 +65,9 @@ public class FileResourcePath
 			
 			// if the local data path exists and is valid use it
 			// else try to use the installation data path
-			if (Directory.Exists(localDataDir) && File.Exists(Path.Combine(localDataDir, "bless.glade")))
+			if (Directory.Exists(localDataDir) && File.Exists(Path.Combine(localDataDir, "bless-default.layout")))
 				dataPath = localDataDir;
-			else if (Directory.Exists(ConfigureDefines.DATADIR) && File.Exists(Path.Combine(ConfigureDefines.DATADIR, "bless.glade")))
+			else if (Directory.Exists(ConfigureDefines.DATADIR) && File.Exists(Path.Combine(ConfigureDefines.DATADIR, "bless-default.layout")))
 				dataPath = ConfigureDefines.DATADIR;
 			else
 				throw new DirectoryNotFoundException(localDataDir + " or " +  ConfigureDefines.DATADIR);

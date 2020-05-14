@@ -43,7 +43,6 @@ fi
 #
 PKG_CHECK_MODULES(MONO, mono >= 1.1.14)
 PKG_CHECK_MODULES(GTK_SHARP_2_0, gtk-sharp-2.0 >= 2.8)
-PKG_CHECK_MODULES(GLADE_SHARP_2_0, glade-sharp-2.0 >= 2.8)
 
 #
 # Check for GNOME

@@ -22,7 +22,6 @@ using System;
 using System.Text;
 using System.Threading;
 using Gtk;
-using Glade;
 using Bless.Util;
 using Bless.Gui.Dialogs;
 using Bless.Gui;
@@ -194,14 +193,14 @@ public class BitwiseOperationsPlugin : GuiPlugin
 ///</summary>
 public class BitwiseOperationsWidget : Gtk.HBox
 {
-	[Glade.Widget] Gtk.HBox BitwiseOperationsHBox;
-	[Glade.Widget] Gtk.Label SourceLabel;
-	[Glade.Widget] Gtk.EventBox SourceLabelEB;
-	[Glade.Widget] Gtk.Button DoOperationButton;
-	[Glade.Widget] Gtk.ComboBox OperationComboBox;
-	[Glade.Widget] Gtk.ComboBox OperandAsComboBox;
-	[Glade.Widget] Gtk.Entry OperandEntry;
-	[Glade.Widget] Gtk.Button CloseButton;
+	[Gtk.Builder.Object] Gtk.HBox BitwiseOperationsHBox;
+	[Gtk.Builder.Object] Gtk.Label SourceLabel;
+	[Gtk.Builder.Object] Gtk.EventBox SourceLabelEB;
+	[Gtk.Builder.Object] Gtk.Button DoOperationButton;
+	[Gtk.Builder.Object] Gtk.ComboBox OperationComboBox;
+	[Gtk.Builder.Object] Gtk.ComboBox OperandAsComboBox;
+	[Gtk.Builder.Object] Gtk.Entry OperandEntry;
+	[Gtk.Builder.Object] Gtk.Button CloseButton;
 
 
 	DataBook dataBook;
@@ -235,8 +234,9 @@ public class BitwiseOperationsWidget : Gtk.HBox
 		dataBook = db;
 		performAction = action;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "BitwiseOperationsHBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "BitwiseOperationsPlugin.ui"));
+		builder.Autoconnect(this);
 
 		OperationComboBox.Active = 0;
 		OperandAsComboBox.Active = 0;

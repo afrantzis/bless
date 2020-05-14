@@ -24,7 +24,6 @@ using System.Collections;
 using System.Threading;
 using System.IO;
 using Gtk;
-using Glade;
 using Bless.Buffers;
 using Bless.Gui;
 using Bless.Gui.Areas;
@@ -37,19 +36,9 @@ using Mono.Unix;
 
 public class BlessMain
 {
-	[Glade.Widget] Gtk.HBox DataViewBox;
-	[Glade.Widget] Gtk.Toolbar MainToolbar;
-	[Glade.Widget] Gtk.Window MainWindow;
-	[Glade.Widget] Gtk.VBox MainVBox;
-
-	[Glade.Widget] Gtk.ToolButton NewToolButton;
-	[Glade.Widget] Gtk.ToolButton OpenToolButton;
-	[Glade.Widget] Gtk.ToolButton SaveToolButton;
-	[Glade.Widget] Gtk.ToolButton UndoToolButton;
-	[Glade.Widget] Gtk.ToolButton RedoToolButton;
-	[Glade.Widget] Gtk.ToolButton CutToolButton;
-	[Glade.Widget] Gtk.ToolButton CopyToolButton;
-	[Glade.Widget] Gtk.ToolButton PasteToolButton;
+	[Gtk.Builder.Object] Gtk.HBox DataViewBox;
+	[Gtk.Builder.Object] Gtk.Window MainWindow;
+	[Gtk.Builder.Object] Gtk.VBox MainVBox;
 
 	const string uiXml =
 		"<menubar>" +
@@ -102,9 +91,10 @@ public class BlessMain
 			System.Console.WriteLine("Warning: Could not add built-in Courier font, will fall back to system Courier font as needed.");
 		}
 
-		// load main window from glade XML
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "MainWindow", "bless");
-		gxml.Autoconnect (this);
+		// load main window from GtkBuilder XML
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "MainWindow.ui"));
+		builder.Autoconnect(this);
 
 		// set the application icon
 		MainWindow.Icon = new Gdk.Pixbuf(FileResourcePath.GetDataPath("bless-48x48.png"));

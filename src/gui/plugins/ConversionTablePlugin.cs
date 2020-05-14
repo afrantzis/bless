@@ -114,24 +114,24 @@ public class ConversionTablePlugin : GuiPlugin
 public class ConversionTable: Gtk.HBox
 {
 
-	[Glade.Widget] Gtk.Table ConversionTableWidget;
+	[Gtk.Builder.Object] Gtk.Table ConversionTableWidget;
 
-	[Glade.Widget] Gtk.Entry Signed8bitEntry;
-	[Glade.Widget] Gtk.Entry Unsigned8bitEntry;
-	[Glade.Widget] Gtk.Entry Signed16bitEntry;
-	[Glade.Widget] Gtk.Entry Unsigned16bitEntry;
-	[Glade.Widget] Gtk.Entry Signed32bitEntry;
-	[Glade.Widget] Gtk.Entry Unsigned32bitEntry;
-	[Glade.Widget] Gtk.Entry Float32bitEntry;
-	[Glade.Widget] Gtk.Entry Float64bitEntry;
-	[Glade.Widget] Gtk.Entry HexadecimalEntry;
-	[Glade.Widget] Gtk.Entry DecimalEntry;
-	[Glade.Widget] Gtk.Entry OctalEntry;
-	[Glade.Widget] Gtk.Entry BinaryEntry;
-	[Glade.Widget] Gtk.Entry AsciiEntry;
+	[Gtk.Builder.Object] Gtk.Entry Signed8bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Unsigned8bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Signed16bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Unsigned16bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Signed32bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Unsigned32bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Float32bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Float64bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry HexadecimalEntry;
+	[Gtk.Builder.Object] Gtk.Entry DecimalEntry;
+	[Gtk.Builder.Object] Gtk.Entry OctalEntry;
+	[Gtk.Builder.Object] Gtk.Entry BinaryEntry;
+	[Gtk.Builder.Object] Gtk.Entry AsciiEntry;
 
-	[Glade.Widget] Gtk.CheckButton LittleEndianCheckButton;
-	[Glade.Widget] Gtk.CheckButton UnsignedAsHexCheckButton;
+	[Gtk.Builder.Object] Gtk.CheckButton LittleEndianCheckButton;
+	[Gtk.Builder.Object] Gtk.CheckButton UnsignedAsHexCheckButton;
 
 	DataBook dataBook;
 
@@ -140,8 +140,9 @@ public class ConversionTable: Gtk.HBox
 
 	public ConversionTable(DataBook db)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ConversionTableWidget", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "ConversionTablePlugin.ui"));
+		builder.Autoconnect(this);
 
 		littleEndian = true;
 		unsignedAsHex = false;
