@@ -294,6 +294,10 @@ public class DataViewDisplay : Gtk.VBox {
 		// find bytes per row...
 		int bpr = FindBestBpr(winWidth);
 
+		// Ensure our offset is always aligned with bpr
+		if (bpr > 0)
+			layout.AreaGroup.Offset = (layout.AreaGroup.Offset / bpr) * bpr;
+
 		// configure areas
 		int s = 0;
 		int fontHeight = winHeight;
