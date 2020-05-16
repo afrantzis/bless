@@ -1,3 +1,0 @@
-#!@SHELL@
-
-mono "@blesssrcdir@/bin/bless.exe" "$@"

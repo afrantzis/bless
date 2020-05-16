@@ -24,11 +24,12 @@ namespace Bless.Util {
 ///</summary>
 public sealed class ConfigureDefines                                        
 {                                                                           
-	public const string LOCALE_DIR = "@prefix@/share/locale/"; 
+	public const string LOCALE_DIR = "@datadir@/locale/"; 
 	public const string PACKAGE = "@PACKAGE@";
 	public const string VERSION = "@VERSION@";
 	public const string GETTEXT_PACKAGE = "@GETTEXT_PACKAGE@";
-	public const string DATADIR = "@blessdatadir@/@PACKAGE@/";
+	public const string DATADIR = "@datadir@/@PACKAGE@/";
+	public const string HELPDIR = "@datadir@/help";
 }
 
 } // end namespace       

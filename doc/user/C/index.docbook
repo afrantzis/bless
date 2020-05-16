@@ -195,6 +195,15 @@
 				<listitem>
 					<para>pkg-config (Included in all modern GNU/Linux distributions)</para>
 				</listitem>
+				<listitem>
+					<para>meson &gt;=0.46</para>
+				</listitem>
+				<listitem>
+					<para>nunit and nunit-console, if you want to build and run tests</para>
+				</listitem>
+				<listitem>
+					<para>xsltproc and docbook stylesheet, if you want to produce HTML documentation</para>
+				</listitem>
 			</itemizedlist>
 		    </para>
 		    
@@ -219,8 +228,9 @@
 			installation procedure is described below:
 		</para>
 		<para>
-			Overview: git clone https://github.com/afrantzis/bless, ./autogen.sh,
-			./configure, make, (make install)
+			Overview: git clone https://github.com/afrantzis/bless,
+			meson setup build (-Dopt=val --buildtype=type ...), ninja -C build,
+			(ninja -C build install)
 	    </para>
 		<variablelist>
 			<varlistentry>
@@ -240,18 +250,21 @@
 				<term>Step 2: Configure the build</term>
 				<listitem>
 					<para>
-						Enter the directory created in the previous step (bless or bless-a.b.c).
-						If you have checked out the latest source from git, first run
-						<command>./autogen.sh</command>. To configure the build and check that
-						your system has all the required libraries use the
-						<command>./configure</command> script. Use the
-						<parameter>--prefix=<replaceable>PREFIX</replaceable></parameter>
+					Enter the directory created in the previous step (bless or bless-a.b.c). To
+					configure the build and check that your system has all the required libraries
+					use: 
+					</para>
+					<para>
+						<command>meson setup build (-Dopt=val --buildtype=type ...)</command>
+					</para>
+					<para>
+						Use the <parameter>--prefix=<replaceable>PREFIX</replaceable></parameter>
 						option to set the installation directory prefix.  By default the prefix
 						is '/usr/local'.
 					</para>
 					<para>
-						You can also use the <parameter>--enable-debug</parameter> option to build bless with debug
-						information.
+						You can use the <parameter>--buildtype=release</parameter> option to
+						build bless in release mode. By default the debug mode is built.
 					</para>
 				</listitem>
 			</varlistentry>
@@ -260,11 +273,11 @@
 				<term>Step 3: Build the program</term>
 				<listitem>
 					<para>
-						Type <command>make</command>. This will create <filename>bless.exe</filename> and the necessary
-						libraries in the bin/ directory and the <filename>bless</filename> 
-						launcher script in the top source directory. You can also use
-						<command>make check</command> to run some tests on various bless
-						components. Note that <command>make check</command> requires the
+						Type <command>ninja -C build</command>. This will create
+						<filename>bless.exe</filename> and the necessary libraries in
+						the build/src directory. You can also use
+						<command>ninja -C build test</command> to run some tests on various
+						bless components. Note that running the tests requires the
 						<command>nunit-console</command> binary.
 					</para>
 				</listitem>
@@ -274,7 +287,7 @@
 				<term>Step 4: Install the program (optional)</term>
 				<listitem>
 					<para>
-						Become root and type <command>'make install'</command>. 
+						Become root and type <command>ninja -C build install</command>. 
 					</para>
 				</listitem>
 			</varlistentry>

@@ -23,8 +23,8 @@ Bless is a binary (hex) editor, a program that enables you to edit files as
 a sequence of bytes. It is written in C# and uses the Gtk# bindings for the 
 GTK+ toolkit.
 
-Bless is distributed under the terms of the GNU General Public License (GPL). 
-See the file COPYING for more information.
+Bless is distributed under the terms of the GNU General Public License
+(GPL-2.0-or-later).  See the file COPYING for more information.
 
 Main Features
 -------------
@@ -67,6 +67,9 @@ To build and run the current version of bless you need:
     * mono/.NET runtime and C# compiler >= 1.1.14 (http://www.mono-project.com)
     * Gtk# bindings >= 2.8 for GTK+ (http://gtk-sharp.sourceforge.net)
     * pkg-config (Included in all modern GNU/Linux distributions)
+    * meson >= 0.46
+    * nunit and nunit-console, if you want to build and run tests
+    * xsltproc and docbook stylesheet, if you want to produce HTML documentation
     
 Development is done using the latest stable versions of the above libraries. 
 Although using an older version may be OK, there is no guarantee that there 
@@ -76,8 +79,10 @@ will not be problems.
 4. Installation
 ---------------
 Quick: 
-    git clone https://github.com/afrantzis/bless, ./autogen.sh, ./configure,
-    make, (make install)
+    git clone https://github.com/afrantzis/bless
+    meson setup build (-Dopt=val --buildtype=type ...)
+    ninja -C build
+    (ninja -C build install)
 
 Detailed:
 
@@ -91,33 +96,36 @@ For a compressed tarball use:
 
 Step 2: Configure the build
 -----------------------------
-Enter the directory created in the previous step (bless or bless-a.b.c). If you
-have checked out the latest source from git, first run './autogen.sh'. To
+Enter the directory created in the previous step (bless or bless-a.b.c). To
 configure the build and check that your system has all the required libraries
-use the './configure' script. Use the "--prefix=PREFIX" option to set the
-installation directory prefix.  By default the prefix is '/usr/local'.
+use: 
 
-You can also use the "--enable-debug" option to build bless with debug
-information.
+    $ meson setup build (-Dopt=val --buildtype=type ...)
+
+Use the "-Dprefix=PREFIX" option to set the installation directory prefix.  By
+default the prefix is '/usr/local'.
+
+You can use the "--buildtype=release" option to build bless in release mode,
+by default the debug mode is built.
 
 Step 3: Build the program
 -----------------------------
-Type 'make'. This will create 'bless.exe' and the necessary library files in the
-bin/ directory and the 'bless' launcher script in the top source directory. You
-can also type 'make check' to run some tests on various bless components. Note
-that 'make check' requires the 'nunit-console' binary.
+Type 'ninja -C build'. This will create 'bless.exe' and the necessary library
+files in the build/src directory. You can also type 'ninja -C build test' to
+run some tests on various bless components. Note that running the tests
+requires the 'nunit-console' binary.
 
 Step 4: Install the program (optional)
 --------------------------------------
-Become root and type 'make install'.
+Become root and type 'ninja -C build install'.
 
 
 ----------
 5. Running
 ----------
-If you chose to install the program, just type 'bless'. In any case you can  
-run the program by typing './bless' from within the top source directory.
-Enjoy!
+If you chose to install the program, just type 'bless'. In any case you can
+run the program by typing 'mono build/src/bless.exe' from within the top source
+directory.  Enjoy!
 
 ----------------
 6. Documentation
@@ -127,7 +135,7 @@ The doc/ directory contains documentation directed both at the user and at the
 developer who wants to explore Bless. The doc/user/ subdirectory contains 
 information about using bless whereas doc/developer/ contains developer 
 information (bless api etc). 
-Note: The developer documentation is almost non-existant.
+Note: The developer documentation is almost non-existent.
 
 ---------------
 7. Known Issues
