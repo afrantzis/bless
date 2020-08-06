@@ -83,6 +83,10 @@ public class PluginManager
 		catch (DirectoryNotFoundException e) {
 			System.Console.WriteLine(e.Message);
 		}
+                catch (System.IO.IOException e) {
+			System.Console.WriteLine(e.Message);
+                        System.Console.WriteLine("plugins directory may not exist");
+                }
 
 	}
 
