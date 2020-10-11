@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install dependencies
+      run: >
+        sudo apt-get install meson mono-devel libgtk2.0-cil-dev
+        libnunit-cil-dev nunit-console xsltproc docbook-xsl
+    - name: Setup
+      run: meson setup build
+    - name: Build
+      run: ninja -C build
+    - name: Run tests
+      run: meson test -v -C build
+    - name: Install
+      run: DESTDIR=/tmp/bless-install ninja -C build install
