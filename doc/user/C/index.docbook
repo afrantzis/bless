@@ -110,7 +110,7 @@
 			<title>Feedback</title> 
 			<para>To report a bug or make a suggestion regarding the &app; application or
 			this manual, please use the
-			<ulink url="http://gna.org/bugs/?group=bless" type="http">Bless bug page</ulink>.
+			<ulink url="https://github.com/afrantzis/bless/issues" type="https">Bless bug page</ulink>.
 			</para>
 <!-- Translators may also add here feedback address for translations -->
 		</legalnotice> 
@@ -2239,9 +2239,9 @@
 	<chapter id="bless-about"> 
 		<title>About &app;</title> 
 		<para> &app; was written by Alexandros Frantzis
-			(<email>alf82@freemail.gr</email>). To find more information about
+			(<email>alf82 at freemail dot gr</email>). To find more information about
 			&app;, please visit the 
-			<ulink url="http://home.gna.org/bless" type="http">Bless Web page</ulink>.
+			<ulink url="https://github.com/afrantzis/bless" type="https">Bless Web page</ulink>.
 		</para>
 
 		<para> This program is distributed under the terms of the GNU
