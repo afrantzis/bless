@@ -1,3 +1,14 @@
+Bless v0.6.3 20201011
+---------------------
+
+* Add plugin to allow copying the current offset to clipboard (gh #15).
+* Fix display of Courier font glyphs (gh #25).
+* Use Gtk.Builder for UI loading, drop libglade (gh #2).
+* Move to the meson build system, drop autotools.
+* Fix crash when plugins directory path is a file (gh #32).
+* Add binary+ASCII layout file (gh #23).
+* Fix issue with statusbar not showing all information (gh #14).
+
 Bless v0.6.2 20190418
 ---------------------
 
