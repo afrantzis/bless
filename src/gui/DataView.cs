@@ -515,6 +515,7 @@ public class DataView {
 		cursorRedoDeque.Clear();
 		cursorUndoDeque.Clear();
 
+		SetSelection(-1, -1);
 		MoveCursor(0, 0);
 	}
 
