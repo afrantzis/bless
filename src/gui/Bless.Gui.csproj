@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9BBAC7B3-69BE-48E7-9169-98AB34290A73}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Bless.Gui</RootNamespace>
+    <AssemblyName>Bless.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataBook.cs" />
+    <Compile Include="DataBookFinder.cs" />
+    <Compile Include="DataView.cs" />
+    <Compile Include="DataViewControl.cs" />
+    <Compile Include="DataViewDisplay.cs" />
+    <Compile Include="Dialogs\AboutDialog.cs" />
+    <Compile Include="Dialogs\Alert.cs" />
+    <Compile Include="Dialogs\ErrorAlert.cs" />
+    <Compile Include="Dialogs\ExportDialog.cs" />
+    <Compile Include="Dialogs\FileOverwriteAlert.cs" />
+    <Compile Include="Dialogs\InformationAlert.cs" />
+    <Compile Include="Dialogs\LayoutSelectionDialog.cs" />
+    <Compile Include="Dialogs\PreferencesDialog.cs" />
+    <Compile Include="Dialogs\ProgressDialog.cs" />
+    <Compile Include="Dialogs\RevertConfirmationAlert.cs" />
+    <Compile Include="Dialogs\SaveConfirmationAlert.cs" />
+    <Compile Include="Dialogs\SaveConfirmationMultiAlert.cs" />
+    <Compile Include="Dialogs\WarningAlert.cs" />
+    <Compile Include="FileChangedBar.cs" />
+    <Compile Include="FileService.cs" />
+    <Compile Include="Layout.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services.cs" />
+    <Compile Include="SessionService.cs" />
+    <Compile Include="UIService.cs" />
+    <Compile Include="WidgetGroup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\buffers\Bless.Buffers.csproj">
+      <Project>{e76ed85c-0e09-47da-a1b7-109e5fb748f8}</Project>
+      <Name>Bless.Buffers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\plugins\Bless.Plugins.csproj">
+      <Project>{4e2e4cc9-52ee-43f5-93dc-c4997dcf52b2}</Project>
+      <Name>Bless.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tools\Bless.Tools.csproj">
+      <Project>{10160ed9-a54b-42e6-8a3f-cfe99e91337c}</Project>
+      <Name>Bless.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tools\export\Bless.Tools.Export.csproj">
+      <Project>{1b06c403-201b-4612-a2a5-1b6ccbc91adf}</Project>
+      <Name>Bless.Tools.Export</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tools\find\Bless.Tools.Find.csproj">
+      <Project>{09c961f5-105b-493e-8b4d-9809ec5fafda}</Project>
+      <Name>Bless.Tools.Find</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\util\Bless.Util.csproj">
+      <Project>{0f44980f-b4d0-4fd0-8847-3c79f4212f16}</Project>
+      <Name>Bless.Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="areas\Bless.Gui.Areas.csproj">
+      <Project>{95dc598d-fb85-4d03-87da-c00b0ff44e71}</Project>
+      <Name>Bless.Gui.Areas</Name>
+    </ProjectReference>
+    <ProjectReference Include="drawers\Bless.Gui.Drawers.csproj">
+      <Project>{e0985e69-fb0c-453b-99e7-f81af82a7e76}</Project>
+      <Name>Bless.Gui.Drawers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
