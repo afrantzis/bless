@@ -83,6 +83,10 @@ public class PluginManager
 		catch (IOException e) {
 			System.Console.WriteLine("Failed to open plugins directory: " + e.Message);
 		}
+                catch (System.IO.IOException e) {
+			System.Console.WriteLine(e.Message);
+                        System.Console.WriteLine("plugins directory may not exist");
+                }
 
 	}
 
