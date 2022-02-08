@@ -93,7 +93,7 @@ public class LayoutSelectionDialog : Dialog {
 		TreeIter ti = ts.AppendValues(Catalog.GetString("System-wide Layouts"), string.Empty);
 
 		// fill list from bless data dir
-		string dataDir = FileResourcePath.GetDataPath("data");
+		string dataDir = FileResourcePath.GetDataPath(".");
 		if (Directory.Exists(dataDir)) {
 			string[] files = Directory.GetFiles(dataDir, "*.layout");
 			foreach (string s in files) {
