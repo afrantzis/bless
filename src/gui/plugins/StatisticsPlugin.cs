@@ -20,8 +20,8 @@
  */
 using System;
 using System.Collections;
-using Cairo;
 using Gtk;
+using Cairo;
 using Bless.Tools;
 using Bless.Util;
 using Bless.Gui;
@@ -139,10 +139,9 @@ public class StatisticsWidget : Gtk.HBox
 			info[dvd.View] = new StatisticsInfo();
 		}
 
-		sdw = new StatisticsDrawWidget();
-
 		Preferences.Proxy.Subscribe("Tools.Statistics.Show", "stats2", new PreferencesChangedHandler(OnPreferencesChanged));
 
+		sdw = new StatisticsDrawWidget();
 		this.Add(sdw);
 		this.ShowAll();
 	}
@@ -276,11 +275,31 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 	int previousHighlight;
 	int currentHighlight;
 
+	const double BARS_X_OFFSET = 0.1;
+	const double BARS_X_RHS_SPACE = 0.02;
+	const double BAR_WIDTH_FRACTIONAL = 1.0;
+	const double BAR_HEIGHT_SCALE_FRACTIONAL = 0.95;
+
+	readonly Color BAR_NORMAL_COLOR = new Color(0.0, 0.0, 1.0);  // blue
+	readonly Color BAR_HIGHLIGHT_COLOR = new Color(1.0, 0.0, 0.0);  // red
+	readonly Color INTER_BAR_COLOR = new Color(1.0, 1.0, 1.0);  // white
+
 	void DrawBar(Cairo.Context gr, int b)
 	{
-		gr.MoveTo(barStart[b]);
-		gr.LineTo (barEnd[b]);
-		gr.Stroke();
+		if ((b >= 0) && (b <= 255))  // prevent exception if user moves mouse-pointer to right of rightmost bar
+		{
+			//gr.MoveTo(barStart[b]);
+			//gr.LineTo (barEnd[b]);
+			//gr.Stroke();
+
+			gr.LineWidth = 0.1 / freqs.Length;
+			double width = 1.0 / freqs.Length * BAR_WIDTH_FRACTIONAL;
+			double height = (barEnd[b].Y - barStart[b].Y) * BAR_HEIGHT_SCALE_FRACTIONAL;
+			gr.Rectangle(barStart[b].X - ((0.5 / freqs.Length) * BAR_WIDTH_FRACTIONAL), barStart[b].Y, 
+				width, height);
+			gr.FillRule = FillRule.Winding;  // or FillRule.EvenOdd, makes no difference to red stripes issue
+			gr.Fill();
+		}
 	}
 
 	void UpdateHighlight()
@@ -293,20 +312,25 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		win.GetGeometry(out x, out y, out w, out h, out d);
 
 		g.Scale (w, h);
-		g.LineWidth = (1.0 / freqs.Length) * 0.6;
+		//g.LineWidth = (1.0 / freqs.Length) * BAR_WIDTH_FRACTIONAL;
 
 		if (previousHighlight != -1) {
-			/*int start=previousHighlight-1;
-			int end=previousHighlight+1;
-			if (start<0) start=0;
-			if (end>=barStart.Length) end=barStart.Length-1;*/
-			g.Color = new Color(0.0, 0.0, 0.0);
-			//for(int i=start; i<=end; i++)
+			g.SetSourceColor(BAR_NORMAL_COLOR);
 			DrawBar(g, previousHighlight);
 		}
 
+		// Brute-force fix for red-lines issue: redraw bars either side of previously-highlighted bar
+		if (previousHighlight > 0) {
+			g.SetSourceColor(BAR_NORMAL_COLOR);
+			DrawBar(g, (previousHighlight - 1));
+		}
+		if (previousHighlight < 255) {
+			g.SetSourceColor(BAR_NORMAL_COLOR);
+			DrawBar(g, (previousHighlight + 1));
+		}
+
 		if (currentHighlight != -1) {
-			g.Color = new Color(1.0, 0.0, 0.0);
+			g.SetSourceColor(BAR_HIGHLIGHT_COLOR);
 			DrawBar(g, currentHighlight);
 		}
 
@@ -315,19 +339,19 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 	void Draw (Cairo.Context gr, int width, int height)
 	{
 		gr.Scale (width, height);
-		gr.Color = new Color(1.0, 1.0, 1.0);
+		gr.SetSourceColor(INTER_BAR_COLOR);
 		gr.Rectangle(0.0, 0.0, 1.0, 1.0);
 		gr.Stroke();
-		gr.Color = new Color(0.0, 0.0, 0.0);
+		gr.SetSourceColor(BAR_NORMAL_COLOR);
 
-		gr.LineWidth = (1.0 / freqs.Length) * 0.6;
+		//gr.LineWidth = (1.0 / freqs.Length) * BAR_WIDTH_FRACTIONAL;
 
 		for (int i = 0; i < freqs.Length; i++) {
 			if (previousHighlight == i)
-				gr.Color = new Color(1.0, 0.0, 0.0);
+				gr.SetSourceColor(BAR_HIGHLIGHT_COLOR);
 			DrawBar(gr, i);
 			if (previousHighlight == i)
-				gr.Color = new Color(0.0, 0.0, 0.0);
+				gr.SetSourceColor(BAR_NORMAL_COLOR);
 		}
 
 	}
@@ -383,7 +407,7 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 
 	void DoDrawingCalculations()
 	{
-		freqWidth = (1.0 / freqs.Length);
+		freqWidth = ((1.0 - BARS_X_OFFSET - BARS_X_RHS_SPACE) / freqs.Length);
 
 		int max = 0;
 
@@ -392,11 +416,10 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		}
 
 		for (int i = 0; i < barStart.Length; i++) {
-			barStart[i].X = i * freqWidth;
+			barStart[i].X = (i * freqWidth) + BARS_X_OFFSET;
 			barStart[i].Y = 1.0;
 			barEnd[i].X = barStart[i].X;
-			barEnd[i].Y = 1.0 - ((double)freqs[i]) / max;
-
+			barEnd[i].Y = 1.0 - ((double)freqs[i] / max);
 		}
 
 	}
@@ -416,8 +439,9 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		}
 		Gdk.Rectangle alloc = this.Allocation;
 		//Console.WriteLine("x {0} freq {1} width{2}", x, freqWidth, alloc.Width);
-		currentHighlight = (int)((x / (freqWidth * alloc.Width))) + 1;
-		Console.WriteLine(currentHighlight);
+		currentHighlight = (int)((x / (freqWidth * alloc.Width)) - (BARS_X_OFFSET / freqWidth)) + 1;
+		//currentHighlight = (int)(((x / alloc.Width) - BARS_X_OFFSET) / freqWidth) + 1;
+		Console.WriteLine(currentHighlight);  // debug output to console, TEMPORARY
 
 		if (previousHighlight != currentHighlight) {
 			UpdateHighlight();
