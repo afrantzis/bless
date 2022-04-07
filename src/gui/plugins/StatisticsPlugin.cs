@@ -439,7 +439,7 @@ public class StatisticsDrawWidget: Gtk.DrawingArea
 		}
 		Gdk.Rectangle alloc = this.Allocation;
 		//Console.WriteLine("x {0} freq {1} width{2}", x, freqWidth, alloc.Width);
-		currentHighlight = (int)((x / (freqWidth * alloc.Width)) - (BARS_X_OFFSET / freqWidth)) + 1;
+		currentHighlight = (int)((x / (freqWidth * alloc.Width)) - (BARS_X_OFFSET / freqWidth));
 		//currentHighlight = (int)(((x / alloc.Width) - BARS_X_OFFSET) / freqWidth) + 1;
 		Console.WriteLine(currentHighlight);  // debug output to console, TEMPORARY
 
