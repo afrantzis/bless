@@ -232,8 +232,9 @@ gui_plugins_lib = library(
         'gui/plugins/ProgressDisplayPlugin.cs',
         'gui/plugins/SelectLayoutPlugin.cs',
         'gui/plugins/SelectRangePlugin.cs',
+        'gui/plugins/StatisticsPlugin.cs',
     ),
-    dependencies: gtk_sharp_2_dep,
+    dependencies: [gtk_sharp_2_dep, cairo_dep],
     cs_args: ['-r:Mono.Posix', '-nowarn:0169'],
     link_with: [
         buffers_lib,
