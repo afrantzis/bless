@@ -21,7 +21,6 @@
 
 using System;
 using Gtk;
-using Glade;
 using Bless.Util;
 using Bless.Gui.Dialogs;
 using Bless.Gui;
@@ -101,10 +100,10 @@ public class GotoOffsetPlugin : GuiPlugin
 ///</summary>
 public class GotoOffsetWidget : Gtk.HBox
 {
-	[Glade.Widget] Gtk.HBox GotoOffsetHBox;
-	[Glade.Widget] Gtk.Button GotoOffsetButton;
-	[Glade.Widget] Gtk.Entry OffsetEntry;
-	[Glade.Widget] Gtk.Button CloseButton;
+	[Gtk.Builder.Object] Gtk.HBox GotoOffsetHBox;
+	[Gtk.Builder.Object] Gtk.Button GotoOffsetButton;
+	[Gtk.Builder.Object] Gtk.Entry OffsetEntry;
+	[Gtk.Builder.Object] Gtk.Button CloseButton;
 
 	DataBook dataBook;
 
@@ -113,8 +112,9 @@ public class GotoOffsetWidget : Gtk.HBox
 	{
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "GotoOffsetHBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "GotoOffsetPlugin.ui"));
+		builder.Autoconnect(this);
 
 		OffsetEntry.Completion = new EntryCompletion();
 		OffsetEntry.Completion.Model = new ListStore (typeof (string));

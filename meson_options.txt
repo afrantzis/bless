@@ -1,0 +1,16 @@
+option('user_doc',
+       type: 'boolean', value: true,
+       description: 'Build and install docbook user documentation')
+
+option('html_user_doc',
+       type: 'boolean', value: true,
+       description: 'Build and install HTML user documentation (requires xsltproc and stylesheets)')
+
+option('tests',
+       type: 'boolean', value: true,
+       description: 'Build tests (requires nunit)')
+
+option('run_tests',
+       type: 'boolean', value: true,
+       description: 'Whether to run tests (requires nunit-console)')
+

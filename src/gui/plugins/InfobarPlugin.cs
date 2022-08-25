@@ -18,9 +18,9 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using Glade;
 using Gtk;
 using System;
+using Pango;
 using Bless.Util;
 using Bless.Gui;
 using Bless.Plugins;
@@ -250,13 +250,12 @@ public class InfobarPlugin : GuiPlugin
 ///<summary>
 /// An advanced statusbar for Bless
 ///</summary>
-public class Infobar : Gtk.HPaned, IInfoDisplay
+public class Infobar : Gtk.HBox, IInfoDisplay
 {
-	Statusbar MessageStatusbar;
-	Statusbar DummyStatusbar;
-	Statusbar OffsetStatusbar;
-	Statusbar SelectionStatusbar;
-	Statusbar OverwriteStatusbar;
+	Label MessageLabel;
+	Label OffsetLabel;
+	Label SelectionLabel;
+	Label OverwriteLabel;
 
 	DataBook dataBook;
 
@@ -266,24 +265,24 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 	///Get or set the visibility of the Offset statusbar
 	///</summary>
 	public bool OffsetVisible {
-		get { return OffsetStatusbar.Visible; }
-		set { OffsetStatusbar.Visible = value; AssignResizeGrip(); }
+		get { return OffsetLabel.Visible; }
+		set { OffsetLabel.Visible = value; }
 	}
 
 	///<summary>
 	///Get or set the visibility of the Selection statusbar
 	///</summary>
 	public bool SelectionVisible {
-		get { return SelectionStatusbar.Visible; }
-		set { SelectionStatusbar.Visible = value; AssignResizeGrip(); }
+		get { return SelectionLabel.Visible; }
+		set { SelectionLabel.Visible = value; }
 	}
 
 	///<summary>
 	///Get or set the visibility of the Overwrite statusbar
 	///</summary>
 	public bool OverwriteVisible {
-		get { return OverwriteStatusbar.Visible; }
-		set { OverwriteStatusbar.Visible = value; AssignResizeGrip(); }
+		get { return OverwriteLabel.Visible; }
+		set { OverwriteLabel.Visible = value; }
 	}
 
 	public int NumberBase {
@@ -307,46 +306,29 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 	{
 		dataBook = db;
 
-		// create bars
-		MessageStatusbar = new Statusbar();
-
-		OffsetStatusbar = new Statusbar();
-		OffsetStatusbar.WidthRequest = 270;
-
-		SelectionStatusbar = new Statusbar();
-		SelectionStatusbar.WidthRequest = 270;
-
-		OverwriteStatusbar = new Statusbar();
-		OverwriteStatusbar.WidthRequest = 60;
-
-		DummyStatusbar = new Statusbar();
-		DummyStatusbar.Visible = false;
+		MessageLabel = new Label();
+		MessageLabel.Ellipsize = Pango.EllipsizeMode.End;
+		MessageLabel.SetAlignment(0.0f, 0.5f);
+		OffsetLabel = new Label();
+		SelectionLabel = new Label();
+		OverwriteLabel = new Label();
 
 		EventBox OffsetEB = new EventBox();
-		OffsetEB.Add(OffsetStatusbar);
+		OffsetEB.Add(OffsetLabel);
 		OffsetEB.ButtonPressEvent += ChangeNumberBase;
 
 		EventBox SelectionEB = new EventBox();
-		SelectionEB.Add(SelectionStatusbar);
+		SelectionEB.Add(SelectionLabel);
 		SelectionEB.ButtonPressEvent += ChangeNumberBase;
 
 		EventBox OverwriteEB = new EventBox();
-		OverwriteEB.Add(OverwriteStatusbar);
-		OverwriteEB.ButtonPressEvent += OnOverwriteStatusbarPressed;
+		OverwriteEB.Add(OverwriteLabel);
+		OverwriteEB.ButtonPressEvent += OnOverwriteLabelPressed;
 
-		// create hbox to put bars in
-		HBox StatusHBox = new HBox();
-		StatusHBox.PackStart(DummyStatusbar, false, true, 0);
-		StatusHBox.PackStart(OffsetEB, false, true, 0);
-		StatusHBox.PackStart(SelectionEB, false, true, 0);
-		StatusHBox.PackStart(OverwriteEB, false, true, 0);
-
-		// align the hbox
-		Alignment StatusAlignment = new Alignment(1.0f, 0.5f, 0.0f, 1.0f);
-		StatusAlignment.Add(StatusHBox);
-
-		this.Pack1(MessageStatusbar, true, true);
-		this.Pack2(StatusAlignment, false, true);
+		this.PackStart(MessageLabel, true, true, 20);
+		this.PackStart(OffsetEB, false, false, 20);
+		this.PackStart(SelectionEB, false, false, 20);
+		this.PackStart(OverwriteEB, false, false, 20);
 
 		this.NumberBase = 16;
 
@@ -356,27 +338,20 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		Preferences.Proxy.Subscribe("View.Statusbar.Overwrite", "ib2", handler);
 		Preferences.Proxy.Subscribe("View.Statusbar.Offset", "ib2", handler);
 
-		this.MapEvent += OnMapEvent;
 		this.ShowAll();
-	}
-
-	void OnMapEvent(object o, EventArgs args)
-	{
-		AssignResizeGrip();
 	}
 
 	///<summary>Displays a message in the infobar (for 5 sec)</summary>
 	public void DisplayMessage(string message)
 	{
-		MessageStatusbar.Pop(0);
-		MessageStatusbar.Push(0, message);
+		MessageLabel.Text = message;
 		GLib.Timeout.Add(5000, ClearStatusMessage);
 	}
 
 	///<summary>Clears the status bar message (callback)</summary>
 	bool ClearStatusMessage()
 	{
-		MessageStatusbar.Pop(0);
+		MessageLabel.Text = "";
 		return false;
 	}
 
@@ -405,13 +380,12 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 			return;
 
 		long coffset = dv.CursorOffset;
-		OffsetStatusbar.Pop(0);
 
 		string coffsetString = BaseConverter.ConvertToString(coffset, numberBase, true, true, 1);
 		string sizeString = BaseConverter.ConvertToString(dv.Buffer.Size - 1, numberBase, true, true, 1);
 
 		string str = string.Format(Catalog.GetString("Offset: {0} / {1}"), coffsetString, sizeString);
-		OffsetStatusbar.Push(0, str);
+		OffsetLabel.Text = str;
 	}
 
 	///<summary>
@@ -429,7 +403,6 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 
 		Bless.Util.Range sel = dv.Selection;
 		
-		SelectionStatusbar.Pop(0);
 		string str;
 
 		if (sel.IsEmpty() == true)
@@ -443,7 +416,7 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 					startString, endString, sizeString);
 		}
 
-		SelectionStatusbar.Push(0, str);
+		SelectionLabel.Text = str;
 	}
 
 	///<summary>
@@ -459,11 +432,10 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 		if (curdv != dv)
 			return;
 
-		OverwriteStatusbar.Pop(0);
 		if (dv.Overwrite == true)
-			OverwriteStatusbar.Push(0, " " + Catalog.GetString("OVR"));
+			OverwriteLabel.Text = Catalog.GetString("OVR");
 		else
-			OverwriteStatusbar.Push(0, " " + Catalog.GetString("INS"));
+			OverwriteLabel.Text = Catalog.GetString("INS");
 	}
 
 	///<summary>
@@ -471,15 +443,12 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 	///</summary>
 	public void ClearMessage()
 	{
-		OffsetStatusbar.Pop(0);
-		OffsetStatusbar.Push(0, Catalog.GetString("Offset: -"));
-
-		SelectionStatusbar.Pop(0);
-		SelectionStatusbar.Push(0, Catalog.GetString("Selection: None"));
+		OffsetLabel.Text = Catalog.GetString("Offset: -");
+		SelectionLabel.Text = Catalog.GetString("Selection: None");
 	}
 
 	///<summary>Handle button press on Ins/Ovr statusbar</summary>
-	void OnOverwriteStatusbarPressed (object o, ButtonPressEventArgs args)
+	void OnOverwriteLabelPressed (object o, ButtonPressEventArgs args)
 	{
 		if (dataBook.NPages > 0) {
 			Gdk.EventButton e = args.Event;
@@ -510,31 +479,6 @@ public class Infobar : Gtk.HPaned, IInfoDisplay
 			this.NumberBase = 16;
 		else if (this.NumberBase == 16)
 			this.NumberBase = 8;
-	}
-
-	///<summary>Assign the resize grip to a visible statusbar</summary>
-	void AssignResizeGrip()
-	{
-		// clear all grips
-		OffsetStatusbar.HasResizeGrip = false;
-		SelectionStatusbar.HasResizeGrip = false;
-		MessageStatusbar.HasResizeGrip = false;
-		OverwriteStatusbar.HasResizeGrip = false;
-		DummyStatusbar.Visible = false;
-
-		// give resize grip to a statusbar
-		if (OverwriteStatusbar.Visible == false){
-			if (SelectionStatusbar.Visible == false) {
-				if (OffsetStatusbar.Visible == false)
-					DummyStatusbar.Visible = true;
-				else
-					OffsetStatusbar.HasResizeGrip = true;
-			}
-			else
-				SelectionStatusbar.HasResizeGrip = true;
-		}
-		else
-			OverwriteStatusbar.HasResizeGrip = true;
 	}
 
 	void OnPreferencesChanged(Preferences prefs)

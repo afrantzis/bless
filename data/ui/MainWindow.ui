@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkWindow" id="MainWindow">
+    <property name="visible">True</property>
+    <property name="title">Bless - Gtk# Hex Editor</property>
+    <property name="default_width">400</property>
+    <property name="default_height">400</property>
+    <signal handler="OnMainWindowDeleteEvent" name="delete_event"/>
+    <child>
+      <object class="GtkVBox" id="MainVBox">
+        <property name="visible">True</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <object class="GtkHBox" id="DataViewBox">
+            <property name="visible">True</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

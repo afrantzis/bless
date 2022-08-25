@@ -20,7 +20,6 @@
  */
 using System;
 using Gtk;
-using Glade;
 using Bless.Tools.Find;
 using Bless.Util;
 
@@ -31,18 +30,18 @@ namespace Bless.Gui.Dialogs {
 ///</summary>
 public class ProgressDialog : Gtk.Window {
 
-	[Glade.Widget]Gtk.VBox ProgressVBox;
-	[Glade.Widget]Gtk.Button CancelButton;
-	[Glade.Widget]Gtk.ProgressBar ProgressBar;
-	[Glade.Widget]Gtk.Label MessageLabel;
-	[Glade.Widget]Gtk.Label DetailsLabel;
+	[Gtk.Builder.Object] Gtk.VBox ProgressVBox;
+	[Gtk.Builder.Object] Gtk.ProgressBar ProgressBar;
+	[Gtk.Builder.Object] Gtk.Label MessageLabel;
+	[Gtk.Builder.Object] Gtk.Label DetailsLabel;
 
 	bool cancelClicked;
 
 	public ProgressDialog(string primary, Gtk.Window main) : base(primary)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ProgressVBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "ProgressDialog.ui"));
+		builder.Autoconnect(this);
 
 		// setup window
 		this.SkipTaskbarHint = false;

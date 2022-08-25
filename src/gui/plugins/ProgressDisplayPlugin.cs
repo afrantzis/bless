@@ -18,7 +18,6 @@
  *   along with Bless; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-using Glade;
 using Gtk;
 using System;
 using Bless.Util;
@@ -101,16 +100,17 @@ public class ProgressDisplayWidget : Gtk.VBox, IProgressDisplay
 
 public class ProgressDisplayBar : Gtk.HBox {
 
-	[Glade.Widget]Gtk.HBox ProgressBarHBox;
-	[Glade.Widget]Gtk.Button CancelButton;
-	[Glade.Widget]Gtk.ProgressBar ProgressBar;
+	[Gtk.Builder.Object] Gtk.HBox ProgressBarHBox;
+	[Gtk.Builder.Object] Gtk.Button CancelButton;
+	[Gtk.Builder.Object] Gtk.ProgressBar ProgressBar;
 
 	bool cancelClicked;
 
 	public ProgressDisplayBar()
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ProgressBarHBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "ProgressDisplayPlugin.ui"));
+		builder.Autoconnect(this);
 
 		this.Add(ProgressBarHBox);
 		this.Hide();

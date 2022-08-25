@@ -80,8 +80,8 @@ public class PluginManager
 				}
 			}
 		}
-		catch (DirectoryNotFoundException e) {
-			System.Console.WriteLine(e.Message);
+		catch (IOException e) {
+			System.Console.WriteLine("Failed to open plugins directory: " + e.Message);
 		}
 
 	}

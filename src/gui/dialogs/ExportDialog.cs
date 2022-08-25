@@ -38,17 +38,17 @@ public class ExportDialog : Dialog
 	DataBook dataBook;
 	Gtk.Window mainWindow;
 
-	[Glade.Widget] Gtk.VBox ExportDialogVBox;
-	[Glade.Widget] Gtk.ComboBox ExportAsCombo;
-	[Glade.Widget] Gtk.ComboBoxEntry ExportPatternComboEntry;
-	[Glade.Widget] Gtk.ProgressBar ExportProgressBar;
-	[Glade.Widget] Gtk.Entry ExportFileEntry;
-	[Glade.Widget] Gtk.RadioButton WholeFileRadio;
-	[Glade.Widget] Gtk.RadioButton CurrentSelectionRadio;
-	[Glade.Widget] Gtk.RadioButton RangeRadio;
-	[Glade.Widget] Gtk.Entry RangeFromEntry;
-	[Glade.Widget] Gtk.Entry RangeToEntry;
-	[Glade.Widget] Gtk.HBox ProgressHBox;
+	[Gtk.Builder.Object] Gtk.VBox ExportDialogVBox;
+	[Gtk.Builder.Object] Gtk.ComboBox ExportAsCombo;
+	[Gtk.Builder.Object] Gtk.ComboBoxEntry ExportPatternComboEntry;
+	[Gtk.Builder.Object] Gtk.ProgressBar ExportProgressBar;
+	[Gtk.Builder.Object] Gtk.Entry ExportFileEntry;
+	[Gtk.Builder.Object] Gtk.RadioButton WholeFileRadio;
+	[Gtk.Builder.Object] Gtk.RadioButton CurrentSelectionRadio;
+	[Gtk.Builder.Object] Gtk.RadioButton RangeRadio;
+	[Gtk.Builder.Object] Gtk.Entry RangeFromEntry;
+	[Gtk.Builder.Object] Gtk.Entry RangeToEntry;
+	[Gtk.Builder.Object] Gtk.HBox ProgressHBox;
 	Gtk.Button CloseButton;
 	Gtk.Button ExportButton;
 
@@ -60,8 +60,9 @@ public class ExportDialog : Dialog
 	public ExportDialog(DataBook db, Gtk.Window mw)
 			: base(Catalog.GetString("Export Bytes"), null, 0)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "ExportDialogVBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "ExportDialog.ui"));
+		builder.Autoconnect(this);
 
 		dataBook = db;
 		mainWindow = mw;

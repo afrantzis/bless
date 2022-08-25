@@ -22,6 +22,7 @@ using NUnit.Framework;
 using System;
 
 using Bless.Util;
+using Range = Bless.Util.Range;
 
 namespace BlessTests.Util {
 

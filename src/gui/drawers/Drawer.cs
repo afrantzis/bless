@@ -53,7 +53,7 @@ public abstract class Drawer {
 
 		public Information()
 		{
-			FontName = "Courier 12";
+			FontName = "BlessCourier, Courier 12";
 			FontLanguage = "utf-8";
 
 			fgNormal = new Drawer.Color[2, 2];

@@ -20,7 +20,6 @@
 
 using System;
 using Gtk;
-using Glade;
 using Bless.Buffers;
 using Bless.Util;
 using Bless.Gui.Dialogs;
@@ -121,11 +120,11 @@ public class SelectRangePlugin : GuiPlugin
 ///</summary>
 public class SelectRangeWidget : Gtk.HBox
 {
-	[Glade.Widget] Gtk.HBox SelectRangeHBox;
-	[Glade.Widget] Gtk.Button SelectButton;
-	[Glade.Widget] Gtk.Entry FromEntry;
-	[Glade.Widget] Gtk.Entry ToEntry;
-	[Glade.Widget] Gtk.Button CloseButton;
+	[Gtk.Builder.Object] Gtk.HBox SelectRangeHBox;
+	[Gtk.Builder.Object] Gtk.Button SelectButton;
+	[Gtk.Builder.Object] Gtk.Entry FromEntry;
+	[Gtk.Builder.Object] Gtk.Entry ToEntry;
+	[Gtk.Builder.Object] Gtk.Button CloseButton;
 
 	DataBook dataBook;
 
@@ -134,8 +133,9 @@ public class SelectRangeWidget : Gtk.HBox
 	{
 		dataBook = db;
 
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "SelectRangeHBox", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "SelectRangePlugin.ui"));
+		builder.Autoconnect(this);
 
 		// set up entry completions
 		FromEntry.Completion = new EntryCompletion();

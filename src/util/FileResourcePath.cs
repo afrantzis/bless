@@ -59,15 +59,14 @@ public class FileResourcePath
 	public static string GetDataPath(params string[] dirs)
 	{
 		if (dataPath == null) {
-			
 			// get the local data path (eg when running bless from within the build directory)
-			string localDataDir = GetBinPath("..", "data");
+			string localDataDir = GetBinPath("..", "..", "data");
 			
 			// if the local data path exists and is valid use it
 			// else try to use the installation data path
-			if (Directory.Exists(localDataDir) && File.Exists(Path.Combine(localDataDir, "bless.glade")))
+			if (Directory.Exists(localDataDir) && File.Exists(Path.Combine(localDataDir, "bless-default.layout")))
 				dataPath = localDataDir;
-			else if (Directory.Exists(ConfigureDefines.DATADIR) && File.Exists(Path.Combine(ConfigureDefines.DATADIR, "bless.glade")))
+			else if (Directory.Exists(ConfigureDefines.DATADIR) && File.Exists(Path.Combine(ConfigureDefines.DATADIR, "bless-default.layout")))
 				dataPath = ConfigureDefines.DATADIR;
 			else
 				throw new DirectoryNotFoundException(localDataDir + " or " +  ConfigureDefines.DATADIR);
@@ -91,6 +90,18 @@ public class FileResourcePath
 		return resourcePath;
 	}
 
+	public static string GetHelpDir()
+	{
+		string localHelpDir = GetDataPath("..", "doc", "user", "C");
+		string helpDir = "";
+		if (Directory.Exists(localHelpDir) &&
+			File.Exists(Path.Combine(localHelpDir, "index.docbook"))) {
+			helpDir = localHelpDir;
+		} else {
+			helpDir = Path.Combine(ConfigureDefines.HELPDIR, "C", "bless");
+		}
+		return helpDir;
+	}
 
 }
 

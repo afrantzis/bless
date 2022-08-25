@@ -1,5 +1,15 @@
 # List of source files which contain translatable strings.
-data/bless.glade
+data/ui/BitwiseOperationsPlugin.ui
+data/ui/ConversionTablePlugin.ui
+data/ui/ExportDialog.ui
+data/ui/FindReplacePlugin.ui
+data/ui/GotoOffsetPlugin.ui
+data/ui/LayoutSelectionDialog.ui
+data/ui/MainWindow.ui
+data/ui/PreferencesDialog.ui
+data/ui/ProgressDialog.ui
+data/ui/ProgressDisplayPlugin.ui
+data/ui/SelectRangePlugin.ui
 src/buffers/SaveAsOperation.cs
 src/buffers/SaveOperation.cs
 src/gui/FileChangedBar.cs

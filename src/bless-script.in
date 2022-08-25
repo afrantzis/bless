@@ -1,3 +1,0 @@
-#!@SHELL@
-
-mono "@blesslibdir@/@PACKAGE_NAME@/bless.exe" "$@"

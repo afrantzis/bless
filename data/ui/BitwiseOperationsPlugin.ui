@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkListStore" id="model3">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">AND</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">OR</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XOR</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">NOT</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="model4">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Hexadecimal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Decimal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Octal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Binary</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Text</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkHBox" id="BitwiseOperationsHBox">
+    <property name="visible">True</property>
+    <property name="border_width">6</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkEventBox" id="SourceLabelEB">
+        <property name="visible">True</property>
+        <signal handler="OnSourceLabelButtonPress" name="button_press_event"/>
+        <child>
+          <object class="GtkLabel" id="SourceLabel">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="use_markup">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkComboBox" id="OperationComboBox">
+        <property name="visible">True</property>
+        <signal handler="OnOperationComboBoxChanged" name="changed"/>
+        <property name="model">model3</property>
+        <child>
+          <object class="GtkCellRendererText" id="renderer3"/>
+          <attributes>
+            <attribute name="text">0</attribute>
+          </attributes>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="OperandEntry">
+        <property name="visible">True</property>
+        <signal handler="OnOperandEntryChanged" name="changed"/>
+        <signal handler="OnOperandEntryActivated" name="activate"/>
+      </object>
+      <packing>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label8">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">as</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkComboBox" id="OperandAsComboBox">
+        <property name="visible">True</property>
+        <property name="model">model4</property>
+        <child>
+          <object class="GtkCellRendererText" id="renderer4"/>
+          <attributes>
+            <attribute name="text">0</attribute>
+          </attributes>
+        </child>
+      </object>
+      <packing>
+        <property name="position">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="DoOperationButton">
+        <property name="visible">True</property>
+        <property name="label" translatable="no">gtk-execute</property>
+        <property name="use_stock">True</property>
+        <signal handler="OnDoOperationClicked" name="clicked"/>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="CloseButton">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnCloseButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="stock">gtk-close</property>
+            <property name="icon_size">1</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">6</property>
+      </packing>
+    </child>
+  </object>
+</interface>

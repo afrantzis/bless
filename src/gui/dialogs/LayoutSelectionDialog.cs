@@ -21,7 +21,6 @@
 using System;
 using System.IO;
 using Gtk;
-using Glade;
 using Bless.Gui.Areas;
 using Bless.Buffers;
 using Bless.Util;
@@ -36,9 +35,9 @@ public class LayoutSelectionDialog : Dialog {
 
 	DataBook dataBook;
 	DataView dataPreview;
-	[Glade.Widget] Gtk.TreeView LayoutList;
-	[Glade.Widget] Gtk.Frame PreviewFrame;
-	[Glade.Widget] Gtk.Paned LayoutSelectionPaned;
+	[Gtk.Builder.Object] Gtk.TreeView LayoutList;
+	[Gtk.Builder.Object] Gtk.Frame PreviewFrame;
+	[Gtk.Builder.Object] Gtk.Paned LayoutSelectionPaned;
 	TreeIter selectedLayoutIter;
 	string selectedLayout;
 	string layoutDir;
@@ -52,8 +51,9 @@ public class LayoutSelectionDialog : Dialog {
 	public LayoutSelectionDialog(DataBook db)
 			: base(Catalog.GetString("Select Layout"), null, 0)
 	{
-		Glade.XML gxml = new Glade.XML (FileResourcePath.GetDataPath("bless.glade"), "LayoutSelectionPaned", "bless");
-		gxml.Autoconnect (this);
+		Gtk.Builder builder = new Gtk.Builder();
+		builder.AddFromFile(FileResourcePath.GetDataPath("ui", "LayoutSelectionDialog.ui"));
+		builder.Autoconnect(this);
 
 		dataBook = db;
 

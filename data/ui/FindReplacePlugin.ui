@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<interface>
+  <object class="GtkListStore" id="model1">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Hexadecimal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Decimal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Octal</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Binary</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Text</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkTable" id="FindReplaceTable">
+    <property name="visible">True</property>
+    <property name="border_width">6</property>
+    <property name="n_rows">2</property>
+    <property name="n_columns">7</property>
+    <property name="column_spacing">6</property>
+    <property name="row_spacing">6</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkComboBox" id="ReplaceAsComboBox">
+        <property name="visible">True</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnReplaceAsComboBoxChanged" name="changed"/>
+        <property name="model">model1</property>
+        <child>
+          <object class="GtkCellRendererText" id="renderer1"/>
+          <attributes>
+            <attribute name="text">0</attribute>
+          </attributes>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">3</property>
+        <property name="right_attach">4</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkComboBox" id="SearchAsComboBox">
+        <property name="visible">True</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnSearchAsComboBoxChanged" name="changed"/>
+        <property name="model">model1</property>
+        <child>
+          <object class="GtkCellRendererText" id="renderer2"/>
+          <attributes>
+            <attribute name="text">0</attribute>
+          </attributes>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">3</property>
+        <property name="right_attach">4</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="FindNextButton">
+        <property name="visible">True</property>
+        <property name="sensitive">False</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnFindNextButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkAlignment" id="alignment51">
+            <property name="visible">True</property>
+            <property name="xscale">0</property>
+            <property name="yscale">0</property>
+            <child>
+              <object class="GtkHBox" id="hbox30">
+                <property name="visible">True</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkImage" id="image1329">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-go-down</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label77">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Find Next</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">4</property>
+        <property name="right_attach">5</property>
+        <property name="x_options"/>
+        <property name="y_options"/>
+        <property name="x_padding">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="ReplaceButton">
+        <property name="visible">True</property>
+        <property name="sensitive">False</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnReplaceButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkAlignment" id="alignment53">
+            <property name="visible">True</property>
+            <property name="xscale">0</property>
+            <property name="yscale">0</property>
+            <child>
+              <object class="GtkHBox" id="hbox32">
+                <property name="visible">True</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkImage" id="image1331">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-find-and-replace</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label79">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Replace</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">4</property>
+        <property name="right_attach">5</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+        <property name="x_padding">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="ReplaceAsLabel">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">as</property>
+      </object>
+      <packing>
+        <property name="left_attach">2</property>
+        <property name="right_attach">3</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+        <property name="x_padding">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="SearchAsLabel">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">as</property>
+      </object>
+      <packing>
+        <property name="left_attach">2</property>
+        <property name="right_attach">3</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+        <property name="x_padding">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="ReplaceAllButton">
+        <property name="visible">True</property>
+        <property name="sensitive">False</property>
+        <property name="can_focus">True</property>
+        <property name="label" translatable="yes">Replace All</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="use_underline">True</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnReplaceAllButtonClicked" name="clicked"/>
+      </object>
+      <packing>
+        <property name="left_attach">5</property>
+        <property name="right_attach">6</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="FindPreviousButton">
+        <property name="visible">True</property>
+        <property name="sensitive">False</property>
+        <property name="can_focus">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <property name="focus_on_click">False</property>
+        <signal handler="OnFindPreviousButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkAlignment" id="alignment52">
+            <property name="visible">True</property>
+            <property name="xscale">0</property>
+            <property name="yscale">0</property>
+            <child>
+              <object class="GtkHBox" id="hbox31">
+                <property name="visible">True</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkImage" id="image1330">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-go-up</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label78">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Find Previous</property>
+                    <property name="use_underline">True</property>
+                    <property name="width_chars">10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">5</property>
+        <property name="right_attach">6</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="ReplacePatternEntry">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="activates_default">True</property>
+        <signal handler="OnReplacePatternEntryChanged" name="changed"/>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="SearchPatternEntry">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="activates_default">True</property>
+        <signal handler="OnSearchPatternEntryChanged" name="changed"/>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="ReplaceLabel">
+        <property name="visible">True</property>
+        <property name="xalign">0</property>
+        <property name="label" translatable="yes">Replace with:</property>
+        <property name="use_markup">True</property>
+      </object>
+      <packing>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="SearchLabel">
+        <property name="visible">True</property>
+        <property name="xalign">0</property>
+        <property name="label" translatable="yes">Search for:</property>
+        <property name="use_markup">True</property>
+      </object>
+      <packing>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options"/>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="CloseButton">
+        <property name="visible">True</property>
+        <property name="relief">GTK_RELIEF_NONE</property>
+        <signal handler="OnCloseButtonClicked" name="clicked"/>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="stock">gtk-close</property>
+            <property name="icon_size">1</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">6</property>
+        <property name="right_attach">7</property>
+        <property name="x_options">GTK_FILL</property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
+    </child>
+  </object>
+</interface>

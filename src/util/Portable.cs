@@ -19,6 +19,8 @@
  */
 
 using Mono.Unix.Native;
+using System;
+using System.Runtime.InteropServices;
 
 public class Portable
 {
@@ -47,5 +49,13 @@ public class Portable
 #else
 		throw new System.NotImplementedException();
 #endif
+	}
+
+	[DllImport("libfontconfig.so.1", CharSet = CharSet.Auto)]
+	static extern IntPtr FcConfigAppFontAddFile(IntPtr fc, String path);
+
+	public static void AddLocalFontFile(String path)
+	{
+		FcConfigAppFontAddFile(IntPtr.Zero, path);
 	}
 }
