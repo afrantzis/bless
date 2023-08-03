@@ -122,6 +122,8 @@ public class ConversionTable: Gtk.HBox
 	[Gtk.Builder.Object] Gtk.Entry Unsigned16bitEntry;
 	[Gtk.Builder.Object] Gtk.Entry Signed32bitEntry;
 	[Gtk.Builder.Object] Gtk.Entry Unsigned32bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Signed64bitEntry;
+	[Gtk.Builder.Object] Gtk.Entry Unsigned64bitEntry;
 	[Gtk.Builder.Object] Gtk.Entry Float32bitEntry;
 	[Gtk.Builder.Object] Gtk.Entry Float64bitEntry;
 	[Gtk.Builder.Object] Gtk.Entry HexadecimalEntry;
@@ -324,6 +326,12 @@ public class ConversionTable: Gtk.HBox
 		Unsigned32bitEntry.Text = "---";
 	}
 
+	void Clear64bit()
+	{
+		Signed64bitEntry.Text = "---";
+		Unsigned64bitEntry.Text = "---";
+	}
+
 	void ClearFloat()
 	{
 		Float32bitEntry.Text = "---";
@@ -437,6 +445,42 @@ public class ConversionTable: Gtk.HBox
 		}
 	}
 
+	///<summary>Update the 64bit entries</summary>
+	void Update64bit(DataView dv)
+	{
+		long offset = dv.CursorOffset;
+
+		// make sure offset is valid
+		if (offset < dv.Buffer.Size - 7 && offset >= 0) {
+			long val = 0;
+
+			// create buffer for raw bytes
+			byte[] ba = new byte[8];
+
+			// fill byte[] according to endianess
+			if (littleEndian)
+				for (int i = 0; i < 8; i++)
+					ba[i] = dv.Buffer[offset+i];
+			else
+				for (int i = 0; i < 8; i++)
+					ba[7-i] = dv.Buffer[offset+i];
+
+			// set signed
+			val = BitConverter.ToInt64(ba);
+			Signed64bitEntry.Text = val.ToString();
+
+			// set unsigned
+			ulong uval = (ulong)val;
+			if (unsignedAsHex)
+				Unsigned64bitEntry.Text = string.Format("0x{0:x}", uval);
+			else
+				Unsigned64bitEntry.Text = uval.ToString();
+		}
+		else {
+			Clear64bit();
+		}
+	}
+
 	///<summary>Update the floating point entries</summary>
 	void UpdateFloat(DataView dv)
 	{
@@ -530,6 +574,7 @@ public class ConversionTable: Gtk.HBox
 		Update8bit(dv);
 		Update16bit(dv);
 		Update32bit(dv);
+		Update64bit(dv);
 		UpdateFloat(dv);
 		UpdateBases(dv);
 	}
@@ -543,6 +588,7 @@ public class ConversionTable: Gtk.HBox
 		Clear8bit();
 		Clear16bit();
 		Clear32bit();
+		Clear64bit();
 		ClearFloat();
 		ClearBases();
 	}

@@ -9,6 +9,7 @@ install_data(
         'bless-48x48.png',
         'bless-about.png',
         'bless-all-number-bases.layout',
+        'bless-binary-ascii.layout',
         'bless-courier.ttf',
         'bless-default.layout',
         'default-preferences.xml',

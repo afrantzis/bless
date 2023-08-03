@@ -2,9 +2,9 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 	<!ENTITY legal SYSTEM "legal.xml">
-	<!ENTITY appversion "0.6.2">
+	<!ENTITY appversion "0.6.3">
 	<!ENTITY manrevision "1.0">
-	<!ENTITY date "Apr 2019">
+	<!ENTITY date "Oct 2020">
 	<!ENTITY app "<application>Bless</application>">
 	<!-- Information about the entities
 		The legal.xml file contains legal information, there is no need to edit the file. 
@@ -29,7 +29,7 @@
 
 		<copyright> 
 			<year>2004</year> 
-			<year>2019</year>
+			<year>2020</year>
 			<holder>Alexandros Frantzis</holder> 
 		</copyright> 
 <!-- translators: uncomment this:
@@ -110,7 +110,7 @@
 			<title>Feedback</title> 
 			<para>To report a bug or make a suggestion regarding the &app; application or
 			this manual, please use the
-			<ulink url="http://gna.org/bugs/?group=bless" type="http">Bless bug page</ulink>.
+			<ulink url="https://github.com/afrantzis/bless/issues" type="https">Bless bug page</ulink>.
 			</para>
 <!-- Translators may also add here feedback address for translations -->
 		</legalnotice> 
@@ -2239,9 +2239,9 @@
 	<chapter id="bless-about"> 
 		<title>About &app;</title> 
 		<para> &app; was written by Alexandros Frantzis
-			(<email>alf82@freemail.gr</email>). To find more information about
+			(<email>alf82 at freemail dot gr</email>). To find more information about
 			&app;, please visit the 
-			<ulink url="http://home.gna.org/bless" type="http">Bless Web page</ulink>.
+			<ulink url="https://github.com/afrantzis/bless" type="https">Bless Web page</ulink>.
 		</para>
 
 		<para> This program is distributed under the terms of the GNU
